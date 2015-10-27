@@ -1,0 +1,28 @@
+{
+  "site": {
+    "name"        : "zalando",
+    "domain"      : ".de",
+    "port"        : 6052
+  },
+  "header": {
+    "catalog"     : "zalando",
+    "alias"       : "ZA",
+    "info"        : "Интернет-магазин ZALANDO. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
+  },
+  "options": {
+    "height"      : 112,
+    "width"       : 984
+  },
+  "replaces": [
+    {
+      "type": "usual",
+      "from": "id=\"popupContainer\"",
+      "to": ""
+    },
+    {
+      "type": "usual",
+      "from": "id=\"newsletterPopupContainer\"",
+      "to": ""
+    }
+  ]
+}
