@@ -1,0 +1,16 @@
+{
+  "site": {
+    "name"        : "conleys",
+    "domain"      : ".de"
+  },
+  "header": {
+    "catalog"     : "conleys",
+    "alias"       : "CS",
+    "info"        : "Интернет-магазин Conleys. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
+  },
+  "options": {
+    "height"      : 120,
+    "width"       : 960
+  },
+  "replaces": []
+}
