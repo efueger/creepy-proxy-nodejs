@@ -1,0 +1,16 @@
+{
+  "site": {
+    "name"        : "faibels",
+    "domain"      : ".de"
+  },
+  "header": {
+    "catalog"     : "faibels",
+    "alias"       : "DY",
+    "info"        : "Интернет-магазин Faibels. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
+  },
+  "options": {
+    "height"      : 120,
+    "width"       : 960
+  },
+  "replaces": []
+}
