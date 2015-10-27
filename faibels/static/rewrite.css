@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'FontAwesome';
+    src: url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.eot?v=4.0.3");
+    src: url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"),
+    url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.woff?v=4.0.3") format("woff"),
+    url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.ttf?v=4.0.3") format("truetype"),
+    url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg");
+}
+
+p {
+    font-family: FontAwesome;
+    font-size: 21px;
+}
+p:after {
+    content: "\f057";
+}
