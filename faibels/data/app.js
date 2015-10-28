@@ -30,7 +30,7 @@ var replaces = config.get('replaces');
 if (cluster.isMaster) {
     console.log('Start master');
     cluster.fork();
-    cluster.fork();
+    //cluster.fork();
     //cluster.fork();
     //cluster.fork();
 
