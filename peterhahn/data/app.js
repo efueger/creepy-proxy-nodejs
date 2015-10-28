@@ -110,10 +110,10 @@ if (cluster.isMaster) {
         //    translates = JSON.parse(fs.readFileSync(fname, 'utf8'));
         //}
 
-        request.get('http://translates.catalogi.ru/temp/peterhahn.json', function (error, response, body) {
+        request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             //if (!error && response.statusCode == 200) {
             tmp = response.headers['content-length'];
-            console.log(response.headers['content-length']);
+            //console.log(response.headers['content-length']);
             //console.log(body);
             //console.log('ggwp');
             if (IsJsonString(body)) {
@@ -123,11 +123,11 @@ if (cluster.isMaster) {
                     translates = JSON.parse(body, 'utf8');
                 }
             } else {
-                console.log("JOSN NOT detected!");
+                //console.log("JOSN NOT detected!");
             }
         });
 
-        console.log('Trying to access: ' + req.headers.host + req.url);
+        //console.log('Trying to access: ' + req.headers.host + req.url);
 
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
@@ -138,12 +138,12 @@ if (cluster.isMaster) {
         _header['Host'] = host;
 
         proxyfull = "http://" + proxy() + ":3129";
-        console.log("Accessing via: " + proxyfull);
+       // console.log("Accessing via: " + proxyfull);
 
 
 
         var start = new Date();
-        console.log("Method: " + req.method);
+        //console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
 
@@ -185,15 +185,12 @@ if (cluster.isMaster) {
                 else if (item.type === "regex") {
                     var from = "(^|[^ \\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
-
-                    //console.log("[REGEX] from: " + from + ", to: " + to + ", args: " + item.args);
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
                 }
             });
         }
 
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
-            //.pipe(replacestream('<head data-country="DE" data-language="de">', '<head>' + includes.head))
             .pipe(replacestream(new RegExp('<head data(.*)>', 'i'), '<head data-country="DE" data-language="de">'+includes.head))
             .pipe(replacestream('eu-sonar.sociomantic.com', '127.0.0.1'))
             .pipe(replacestream('www.google-analytics.com', '127.0.0.1'))
