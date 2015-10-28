@@ -46,10 +46,10 @@ catalogi.parse = function(){
 	//catalogi('.disp-img').remove();
 
 	// Комментарии
-	catalogi('.review-number').remove();
-	catalogi('#content-after').remove('');
-	catalogi('.review-bar').remove();
-	catalogi('a[href*="/review"]').parent().remove();
+	//catalogi('.review-number').remove();
+	//catalogi('#content-after').remove();
+	catalogi('.review-bar > button').remove();
+	//catalogi('a[href*="/review"]').parent().remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
@@ -60,7 +60,6 @@ catalogi.parse = function(){
     // стоимость с учетом доставки
     catalogi.service();
 	});
-
 
 	// Переопределение метода добавления в корзину
 	catalogi('#add-to-cart-form').submit(function(event){
@@ -139,7 +138,7 @@ catalogi(function(){
 	catalogi(window).on('message', function(event) {
 		switch (event.originalEvent.data.action) {
 			case 'search':
-				var goingto = "http://www.impressionen.catalogi.ru/impressionen/de/s?_sb=true&query=";
+				var goingto = "http://www.faibels.catalogi.ru/faibels/de/s?_sb=true&query=";
 				goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
 				window.location = goingto;
 				break
