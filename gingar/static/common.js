@@ -30,7 +30,7 @@ catalogi.noTranslate = function(){
 	// Стр. товара
 	catalogi('.js-display-variant-price').addClass('notranslate');
 	catalogi('#product-size-dropdown').addClass('notranslate');
-}
+};
 
 catalogi.parse = function(){
 	// Шапка
@@ -119,7 +119,7 @@ catalogi.parse = function(){
 
 	// Футер
 	catalogi('#footer-main-slot').remove();
-}
+};
 
 // Скидка
 catalogi.service = function(){
@@ -132,7 +132,7 @@ catalogi.service = function(){
     var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
     catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
 	}
-}
+};
 
 catalogi(function(){
 	catalogi(window).on('message', function(event) {

@@ -92,7 +92,7 @@ if (cluster.isMaster) {
                 ]);
                 res.setHeader('Set-cookie', _cookie);
             }
-            res.setHeader('Access-Control-Allow-Origin', '*');
+            //res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         };
 
@@ -173,7 +173,7 @@ if (cluster.isMaster) {
             });
         }
 
-        if (req.headers.host !== 'static.faibels.catalogi.ru') {
+        if (req.headers.host !== 'static.gingar.catalogi.ru') {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
