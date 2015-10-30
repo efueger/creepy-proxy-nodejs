@@ -42,18 +42,19 @@ catalogi.parse = function(){
 	// Шапка
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
-	//catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+
+	// Список товаров
+	catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
 
 	// Стр. товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
-
-	//catalogi('.disp-img').remove();
+	catalogi('.disp-img').remove();
 
 	// Комментарии
-	//catalogi('#content-after').remove('');
-	//catalogi('.review-bar').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
+	catalogi('#content-after').remove('');
+	catalogi('.review-bar').remove();
+	catalogi('a[href*="/review"]').parent().remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
@@ -61,8 +62,8 @@ catalogi.parse = function(){
 	});
 
 	catalogi('.js-display-variant-price').bind('DOMSubtreeModified', function(e){
-    // стоимость с учетом доставки
-    catalogi.service();
+		// стоимость с учетом доставки
+		catalogi.service();
 	});
 
 	// Переопределение метода добавления в корзину
@@ -89,7 +90,10 @@ catalogi.parse = function(){
 
 			//var color 		= variation.variants.Farbvariante ? variation.variants.Farbvariante.replace('Standard','') : '';
 			var color 		= catalogi('#product-color-dropdown > p').text();
-			var size 		= catalogi('.js-display-chosen-size').text();
+
+			var size1 		= catalogi('.js-display-chosen-size').text();
+			var size2		= catalogi('li[class*="variant-size-tile available selected"]').text();
+			var size 		= (size1 == "") ? size2 : size1;
 
 			var param = [];
 
@@ -166,9 +170,9 @@ catalogi(function(){
 
 	catalogi.noTranslate();
 	catalogi.parse();
-
-	catalogi('body').attr('style', '');
-	catalogi('.yCmsContentSlot > li:eq(0) > a')
-			.attr('href', 'http://www.impressionen.catalogi.ru/impressionen/de/s//living/?navigation=true');
-	catalogi.service();
+    //
+	//catalogi('body').attr('style', '');
+	//catalogi('.yCmsContentSlot > li:eq(0) > a')
+	//		.attr('href', 'http://www.impressionen.catalogi.ru/impressionen/de/s//living/?navigation=true');
+	//catalogi.service();
 });
