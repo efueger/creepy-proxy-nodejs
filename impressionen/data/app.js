@@ -177,12 +177,12 @@ if (cluster.isMaster) {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
+                .pipe(replacestream(new RegExp('/impressionen/_ui/desktop/theme-impressionen/all.js', 'g'), 'http://impressionen.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
             piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://impressionen.catalogi.ru/static/bk_script.js'))
                 .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://impressionen.catalogi.ru/static/customlib.js'))
                 .pipe(res);
         }
-
     }).listen(5057);
 }

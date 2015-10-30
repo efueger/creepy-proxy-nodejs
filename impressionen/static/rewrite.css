@@ -1,16 +1,13 @@
 @font-face {
-    font-family: 'FontAwesome';
-    src: url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.eot?v=4.0.3");
-    src: url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.eot?#iefix&v=4.0.3") format("embedded-opentype"),
-    url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.woff?v=4.0.3") format("woff"),
-    url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.ttf?v=4.0.3") format("truetype"),
-    url("http://www.impressionen.catalogi.ru/static/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular") format("svg");
+	font-family: 'FontAwesome';
+	src: url('/static/fonts/fontawesome-webfont.eot?v=4.4.0');
+	src: url('/static/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'),
+		 url('/static/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'),
+		 url('/static/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'),
+		 url('/static/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'),
+		 url('/static/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
-
-p {
-    font-family: FontAwesome;
-    font-size: 21px;
-}
-p:after {
-    content: "\f057";
-}
+#js-comments-write_button_review,
+.review-inner-button-panel {display:none;}
