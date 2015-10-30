@@ -45,9 +45,9 @@ catalogi.parse = function(){
 	});
 
 	// Комментарии
-	catalogi('#content-after').remove('');
-	catalogi('.review-bar').remove();
-	catalogi('a[href*="/review"]').parent().remove();
+	//catalogi('#content-after').remove('');
+	//catalogi('.review-bar').remove();
+	//catalogi('a[href*="/review"]').parent().remove();
 
 	catalogi('.js-display-variant-price').bind('DOMSubtreeModified', function(e){
     	// стоимость с учетом доставки
