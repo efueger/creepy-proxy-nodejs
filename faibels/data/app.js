@@ -177,9 +177,7 @@ if (cluster.isMaster) {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-                //.pipe(replacestream(new RegExp('/impressionen/_ui/desktop/theme-impressionen/all.css', 'g'), '/static/all.css'))
-                //.pipe(replacestream(new RegExp('www.googletagmanager.com', 'g'), '#'))
-                //.pipe(replacestream(new RegExp('www.facebook.com', 'g'), '#'))
+                .pipe(replacestream(new RegExp('/faibels/_ui/desktop/theme-faibels/all.js', 'g'), 'http://faibels.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
             piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE//js/customlib.js', 'g'), 'http://faibels.catalogi.ru/static/customlib.js'))
