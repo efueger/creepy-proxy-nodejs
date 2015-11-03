@@ -21,6 +21,11 @@ var replaces = config.get('replaces');
 if (cluster.isMaster) {
     console.log('Start master');
     cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
         cluster.fork();
@@ -163,5 +168,6 @@ if (cluster.isMaster) {
     }).listen(5058);
 }
 
-
-
+setInterval(function() {
+    global.gc(); // --expose-gc
+}, 1000);
