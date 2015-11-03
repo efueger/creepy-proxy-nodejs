@@ -22,7 +22,7 @@ module.exports = function(catalog, param, options){
     ].join("\n"),
 
     headbottom: [
-      '<!-- <link href="http://www.'+catalog+'.catalogi.ru/static/rewrite.css" rel="stylesheet" type="text/css" /> -->'
+      '<link href="http://www.'+catalog+'.catalogi.ru/static/rewrite.css" rel="stylesheet" type="text/css" />'
     ].join("\n"),
 
     body: {

@@ -1,8 +1,3 @@
-//function _googleTranslateElementInit(){
-//  new google.translate.TranslateElement({pageLanguage: 'de', includedLanguages: 'ru', layout:
-// google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-//}
-
 function _googleTranslateElementInit() {
 	new google.translate.TranslateElement({
 		pageLanguage: 'de',
@@ -18,6 +13,7 @@ catalogi.noTranslate = function(){
 
 	// Меню
 	catalogi('.yCmsContentSlot:eq(0)').addClass('notranslate');
+	catalogi('.facet-block:eq(1)').addClass('notranslate');
 
 	// Список
 	catalogi('.category:contains("Marke")').next().addClass('notranslate');
@@ -34,27 +30,26 @@ catalogi.noTranslate = function(){
 	// Стр. товара
 	catalogi('.js-display-variant-price').addClass('notranslate');
 	catalogi('#product-size-dropdown').addClass('notranslate');
-
-	// Футер
-}
+};
 
 catalogi.parse = function(){
 	// Шапка
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
-
-	// Список товаров
-	catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+//	//catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
 
 	// Стр. товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
-	catalogi('.disp-img').remove();
+	catalogi('.text-center').remove();
+
+	//catalogi('.disp-img').remove();
 
 	// Комментарии
-	catalogi('#content-after').remove('');
-	catalogi('.review-bar').remove();
-	catalogi('a[href*="/review"]').parent().remove();
+	//catalogi('.review-number').remove();
+	//catalogi('#content-after').remove();
+	catalogi('.review-bar > button').remove();
+	//catalogi('a[href*="/review"]').parent().remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
@@ -69,9 +64,8 @@ catalogi.parse = function(){
 	// Переопределение метода добавления в корзину
 	catalogi('#add-to-cart-form').submit(function(event){
 		try{
-
 			var articul 	= catalogi('.js-display-variant-number').text();
-			var name 		= shop.product.name;
+			var name 		= catalogi('.js-display-product-name').text();
 
 			if(catalogi('.js-display-variant-price .price-new').is('span')){
 				var price = catalogi('.js-display-variant-price .price-new').text().replace('€','').replace('.', '').replace(',','.').trim();
@@ -80,36 +74,20 @@ catalogi.parse = function(){
 			}
 
 			var count   	= catalogi('#qty').val();
-
-			var api 		= new eTrackerCommerceAPI();
-			var variation 	= api.getProductJSON(catalogi('input[name="productCodePost"]').val().replace('Article_',''));
-
-			if(!variation){
-				return true;
-			}
-
-			//var color 		= variation.variants.Farbvariante ? variation.variants.Farbvariante.replace('Standard','') : '';
-			var color 		= catalogi('#product-color-dropdown > p').text();
-
-			var size1 		= catalogi('.js-display-chosen-size').text();
-			var size2		= catalogi('li[class*="selected"]:eq(1)').text()
-			var size 		= (size1 == "") ? size2 : size1;
+			var color 		= catalogi('.selected').attr('title');
+			var size 		= catalogi('.js-display-chosen-size').text();
+			var img 		= catalogi('.js-display-variant-primary-image').attr('content');
 
 			var param = [];
-
 			if(color && color.length > 0){
-			  param.push(color);
+				param.push(color);
 			}
-
 			if(size && size.length > 0){
-			  param.push(size);
+				param.push(size);
 			}
-
-
-			var img = catalogi('.js-display-variant-primary-image').attr('content');
 
 			catalogi.basket.add({
-				catalog: 'IM',
+				catalog: 'DY',
 				articul: articul,
 				name: name,
 				size: (param.join(' ').trim() == '') ? 0 : param.join(' ').trim(),
@@ -133,15 +111,15 @@ catalogi.parse = function(){
 	catalogi('body')
 			.delay(900)
 			.queue(function (next) {
-				$(this).css('visibility', 'visible');
+				catalogi(this).css('visibility', 'visible');
 			});
 
 	// Подписка
-	catalogi.subscribe(false, '27268');
+	catalogi.subscribe(false, '26436');
 
 	// Футер
 	catalogi('#footer-main-slot').remove();
-}
+};
 
 // Скидка
 catalogi.service = function(){
@@ -154,13 +132,13 @@ catalogi.service = function(){
     var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
     catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
 	}
-}
+};
 
 catalogi(function(){
 	catalogi(window).on('message', function(event) {
 		switch (event.originalEvent.data.action) {
 			case 'search':
-				var goingto = "http://www.impressionen.catalogi.ru/impressionen/de/s?_sb=true&query=";
+				var goingto = "http://www.faibels.catalogi.ru/faibels/de/s?_sb=true&query=";
 				goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
 				window.location = goingto;
 				break
@@ -170,9 +148,7 @@ catalogi(function(){
 
 	catalogi.noTranslate();
 	catalogi.parse();
-    //
-	//catalogi('body').attr('style', '');
-	//catalogi('.yCmsContentSlot > li:eq(0) > a')
-	//		.attr('href', 'http://www.impressionen.catalogi.ru/impressionen/de/s//living/?navigation=true');
-	//catalogi.service();
+
+	catalogi('body').attr('style', '');
+	catalogi.service();
 });

@@ -30,7 +30,7 @@ var replaces = config.get('replaces');
 if (cluster.isMaster) {
     console.log('Start master');
     cluster.fork();
-    cluster.fork();
+    //cluster.fork();
     //cluster.fork();
     //cluster.fork();
 
@@ -99,22 +99,22 @@ if (cluster.isMaster) {
         request.get('http://translates.catalogi.ru/temp/'+ SITENAME +'.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
-                console.log(response.headers['content-length']);
+                //console.log(response.headers['content-length']);
                 if (IsJsonString(body)) {
-                    console.log("JOSN detected");
+                    //console.log("JOSN detected");
                     if (fsize != tmp) {
                         fsize = tmp;
                         translates = JSON.parse(body, 'utf8');
                     }
                 } else {
-                    console.log("JOSN NOT detected!");
+                    //console.log("JOSN NOT detected!");
                 }
             } else {
-                console.log("JOSN NOT 200!");
+                //console.log("JOSN NOT 200!");
             }
         });
 
-        console.log('Trying to access: ' + req.headers.host);
+        //console.log('Trying to access: ' + req.headers.host);
 
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
@@ -124,7 +124,7 @@ if (cluster.isMaster) {
         _header['Host'] = host;
 
         proxyfull = "http://" + proxy() + ":3129";
-        console.log("Accessing via: " + proxyfull);
+        //console.log("Accessing via: " + proxyfull);
 
         console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
@@ -168,8 +168,6 @@ if (cluster.isMaster) {
                 else if (item.type === "regex") {
                     var from = "(^|[^ =\\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
-
-                    //console.log("[REGEX] from: " + from + ", to: " + to + ", args: " + item.args);
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
                 }
             });
@@ -179,13 +177,11 @@ if (cluster.isMaster) {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-                //.pipe(replacestream(new RegExp('/impressionen/_ui/desktop/theme-impressionen/all.css', 'g'), '/static/all.css'))
-                //.pipe(replacestream(new RegExp('www.googletagmanager.com', 'g'), '#'))
-                //.pipe(replacestream(new RegExp('www.facebook.com', 'g'), '#'))
+                .pipe(replacestream(new RegExp('/faibels/_ui/desktop/theme-faibels/all.js', 'g'), 'http://faibels.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
-            piper.pipe(replacestream(new RegExp('customlib.js', 'g'), 'GGWP'))
-            piper.pipe(res);
+            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE//js/customlib.js', 'g'), 'http://faibels.catalogi.ru/static/customlib.js'))
+                 .pipe(res);
         }
 
     }).listen(5056);

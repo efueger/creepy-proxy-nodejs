@@ -178,8 +178,8 @@ if (cluster.isMaster) {
     if (req.headers.host !== 'static.conleys.catalogi.ru') {
       piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
           .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
-          //.pipe(replacestream(new RegExp('www.googletagmanager.com', 'g'), '#'))
-          //.pipe(replacestream(new RegExp('www.facebook.com', 'g'), '#'))
+          .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
+          .pipe(replacestream(new RegExp('/conleys/_ui/desktop/theme-conleys/all.js', 'g'), 'http://conleys.catalogi.ru/static/all.js'))
           .pipe(res);
     } else {
       piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://conleys.catalogi.ru/static/bk_script.js'))

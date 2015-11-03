@@ -20,6 +20,10 @@ module.exports = function(catalog, param, options){
       '<style>#page-header-main-wrapper{height: 110px !important}</style>'
     ].join("\n"),
 
+    headbottom: [
+      '<link href="http://www.'+catalog+'.catalogi.ru/static/rewrite.css" rel="stylesheet" type="text/css" />'
+    ].join("\n"),
+
     body: {
       top: [
         '<div id="google_translate_element" style="display: none"></div>',
