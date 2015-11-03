@@ -36,20 +36,15 @@ catalogi.parse = function(){
 	// Шапка
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
-//	//catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+	catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
 
-	// Стр. товара
+	// Страница товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.text-center').remove();
+	catalogi('.campaign-img-big').remove();
+	catalogi('.rte-text').remove();
 
-	//catalogi('.disp-img').remove();
-
-	// Комментарии
-	//catalogi('.review-number').remove();
-	//catalogi('#content-after').remove();
-	catalogi('.review-bar > button').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
@@ -116,6 +111,12 @@ catalogi.parse = function(){
 
 	// Подписка
 	catalogi.subscribe(false, '26436');
+
+	catalogi('area[href*="katalogbestellung"]').attr('href', 'http://www.faibels.catalogi.ru/faibels/de/blaetterkataloge');
+	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
+		//alert("ggwp");
+		catalogi.subscribe(true, '26436');
+	});
 
 	// Футер
 	catalogi('#footer-main-slot').remove();
