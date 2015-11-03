@@ -4,8 +4,10 @@ if (cluster.isMaster) {
 	console.log('Start master');
 	cluster.fork();
 	cluster.fork();
-	//cluster.fork();
-	//cluster.fork();
+	cluster.fork();
+	cluster.fork();
+	cluster.fork();
+	cluster.fork();
 
 	cluster.on('disconnect', function(worker) {
 		console.error('Worker disconnect!');
@@ -214,4 +216,4 @@ if (cluster.isMaster) {
 
 setInterval(function() {
 	global.gc(); // --expose-gc
-}, 100);
+}, 1000);
