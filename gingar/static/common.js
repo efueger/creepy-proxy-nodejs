@@ -36,7 +36,13 @@ catalogi.parse = function(){
 	// Шапка
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
-//	//catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+	catalogi('a[href="/gingar/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+
+	catalogi('a[href="/gingar/de/KlickundSchnapp?navigation=true&node=8796105311292&filterSale=true"]').parent().remove();
+	catalogi('#content-after').remove();
+
+	// Реклама на главной
+	//catalogi('img[src*="/medias/sys_gingar/root/"]').parent().hide();
 
 	// Стр. товара
 	catalogi('.product-shipping-costs').text('');
