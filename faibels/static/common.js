@@ -45,14 +45,6 @@ catalogi.parse = function(){
 	catalogi('.campaign-img-big').remove();
 	catalogi('.rte-text').remove();
 
-	//catalogi('.disp-img').remove();
-
-	// Комментарии
-	//catalogi('.review-number').remove();
-	//catalogi('#content-after').remove();
-	catalogi('.review-bar > button').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
-
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
 		return false;
