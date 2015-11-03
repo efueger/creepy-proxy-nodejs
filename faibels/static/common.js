@@ -42,6 +42,8 @@ catalogi.parse = function(){
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.text-center').remove();
+	catalogi('.campaign-img-big').remove();
+	catalogi('.rte-text').remove();
 
 	//catalogi('.disp-img').remove();
 
