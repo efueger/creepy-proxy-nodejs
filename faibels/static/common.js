@@ -38,7 +38,7 @@ catalogi.parse = function(){
 	catalogi('#page-header').prepend(catalogi('#iframe'));
 	catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
 
-	// Стр. товара
+	// Страница товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.text-center').remove();
