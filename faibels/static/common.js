@@ -45,6 +45,7 @@ catalogi.parse = function(){
 	catalogi('.campaign-img-big').remove();
 	catalogi('.rte-text').remove();
 
+
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
 		return false;
