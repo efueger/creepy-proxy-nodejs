@@ -37,24 +37,14 @@ catalogi.parse = function(){
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
 	catalogi('a[href="/schneider/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
-
 	catalogi('#content-after').remove();
-
-	// Реклама на главной
-	//catalogi('img[src*="/medias/sys_gingar/root/"]').parent().hide();
 
 	// Стр. товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.text-center').remove();
 
-	//catalogi('.disp-img').remove();
-
-	// Комментарии
-	//catalogi('.review-number').remove();
-	//catalogi('#content-after').remove();
-	catalogi('.review-bar > button').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
+	catalogi('#waCalculator').remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
