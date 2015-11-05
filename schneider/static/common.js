@@ -14,6 +14,7 @@ catalogi.noTranslate = function(){
 	// Меню
 	catalogi('.yCmsContentSlot:eq(0)').addClass('notranslate');
 	catalogi('.facet-block:eq(1)').addClass('notranslate');
+	catalogi('.refinementToggle:contains("Бренд")').parent().parent().addClass('notranslate');
 
 	// Список
 	catalogi('.category:contains("Marke")').next().addClass('notranslate');
