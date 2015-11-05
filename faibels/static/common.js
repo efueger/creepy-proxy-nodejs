@@ -97,6 +97,11 @@ catalogi.parse = function(){
 	});
 
 	// Футер
+	catalogi('area[href*="katalogbestellung"]').attr('href', '#').click(function() {
+		catalogi.subscribe(false, '26436');
+	});
+	catalogi('area[href*="newsletter"]').attr('href', 'http://www.faibels.catalogi.ru/faibels/de/blaetterkataloge');
+
 	catalogi('#footer-slot6').remove();
 	catalogi('#seo-text').remove();
 	catalogi('.nohitsearchformcomponent').remove();
