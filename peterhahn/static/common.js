@@ -66,11 +66,11 @@ catalogi.parse = function() {
     $('#rightBox').on('click', '.basketWrap a[href=#addtocartCatalogi]', function(e) {
         if (!$(this).hasClass('fail')) {
             var articul = catalogi('.pinfo > span:eq(1)').text().replace(/[^0-9]/gi, '');
-            var name = catalogi('span[itemprop="name"]').text();
+            var name = catalogi('span[itemprop="name"]:eq(0)').text()
             var price = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
             var color = catalogi('.colors > li[class="activeSelection"]').attr('title');
             var size = catalogi('li[class*="selected"] > a > span').text();
-            var img = catalogi('.zoomPad > img').attr('src');
+            var img = catalogi('img[class="mainphoto"]:eq(1)').attr('src');
 
             var param = [];
             if (color !== '') param.push(color);
