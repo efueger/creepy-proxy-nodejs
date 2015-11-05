@@ -51,8 +51,8 @@ catalogi.parse = function(){
 	});
 
 	catalogi('.js-display-variant-price').bind('DOMSubtreeModified', function(e){
-    // стоимость с учетом доставки
-    catalogi.service();
+		// стоимость с учетом доставки
+		catalogi.service();
 	});
 
 	// Переопределение метода добавления в корзину
