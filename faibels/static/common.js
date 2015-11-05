@@ -7,6 +7,7 @@ function _googleTranslateElementInit() {
 }
 
 catalogi.noTranslate = function(){
+	// test
 	// Шапка
 	catalogi('.nav-submenu-title:contains("Top Brands")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
 	catalogi('.nav-submenu-title:contains("Von A bis Z")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
