@@ -51,11 +51,6 @@ catalogi.parse = function(){
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.disp-img').remove();
 
-	// Комментарии
-	catalogi('#content-after').remove('');
-	catalogi('.review-bar').remove();
-	catalogi('a[href*="/review"]').parent().remove();
-
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
 		return false;
