@@ -36,7 +36,7 @@ catalogi.parse = function(){
 	// Шапка
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
-	catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+	catalogi('a[href="/faibels/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
 
 	// Страница товара
 	catalogi('.product-shipping-costs').text('');
@@ -110,12 +110,6 @@ catalogi.parse = function(){
 
 	// Подписка
 	catalogi.subscribe(false, '26436');
-
-	catalogi('area[href*="katalogbestellung"]').attr('href', 'http://www.faibels.catalogi.ru/faibels/de/blaetterkataloge');
-	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
-		//alert("ggwp");
-		catalogi.subscribe(true, '26436');
-	});
 
 	// Футер
 	catalogi('#footer-main-slot').remove();
