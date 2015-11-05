@@ -69,7 +69,11 @@ catalogi.parse = function(){
 			}
 
 			var count   	= catalogi('#qty').val();
-			var color 		= catalogi('.selected').attr('title');
+
+			var color1 		= catalogi('.selected').attr('title');
+			var color2		= catalogi('#product-color-dropdown > p').text();
+			var color		= (color2 == "") ? color1 : color2;
+
 			var size 		= catalogi('.js-display-chosen-size').text();
 			var img 		= catalogi('.js-display-variant-primary-image').attr('content');
 
