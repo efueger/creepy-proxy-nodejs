@@ -115,7 +115,7 @@ catalogi.parse = function(){
 	catalogi('body')
 			.delay(800)
 			.queue(function (next) {
-				$(this).css('visibility', 'visible');
+				catalogi(this).css('visibility', 'visible');
 			});
 
 	// Подписка
