@@ -186,7 +186,7 @@ if (cluster.isMaster) {
     } else {
       piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://conleys.catalogi.ru/static/bk_script.js'))
           .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://conleys.catalogi.ru/static/customlib.js'))
-          .pipe(replacestream(new RegExp('js/swfobject.2.2.js', 'g'), 'OnlineKAT_Conleys_950V_DE/js/swfobject.2.2.js'))
+          //.pipe(replacestream(new RegExp('js/swfobject.2.2.js', 'g'), 'OnlineKAT_Conleys_950V_DE/js/swfobject.2.2.js'))
           .pipe(res);
     }
 
