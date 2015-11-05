@@ -25,6 +25,7 @@ catalogi.noTranslate = function(){
 		catalogi('.brand-name').addClass('notranslate');
 	});
 
+
 	catalogi('div[id^="brand"]').addClass('notranslate');
 
 	// Стр. товара
