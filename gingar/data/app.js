@@ -98,7 +98,7 @@ if (cluster.isMaster) {
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         };
 
-        request.get('http://translates.catalogi.ru/temp/'+ SITENAME +'.json', function (error, response, body) {
+        request.get('http://translates.catalogi.ru/temp/gingar.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
                 //console.log(response.headers['content-length']);
@@ -131,6 +131,7 @@ if (cluster.isMaster) {
         console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
+        console.log('url: ' + req.url);
 
 
         if ('cookie' in req.headers) {
@@ -175,15 +176,21 @@ if (cluster.isMaster) {
             });
         }
 
-        if (req.headers.host !== 'static.gingar.catalogi.ru') {
+        if (req.headers.host !== 'static.' + SITENAME + '.catalogi.ru') {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-                .pipe(replacestream(new RegExp('/gingar/_ui/desktop/theme-gingar/all.js', 'g'), 'http://gingar.catalogi.ru/static/all.js'))
+                .pipe(replacestream(new RegExp('/' + SITENAME + '/_ui/desktop/theme-' + SITENAME + '/all.js', 'g'), 'http://' + SITENAME + '.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
-            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE//js/customlib.js', 'g'), 'http://faibels.catalogi.ru/static/customlib.js'))
-                 .pipe(res);
+            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://' + SITENAME + '.catalogi.ru/static/customlib.js'))
+                .pipe(replacestream(new RegExp('js/swfobject.2.2.js', 'g'), '3403_NEUELINKS/js/swfobject.2.2.js'))
+                .pipe(replacestream(new RegExp('js/swfaddress.2.4.js', 'g'), '3403_NEUELINKS/js/swfaddress.2.4.js'))
+                .pipe(replacestream(new RegExp('js/WebKitDetect.1.0.0.js', 'g'), '3403_NEUELINKS/js/WebKitDetect.1.0.0.js'))
+                .pipe(replacestream(new RegExp('css/onlinekat-style.1.0.0.css', 'g'), '3403_NEUELINKS/css/onlinekat-style.1.0.0.css'))
+                .pipe(replacestream(new RegExp('js/onlinekatLib.1.0.js', 'g'), '3403_NEUELINKS/js/onlinekatLib.1.0.js'))
+                .pipe(replacestream(new RegExp('OnlineKatShell.swf', 'g'), '3403_NEUELINKS/OnlineKatShell.swf'))
+                .pipe(res);
         }
 
     }).listen(6054);
