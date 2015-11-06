@@ -1,7 +1,8 @@
 {
   "site": {
     "name"        : "faibels",
-    "domain"      : ".de"
+    "domain"      : ".de",
+    "port"        : 5056
   },
   "header": {
     "catalog"     : "faibels",

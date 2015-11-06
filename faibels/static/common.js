@@ -7,6 +7,7 @@ function _googleTranslateElementInit() {
 }
 
 catalogi.noTranslate = function(){
+	// test
 	// Шапка
 	catalogi('.nav-submenu-title:contains("Top Brands")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
 	catalogi('.nav-submenu-title:contains("Von A bis Z")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
@@ -97,10 +98,10 @@ catalogi.parse = function(){
 	});
 
 	// Футер
-	catalogi('area[href*="katalogbestellung"]').attr('href', '#').click(function() {
-		catalogi.subscribe(false, '26436');
+	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
+		catalogi.subscribe(true, '26436');
 	});
-	catalogi('area[href*="newsletter"]').attr('href', 'http://www.faibels.catalogi.ru/faibels/de/blaetterkataloge');
+	catalogi('area[href*="katalogbestellung"]').attr('href', 'http://www.faibels.catalogi.ru/faibels/de/blaetterkataloge');
 
 	catalogi('#footer-slot6').remove();
 	catalogi('#seo-text').remove();
