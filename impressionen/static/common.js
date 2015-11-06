@@ -128,7 +128,7 @@ catalogi.parse = function(){
 	catalogi('body')
 			.delay(900)
 			.queue(function (next) {
-				$(this).css('visibility', 'visible');
+				catalogi(this).css('visibility', 'visible');
 			});
 
 	// Подписка
@@ -165,9 +165,4 @@ catalogi(function(){
 
 	catalogi.noTranslate();
 	catalogi.parse();
-    //
-	//catalogi('body').attr('style', '');
-	//catalogi('.yCmsContentSlot > li:eq(0) > a')
-	//		.attr('href', 'http://www.impressionen.catalogi.ru/impressionen/de/s//living/?navigation=true');
-	//catalogi.service();
 });
