@@ -94,7 +94,7 @@ catalogi.parse = function(){
 			}
 
 			catalogi.basket.add({
-				catalog: 'DY',
+				catalog: 'GR',
 				articul: articul,
 				name: name,
 				size: (param.join(' ').trim() == '') ? 0 : param.join(' ').trim(),
