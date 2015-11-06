@@ -43,20 +43,12 @@ catalogi.parse = function(){
 	catalogi('#content-after').remove();
 
 	// Реклама на главной
-	//catalogi('img[src*="/medias/sys_gingar/root/"]').parent().hide();
+	catalogi('img[alt*="nl_anmeldung-Banner_01.jpg"]').remove();
 
 	// Стр. товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.text-center').remove();
-
-	//catalogi('.disp-img').remove();
-
-	// Комментарии
-	//catalogi('.review-number').remove();
-	//catalogi('#content-after').remove();
-	catalogi('.review-bar > button').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
@@ -113,6 +105,11 @@ catalogi.parse = function(){
 	catalogi('#footer-slot6').remove();
 	catalogi('#seo-text').remove();
 	catalogi('.nohitsearchformcomponent').remove();
+
+	// Футер
+	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
+		catalogi.subscribe(true, '26436');
+	});
 
 	// Show body after f@cking hiding >_<
 	catalogi('body')
