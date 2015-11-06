@@ -73,9 +73,14 @@ catalogi.parse = function(){
 			}
 
 			var count   	= catalogi('#qty').val();
-			var color 		= catalogi('.selected').attr('title');
+
+			var color1 		= catalogi('#product-color-dropdown > p').text();
+			var color2 		= catalogi('.selected').attr('title');
+			var color		= (color1 == "") ? color2 : color1;
+
 			var size 		= catalogi('.js-display-chosen-size').text();
-			var img 		= catalogi('.js-display-variant-primary-image').attr('content');
+			//var img 		= catalogi('.js-display-variant-primary-image').attr('content');
+			var img 		= catalogi('.slider-wrapper > li:eq(0) > span > a > img').attr('src')
 
 			var param = [];
 			if(color && color.length > 0){
