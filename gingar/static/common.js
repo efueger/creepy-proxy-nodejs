@@ -78,7 +78,10 @@ catalogi.parse = function(){
 			var color2 		= catalogi('.selected').attr('title');
 			var color		= (color1 == "") ? color2 : color1;
 
-			var size 		= catalogi('.js-display-chosen-size').text();
+			var size1 		= catalogi('.js-display-chosen-size').text();
+			var size2 		= catalogi('.variant-size-tile:eq(0)').text();
+			var size		= (size1 == "") ? size2 : size1;
+
 			//var img 		= catalogi('.js-display-variant-primary-image').attr('content');
 			var img 		= catalogi('.slider-wrapper > li:eq(0) > span > a > img').attr('src')
 
