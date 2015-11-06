@@ -98,7 +98,7 @@ if (cluster.isMaster) {
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         };
 
-        request.get('http://translates.catalogi.ru/temp/'+ SITENAME +'.json', function (error, response, body) {
+        request.get('http://translates.catalogi.ru/temp/gingar.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
                 //console.log(response.headers['content-length']);

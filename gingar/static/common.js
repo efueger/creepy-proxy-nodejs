@@ -10,6 +10,7 @@ catalogi.noTranslate = function(){
 	// Шапка
 	catalogi('.nav-submenu-title:contains("Top Brands")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
 	catalogi('.nav-submenu-title:contains("Von A bis Z")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
+	catalogi('a[href*="KlickundSchnapp"]:eq(0)').text('Распродажа');
 
 	// Меню
 	catalogi('.yCmsContentSlot:eq(0)').addClass('notranslate');
@@ -144,7 +145,7 @@ catalogi(function(){
 	catalogi(window).on('message', function(event) {
 		switch (event.originalEvent.data.action) {
 			case 'search':
-				var goingto = "http://www.faibels.catalogi.ru/faibels/de/s?_sb=true&query=";
+				var goingto = "http://www.gingar.catalogi.ru/gingar/de/s?_sb=true&query=";
 				goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
 				window.location = goingto;
 				break
