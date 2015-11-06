@@ -182,11 +182,11 @@ if (cluster.isMaster) {
                 .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktop/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
-            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
+            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE//js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                  .pipe(res);
         }
 
-    }).listen(5056);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {
