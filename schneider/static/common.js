@@ -75,8 +75,16 @@ catalogi.parse = function(){
 			var color2		= catalogi('#product-color-dropdown > p').text();
 			var color		= (color2 == "") ? color1 : color2;
 
-			var size 		= catalogi('.js-display-chosen-size').text();
+			var size1		= catalogi('#product-size-tiles > ul > li[class*="selected"]').text();
+			var size2		= catalogi('.js-display-chosen-size').text();
+			var size		= (size1 == "") ? size2 : size1;
+
 			var img 		= catalogi('.js-display-variant-primary-image').attr('content');
+
+			if( catalogi('.sod_label').length ){
+				var count	= catalogi('.quantity:eq(0)').text();
+				var price 	= catalogi('.volume-price:eq(0)').text().replace('€','').replace('.', '').replace(',','.').trim();
+			}
 
 			var param = [];
 			if(color && color.length > 0){
@@ -126,12 +134,14 @@ catalogi.service = function(){
 	if('_service' in window && catalogi('.js-display-variant-price')){
 		if(catalogi('.js-display-variant-price .price-new').is('span')){
 			var _price = catalogi('.js-display-variant-price .price-new').text().replace('€','').replace('.', '').replace(',','.').trim();
+		}else if ( catalogi('.sod_label').length ){
+			var _price 	= catalogi('.volume-price:eq(0)').text().replace('€','').replace('.', '').replace(',','.').trim();
 		}else{
 			var _price = catalogi('.js-display-variant-price').text().replace('€','').replace('.', '').replace(',','.').trim();
 		}
+	}
     var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
     catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
-	}
 };
 
 catalogi(function(){
