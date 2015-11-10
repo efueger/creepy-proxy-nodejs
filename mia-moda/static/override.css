@@ -1,0 +1,7 @@
+#_head #_center ._info{
+    margin: 0px 0 0 34px !important;
+}
+body{
+    top: 0 !important;
+    visibility: hidden;
+}
