@@ -118,7 +118,8 @@ if (cluster.isMaster) {
 
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
             .pipe(replacestream('<head>', '<head>' + includes.head))
-            .pipe(replacestream(new RegExp('/images', 'ig'), 'http://' + SITENAME + '.catalogi.ru/images'))
+            //.pipe(replacestream(new RegExp('/images', 'ig'), 'http://' + SITENAME + '.catalogi.ru/images'))
+            .pipe(replacestream(new RegExp('/wcsstore/KMOStorefrontAssetStore/javascript/kmoquery.min.js', 'g'), 'http://' + SITENAME + '.catalogi.ru/static/kmoquery.min.js'))
             .pipe(res);
 
     }).listen(config.get('site.port'));

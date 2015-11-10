@@ -18,6 +18,8 @@ module.exports = function(catalog, param, options){
             '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/common.js"></script>',
             '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/bk_script.js"></script>',
             '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/customlib.js"></script>',
+            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/kmo.min.js"></script>',
+            '<script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery-2.1.4.min.js"></script>',
             '<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=_googleTranslateElementInit"></script>'
         ].join("\n"),
 
