@@ -115,6 +115,13 @@ catalogi.parse = function(){
 	catalogi('#seo-text').remove();
 	catalogi('.nohitsearchformcomponent').remove();
 
+	// Футер
+	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
+		catalogi.subscribe(true, '113549');
+	});
+	catalogi('area[href*="katalogbestellung"]').attr('href', 'http://www.schneider.catalogi.ru/schneider/de/Onlinekataloge');
+
+
 	// Show body after f@cking hiding >_<
 	catalogi('body')
 			.delay(900)
@@ -123,7 +130,7 @@ catalogi.parse = function(){
 			});
 
 	// Подписка
-	catalogi.subscribe(false, '38231');
+	catalogi.subscribe(false, '113549');
 
 	// Футер
 	catalogi('#footer-main-slot').remove();
