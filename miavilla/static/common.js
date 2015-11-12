@@ -79,6 +79,7 @@ catalogi.parse = function(){
 			}
 
 			var color 		= catalogi('#product-color-dropdown > p').text();
+			var color2		=
 
 			var size1 		= catalogi('.js-display-chosen-size').text();
 			var size2		= catalogi('li[class*="selected"]:eq(1)').text()
