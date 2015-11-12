@@ -78,8 +78,9 @@ catalogi.parse = function(){
 				return true;
 			}
 
-			var color 		= catalogi('#product-color-dropdown > p').text();
-			//var color2		=
+			var color1 		= catalogi('#product-color-dropdown > p').text();
+			var color2		= catalogi('#product-color-tiles > ul > .selected').attr('title');
+			var color 		= (color1 == "") ? color2 : color1;
 
 			var size1 		= catalogi('.js-display-chosen-size').text();
 			var size2		= catalogi('li[class*="selected"]:eq(1)').text()
