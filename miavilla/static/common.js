@@ -1,8 +1,3 @@
-//function _googleTranslateElementInit(){
-//  new google.translate.TranslateElement({pageLanguage: 'de', includedLanguages: 'ru', layout:
-// google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-//}
-
 function _googleTranslateElementInit() {
 	new google.translate.TranslateElement({
 		pageLanguage: 'de',
@@ -51,11 +46,6 @@ catalogi.parse = function(){
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.disp-img').remove();
 
-	// Комментарии
-	//catalogi('#content-after').remove('');
-	//catalogi('.review-bar').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
-
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
 		return false;
@@ -88,8 +78,9 @@ catalogi.parse = function(){
 				return true;
 			}
 
-			//var color 		= variation.variants.Farbvariante ? variation.variants.Farbvariante.replace('Standard','') : '';
-			var color 		= catalogi('#product-color-dropdown > p').text();
+			var color1 		= catalogi('#product-color-dropdown > p').text();
+			var color2		= catalogi('#product-color-tiles > ul > .selected').attr('title');
+			var color 		= (color1 == "") ? color2 : color1;
 
 			var size1 		= catalogi('.js-display-chosen-size').text();
 			var size2		= catalogi('li[class*="selected"]:eq(1)').text()
@@ -133,11 +124,11 @@ catalogi.parse = function(){
 	catalogi('body')
 			.delay(900)
 			.queue(function (next) {
-				$(this).css('visibility', 'visible');
+				catalogi(this).css('visibility', 'visible');
 			});
 
 	// Подписка
-	catalogi.subscribe(false, '27268');
+	catalogi.subscribe(false, '113272');
 
 	// Футер
 	catalogi('#footer-main-slot').remove();
