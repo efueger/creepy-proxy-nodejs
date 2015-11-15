@@ -151,6 +151,7 @@ catalogi.service = function(){
     catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
 };
 
+
 catalogi(function(){
 	catalogi(window).on('message', function(event) {
 		switch (event.originalEvent.data.action) {
