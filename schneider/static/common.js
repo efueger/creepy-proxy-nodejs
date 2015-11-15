@@ -155,7 +155,7 @@ catalogi(function(){
 	catalogi(window).on('message', function(event) {
 		switch (event.originalEvent.data.action) {
 			case 'search':
-				var goingto = "http://www.schneider.catalogi.ru/faibels/de/s?_sb=true&query=";
+				var goingto = "http://www.schneider.catalogi.ru/schneider/de/s?_sb=true&query=";
 				goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
 				window.location = goingto;
 				break
