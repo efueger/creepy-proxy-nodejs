@@ -195,7 +195,7 @@ catalogi.parse = function () {
 
     catalogi('div#mainContent > div').bind('DOMNodeInserted', function(e) {console.log()});
     // Футер
-    catalogi('footer').remove();
+    catalogi('.footer').remove();
 
     // Подписка
     catalogi.subscribe(false, '30460');
