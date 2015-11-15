@@ -119,6 +119,7 @@ catalogi.parse = function(){
 	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
 		catalogi.subscribe(true, '113549');
 	});
+
 	catalogi('area[href*="katalogbestellung"]').attr('href', 'http://www.schneider.catalogi.ru/schneider/de/Onlinekataloge');
 
 
@@ -151,11 +152,12 @@ catalogi.service = function(){
     catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
 };
 
+
 catalogi(function(){
 	catalogi(window).on('message', function(event) {
 		switch (event.originalEvent.data.action) {
 			case 'search':
-				var goingto = "http://www.schneider.catalogi.ru/faibels/de/s?_sb=true&query=";
+				var goingto = "http://www.schneider.catalogi.ru/schneider/de/s?_sb=true&query=";
 				goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
 				window.location = goingto;
 				break
