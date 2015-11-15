@@ -119,6 +119,7 @@ catalogi.parse = function(){
 	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
 		catalogi.subscribe(true, '113549');
 	});
+
 	catalogi('area[href*="katalogbestellung"]').attr('href', 'http://www.schneider.catalogi.ru/schneider/de/Onlinekataloge');
 
 
