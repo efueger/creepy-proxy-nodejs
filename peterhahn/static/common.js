@@ -11,6 +11,7 @@ function _googleTranslateElementInit() {
 // Force use catalogi.service()
 catalogi(document).ready(function(){
     $("#phshop-itemsizebox").bind("DOMSubtreeModified", function() {
+        catalogi('.sizes').addClass('notranslate'); // размеры на странице товара
         catalogi.service();
     });
 });
@@ -23,6 +24,8 @@ catalogi.noTranslate = function() {
     //$('.pinfo > span:eq(1)').addClass('notranslate');
     catalogi('.colorbox > ul').addClass('notranslate');
 
+    // Страница товара
+    catalogi('.sizes').addClass('notranslate');
     catalogi('#phshop-itemsizebox > div > ul:eq(0)').addClass('notranslate');
 
     catalogi('#leftcol > ul:eq(0)').addClass('notranslate');
