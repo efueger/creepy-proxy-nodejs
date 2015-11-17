@@ -120,6 +120,11 @@ if (cluster.isMaster) {
             .pipe(replacestream('<head>', '<head>' + includes.head))
             //.pipe(replacestream(new RegExp('/images', 'ig'), 'http://' + SITENAME + '.catalogi.ru/images'))
             .pipe(replacestream(new RegExp('/wcsstore/KMOStorefrontAssetStore/javascript/kmoquery.min.js', 'g'), 'http://' + SITENAME + '.catalogi.ru/static/kmoquery.min.js'))
+            .pipe(replacestream(new RegExp('/wcsstore/KMOStorefrontAssetStore/javascript/kmo.min.js', 'g'), 'http://' + SITENAME + '.catalogi.ru/static/kmo.min.js'))
+            .pipe(replacestream(new RegExp('/wcsstore/KMOStorefrontAssetStore/javascript/pages/Catalog.min.js', 'g'), 'http://' + SITENAME + '.catalogi.ru/static/Catalog.min.js'))
+            .pipe(replacestream(new RegExp('/wcsstore/KMOStorefrontAssetStore/javascript/ActionLayer.js', 'g'), 'http://' + SITENAME + '.catalogi.ru/static/ActionLayer.js'))
+            //.pipe(replacestream(new RegExp('data-original', 'g'), 'src'))
+            //.pipe(replacestream(new RegExp('Catalog.min.js', 'g'), 'GGWP'))
             .pipe(res);
 
     }).listen(config.get('site.port'));
