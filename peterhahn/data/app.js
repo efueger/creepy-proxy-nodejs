@@ -31,8 +31,10 @@ if (cluster.isMaster) {
     console.log('Start master');
     cluster.fork();
     cluster.fork();
-    //cluster.fork();
-    //cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
 
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
@@ -192,30 +194,31 @@ if (cluster.isMaster) {
 
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
             .pipe(replacestream(new RegExp('<head data(.*)>', 'i'), '<head data-country="DE" data-language="de">'+includes.head))
-            .pipe(replacestream('eu-sonar.sociomantic.com', '127.0.0.1'))
-            .pipe(replacestream('www.google-analytics.com', '127.0.0.1'))
-            .pipe(replacestream('dev.visualwebsiteoptimizer.com', '127.0.0.1'))
-            .pipe(replacestream('d5phz18u4wuww.cloudfront.net', '127.0.0.1'))
-            .pipe(replacestream('www.google.com', '127.0.0.1'))
-            .pipe(replacestream('ad2.adfarm1.adition.com'))
-            .pipe(replacestream('peterhahn.peerius.com', '127.0.0.1'))
-            .pipe(replacestream('googleads.g.doubleclick.net', '127.0.0.1'))
-            .pipe(replacestream('www.google.ru', '127.0.0.1'))
-            .pipe(replacestream('ib.adnxs.com', '127.0.0.1'))
-            .pipe(replacestream('ads.yahoo.com', '127.0.0.1'))
-            .pipe(replacestream('ib.adnxs.com', '127.0.0.1'))
-            .pipe(replacestream('tracking.m6r.eu', '127.0.0.1'))
-            .pipe(replacestream(new RegExp('dis.eu.criteo.com', 'g'), '127.0.0.1'))
-            .pipe(replacestream('ib.adnxs.com', '127.0.0.1'))
-            .pipe(replacestream('tracker.emailretargeting.com', '127.0.0.1'))
-            .pipe(replacestream('criteo_ld.js', ''))
-            .pipe(replacestream('ad.360yield.com', '127.0.0.1'))
-            .pipe(replacestream('www.gstatic.com', '127.0.0.1'))
-            .pipe(replacestream('www.econda-monitor.de', '127.0.0.1'))
+            //.pipe(replacestream('eu-sonar.sociomantic.com', '127.0.0.1'))
+            //.pipe(replacestream('www.google-analytics.com', '127.0.0.1'))
+            //.pipe(replacestream('dev.visualwebsiteoptimizer.com', '127.0.0.1'))
+            //.pipe(replacestream('d5phz18u4wuww.cloudfront.net', '127.0.0.1'))
+            //.pipe(replacestream('www.google.com', '127.0.0.1'))
+            //.pipe(replacestream('ad2.adfarm1.adition.com'))
+            //.pipe(replacestream('peterhahn.peerius.com', '127.0.0.1'))
+            //.pipe(replacestream('googleads.g.doubleclick.net', '127.0.0.1'))
+            //.pipe(replacestream('www.google.ru', '127.0.0.1'))
+            //.pipe(replacestream('ib.adnxs.com', '127.0.0.1'))
+            //.pipe(replacestream('ads.yahoo.com', '127.0.0.1'))
+            //.pipe(replacestream('ib.adnxs.com', '127.0.0.1'))
+            //.pipe(replacestream('tracking.m6r.eu', '127.0.0.1'))
+            //.pipe(replacestream(new RegExp('dis.eu.criteo.com', 'g'), '127.0.0.1'))
+            //.pipe(replacestream('ib.adnxs.com', '127.0.0.1'))
+            //.pipe(replacestream('tracker.emailretargeting.com', '127.0.0.1'))
+            //.pipe(replacestream('criteo_ld.js', ''))
+            //.pipe(replacestream('ad.360yield.com', '127.0.0.1'))
+            //.pipe(replacestream('www.gstatic.com', '127.0.0.1'))
+            //.pipe(replacestream('www.econda-monitor.de', '127.0.0.1'))
             .pipe(res);
 
     }).listen(6052);
 }
 
-
-
+setInterval(function() {
+    global.gc(); // --expose-gc
+}, 1000);
