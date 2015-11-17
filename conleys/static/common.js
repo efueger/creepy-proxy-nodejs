@@ -57,19 +57,19 @@ catalogi.parse = function(){
 	// Переопределение метода добавления в корзину
 	catalogi('#add-to-cart-form').submit(function(event){
 		try{
-			var articul = catalogi('.js-display-variant-number').text();
-			var name = shop.product.name;
+			var articul		= catalogi('.js-display-variant-number').text();
+			var name		= shop.product.name;
 
-			if(catalogi('.js-display-variant-price .price-new').is('span')){
+			if (catalogi('.js-display-variant-price .price-new').is('span')){
 				var price = catalogi('.js-display-variant-price .price-new').text().replace('€','').replace('.','').replace(',','.').replace('ab','').trim();
-			}else{
+			} else {
 				var price = catalogi('.js-display-variant-price').text().replace('€','').replace('.','').replace(',','.').replace('ab','').trim();
 			}
 
-			var count = catalogi('#qty').val();
+			var count		= catalogi('#qty').val();
 
-			var api = new eTrackerCommerceAPI();
-			var variation = api.getProductJSON(catalogi('input[name="productCodePost"]').val().replace('Article_',''));
+			var api			= new eTrackerCommerceAPI();
+			var variation	= api.getProductJSON(catalogi('input[name="productCodePost"]').val().replace('Article_',''));
 
 			if(!variation){
 				return true;
@@ -79,7 +79,10 @@ catalogi.parse = function(){
 				var color = catalogi('#product-color-dropdown > p').text();
 			else
 				var color = catalogi('#product-color-tiles > ul > li').attr('title');
-			var size = catalogi('#product-size-tiles > ul > li[class*="selected"]').text();
+
+			var size1		= catalogi('#product-size-tiles > ul > li[class*="selected"]').text();
+			var size2		= catalogi('.js-display-chosen-size').text();
+			var size		= (size1 == "") ? size2 : size1;
 
 			var param = [];
 			if(color && color.length > 0){
@@ -89,6 +92,8 @@ catalogi.parse = function(){
 				param.push(size);
 			}
 
+			var img			= catalogi('.js-display-variant-primary-image').attr('src');
+
 			catalogi.basket.add({
 				catalog: 'CS',
 				articul: articul,
@@ -96,7 +101,7 @@ catalogi.parse = function(){
 				size: (param.join(' ').trim() == '') ? 0 : param.join(' ').trim(),
 				price: price,
 				count: count,
-				img: catalogi('.zoomWindow').css('background-image').replace('url(', '').replace(')', '')
+				img: img
 			});
 
 		}catch(e){
@@ -115,7 +120,7 @@ catalogi.parse = function(){
 	catalogi('body')
 			.delay(800)
 			.queue(function (next) {
-				$(this).css('visibility', 'visible');
+				catalogi(this).css('visibility', 'visible');
 			});
 
 	// Подписка

@@ -10,6 +10,7 @@ catalogi.noTranslate = function(){
 	// Шапка
 	catalogi('.nav-submenu-title:contains("Top Brands")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
 	catalogi('.nav-submenu-title:contains("Von A bis Z")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
+	catalogi('a[href*="KlickundSchnapp"]:eq(0)').text('Распродажа');
 
 	// Меню
 	catalogi('.yCmsContentSlot:eq(0)').addClass('notranslate');
@@ -36,20 +37,18 @@ catalogi.parse = function(){
 	// Шапка
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
-//	//catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+	catalogi('a[href="/gingar/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+
+	catalogi('a[href="/gingar/de/KlickundSchnapp?navigation=true&node=8796105311292&filterSale=true"]').parent().remove();
+	catalogi('#content-after').remove();
+
+	// Реклама на главной
+	catalogi('img[alt*="nl_anmeldung-Banner_01.jpg"]').remove();
 
 	// Стр. товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.text-center').remove();
-
-	//catalogi('.disp-img').remove();
-
-	// Комментарии
-	//catalogi('.review-number').remove();
-	//catalogi('#content-after').remove();
-	catalogi('.review-bar > button').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
@@ -74,9 +73,17 @@ catalogi.parse = function(){
 			}
 
 			var count   	= catalogi('#qty').val();
-			var color 		= catalogi('.selected').attr('title');
-			var size 		= catalogi('.js-display-chosen-size').text();
-			var img 		= catalogi('.js-display-variant-primary-image').attr('content');
+
+			var color1 		= catalogi('#product-color-dropdown > p').text();
+			var color2 		= catalogi('.selected').attr('title');
+			var color		= (color1 == "") ? color2 : color1;
+
+			var size1 		= catalogi('.js-display-chosen-size').text();
+			var size2 		= catalogi('.variant-size-tile:eq(0)').text();
+			var size		= (size1 == "") ? size2 : size1;
+
+			//var img 		= catalogi('.js-display-variant-primary-image').attr('content');
+			var img 		= catalogi('.slider-wrapper > li:eq(0) > span > a > img').attr('src')
 
 			var param = [];
 			if(color && color.length > 0){
@@ -87,7 +94,7 @@ catalogi.parse = function(){
 			}
 
 			catalogi.basket.add({
-				catalog: 'DY',
+				catalog: 'GR',
 				articul: articul,
 				name: name,
 				size: (param.join(' ').trim() == '') ? 0 : param.join(' ').trim(),
@@ -106,6 +113,11 @@ catalogi.parse = function(){
 	catalogi('#footer-slot6').remove();
 	catalogi('#seo-text').remove();
 	catalogi('.nohitsearchformcomponent').remove();
+
+	// Футер
+	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
+		catalogi.subscribe(true, '26436');
+	});
 
 	// Show body after f@cking hiding >_<
 	catalogi('body')
@@ -138,7 +150,7 @@ catalogi(function(){
 	catalogi(window).on('message', function(event) {
 		switch (event.originalEvent.data.action) {
 			case 'search':
-				var goingto = "http://www.faibels.catalogi.ru/faibels/de/s?_sb=true&query=";
+				var goingto = "http://www.gingar.catalogi.ru/gingar/de/s?_sb=true&query=";
 				goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
 				window.location = goingto;
 				break

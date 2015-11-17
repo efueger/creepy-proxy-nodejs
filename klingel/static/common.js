@@ -1,5 +1,13 @@
-function _googleTranslateElementInit(){
-    new google.translate.TranslateElement({pageLanguage: 'de', includedLanguages: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+//function _googleTranslateElementInit(){
+//    new google.translate.TranslateElement({pageLanguage: 'de', includedLanguages: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+//}
+
+function _googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'de',
+        includedLanguages: 'ru',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
 }
 
 catalogi.noTranslate = function(){
@@ -9,6 +17,11 @@ catalogi.noTranslate = function(){
 
     // Шапка
     catalogi('.categoryNavListTitle:contains("Marken")').parent().addClass('notranslate');
+    catalogi('.categoryNavListTitle:contains("Marken")')
+        .delay(500)
+        .queue(function (next) {
+            $(this).parent().addClass('notranslate');
+        });
 
     catalogi('span.categoryNavLink:contains("Neu!")').text('Новинки!');
     catalogi('span.categoryNavLink:contains("Damen")').text('ЖЕНЩИНАМ');
@@ -26,6 +39,7 @@ catalogi.noTranslate = function(){
     // Список
     catalogi('.categoryProductBrand').addClass('notranslate');
     catalogi('#sidebar .gotChild a:contains("Marken")').parent().children(".secondLevelNav").addClass('notranslate');
+    catalogi('#brandFilterContainer').addClass('notranslate');
 
     // Стр. товара
     catalogi('.brandName').addClass('notranslate');

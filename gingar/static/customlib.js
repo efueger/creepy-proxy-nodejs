@@ -4,13 +4,13 @@ function onlinekat_open(linkContent, linkTarget, payload) {
 		switch(linkTarget){
 			case  "_javascript":
 			{
-				linkContent = "http://www.faibels.catalogi.ru/faibels/de/s?_sb=true&query="+linkContent;
+				linkContent = "http://www.gingar.catalogi.ru/gingar/de/s?_sb=true&query="+linkContent;
 				window.open(linkContent, "_top");
 				break;
 			}
       case  "text":
 			{
-				linkContent = "http://www.faibels.catalogi.ru/faibels/de/s?_sb=true&query="+linkContent;
+				linkContent = "http://www.gingar.catalogi.ru/gingar/de/s?_sb=true&query="+linkContent;
 				window.open(linkContent, "_top");
 				break;
 			}
@@ -58,7 +58,7 @@ function onlinekat_open(linkContent, linkTarget, payload) {
 }
 function addToBasket(linkContent) {
 		console.log(linkContent);
-		top.location.href = 'http://www.faibels.catalogi.ru/shop/s?query='+linkContent+'&searchSubmit=&fulltext-search=true&fromSearch=true';
+		top.location.href = 'http://www.gingar.catalogi.ru/shop/s?query='+linkContent+'&searchSubmit=&fulltext-search=true&fromSearch=true';
 }
 function sendInformationToAnalytics(category, action, opt_label)
 {

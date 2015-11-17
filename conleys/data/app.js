@@ -30,9 +30,11 @@ var replaces = config.get('replaces');
 if (cluster.isMaster) {
   console.log('Start master');
   cluster.fork();
-  //cluster.fork();
-  //cluster.fork();
-  //cluster.fork();
+  cluster.fork();
+  cluster.fork();
+  cluster.fork();
+  cluster.fork();
+  cluster.fork();
 
   cluster.on('disconnect', function (worker) {
     console.error('Worker disconnect!');
@@ -175,21 +177,22 @@ if (cluster.isMaster) {
       });
     }
 
-    if (req.headers.host !== 'static.conleys.catalogi.ru') {
+    if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
       piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
           .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
           .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-          .pipe(replacestream(new RegExp('/conleys/_ui/desktop/theme-conleys/all.js', 'g'), 'http://conleys.catalogi.ru/static/all.js'))
+          .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktop/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
           .pipe(res);
     } else {
-      piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://conleys.catalogi.ru/static/bk_script.js'))
-          .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://conleys.catalogi.ru/static/customlib.js'))
-          .pipe(replacestream(new RegExp('js/swfobject.2.2.js', 'g'), 'OnlineKAT_Conleys_950V_DE/js/swfobject.2.2.js'))
+      piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/bk_script.js'))
+          .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
+          //.pipe(replacestream(new RegExp('js/swfobject.2.2.js', 'g'), 'OnlineKAT_Conleys_950V_DE/js/swfobject.2.2.js'))
           .pipe(res);
     }
 
   }).listen(5054);
 }
 
-
-
+setInterval(function() {
+  global.gc(); // --expose-gc
+}, 1000);

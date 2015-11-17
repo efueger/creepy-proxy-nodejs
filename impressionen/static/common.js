@@ -51,11 +51,6 @@ catalogi.parse = function(){
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.disp-img').remove();
 
-	// Комментарии
-	catalogi('#content-after').remove('');
-	catalogi('.review-bar').remove();
-	catalogi('a[href*="/review"]').parent().remove();
-
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
 		return false;
@@ -133,7 +128,7 @@ catalogi.parse = function(){
 	catalogi('body')
 			.delay(900)
 			.queue(function (next) {
-				$(this).css('visibility', 'visible');
+				catalogi(this).css('visibility', 'visible');
 			});
 
 	// Подписка
@@ -170,9 +165,4 @@ catalogi(function(){
 
 	catalogi.noTranslate();
 	catalogi.parse();
-    //
-	//catalogi('body').attr('style', '');
-	//catalogi('.yCmsContentSlot > li:eq(0) > a')
-	//		.attr('href', 'http://www.impressionen.catalogi.ru/impressionen/de/s//living/?navigation=true');
-	//catalogi.service();
 });

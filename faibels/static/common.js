@@ -7,6 +7,7 @@ function _googleTranslateElementInit() {
 }
 
 catalogi.noTranslate = function(){
+	// test
 	// Шапка
 	catalogi('.nav-submenu-title:contains("Top Brands")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
 	catalogi('.nav-submenu-title:contains("Von A bis Z")').siblings('ul').find('a.link-style-normal').addClass('notranslate');
@@ -36,20 +37,14 @@ catalogi.parse = function(){
 	// Шапка
 	catalogi('#page-header-main-wrapper').remove();
 	catalogi('#page-header').prepend(catalogi('#iframe'));
-//	//catalogi('a[href="/impressionen/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
+	catalogi('a[href="/faibels/de/service/agb#Preise"]').parent().hide(); //Ссылка про НДС
 
-	// Стр. товара
+	// Страница товара
 	catalogi('.product-shipping-costs').text('');
 	catalogi('#add-to-watchlist-button').remove();
 	catalogi('.text-center').remove();
-
-	//catalogi('.disp-img').remove();
-
-	// Комментарии
-	//catalogi('.review-number').remove();
-	//catalogi('#content-after').remove();
-	catalogi('.review-bar > button').remove();
-	//catalogi('a[href*="/review"]').parent().remove();
+	catalogi('.campaign-img-big').remove();
+	catalogi('.rte-text').remove();
 
 	catalogi('.product-size-guide').click(function(event){
 		catalogi.sizeTable();
@@ -57,8 +52,8 @@ catalogi.parse = function(){
 	});
 
 	catalogi('.js-display-variant-price').bind('DOMSubtreeModified', function(e){
-    // стоимость с учетом доставки
-    catalogi.service();
+		// стоимость с учетом доставки
+		catalogi.service();
 	});
 
 	// Переопределение метода добавления в корзину
@@ -103,6 +98,11 @@ catalogi.parse = function(){
 	});
 
 	// Футер
+	catalogi('area[href*="newsletter"]').attr('href', '#').click(function() {
+		catalogi.subscribe(true, '26436');
+	});
+	catalogi('area[href*="katalogbestellung"]').attr('href', 'http://www.faibels.catalogi.ru/faibels/de/blaetterkataloge');
+
 	catalogi('#footer-slot6').remove();
 	catalogi('#seo-text').remove();
 	catalogi('.nohitsearchformcomponent').remove();

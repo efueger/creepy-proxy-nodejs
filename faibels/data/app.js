@@ -30,9 +30,11 @@ var replaces = config.get('replaces');
 if (cluster.isMaster) {
     console.log('Start master');
     cluster.fork();
-    //cluster.fork();
-    //cluster.fork();
-    //cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
+    cluster.fork();
 
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
@@ -177,12 +179,16 @@ if (cluster.isMaster) {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-                .pipe(replacestream(new RegExp('/faibels/_ui/desktop/theme-faibels/all.js', 'g'), 'http://faibels.catalogi.ru/static/all.js'))
+                .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktop/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
-            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE//js/customlib.js', 'g'), 'http://faibels.catalogi.ru/static/customlib.js'))
+            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE//js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                  .pipe(res);
         }
 
-    }).listen(5056);
+    }).listen(config.get('site.port'));
 }
+
+setInterval(function() {
+    global.gc(); // --expose-gc
+}, 1000);
