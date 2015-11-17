@@ -5,7 +5,7 @@ function _googleTranslateElementInit() {
         includedLanguages: 'ru',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
-    console.log("translate started");
+    //console.log("translate started");
 }
 
 // Force use catalogi.service()
@@ -59,7 +59,7 @@ catalogi.parse = function() {
     catalogi('body')
         .delay(800)
         .queue(function (next) {
-        $(this).css('visibility', 'visible');
+            catalogi(this).css('visibility', 'visible');
     });
 
     // Subscribe category id
