@@ -16,15 +16,16 @@ module.exports = function(catalog, param, options){
             '<script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.cookie.js"></script>',
             '<script type="text/javascript" src="http://cdn.catalogi.ru/static/js/common.js"></script>',
             '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/common.js"></script>',
-            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/bk_script.js"></script>',
-            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/customlib.js"></script>',
-            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/kmo.min.js"></script>',
-            '<script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery-2.1.4.min.js"></script>',
             '<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=_googleTranslateElementInit"></script>'
         ].join("\n"),
 
         headbottom: [
-            '<link href="http://www.'+catalog+'.catalogi.ru/static/rewrite.css" rel="stylesheet" type="text/css" />'
+            '<link href="http://www.'+catalog+'.catalogi.ru/static/rewrite.css" rel="stylesheet" type="text/css" />',
+            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/ggwp.js"></script>',
+            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/kmoquery.min.js"></script>',
+            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/Catalog.min.js"></script>',
+            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/ActionLayer.js"></script>',
+            '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/kmo.min.js"></script>'
         ].join("\n"),
 
         body: {
