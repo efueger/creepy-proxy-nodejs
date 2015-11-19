@@ -23,6 +23,8 @@ if (cluster.isMaster) {
     cluster.fork();
     cluster.fork();
     cluster.fork();
+    cluster.fork();
+    cluster.fork();
 
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
