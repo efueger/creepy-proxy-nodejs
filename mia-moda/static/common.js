@@ -147,4 +147,6 @@ catalogi(function () {
     _googleTranslateElementInit();
     catalogi.noTranslate();
     catalogi.parse();
+
+    catalogi('.quickViewHover').remove();
 });
