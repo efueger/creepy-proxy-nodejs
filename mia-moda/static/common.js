@@ -135,7 +135,11 @@ catalogi(function () {
     catalogi(window).on('message', function (event) {
         switch (event.originalEvent.data.action) {
             case 'search':
-                catalogi('#desktopSearchTerm').val(event.originalEvent.data.search).parents('form').submit();
+                //catalogi('#desktopSearchTerm').val(event.originalEvent.data.search).parents('form').submit();
+                //break;
+                var goingto = "http://www.mia-moda.de/SearchDisplay?searchTerm=";
+                goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
+                window.location = goingto + "&storeId=510004&catalogId=510000&langId=-3&beginIndex=0&sType=SimpleSearch&resultCatEntryType=2&showResultsPage=true&searchSource=Q&pageView=&categoryId=";
                 break;
 
             case 'orderCount':
