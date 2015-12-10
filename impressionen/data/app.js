@@ -180,6 +180,10 @@ if (cluster.isMaster) {
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
                 .pipe(replacestream(new RegExp('/impressionen/_ui/desktoprebrush/theme-impressionen/all.js', 'g'), 'http://impressionen.catalogi.ru/static/all_new.js'))
+                .pipe(replacestream('static.etracker', '127.0.0.1'))
+                .pipe(replacestream('maxymiser', '127.0.0.1'))
+                .pipe(replacestream('googletagmanager', '127.0.0.1'))
+                .pipe(replacestream('fast.fonts.net', '127.0.0.1'))
                 .pipe(res);
         } else {
             piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://impressionen.catalogi.ru/static/bk_script.js'))
