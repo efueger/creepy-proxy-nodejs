@@ -27,6 +27,9 @@ catalogi.noTranslate = function(){
     // Все остальное
     catalogi('.brands-main-title').addClass('notranslate');
     catalogi('.all-brands-container').addClass('notranslate');
+
+    // Список товаров
+    catalogi('li[class*="brand"]').addClass('notranslate');
 };
 
 catalogi.parse = function() {
