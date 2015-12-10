@@ -45,10 +45,20 @@ catalogi.parse = function() {
     catalogi('a[href="/impressionen/de/service/katalogbestellung"]').remove();
 
     // Меню
-    catalogi('a[data-etracker-event*="Header, Metanavi, Direkt bestellen"]').attr('href', '#').attr('class', 'catalogi-shops').removeAttr('data-etracker-event').removeAttr('data-etracker-campaign');
-    catalogi('a[data-etracker-event*="Header, Metanavi, Katalog bestellen"]').attr('href', '#').attr('class', 'catalogi-catalogs').removeAttr('data-etracker-event').removeAttr('data-etracker-campaign');
-    catalogi('a[data-etracker-event*="Header, Metanavi, Newsletter "]').attr('href', '#').attr('class', 'catalogi-payment').removeAttr('data-etracker-event').removeAttr('data-etracker-campaign');
-    catalogi('.catalogi-payment').parent().parent().clone().appendTo('#meta-nav > ul');
+    catalogi('a[data-etracker-event*="Header, Metanavi, Direkt bestellen"]').attr('href', '#')
+        .attr('class', 'catalogi-shops')
+        .removeAttr('data-etracker-event')
+        .removeAttr('data-etracker-campaign');
+    catalogi('a[data-etracker-event*="Header, Metanavi, Katalog bestellen"]')
+        .attr('href', '#')
+        .attr('class', 'catalogi-catalogs')
+        .removeAttr('data-etracker-event')
+        .removeAttr('data-etracker-campaign');
+    catalogi('a[data-etracker-event*="Header, Metanavi, Newsletter "]').attr('href', '#')
+        .attr('class', 'catalogi-payment')
+        .removeAttr('data-etracker-event')
+        .removeAttr('data-etracker-campaign');
+    catalogi('.catalogi-payment').parent().parent().clone().appendTo('#meta-nav > ul'); // клонируем элементы
     catalogi('.catalogi-payment:eq(1)').attr('class', 'catalogi-delivery');
     catalogi('.catalogi-payment').parent().parent().clone().appendTo('#meta-nav > ul');
     catalogi('.catalogi-payment:eq(1)').attr('class', 'catalogi-size-table');
@@ -80,8 +90,10 @@ catalogi.parse = function() {
         catalogi.order();
         return false;
     });
-    catalogi('a[title*="Warenkorb"] > span:eq(0)').text('Корзина');
-    catalogi('a[title*="Warenkorb"] > span:eq(2)').load('http://cdn.catalogi.ru/executable/actions/_order_count.php');
+    catalogi('a[title*="Warenkorb"] > span:eq(0)')
+        .text('Корзина');
+    catalogi('a[title*="Warenkorb"] > span:eq(2)')
+        .load('http://cdn.catalogi.ru/executable/actions/_order_count.php');
 
     // Страница товара
     catalogi('#add-to-watchlist-button').remove();
@@ -143,6 +155,9 @@ catalogi.parse = function() {
     // Футер
     catalogi('#seo-text').remove();
     catalogi('#page-footer').remove();
+
+    // Подписка
+    catalogi.subscribe(false, '27268');
 
     // Show body after f@cking hiding >_<
     catalogi('body')
