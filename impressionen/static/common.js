@@ -35,9 +35,11 @@ catalogi.noTranslate = function(){
 catalogi.parse = function() {
     // Шапка
     catalogi('#iframe').hide();
-    catalogi('.my-account').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
+    catalogi('.my-account').remove();
     catalogi('#wishlist-link').remove();
+    catalogi('a[href*="/service/faq"]').attr('href', '#').attr('id', 'menu-mob');
+    catalogi('#menu-mob > span > span').text('Меню');
 
     // Разное
     catalogi('a[href*="/impressionen/de/login"]').parent().parent().remove();
@@ -182,7 +184,7 @@ catalogi.parse = function() {
             if(_auth){
                 catalogi('.account-nav-listelem > a').remove();
                 catalogi('.account-nav-listelem')
-                    .html('<a href="http://catalogi.ru/cabinet/" class="my-account-login underline-alternative" target="_blank">Личный кабинет</a> ' +
+                    .html('<a href="http://catalogi.ru/cabinet/" class="my-account-login underline-alternative" target="_blank">Личный кабинет</a>' +
                           '<a href="#" class="_logout"></a>');
                 catalogi('.account-nav-listelem').show();
                 catalogi('._logout').click(function(){
