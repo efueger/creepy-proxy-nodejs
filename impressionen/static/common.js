@@ -30,6 +30,9 @@ catalogi.noTranslate = function(){
 
     // Список товаров
     catalogi('li[class*="brand"]').addClass('notranslate');
+
+    // Страница товара
+    catalogi('.product-size-dropdown').addClass('notranslate');
 };
 
 catalogi.parse = function() {
