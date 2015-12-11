@@ -179,7 +179,7 @@ if (cluster.isMaster) {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-                .pipe(replacestream(new RegExp('/impressionen/_ui/desktoprebrush/theme-impressionen/all.js', 'g'), 'http://impressionen.catalogi.ru/static/all_new.js'))
+                .pipe(replacestream(new RegExp('/impressionen/_ui/desktoprebrush/theme-impressionen/all.js', 'g'), 'http://impressionen.catalogi.ru/static/all.js'))
                 .pipe(replacestream('static.etracker', '127.0.0.1'))
                 .pipe(replacestream('maxymiser', '127.0.0.1'))
                 .pipe(replacestream('googletagmanager', '127.0.0.1'))
