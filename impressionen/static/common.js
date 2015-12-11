@@ -57,21 +57,18 @@ catalogi.parse = function() {
         .attr('class', 'catalogi-shops')
         .removeAttr('data-etracker-event')
         .removeAttr('data-etracker-campaign');
-    catalogi('a[data-etracker-event*="Header, Metanavi, Katalog bestellen"]')
-        .attr('href', '#')
+    catalogi('a[data-etracker-event*="Header, Metanavi, Newsletter "]').attr('href', '#')
         .attr('class', 'catalogi-catalogs')
         .removeAttr('data-etracker-event')
         .removeAttr('data-etracker-campaign');
-    catalogi('a[data-etracker-event*="Header, Metanavi, Newsletter "]').attr('href', '#')
-        .attr('class', 'catalogi-payment')
-        .removeAttr('data-etracker-event')
-        .removeAttr('data-etracker-campaign');
-    catalogi('.catalogi-payment').parent().parent().clone().appendTo('#meta-nav > ul'); // клонируем элементы
-    catalogi('.catalogi-payment:eq(1)').attr('class', 'catalogi-delivery');
-    catalogi('.catalogi-payment').parent().parent().clone().appendTo('#meta-nav > ul');
-    catalogi('.catalogi-payment:eq(1)').attr('class', 'catalogi-size-table');
+    catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul'); // клонируем элементы
+    catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-payment');
+    catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
+    catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-delivery');
+    catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
+    catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-size-table');
 
-    catalogi('.catalogi-shops > span').text('Интернет-магазины').click(function(){
+    catalogi('.catalogi-shops > span').text('Магазины').click(function(){
         catalogi.shops();
         return false;
     });
@@ -87,7 +84,7 @@ catalogi.parse = function() {
         catalogi.delivery();
         return false;
     });
-    catalogi('.catalogi-size-table > span').text('Таблица размеров').click(function(){
+    catalogi('.catalogi-size-table > span').text('Размеры').click(function(){
         catalogi.sizeTable();
         return false;
     });
