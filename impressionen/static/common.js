@@ -68,7 +68,7 @@ catalogi.parse = function() {
     catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
     catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-size-table');
 
-    catalogi('.catalogi-shops > span').text('Магазины').click(function(){
+    catalogi('.catalogi-shops > span').text('Интернет-магазины').click(function(){
         catalogi.shops();
         return false;
     });
@@ -84,7 +84,7 @@ catalogi.parse = function() {
         catalogi.delivery();
         return false;
     });
-    catalogi('.catalogi-size-table > span').text('Размеры').click(function(){
+    catalogi('.catalogi-size-table > span').text('Таблица размеров').click(function(){
         catalogi.sizeTable();
         return false;
     });
