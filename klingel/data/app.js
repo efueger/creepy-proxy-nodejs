@@ -1,3 +1,12 @@
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
 var config = require('config'),
     cluster = require('cluster'),
     fs = require('fs');
@@ -45,8 +54,7 @@ if (cluster.isMaster) {
         jar: j
     });
 
-    var translates, fsize = 0, fname = "/var/www/translates.json";
-
+    var translates, fsize = 0;
 
     var server = http.createServer(function (req, res) {
 
@@ -93,12 +101,24 @@ if (cluster.isMaster) {
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         }
-        tmp = fs.statSync(fname)["size"];
-        //console.log(tmp);
-        if (fsize != tmp) {
-            fsize = tmp;
-            translates = JSON.parse(fs.readFileSync(fname, 'utf8'));
-        }
+
+        request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                tmp = response.headers['content-length'];
+                //console.log(response.headers['content-length']);
+                if (IsJsonString(body)) {
+                    //console.log("JOSN detected");
+                    if (fsize != tmp) {
+                        fsize = tmp;
+                        translates = JSON.parse(body, 'utf8');
+                    }
+                } else {
+                    //console.log("JOSN NOT detected!");
+                }
+            } else {
+                //console.log("JOSN NOT 200!");
+            }
+        });
 
 
         //console.log('Trying to access: ' + req.headers.host + req.url);
@@ -152,14 +172,18 @@ if (cluster.isMaster) {
                 piper = piper.pipe(replacestream(new RegExp(item.from, item.args), item.to));
             }
         });
-        //translates.forEach(function (item, i, arr) {
-        //    if (item.type === "usual") {
-        //        piper = piper.pipe(replacestream(item.from, item.to));
-        //    }
-        //    else if (item.type === "regex") {
-        //        piper = piper.pipe(replacestream(new RegExp(item.from, item.args), item.to));
-        //    }
-        //});
+        if (translates && translates.length) {
+            translates.forEach(function (item, i, arr) {
+                if (item.type === "usual") {
+                    piper = piper.pipe(replacestream(item.from, item.to));
+                }
+                else if (item.type === "regex") {
+                    var from = "(^|[^ =\\/?$])\\b(" + item.from + ")\\b";
+                    var to = "$1" + item.to;
+                    piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
+                }
+            });
+        }
 
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
             .pipe(replacestream('<head>', '<head>' + includes.head))
