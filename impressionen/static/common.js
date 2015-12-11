@@ -179,7 +179,7 @@ catalogi.parse = function() {
         });
 
     catalogi('head')
-        .delay(3000)
+        .delay(5000)
         .queue(function (next) {
             if(_auth){
                 catalogi('.account-nav-listelem > a').remove();
