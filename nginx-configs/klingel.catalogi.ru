@@ -38,4 +38,8 @@ server {
     	root /var/www;
     	internal;
 	}
+
+    # LOGS
+    access_log /var/www/klingel/data/log/access.log;
+    error_log /var/www/klingel/data/log/error.log;
 }
