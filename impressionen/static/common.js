@@ -167,6 +167,9 @@ catalogi.parse = function() {
         .delay(900)
         .queue(function (next) {
             catalogi(this).css('visibility', 'visible');
+
+            catalogi('.account-nav-listelem').hide();
+
             catalogi('.product-size-guide').remove();
             catalogi('.price-save-tag').remove();
             catalogi('.price-save').remove();
@@ -177,18 +180,22 @@ catalogi.parse = function() {
         .delay(3000)
         .queue(function (next) {
             if(_auth){
-                catalogi('#account-nav > li > a').text('Выход');
-                catalogi('#account-nav > li > a').attr('href', 'http://catalogi.ru/cabinet/');
-                catalogi('#account-nav > li > a').click(function(){
+                catalogi('.account-nav-listelem > a').remove();
+                catalogi('.account-nav-listelem')
+                    .html('<a href="http://catalogi.ru/cabinet/" class="my-account-login underline-alternative" target="_blank">Личный кабинет</a> ' +
+                          '<a href="#" class="_logout"></a>');
+                catalogi('.account-nav-listelem').show();
+                catalogi('._logout').click(function(){
                     catalogi.logout();
                     return false;
                 });
             } else {
-                catalogi('#account-nav > li > a').click(function(){
+                catalogi('.account-nav-listelem').show();
+                catalogi('.account-nav-listelem > a').click(function(){
                     catalogi.login();
                     return false;
                 });
-                catalogi('#account-nav > li > a').text('Вход');
+                catalogi('.account-nav-listelem > a').text('Вход');
             }
         });
 };
