@@ -40,3 +40,14 @@
     font-weight: 700;
     font-style: normal
 }
+
+._logout{
+    background-image: url(http://cdn.catalogi.ru/static/images/_logout.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    display: block;
+    float: right;
+    width: 11px;
+    height: 16px;
+}
