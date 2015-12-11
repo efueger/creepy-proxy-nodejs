@@ -23,7 +23,7 @@ module.exports = function(catalog, param, options){
 
         headbottom: [
             '<link href="http://www.'+catalog+'.catalogi.ru/static/rewrite.css" rel="stylesheet" type="text/css" />',
-            '<iframe src="http://cdn.catalogi.ru/executable/new.php?'+param+'" width="'+options.width+'px" height="'+options.height+'px" frameborder="0" name="_head" id="iframe"/>'
+            '<iframe src="http://cdn.catalogi.ru/executable/index.php?'+param+'" width="'+options.width+'px" height="'+options.height+'px" frameborder="0" name="_head" id="iframe"/>'
         ].join("\n"),
 
         body: {
