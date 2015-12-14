@@ -1,11 +1,13 @@
+/**
+ * Created by mihailstepancenko on 16.10.15.
+ */
+
 function _googleTranslateElementInit() {
-    catalogi.noTranslate();
     new google.translate.TranslateElement({
         pageLanguage: 'de',
         includedLanguages: 'ru',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
-    //console.log("translate started");
 }
 
 // Force use catalogi.service()
@@ -129,20 +131,17 @@ catalogi.service = function() {
 }
 
 catalogi(function() {
-    /***
-     * Обработка команд с ifame
-     **/
-        catalogi(window).on('message', function(event) {
-            switch (event.originalEvent.data.action) {
-                case 'search':
-                    var goingto = "http://www.peterhahn.catalogi.ru/search.php?query=";
-                    goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
-                    window.location = goingto;
-                    break
-            }
-            console.log(event.originalEvent.data);
-        });
+    catalogi(window).on('message', function(event) {
+        switch (event.originalEvent.data.action) {
+            case 'search':
+                var goingto = "http://www.peterhahn.catalogi.ru/search.php?query=";
+                goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
+                window.location = goingto;
+                break
+        }
+        console.log(event.originalEvent.data);
+    });
 
-        _googleTranslateElementInit();
+    catalogi.noTranslate();
     catalogi.parse();
 });
