@@ -7,10 +7,8 @@ function IsJsonString(str) {
     return true; 
 }
 
-var config = require('config'),
-    cluster = require('cluster'),
-    fs = require('fs');
-
+// Load config
+var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
     SITE = SITENAME + SITEDOMAIN,
@@ -27,6 +25,8 @@ var SITENAME = config.get('site.name'),
     };
 var replaces = config.get('replaces');
 
+// Start server
+var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
     cluster.fork();
@@ -40,7 +40,6 @@ if (cluster.isMaster) {
         console.error('Worker disconnect!');
         cluster.fork();
     });
-
 } else {
     console.log("Start worker");
     var http = require("http"),
@@ -56,11 +55,9 @@ if (cluster.isMaster) {
     });
 
     var translates, fsize = 0;
-    var fname1 = "/var/www/translates.json";
-
 
     var server = http.createServer(function (req, res) {
-
+        //console.log('Trying to access: ' + req.headers.host + req.url);
         onError = function (err) {
             console.error(err);
 
@@ -81,9 +78,11 @@ if (cluster.isMaster) {
             } catch (er) {
                 console.error('Error sending HTTP response', er, req.url);
             }
-        }
+        };
+
         onResponse = function (response) {
-            if ('location' in response.headers) response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
+            if ('location' in response.headers)
+                response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
 
             var _cookie = [];
 
@@ -103,49 +102,34 @@ if (cluster.isMaster) {
             }
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-        }
-
-        //tmp = fs.statSync(fname)["size"];
-        //console.log(tmp);
-        //if (fsize != tmp) {
-        //    fsize = tmp;
-        //    translates = JSON.parse(fs.readFileSync(fname, 'utf8'));
-        //}
+        };
 
         request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
-            //if (!error && response.statusCode == 200) {
-            tmp = response.headers['content-length'];
-            //console.log(response.headers['content-length']);
-            //console.log(body);
-            //console.log('ggwp');
-            if (IsJsonString(body)) {
-                console.log("JOSN detected");
-                if (fsize != tmp) {
-                    fsize = tmp;
-                    translates = JSON.parse(body, 'utf8');
+            if (!error && response.statusCode == 200) {
+                tmp = response.headers['content-length'];
+                //console.log(response.headers['content-length']);
+                if (IsJsonString(body)) {
+                    //console.log("JOSN detected");
+                    if (fsize != tmp) {
+                        fsize = tmp;
+                        translates = JSON.parse(body, 'utf8');
+                    }
+                } else {
+                    //console.log("JOSN NOT detected!");
                 }
             } else {
-                //console.log("JOSN NOT detected!");
+                //console.log("JOSN NOT 200!");
             }
         });
-
-        //console.log('Trying to access: ' + req.headers.host + req.url);
 
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
         if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
-        var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
 
+        var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
 
-        proxyfull = "http://" + proxy() + ":3129";
-       // console.log("Accessing via: " + proxyfull);
-
-
-
-        var start = new Date();
-        //console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
 
@@ -156,6 +140,12 @@ if (cluster.isMaster) {
                 j.setCookie(request.cookie(cookies[i].replace(';', '')), "http://" + host);
             }
         }
+
+        // Proxyng trafic
+        proxyfull = "http://" + proxy() + ":3129";
+        //console.log("Accessing via: " + proxyfull);
+
+        //console.log("Method: " + req.method);
         if (req.method === "GET") {
             piper = proxiedReq.get({
                 url: url,
@@ -169,7 +159,7 @@ if (cluster.isMaster) {
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
 
-
+        // Replaces from config
         replaces.forEach(function (item, i, arr) {
             if (item.type === "usual") {
                 piper = piper.pipe(replacestream(item.from, item.to));
@@ -179,6 +169,7 @@ if (cluster.isMaster) {
             }
         });
 
+        // Replaces from translates.catalogi.ru
         if (translates && translates.length) {
             translates.forEach(function (item, i, arr) {
                 if (item.type === "usual") {
@@ -215,7 +206,6 @@ if (cluster.isMaster) {
             //.pipe(replacestream('www.gstatic.com', '127.0.0.1'))
             //.pipe(replacestream('www.econda-monitor.de', '127.0.0.1'))
             .pipe(res);
-
     }).listen(6052);
 }
 
