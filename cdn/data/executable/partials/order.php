@@ -181,7 +181,7 @@ $rows = $stm->fetchAll();
   });
   
   catalogi('#_order_partial').on('_order_update', function(){
-    catalogi('#_order_partial table').load('http://cdn.catalogi.ru/static/actions/_order_get.php', {
+    catalogi('#_order_partial table').load('http://includes.catalogi.ru/new/actions/_order_get.php', {
       user:     catalogi.cookie('user'),
       user_id:  catalogi.cookie('user_id')
     }, function(){

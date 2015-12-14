@@ -90,7 +90,7 @@ catalogi.order = function(){
 		href: 'http://cdn.catalogi.ru/executable/partials/order/order.php',
 		iframe: true,
     initialWidth: 190,
-    initialHeight: 200,
+    initialHeight: 250,
     innerWidth: window.innerWidth < 480 ? 190 : 910,
     innerHeight: 470
   });
