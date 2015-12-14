@@ -23,9 +23,16 @@ server {
 	}
 
 	location / {
-		if ($allowed_country = no) {
-			rewrite ^/ http://www.peterhahn.de/ permanent;
-		}
+        set $allow "yes";
+        if ($allowed_country = no) {
+            set $allow "no";
+        }
+        if ($remote_addr = 95.91.246.213) {
+            set $allow "yes";
+        }
+        if ($allow != "yes") {
+            rewrite ^/ http://www.madeleine.de/ permanent;
+        }
 	
 		if ($subdomain = media) {
 			rewrite ^(.*)$ http://media.peterhahn.de$1 permanent;

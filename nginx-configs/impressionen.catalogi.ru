@@ -23,9 +23,17 @@ server {
         }
 
         location / {
+                set $allow "yes";
                 if ($allowed_country = no) {
-                        rewrite ^/ http://www.impressionen.de/ permanent;
+                    set $allow "no";
                 }
+                if ($remote_addr = 95.91.246.213) {
+                    set $allow "yes";
+                }
+                if ($allow != "yes") {
+                    rewrite ^/ http://www.madeleine.de/ permanent;
+                }
+
                 proxy_pass http://127.0.0.1:5057;
                 proxy_redirect http://127.0.0.1:5057/ /;
                 proxy_set_header Host $host;

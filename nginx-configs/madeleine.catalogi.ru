@@ -35,9 +35,17 @@ server {
     }
 
 	location / {
-		if ($allowed_country = no) {
-			rewrite ^/ http://www.madeleine.de/ permanent;
-		}
+        set $allow "yes";
+        if ($allowed_country = no) {
+            set $allow "no";
+        }
+        if ($remote_addr = 95.91.246.213) {
+            set $allow "yes";
+        }
+        if ($allow != "yes") {
+            rewrite ^/ http://www.madeleine.de/ permanent;
+        }
+
 		proxy_pass http://127.0.0.1:5055;
 		proxy_redirect http://127.0.0.1:5055/ /;
 		proxy_set_header Host $host;
