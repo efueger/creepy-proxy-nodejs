@@ -51,3 +51,7 @@
     width: 11px;
     height: 16px;
 }
+
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}

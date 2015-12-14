@@ -2,6 +2,8 @@
  * Created by mihailstepancenko on 02.12.15.
  */
 
+var timeout1 = 5000; // basket update
+
 function _googleTranslateElementInit() {
     new google.translate.TranslateElement({
         pageLanguage: 'de',
@@ -13,6 +15,7 @@ function _googleTranslateElementInit() {
 // Force use catalogi.service()
 catalogi(document).ready(function(){
     catalogi(".product-variant-options").bind("DOMSubtreeModified", function() {
+        catalogi.noTranslate();
         catalogi('.price-save-tag').remove();
         catalogi('.price-save').remove();
         catalogi.service();
@@ -45,12 +48,12 @@ catalogi.parse = function() {
     catalogi('#menu-mob > span > span').text('Меню');
 
     // Разное
-    catalogi('a[href*="/impressionen/de/login"]').parent().parent().remove();
+    catalogi('a[href*="/de/login"]').parent().parent().remove();
     catalogi('a[href*="agb#Preise"]').parent().remove(); //Ссылка про НДС
 
     // Каталоги
     catalogi('#content-main > article:eq(1)').remove();
-    catalogi('a[href="/impressionen/de/service/katalogbestellung"]').remove();
+    catalogi('a[href*="/de/service/katalogbestellung"]').remove();
 
     // Меню
     catalogi('a[data-etracker-event*="Header, Metanavi, Direkt bestellen"]').attr('href', '#')
@@ -95,10 +98,7 @@ catalogi.parse = function() {
         catalogi.order();
         return false;
     });
-    catalogi('a[title*="Warenkorb"] > span:eq(0)')
-        .text('Корзина');
-    catalogi('a[title*="Warenkorb"] > span:eq(2)')
-        .load('http://cdn.catalogi.ru/executable/actions/_order_count.php');
+    catalogi('a[title*="Warenkorb"] > span:eq(0)').text('Корзина');
 
     // Страница товара
     catalogi('#add-to-watchlist-button').remove();
@@ -168,6 +168,8 @@ catalogi.parse = function() {
     catalogi('body')
         .delay(900)
         .queue(function (next) {
+            checkBasket();
+
             catalogi(this).css('visibility', 'visible');
 
             catalogi('.account-nav-listelem').hide();
@@ -175,11 +177,11 @@ catalogi.parse = function() {
             catalogi('.product-size-guide').remove();
             catalogi('.price-save-tag').remove();
             catalogi('.price-save').remove();
-            catalogi('a[href*="/impressionen/de/login"]').parent().parent().remove();
+            catalogi('a[href*="/de/login"]').parent().parent().remove();
         });
 
     catalogi('head')
-        .delay(3000)
+        .delay(5000)
         .queue(function (next) {
             if(_auth){
                 catalogi('.account-nav-listelem > a').remove();
@@ -202,6 +204,17 @@ catalogi.parse = function() {
         });
 };
 
+function checkBasket() {
+    window.clearInterval(window.timer1);
+
+    var ordersNumber = catalogi.cookie('ordersNum');
+    if(ordersNumber)
+        catalogi('.minicart-amount').text(ordersNumber);
+    console.log('ordersNumber: ' + ordersNumber);
+
+    window.timer1 = window.setInterval("checkBasket();", timeout1);
+};
+
 // Скидка
 catalogi.service = function(){
     if('_service' in window && catalogi('.js-display-variant-price')){
@@ -222,15 +235,28 @@ catalogi.removeShit = function(){
     catalogi('script[src*="doubleclick"]').remove();
     catalogi('script[src*="fonts"]').remove();
 
-    console.log('> ADshit removed.');
+    //console.log('> ADshit removed.');
 };
 
 // On load
 catalogi(function(){
+    var re = /(?:[\s.])([a-z0-9][a-z0-9-]+[a-z0-9])(?:[.\s])/;
+    var str = window.location.hostname;
+    var m;
+
+    if ((m = re.exec(str)) !== null) {
+        if (m.index === re.lastIndex) {
+            re.lastIndex++;
+        }
+        // View your result using the m-variable.
+        // eg m[0] etc.
+    }
+
+
     catalogi(window).on('message', function(event) {
         switch (event.originalEvent.data.action) {
             case 'search':
-                var goingto = "http://www.impressionen.catalogi.ru/impressionen/de/s?_sb=true&query=";
+                var goingto = "http://www." + m[0] + ".catalogi.ru/" + m[0] + "/de/s?_sb=true&query=";
                 goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
                 window.location = goingto;
                 break
