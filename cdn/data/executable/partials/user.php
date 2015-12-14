@@ -69,13 +69,13 @@ ob_start();
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="language" content="ru" />
-  <link href="http://includes.catalogi.ru/css/jquery.jscrollpane.css" rel="stylesheet" type="text/css" />
-  <link href="http://includes.catalogi.ru/new/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+  <link href="http://cdn.catalogi.ru/static/css/jquery.jscrollpane.css" rel="stylesheet" type="text/css" />
+  <link href="http://cdn.catalogi.ru/static/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/js/jquery.mousewheel.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/js/jquery.jscrollpane.min.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.validationEngine-ru.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.validationEngine.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.mousewheel.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.jscrollpane.min.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.validationEngine-ru.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.validationEngine.js"></script>
   <title>Авторизация</title>
   <style>
     #_login_partial{
@@ -220,7 +220,7 @@ ob_start();
     isValid = catalogi(this).validationEngine('validate');
     if(isValid){
       catalogi.ajax({
-        url: 'http://includes.catalogi.ru/new/actions/_user.php',
+        url: 'http://cdn.catalogi.ru/static/actions/_user.php',
         type: 'post',
         data:{
           login: catalogi('#_login_partial input[type="text"]').val(),

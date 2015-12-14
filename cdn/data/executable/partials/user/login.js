@@ -7,7 +7,7 @@ catalogi(function(){
     isValid = catalogi(this).validationEngine('validate');
     if(isValid){
       catalogi.ajax({
-        url: 'http://includes.catalogi.ru/new/actions/_user.php',
+        url: 'http://cdn.catalogi.ru/executable/actions/_user.php',
         type: 'post',
         data:{
           login: catalogi('#_login_partial input[type="text"]').val(),

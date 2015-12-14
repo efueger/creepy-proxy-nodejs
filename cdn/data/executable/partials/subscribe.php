@@ -3,10 +3,10 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Подписка</title>
-  <link href="http://includes.catalogi.ru/new/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+  <link href="http://cdn.catalogi.ru/static/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.validationEngine-ru.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.validationEngine.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.validationEngine-ru.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.validationEngine.js"></script>
 
   <style>
     body{
@@ -109,12 +109,12 @@
     catalogi('.subscribe form').submit(function(){
       var name      = catalogi('input[name="name"]').val();
       var email     = catalogi('input[name="email"]').val();
-      catalogi('a#send').html('<img src="http://includes.catalogi.ru/new/images/ajax-loader.gif" />');
+      catalogi('a#send').html('<img src="http://cdn.catalogi.ru/static/images/ajax-loader.gif" />');
       catalogi('input[name="name"]').attr('disabled','1');
       catalogi('input[name="email"]').attr('disabled','1');
       catalogi.ajax({
         type: 'POST',
-        url: 'http://includes.catalogi.ru/new/partials/smartresponder.php',
+        url: 'http://cdn.catalogi.ru/static/partials/smartresponder.php',
         dataType: 'xml',
         data: {
           name: name,
@@ -151,7 +151,7 @@
 <body>
   <div class="header">Подпишитесь на нашу рассылку!</div>
   <div class="info">Каталоги.ру - зарегистрируйтесь прямо сейчас и пользуйтесь <br />нашими специальными предложениями!</div>
-  <img src="http://includes.catalogi.ru/images/logo.png" id="logo" />
+  <img src="http://cdn.catalogi.ru/static/images/logo.png" id="logo" />
   <table class="subscribe">
     <tr>
       <td valign="top" width="160">
