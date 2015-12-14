@@ -46,14 +46,14 @@ catalogi.parse = function() {
     catalogi('#iframe').appendTo('.headerrow');
 
     // Menu
-    catalogi('#nav').append('<li><div class="upper"><a href="http://catalogi.ru/katalog_peter_hahn/">Каталог</a></div></li>')
+    catalogi('#nav').append('<li><div class="upper"><a href="http://catalogi.ru/katalog_peter_hahn/">Каталог</a></div></li>');
 
     // Body
     catalogi('#skyscraper').empty(); // баннер справа
     catalogi('#warenkorbContainer').empty();
 
     // Product page
-    catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi")
+    catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi");
     catalogi('a[href="#notepad"]').remove();
     catalogi(".hotline").remove();
 
@@ -112,7 +112,7 @@ catalogi.service = function() {
     if('_service' in window) {
         // Cut useless items
         catalogi('.sizebox > a').remove();
-        catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi")
+        catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi");
 
         // Work with price
         catalogi('span[itemprop="price"]').text(function(index, text) {
