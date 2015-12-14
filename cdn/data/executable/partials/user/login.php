@@ -2,14 +2,14 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="language" content="ru" />
-  <link href="http://includes.catalogi.ru/new/css/jquery.jscrollpane.css" rel="stylesheet" type="text/css" />
-  <link href="http://includes.catalogi.ru/new/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+  <link href="http://cdn.catalogi.ru/static/css/jquery.jscrollpane.css" rel="stylesheet" type="text/css" />
+  <link href="http://cdn.catalogi.ru/static/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
   <link href="login.css" rel="stylesheet" type="text/css" />
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.mousewheel.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.jscrollpane.min.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.validationEngine-ru.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.validationEngine.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.mousewheel.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.jscrollpane.min.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.validationEngine-ru.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.validationEngine.js"></script>
   <script type="text/javascript" src="login.js"></script>
   <title>Авторизация</title>
 </head>

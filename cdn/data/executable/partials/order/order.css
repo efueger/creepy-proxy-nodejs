@@ -6,7 +6,7 @@ html, body{
 #_order_partial{
   font-family: Arial, Helvetica, sans-serif;
   height: 250px;
-  width: 700px;
+  width: 910px;
 }
 
 #_order_partial h2{
@@ -19,7 +19,7 @@ html, body{
 
 #_order_partial > div{
   overflow: hidden;
-  height: 190px;
+  height: 390px;
   margin: 5px 0;
   outline: none;
 }
@@ -101,7 +101,7 @@ html, body{
 @media only screen and (max-width: 480px){
   html, body,
   #_order_partial{
-    width: 190px;
+    width: 700px;
   }
   #_order_partial table tr td.flex{
     display: none;

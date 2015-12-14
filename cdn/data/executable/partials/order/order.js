@@ -2,7 +2,7 @@ catalogi = jQuery.noConflict(true);
 
 function remove(id, accept){
   catalogi.ajax({
-    url: 'http://includes.catalogi.ru/new/actions/_order_del.php',
+    url: 'http://cdn.catalogi.ru/executable/actions/_order_del.php',
     type: 'post',
     data:{
       id: id
@@ -29,7 +29,7 @@ function remove(id, accept){
 }
 
 function update(){
-  catalogi('#_order_partial table').load('http://includes.catalogi.ru/new/actions/_order_get.php', function(){
+  catalogi('#_order_partial table').load('http://cdn.catalogi.ru/executable/actions/_order_get.php', function(){
     catalogi(this).find('.delete').each(function(){
       catalogi(this).bind('click', function(){
         var tr = catalogi(this).parents('tr');

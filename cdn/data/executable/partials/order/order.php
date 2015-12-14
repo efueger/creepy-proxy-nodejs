@@ -19,12 +19,12 @@ $rows = $stm->fetchAll();
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="language" content="ru" />
-  <link href="http://includes.catalogi.ru/new/css/jquery.jscrollpane.css" rel="stylesheet" type="text/css" />
+  <link href="http://cdn.catalogi.ru/static/css/jquery.jscrollpane.css" rel="stylesheet" type="text/css" />
   <link href="order.css" rel="stylesheet" type="text/css" />
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.mousewheel.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.jscrollpane.min.js"></script>
-  <script type="text/javascript" src="http://includes.catalogi.ru/new/js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.mousewheel.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.jscrollpane.min.js"></script>
+  <script type="text/javascript" src="http://cdn.catalogi.ru/static/js/jquery.cookie.js"></script>
   <script type="text/javascript" src="order.js"></script>
   <title>Бланк заказа</title>
 </head>

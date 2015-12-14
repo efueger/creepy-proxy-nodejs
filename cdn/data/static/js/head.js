@@ -66,26 +66,29 @@ catalogi.basket = {
   count: function(){
     catalogi('#_basket span').load('http://cdn.catalogi.ru/executable/actions/_order_count.php');
 
-      var ordersNum = catalogi('#_basket span').text();
-      localStorage.setItem('ordersNum', ordersNum);
+    var ordersNum = catalogi('#_basket span').text();
+    catalogi.cookie('ordersNum', ordersNum, { expires: 7, path: '/', domain: '.catalogi.ru' });
 
-        var output = "LOCALSTORAGE DATA:\n------------------------------------\n";
-        if (localStorage) {
-          if (localStorage.length) {
-              for (var i = 0; i < localStorage.length; i++) {
-                  output += localStorage.key(i) + ': ' + localStorage.getItem(localStorage.key(i)) + '\n';
-              }
-          } else {
-              output += 'There is no data stored for this domain.';
-          }
-        } else {
-          output += 'Your browser does not support local storage.';
-        }
-        console.log(output);
+
+      //localStorage.setItem('ordersNum', ordersNum);
+      //
+      //  var output = "LOCALSTORAGE DATA:\n------------------------------------\n";
+      //  if (localStorage) {
+      //    if (localStorage.length) {
+      //        for (var i = 0; i < localStorage.length; i++) {
+      //            output += localStorage.key(i) + ': ' + localStorage.getItem(localStorage.key(i)) + '\n';
+      //        }
+      //    } else {
+      //        output += 'There is no data stored for this domain.';
+      //    }
+      //  } else {
+      //    output += 'Your browser does not support local storage.';
+      //  }
+      //  console.log(output);
 
     top.postMessage({action: 'orderCount', count: catalogi('#_basket span').text() },'*');
   }
-}
+};
 
 catalogi(function(){
 
