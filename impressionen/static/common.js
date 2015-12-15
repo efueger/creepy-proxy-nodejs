@@ -56,6 +56,7 @@ catalogi.parse = function() {
     catalogi('a[href*="/de/service/katalogbestellung"]').remove();
 
     // Меню
+    catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
     catalogi('a[data-etracker-event*="Header, Metanavi, Direkt bestellen"]').attr('href', '#')
         .attr('class', 'catalogi-shops')
         .removeAttr('data-etracker-event')
@@ -215,6 +216,12 @@ function checkBasket() {
     window.timer1 = window.setInterval("checkBasket();", timeout1);
 };
 
+function checkSeach() {
+    var seachString = catalogi.cookie('seachString');
+    if (seachString)
+        catalogi('#search').val(seachString);
+};
+
 // Скидка
 catalogi.service = function(){
     if('_service' in window && catalogi('.js-display-variant-price')){
@@ -238,6 +245,8 @@ catalogi.removeShit = function(){
     //console.log('> ADshit removed.');
 };
 
+
+
 // On load
 catalogi(function(){
     var re = /(?:[\s.])([a-z0-9][a-z0-9-]+[a-z0-9])(?:[.\s])/;
@@ -248,15 +257,37 @@ catalogi(function(){
         if (m.index === re.lastIndex) {
             re.lastIndex++;
         }
-        // View your result using the m-variable.
-        // eg m[0] etc.
+        var currentDomain = m[0].replace('.','').replace('.','');
     }
 
+    catalogi('.search-button').click(function() {
+        catalogi.cookie('seachString', catalogi('#search').val(), { expires: 7, path: '/', domain: '.catalogi.ru' });
+        catalogi.ajax({
+            url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
+            type: 'get',
+            dataType: 'json',
+            data: {
+                client: 't',
+                text: catalogi('#search').val(),
+                sl: 'ru',
+                tl: 'de'
+            },
+            success: function(data){
+                console.log('success:' + data);
+                top.postMessage({action: 'search', search: data.sentences[0].trans},'*');
+            },
+            error: function(data){
+                console.log('error:' + data);
+                top.postMessage({action: 'search', search: catalogi('#search').val()},'*');
+            }
+        });
+        return false;
+    });
 
     catalogi(window).on('message', function(event) {
         switch (event.originalEvent.data.action) {
             case 'search':
-                var goingto = "http://www." + m[0] + ".catalogi.ru/" + m[0] + "/de/s?_sb=true&query=";
+                var goingto = "http://www." + currentDomain + ".catalogi.ru/" + currentDomain + "/de/s?_sb=true&query=";
                 goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
                 window.location = goingto;
                 break
@@ -267,4 +298,5 @@ catalogi(function(){
     catalogi.noTranslate();
     catalogi.parse();
     catalogi.removeShit();
+    checkSeach();
 });
