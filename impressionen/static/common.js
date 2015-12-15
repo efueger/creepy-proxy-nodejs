@@ -56,6 +56,7 @@ catalogi.parse = function() {
     catalogi('a[href*="/de/service/katalogbestellung"]').remove();
 
     // Меню
+    catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
     catalogi('a[data-etracker-event*="Header, Metanavi, Direkt bestellen"]').attr('href', '#')
         .attr('class', 'catalogi-shops')
         .removeAttr('data-etracker-event')

@@ -52,6 +52,53 @@
     height: 16px;
 }
 
+._home{
+    background-image: url(http://cdn.catalogi.ru/static/images/_home.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    line-height: 20px;
+    padding: 0 0 0 20px;
+    font-weight: bold;
+
+    color: #666;
+}
+
+@media screen and (max-width: 63.9em) {
+    #page-header.sticky #account-nav {
+        right: 295px
+    }
+    #page-header:not(.sticky) #account-nav {
+        top: 14px;
+        right: 50px;
+        width: 180px
+    }
+    #page-header:not(.sticky) #account-nav .my-account a,
+    #page-header:not(.sticky) #account-nav .my-account .link {
+        position: relative
+    }
+}
+@media screen and (min-width: 64em) {
+    #page-header.sticky #account-nav {
+        right: 260px
+    }
+    #page-header:not(.sticky) #account-nav {
+        top: 14px;
+        right: 50px;
+        width: 185px
+    }
+    #page-header:not(.sticky) #account-nav .my-account a,
+    #page-header:not(.sticky) #account-nav .my-account .link {
+        position: relative
+    }
+}
+@media screen and (min-width: 80em) {
+    #page-header.sticky #account-nav {
+        right: 333px;
+        width: 100px
+    }
+}
+
 .goog-te-banner-frame.skiptranslate {
     display: none !important;
 }
