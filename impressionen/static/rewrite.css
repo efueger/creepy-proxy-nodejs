@@ -115,3 +115,7 @@
 .goog-te-banner-frame.skiptranslate {
     display: none !important;
 }
+
+.panel.panel-type-4 {
+    display: none !important;
+}
