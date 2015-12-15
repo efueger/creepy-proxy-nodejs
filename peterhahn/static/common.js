@@ -78,8 +78,9 @@ catalogi.parse = function() {
 
             var price1 = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
             var price2 = catalogi('.pricebox > ul > div').find('.newprice').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
-            var price   = (price1 == "") ? price2 : price1;
-
+            var price3   = (price1 == "") ? price2 : price1;
+            var price4 = catalogi('.pricebox > ul > div > p').text();
+            var price   = (price3 == "") ? price4 : price3;
 
             var color = catalogi('.colors > li[class="activeSelection"]').attr('title');
             var size = catalogi('li[class*="selected"] > a > span').text();
