@@ -1,5 +1,7 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+
 $showErrors = FALSE;
 //error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 error_reporting(E_ALL^E_NOTICE);

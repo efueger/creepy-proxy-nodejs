@@ -114,7 +114,7 @@
       catalogi('input[name="email"]').attr('disabled','1');
       catalogi.ajax({
         type: 'POST',
-        url: 'http://cdn.catalogi.ru/static/partials/smartresponder.php',
+        url: 'http://cdn.catalogi.ru/static/executable/smartresponder.php',
         dataType: 'xml',
         data: {
           name: name,
@@ -155,7 +155,7 @@
   <table class="subscribe">
     <tr>
       <td valign="top" width="160">
-        <?php if( $_GET['group'] !== 'undefined' && $_GET['group'] !== '76136' ):?><img src="/cat/magazin/<?php echo $_GET['group'] ?>.png" class="magazine" /><?php endif ?>
+        <?php if( $_GET['group'] !== 'undefined' && $_GET['group'] !== '76136' ):?><img src="/static/images/catalogs/<?php echo $_GET['group'] ?>.png" class="magazine" /><?php endif ?>
       </td>
       <td>
         <div class="slogan">Будьте первыми!</div>
