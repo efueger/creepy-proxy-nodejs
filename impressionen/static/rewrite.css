@@ -102,14 +102,17 @@
 #header-brand-logo {
     display: block;
     text-indent: -9999em;
-    background: transparent url("/static/images/impressionen-logo2.svg") no-repeat 0 0 scroll;
-    background-image: url("/static/images/impressionen-logo2.svg");
-    width: 261px;
+    background: transparent url("/static/images/impressionen-logo.svg") no-repeat 0 0 scroll;
+    background-image: url("/static/images/impressionen-logo.svg");
     height: 58px;
     position: relative;
     top: 65px;
     margin-bottom: 39px;
     background-size: contain;
+}
+
+#account-nav .my-account-login, #account-nav .my-account-flyout-btn {
+    color: #111;
 }
 
 .goog-te-banner-frame.skiptranslate {
