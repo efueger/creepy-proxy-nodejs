@@ -112,13 +112,7 @@
 }
 
 #account-nav .my-account-login, #account-nav .my-account-flyout-btn {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 200px;
     color: #111;
-    letter-spacing: 0;
-    padding-right: 3px;
 }
 
 .goog-te-banner-frame.skiptranslate {
