@@ -66,10 +66,12 @@
 
 @media screen and (max-width: 63.9em) {
     #page-header.sticky #account-nav {
-        right: 235px
+        top: 22px;
+        right: 235px;
+        width: 150px;
     }
     #page-header:not(.sticky) #account-nav {
-        top: 14px;
+        top: 12px;
         right: 50px;
         width: 180px
     }
@@ -80,10 +82,12 @@
 }
 @media screen and (min-width: 64em) {
     #page-header.sticky #account-nav {
-        right: 190px
+        top: 22px;
+        right: 200px;
+        width: 150px;
     }
     #page-header:not(.sticky) #account-nav {
-        top: 14px;
+        top: 13px;
         right: 50px;
         width: 185px
     }
@@ -94,12 +98,9 @@
 }
 @media screen and (min-width: 80em) {
     #page-header.sticky #account-nav {
-        width: 125px
+        top: 22px;
+        width: 230px;
     }
-}
-#page-header.sticky #account-nav {
-    top: 22px;
-    width: 160px;
 }
 
 #page-header.sticky #minicart {
