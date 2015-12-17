@@ -66,7 +66,7 @@
 
 @media screen and (max-width: 63.9em) {
     #page-header.sticky #account-nav {
-        right: 295px
+        right: 235px
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
@@ -80,7 +80,7 @@
 }
 @media screen and (min-width: 64em) {
     #page-header.sticky #account-nav {
-        right: 260px
+        right: 190px
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
@@ -94,10 +94,18 @@
 }
 @media screen and (min-width: 80em) {
     #page-header.sticky #account-nav {
-        right: 333px;
-        width: 100px
+        width: 125px
     }
 }
+#page-header.sticky #account-nav {
+    top: 22px;
+    width: 160px;
+}
+
+#page-header.sticky #minicart {
+    top: 21px;
+}
+
 
 #header-brand-logo {
     display: block;
@@ -116,6 +124,10 @@
 }
 
 .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+.js-layer.layer-hide {
     display: none !important;
 }
 
