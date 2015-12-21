@@ -48,7 +48,7 @@
     background-size: 100% auto;
     display: block;
     float: right;
-    width: 11px;
+    width: 10px;
     height: 16px;
 }
 
@@ -66,7 +66,9 @@
 
 @media screen and (max-width: 63.9em) {
     #page-header.sticky #account-nav {
-        right: 295px
+        top: 22px;
+        right: 235px;
+        width: 150px;
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
@@ -80,7 +82,9 @@
 }
 @media screen and (min-width: 64em) {
     #page-header.sticky #account-nav {
-        right: 260px
+        top: 22px;
+        right: 200px;
+        width: 150px;
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
@@ -94,10 +98,30 @@
 }
 @media screen and (min-width: 80em) {
     #page-header.sticky #account-nav {
-        right: 333px;
-        width: 100px
+        top: 22px;
+        width: 230px;
     }
 }
+
+#page-header.sticky #minicart {
+    top: 21px;
+}
+
+#page-header:not(.sticky) #meta-nav li a, #page-header:not(.sticky) #meta-nav li .link {
+    font: 500 12px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    display: block;
+}
+
+#account-nav a, #account-nav .link {
+    font: 500 12px/18px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #111;
+}
+
+#wishlist-link>a, #wishlist-link>.link, #minicart-link>a, #minicart-link>.link {
+    color: #111;
+    font: 500 12px/1 "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
 
 #header-brand-logo {
     display: block;
@@ -116,6 +140,10 @@
 }
 
 .goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+.js-layer.layer-hide {
     display: none !important;
 }
 

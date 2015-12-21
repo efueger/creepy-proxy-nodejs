@@ -56,7 +56,6 @@ catalogi.parse = function() {
     catalogi('a[href*="/de/service/katalogbestellung"]').remove();
 
     // Меню
-    catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
     catalogi('a[data-etracker-event*="Header, Metanavi, Direkt bestellen"]').attr('href', '#')
         .attr('class', 'catalogi-shops')
         .removeAttr('data-etracker-event')
@@ -71,6 +70,13 @@ catalogi.parse = function() {
     catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-delivery');
     catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
     catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-size-table');
+    catalogi('.catalogi-shops').parent().parent().clone().prependTo('#meta-nav > ul');
+    catalogi('.catalogi-shops:eq(0)').attr('class', 'catalogi-main-site');
+
+    // На основной сайт
+    catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
+    catalogi('.catalogi-main-site > span').text('Каталоги.ру');
+    catalogi('.catalogi-main-site').attr('href', 'http://catalogi.ru').attr('target', '_blank');
 
     catalogi('.catalogi-shops > span').text('Интернет-магазины').click(function(){
         catalogi.shops();
