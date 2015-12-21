@@ -1,3 +1,4 @@
+/* Заменяем шрифты */
 @font-face {
 	font-family: 'FontAwesome';
 	src: url('/static/fonts/fontawesome-webfont.eot?v=4.4.0');
@@ -9,9 +10,6 @@
 	font-weight: normal;
 	font-style: normal;
 }
-#js-comments-write_button_review,
-.review-inner-button-panel {display:none;}
-
 @font-face {
     font-family: "ImpIcons";
     src: url("/static/fonts/impressionen-iconfont.eot");
@@ -41,6 +39,8 @@
     font-style: normal
 }
 
+
+/* Активные элементы шапки */
 ._logout{
     background-image: url(http://cdn.catalogi.ru/static/images/_logout.png);
     background-position: left center;
@@ -51,7 +51,6 @@
     width: 10px;
     height: 16px;
 }
-
 ._home{
     background-image: url(http://cdn.catalogi.ru/static/images/_home.png);
     background-position: left center;
@@ -64,16 +63,17 @@
     color: #666;
 }
 
+/* Новые расположения элементов шапки */
 @media screen and (max-width: 63.9em) {
     #page-header.sticky #account-nav {
         top: 22px;
         right: 235px;
-        width: 150px;
+        width: 110px;
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
         right: 50px;
-        width: 180px
+        width: 110px
     }
     #page-header:not(.sticky) #account-nav .my-account a,
     #page-header:not(.sticky) #account-nav .my-account .link {
@@ -83,46 +83,50 @@
 @media screen and (min-width: 64em) {
     #page-header.sticky #account-nav {
         top: 22px;
-        right: 200px;
-        width: 150px;
+        right: 300px;
+        width: 110px;
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
-        right: 50px;
-        width: 185px
+        right: 100px;
+        width: 115px
     }
     #page-header:not(.sticky) #account-nav .my-account a,
     #page-header:not(.sticky) #account-nav .my-account .link {
         position: relative
     }
+    #page-header:not(.sticky) #meta-nav {
+        max-width: 60%;
+    }
 }
 @media screen and (min-width: 80em) {
     #page-header.sticky #account-nav {
         top: 22px;
-        width: 230px;
+        width: 110px;
     }
 }
 
-#page-header.sticky #minicart {
-    top: 21px;
-}
-
+/* Уменьшаем шрифты */
 #page-header:not(.sticky) #meta-nav li a, #page-header:not(.sticky) #meta-nav li .link {
     font: 500 12px "Helvetica Neue",Helvetica,Arial,sans-serif;
     display: block;
 }
-
 #account-nav a, #account-nav .link {
     font: 500 12px/18px "Helvetica Neue",Helvetica,Arial,sans-serif;
     color: #111;
 }
-
 #wishlist-link>a, #wishlist-link>.link, #minicart-link>a, #minicart-link>.link {
     color: #111;
     font: 500 12px/1 "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+#account-nav .my-account-login, #account-nav .my-account-flyout-btn {
+    color: #111;
+}
+#page-header.sticky #minicart {
+    top: 21px;
+}
 
-
+/* Заменяем лого */
 #header-brand-logo {
     display: block;
     text-indent: -9999em;
@@ -135,18 +139,26 @@
     background-size: contain;
 }
 
-#account-nav .my-account-login, #account-nav .my-account-flyout-btn {
-    color: #111;
-}
 
+/* Скрываем мусор */
 .goog-te-banner-frame.skiptranslate {
     display: none !important;
 }
-
 .js-layer.layer-hide {
     display: none !important;
 }
-
 .panel.panel-type-4 {
     display: none !important;
+}
+#js-comments-write_button_review, .review-inner-button-panel {
+    display:none;
+}
+
+/* Подготовка к отображению */
+#_head #_center ._info{
+    margin: 0px 0 0 34px !important;
+}
+body{
+    top: 0 !important;
+    visibility: hidden;
 }
