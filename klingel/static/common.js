@@ -44,8 +44,9 @@ catalogi.noTranslate = function(){
     // Стр. товара
     catalogi('.brandName').addClass('notranslate');
     catalogi('span[itemprop="identifier"]').addClass('notranslate');
+    catalogi('#productId').addClass('notranslate');
     if(!catalogi('.productName').is('[origin]')){
-    catalogi('.productName').attr('origin', catalogi('.productName').text());
+        catalogi('.productName').attr('origin', catalogi('.productName').text());
     }
 
     catalogi('#BVRRSummaryContainer').bind('DOMNodeInserted', function(e){
