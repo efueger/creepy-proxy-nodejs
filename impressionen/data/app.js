@@ -175,11 +175,11 @@ if (cluster.isMaster) {
             });
         }
 
-        if (req.headers.host !== 'static.impressionen.catalogi.ru') {
+        if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-                .pipe(replacestream(new RegExp('/impressionen/_ui/desktoprebrush/theme-impressionen/all.js', 'g'), 'http://impressionen.catalogi.ru/static/all.js'))
+                .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktoprebrush/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
                 .pipe(replacestream('static.etracker', '127.0.0.1'))
                 .pipe(replacestream('maxymiser', '127.0.0.1'))
                 .pipe(replacestream('googletagmanager', '127.0.0.1'))
@@ -187,8 +187,8 @@ if (cluster.isMaster) {
                 .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
                 .pipe(res);
         } else {
-            piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://impressionen.catalogi.ru/static/bk_script.js'))
-                .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://impressionen.catalogi.ru/static/customlib.js'))
+            piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/bk_script.js'))
+                .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                 .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
                 .pipe(res);
         }
