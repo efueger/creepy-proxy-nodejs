@@ -1,11 +1,16 @@
 body{
-  top: 0 !important;
-  visibility: hidden;
+    top: 0 !important;
+    visibility: hidden;
 }
 
+
 #iframe{
-	margin: 0 auto;
-	display: block;
+    margin: 0 auto;
+    display: block;
+}
+
+#page-header #page-header-main-wrapper{
+    height: 120px !important;
 }
 
 #header-brand-logo,
@@ -17,5 +22,5 @@ body{
 #js-comments-write_button_review,
 #page-footer,
 a[href="http://www.liveinternet.ru/click;CatalogiRU_NEW"]{
-	display: none !important;
+    display: none !important;
 }

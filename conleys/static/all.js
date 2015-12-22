@@ -1,36 +1,535 @@
-function forceRendering() {
-    "use strict";
-    $("body").css("overflow", "hidden").height(), $("body").css("overflow", "auto")
-}
-window.console || (window.console = function() {
-    function exec_callback(args) {
-        !callback_func || !callback_force && con && con.log || callback_func.apply(window, args)
+window.Modernizr = function(window, document, undefined) {
+    function setCss(str) {
+        mStyle.cssText = str
     }
 
-    function is_level(level) {
-        return log_level > 0 ? log_level > level : log_methods.length + log_level <= level
+    function is(obj, type) {
+        return typeof obj === type
     }
-    for (var callback_func, callback_force, window = this, aps = Array.prototype.slice, con = window.console, that = {}, log_level = 9, log_methods = ["error", "warn", "info", "debug", "log"], pass_methods = "assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "), idx = pass_methods.length, logs = []; --idx >= 0;) ! function(method) {
-        that[method] = function() {
-            0 !== log_level && con && con[method] && con[method].apply(con, arguments)
+
+    function contains(str, substr) {
+        return !!~("" + str).indexOf(substr)
+    }
+
+    function testProps(props, prefixed) {
+        for (var i in props) {
+            var prop = props[i];
+            if (!contains(prop, "-") && mStyle[prop] !== undefined) return "pfx" == prefixed ? prop : !0
         }
-    }(pass_methods[idx]);
-    for (idx = log_methods.length; --idx >= 0;) ! function(idx, level) {
-        that[level] = function() {
-            var args = aps.call(arguments),
-                log_arr = [level].concat(args);
-            logs.push(log_arr), exec_callback(log_arr), con && is_level(idx) && (con.firebug ? con[level].apply(window, args) : con[level] ? con[level](args) : con.log(args))
+        return !1
+    }
+
+    function testDOMProps(props, obj, elem) {
+        for (var i in props) {
+            var item = obj[props[i]];
+            if (item !== undefined) return elem === !1 ? props[i] : is(item, "function") ? item.bind(elem || obj) : item
         }
-    }(idx, log_methods[idx]);
-    return that.setLevel = function(level) {
-        log_level = "number" == typeof level ? level : 9
-    }, that.setCallback = function() {
-        var args = aps.call(arguments),
-            max = logs.length,
-            i = max;
-        for (callback_func = args.shift() || null, callback_force = "boolean" == typeof args[0] ? args.shift() : !1, i -= "number" == typeof args[0] ? args.shift() : max; max > i;) exec_callback(logs[i++])
-    }, that
-}()),
+        return !1
+    }
+
+    function testPropsAll(prop, prefixed, elem) {
+        var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
+            props = (prop + " " + cssomPrefixes.join(ucProp + " ") + ucProp).split(" ");
+        return is(prefixed, "string") || is(prefixed, "undefined") ? testProps(props, prefixed) : (props = (prop + " " + domPrefixes.join(ucProp + " ") + ucProp).split(" "), testDOMProps(props, prefixed, elem))
+    }
+
+    function webforms() {
+        Modernizr.input = function(props) {
+            for (var i = 0, len = props.length; len > i; i++) attrs[props[i]] = !!(props[i] in inputElem);
+            return attrs.list && (attrs.list = !(!document.createElement("datalist") || !window.HTMLDataListElement)), attrs
+        }("autocomplete autofocus list placeholder max min multiple pattern required step".split(" ")), Modernizr.inputtypes = function(props) {
+            for (var bool, inputElemType, defaultView, i = 0, len = props.length; len > i; i++) inputElem.setAttribute("type", inputElemType = props[i]), bool = "text" !== inputElem.type, bool && (inputElem.value = smile, inputElem.style.cssText = "position:absolute;visibility:hidden;", /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ? (docElement.appendChild(inputElem), defaultView = document.defaultView, bool = defaultView.getComputedStyle && "textfield" !== defaultView.getComputedStyle(inputElem, null).WebkitAppearance && 0 !== inputElem.offsetHeight, docElement.removeChild(inputElem)) : /^(search|tel)$/.test(inputElemType) || (bool = /^(url|email)$/.test(inputElemType) ? inputElem.checkValidity && inputElem.checkValidity() === !1 : inputElem.value != smile)), inputs[props[i]] = !!bool;
+            return inputs
+        }("search tel url email datetime date month week time datetime-local number range color".split(" "))
+    }
+    var featureName, hasOwnProp, version = "2.8.3",
+        Modernizr = {},
+        enableClasses = !0,
+        docElement = document.documentElement,
+        mod = "modernizr",
+        modElem = document.createElement(mod),
+        mStyle = modElem.style,
+        inputElem = document.createElement("input"),
+        smile = ":)",
+        toString = {}.toString,
+        prefixes = " -webkit- -moz- -o- -ms- ".split(" "),
+        omPrefixes = "Webkit Moz O ms",
+        cssomPrefixes = omPrefixes.split(" "),
+        domPrefixes = omPrefixes.toLowerCase().split(" "),
+        ns = {
+            svg: "http://www.w3.org/2000/svg"
+        },
+        tests = {},
+        inputs = {},
+        attrs = {},
+        classes = [],
+        slice = classes.slice,
+        injectElementWithStyles = function(rule, callback, nodes, testnames) {
+            var style, ret, node, docOverflow, div = document.createElement("div"),
+                body = document.body,
+                fakeBody = body || document.createElement("body");
+            if (parseInt(nodes, 10))
+                for (; nodes--;) node = document.createElement("div"), node.id = testnames ? testnames[nodes] : mod + (nodes + 1), div.appendChild(node);
+            return style = ["&#173;", '<style id="s', mod, '">', rule, "</style>"].join(""), div.id = mod, (body ? div : fakeBody).innerHTML += style, fakeBody.appendChild(div), body || (fakeBody.style.background = "", fakeBody.style.overflow = "hidden", docOverflow = docElement.style.overflow, docElement.style.overflow = "hidden", docElement.appendChild(fakeBody)), ret = callback(div, rule), body ? div.parentNode.removeChild(div) : (fakeBody.parentNode.removeChild(fakeBody), docElement.style.overflow = docOverflow), !!ret
+        },
+        isEventSupported = function() {
+            function isEventSupported(eventName, element) {
+                element = element || document.createElement(TAGNAMES[eventName] || "div"), eventName = "on" + eventName;
+                var isSupported = eventName in element;
+                return isSupported || (element.setAttribute || (element = document.createElement("div")), element.setAttribute && element.removeAttribute && (element.setAttribute(eventName, ""), isSupported = is(element[eventName], "function"), is(element[eventName], "undefined") || (element[eventName] = undefined), element.removeAttribute(eventName))), element = null, isSupported
+            }
+            var TAGNAMES = {
+                select: "input",
+                change: "input",
+                submit: "form",
+                reset: "form",
+                error: "img",
+                load: "img",
+                abort: "img"
+            };
+            return isEventSupported
+        }(),
+        _hasOwnProperty = {}.hasOwnProperty;
+    hasOwnProp = is(_hasOwnProperty, "undefined") || is(_hasOwnProperty.call, "undefined") ? function(object, property) {
+        return property in object && is(object.constructor.prototype[property], "undefined")
+    } : function(object, property) {
+        return _hasOwnProperty.call(object, property)
+    }, Function.prototype.bind || (Function.prototype.bind = function(that) {
+        var target = this;
+        if ("function" != typeof target) throw new TypeError;
+        var args = slice.call(arguments, 1),
+            bound = function() {
+                if (this instanceof bound) {
+                    var F = function() {};
+                    F.prototype = target.prototype;
+                    var self = new F,
+                        result = target.apply(self, args.concat(slice.call(arguments)));
+                    return Object(result) === result ? result : self
+                }
+                return target.apply(that, args.concat(slice.call(arguments)))
+            };
+        return bound
+    }), tests.touch = function() {
+        var bool;
+        return "ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch ? bool = !0 : injectElementWithStyles(["@media (", prefixes.join("touch-enabled),("), mod, ")", "{#modernizr{top:9px;position:absolute}}"].join(""), function(node) {
+            bool = 9 === node.offsetTop
+        }), bool
+    }, tests.postmessage = function() {
+        return !!window.postMessage
+    }, tests.hashchange = function() {
+        return isEventSupported("hashchange", window) && (document.documentMode === undefined || document.documentMode > 7)
+    }, tests.cssanimations = function() {
+        return testPropsAll("animationName")
+    }, tests.cssgradients = function() {
+        var str1 = "background-image:",
+            str2 = "gradient(linear,left top,right bottom,from(#9f9),to(white));",
+            str3 = "linear-gradient(left top,#9f9, white);";
+        return setCss((str1 + "-webkit- ".split(" ").join(str2 + str1) + prefixes.join(str3 + str1)).slice(0, -str1.length)), contains(mStyle.backgroundImage, "gradient")
+    }, tests.csstransitions = function() {
+        return testPropsAll("transition")
+    }, tests.fontface = function() {
+        var bool;
+        return injectElementWithStyles('@font-face {font-family:"font";src:url("https://")}', function(node, rule) {
+            var style = document.getElementById("smodernizr"),
+                sheet = style.sheet || style.styleSheet,
+                cssText = sheet ? sheet.cssRules && sheet.cssRules[0] ? sheet.cssRules[0].cssText : sheet.cssText || "" : "";
+            bool = /src/i.test(cssText) && 0 === cssText.indexOf(rule.split(" ")[0])
+        }), bool
+    }, tests.generatedcontent = function() {
+        var bool;
+        return injectElementWithStyles(["#", mod, "{font:0/0 a}#", mod, ':after{content:"', smile, '";visibility:hidden;font:3px/1 a}'].join(""), function(node) {
+            bool = node.offsetHeight >= 3
+        }), bool
+    }, tests.video = function() {
+        var elem = document.createElement("video"),
+            bool = !1;
+        try {
+            (bool = !!elem.canPlayType) && (bool = new Boolean(bool), bool.ogg = elem.canPlayType('video/ogg; codecs="theora"').replace(/^no$/, ""), bool.h264 = elem.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, ""), bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/, ""))
+        } catch (e) {}
+        return bool
+    }, tests.localstorage = function() {
+        try {
+            return localStorage.setItem(mod, mod), localStorage.removeItem(mod), !0
+        } catch (e) {
+            return !1
+        }
+    }, tests.svg = function() {
+        return !!document.createElementNS && !!document.createElementNS(ns.svg, "svg").createSVGRect
+    }, tests.inlinesvg = function() {
+        var div = document.createElement("div");
+        return div.innerHTML = "<svg/>", (div.firstChild && div.firstChild.namespaceURI) == ns.svg
+    }, tests.svgclippaths = function() {
+        return !!document.createElementNS && /SVGClipPath/.test(toString.call(document.createElementNS(ns.svg, "clipPath")))
+    };
+    for (var feature in tests) hasOwnProp(tests, feature) && (featureName = feature.toLowerCase(), Modernizr[featureName] = tests[feature](), classes.push((Modernizr[featureName] ? "" : "no-") + featureName));
+    return Modernizr.input || webforms(), Modernizr.addTest = function(feature, test) {
+        if ("object" == typeof feature)
+            for (var key in feature) hasOwnProp(feature, key) && Modernizr.addTest(key, feature[key]);
+        else {
+            if (feature = feature.toLowerCase(), Modernizr[feature] !== undefined) return Modernizr;
+            test = "function" == typeof test ? test() : test, "undefined" != typeof enableClasses && enableClasses && (docElement.className += " " + (test ? "" : "no-") + feature), Modernizr[feature] = test
+        }
+        return Modernizr
+    }, setCss(""), modElem = inputElem = null,
+        function(window, document) {
+            function addStyleSheet(ownerDocument, cssText) {
+                var p = ownerDocument.createElement("p"),
+                    parent = ownerDocument.getElementsByTagName("head")[0] || ownerDocument.documentElement;
+                return p.innerHTML = "x<style>" + cssText + "</style>", parent.insertBefore(p.lastChild, parent.firstChild)
+            }
+
+            function getElements() {
+                var elements = html5.elements;
+                return "string" == typeof elements ? elements.split(" ") : elements
+            }
+
+            function getExpandoData(ownerDocument) {
+                var data = expandoData[ownerDocument[expando]];
+                return data || (data = {}, expanID++, ownerDocument[expando] = expanID, expandoData[expanID] = data), data
+            }
+
+            function createElement(nodeName, ownerDocument, data) {
+                if (ownerDocument || (ownerDocument = document), supportsUnknownElements) return ownerDocument.createElement(nodeName);
+                data || (data = getExpandoData(ownerDocument));
+                var node;
+                return node = data.cache[nodeName] ? data.cache[nodeName].cloneNode() : saveClones.test(nodeName) ? (data.cache[nodeName] = data.createElem(nodeName)).cloneNode() : data.createElem(nodeName), !node.canHaveChildren || reSkip.test(nodeName) || node.tagUrn ? node : data.frag.appendChild(node)
+            }
+
+            function createDocumentFragment(ownerDocument, data) {
+                if (ownerDocument || (ownerDocument = document), supportsUnknownElements) return ownerDocument.createDocumentFragment();
+                data = data || getExpandoData(ownerDocument);
+                for (var clone = data.frag.cloneNode(), i = 0, elems = getElements(), l = elems.length; l > i; i++) clone.createElement(elems[i]);
+                return clone
+            }
+
+            function shivMethods(ownerDocument, data) {
+                data.cache || (data.cache = {}, data.createElem = ownerDocument.createElement, data.createFrag = ownerDocument.createDocumentFragment, data.frag = data.createFrag()), ownerDocument.createElement = function(nodeName) {
+                    return html5.shivMethods ? createElement(nodeName, ownerDocument, data) : data.createElem(nodeName)
+                }, ownerDocument.createDocumentFragment = Function("h,f", "return function(){var n=f.cloneNode(),c=n.createElement;h.shivMethods&&(" + getElements().join().replace(/[\w\-]+/g, function(nodeName) {
+                        return data.createElem(nodeName), data.frag.createElement(nodeName), 'c("' + nodeName + '")'
+                    }) + ");return n}")(html5, data.frag)
+            }
+
+            function shivDocument(ownerDocument) {
+                ownerDocument || (ownerDocument = document);
+                var data = getExpandoData(ownerDocument);
+                return !html5.shivCSS || supportsHtml5Styles || data.hasCSS || (data.hasCSS = !!addStyleSheet(ownerDocument, "article,aside,dialog,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}mark{background:#FF0;color:#000}template{display:none}")), supportsUnknownElements || shivMethods(ownerDocument, data), ownerDocument
+            }
+            var supportsHtml5Styles, supportsUnknownElements, version = "3.7.0",
+                options = window.html5 || {},
+                reSkip = /^<|^(?:button|map|select|textarea|object|iframe|option|optgroup)$/i,
+                saveClones = /^(?:a|b|code|div|fieldset|h1|h2|h3|h4|h5|h6|i|label|li|ol|p|q|span|strong|style|table|tbody|td|th|tr|ul)$/i,
+                expando = "_html5shiv",
+                expanID = 0,
+                expandoData = {};
+            ! function() {
+                try {
+                    var a = document.createElement("a");
+                    a.innerHTML = "<xyz></xyz>", supportsHtml5Styles = "hidden" in a, supportsUnknownElements = 1 == a.childNodes.length || function() {
+                            document.createElement("a");
+                            var frag = document.createDocumentFragment();
+                            return "undefined" == typeof frag.cloneNode || "undefined" == typeof frag.createDocumentFragment || "undefined" == typeof frag.createElement
+                        }()
+                } catch (e) {
+                    supportsHtml5Styles = !0, supportsUnknownElements = !0
+                }
+            }();
+            var html5 = {
+                elements: options.elements || "abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video",
+                version: version,
+                shivCSS: options.shivCSS !== !1,
+                supportsUnknownElements: supportsUnknownElements,
+                shivMethods: options.shivMethods !== !1,
+                type: "default",
+                shivDocument: shivDocument,
+                createElement: createElement,
+                createDocumentFragment: createDocumentFragment
+            };
+            window.html5 = html5, shivDocument(document)
+        }(this, document), Modernizr._version = version, Modernizr._prefixes = prefixes, Modernizr._domPrefixes = domPrefixes, Modernizr._cssomPrefixes = cssomPrefixes, Modernizr.hasEvent = isEventSupported, Modernizr.testProp = function(prop) {
+        return testProps([prop])
+    }, Modernizr.testAllProps = testPropsAll, Modernizr.testStyles = injectElementWithStyles, Modernizr.prefixed = function(prop, obj, elem) {
+        return obj ? testPropsAll(prop, obj, elem) : testPropsAll(prop, "pfx")
+    }, docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, "$1$2") + (enableClasses ? " js " + classes.join(" ") : ""), Modernizr
+}(this, this.document),
+    function(a, b, c) {
+        function d(a) {
+            return "[object Function]" == o.call(a)
+        }
+
+        function e(a) {
+            return "string" == typeof a
+        }
+
+        function f() {}
+
+        function g(a) {
+            return !a || "loaded" == a || "complete" == a || "uninitialized" == a
+        }
+
+        function h() {
+            var a = p.shift();
+            q = 1, a ? a.t ? m(function() {
+                ("c" == a.t ? B.injectCss : B.injectJs)(a.s, 0, a.a, a.x, a.e, 1)
+            }, 0) : (a(), h()) : q = 0
+        }
+
+        function i(a, c, d, e, f, i, j) {
+            function k(b) {
+                if (!o && g(l.readyState) && (u.r = o = 1, !q && h(), l.onload = l.onreadystatechange = null, b)) {
+                    "img" != a && m(function() {
+                        t.removeChild(l)
+                    }, 50);
+                    for (var d in y[c]) y[c].hasOwnProperty(d) && y[c][d].onload()
+                }
+            }
+            var j = j || B.errorTimeout,
+                l = b.createElement(a),
+                o = 0,
+                r = 0,
+                u = {
+                    t: d,
+                    s: c,
+                    e: f,
+                    a: i,
+                    x: j
+                };
+            1 === y[c] && (r = 1, y[c] = []), "object" == a ? l.data = c : (l.src = c, l.type = a), l.width = l.height = "0", l.onerror = l.onload = l.onreadystatechange = function() {
+                k.call(this, r)
+            }, p.splice(e, 0, u), "img" != a && (r || 2 === y[c] ? (t.insertBefore(l, s ? null : n), m(k, j)) : y[c].push(l))
+        }
+
+        function j(a, b, c, d, f) {
+            return q = 0, b = b || "j", e(a) ? i("c" == b ? v : u, a, b, this.i++, c, d, f) : (p.splice(this.i++, 0, a), 1 == p.length && h()), this
+        }
+
+        function k() {
+            var a = B;
+            return a.loader = {
+                load: j,
+                i: 0
+            }, a
+        }
+        var A, B, l = b.documentElement,
+            m = a.setTimeout,
+            n = b.getElementsByTagName("script")[0],
+            o = {}.toString,
+            p = [],
+            q = 0,
+            r = "MozAppearance" in l.style,
+            s = r && !!b.createRange().compareNode,
+            t = s ? l : n.parentNode,
+            l = a.opera && "[object Opera]" == o.call(a.opera),
+            l = !!b.attachEvent && !l,
+            u = r ? "object" : l ? "script" : "img",
+            v = l ? "script" : u,
+            w = Array.isArray || function(a) {
+                    return "[object Array]" == o.call(a)
+                },
+            x = [],
+            y = {},
+            z = {
+                timeout: function(a, b) {
+                    return b.length && (a.timeout = b[0]), a
+                }
+            };
+        B = function(a) {
+            function b(a) {
+                var e, f, g, a = a.split("!"),
+                    b = x.length,
+                    c = a.pop(),
+                    d = a.length,
+                    c = {
+                        url: c,
+                        origUrl: c,
+                        prefixes: a
+                    };
+                for (f = 0; d > f; f++) g = a[f].split("="), (e = z[g.shift()]) && (c = e(c, g));
+                for (f = 0; b > f; f++) c = x[f](c);
+                return c
+            }
+
+            function g(a, e, f, g, h) {
+                var i = b(a),
+                    j = i.autoCallback;
+                i.url.split(".").pop().split("?").shift(), i.bypass || (e && (e = d(e) ? e : e[a] || e[g] || e[a.split("/").pop().split("?")[0]]), i.instead ? i.instead(a, e, f, g, h) : (y[i.url] ? i.noexec = !0 : y[i.url] = 1, f.load(i.url, i.forceCSS || !i.forceJS && "css" == i.url.split(".").pop().split("?").shift() ? "c" : c, i.noexec, i.attrs, i.timeout), (d(e) || d(j)) && f.load(function() {
+                    k(), e && e(i.origUrl, h, g), j && j(i.origUrl, h, g), y[i.url] = 2
+                })))
+            }
+
+            function h(a, b) {
+                function c(a, c) {
+                    if (a) {
+                        if (e(a)) c || (j = function() {
+                            var a = [].slice.call(arguments);
+                            k.apply(this, a), l()
+                        }), g(a, j, b, 0, h);
+                        else if (Object(a) === a)
+                            for (n in m = function() {
+                                var c, b = 0;
+                                for (c in a) a.hasOwnProperty(c) && b++;
+                                return b
+                            }(), a) a.hasOwnProperty(n) && (!c && !--m && (d(j) ? j = function() {
+                                var a = [].slice.call(arguments);
+                                k.apply(this, a), l()
+                            } : j[n] = function(a) {
+                                return function() {
+                                    var b = [].slice.call(arguments);
+                                    a && a.apply(this, b), l()
+                                }
+                            }(k[n])), g(a[n], j, b, n, h))
+                    } else !c && l()
+                }
+                var m, n, h = !!a.test,
+                    i = a.load || a.both,
+                    j = a.callback || f,
+                    k = j,
+                    l = a.complete || f;
+                c(h ? a.yep : a.nope, !!i), i && c(i)
+            }
+            var i, j, l = this.yepnope.loader;
+            if (e(a)) g(a, 0, l, 0);
+            else if (w(a))
+                for (i = 0; i < a.length; i++) j = a[i], e(j) ? g(j, 0, l, 0) : w(j) ? B(j) : Object(j) === j && h(j, l);
+            else Object(a) === a && h(a, l)
+        }, B.addPrefix = function(a, b) {
+            z[a] = b
+        }, B.addFilter = function(a) {
+            x.push(a)
+        }, B.errorTimeout = 1e4, null == b.readyState && b.addEventListener && (b.readyState = "loading", b.addEventListener("DOMContentLoaded", A = function() {
+            b.removeEventListener("DOMContentLoaded", A, 0), b.readyState = "complete"
+        }, 0)), a.yepnope = k(), a.yepnope.executeStack = h, a.yepnope.injectJs = function(a, c, d, e, i, j) {
+            var l, o, k = b.createElement("script"),
+                e = e || B.errorTimeout;
+            k.src = a;
+            for (o in d) k.setAttribute(o, d[o]);
+            c = j ? h : c || f, k.onreadystatechange = k.onload = function() {
+                !l && g(k.readyState) && (l = 1, c(), k.onload = k.onreadystatechange = null)
+            }, m(function() {
+                l || (l = 1, c(1))
+            }, e), i ? k.onload() : n.parentNode.insertBefore(k, n)
+        }, a.yepnope.injectCss = function(a, c, d, e, g, i) {
+            var j, e = b.createElement("link"),
+                c = i ? h : c || f;
+            e.href = a, e.rel = "stylesheet", e.type = "text/css";
+            for (j in d) e.setAttribute(j, d[j]);
+            g || (n.parentNode.insertBefore(e, n), m(c, 0))
+        }
+    }(this, document), Modernizr.load = function() {
+    yepnope.apply(window, [].slice.call(arguments, 0))
+},
+    function(window, navigator) {
+        function Detectizr(opt) {
+            var i, j, k, l, alias, plugin, resizeTimeoutId, re, oldOrientation, extend = function(obj, extObj) {
+                    var a, b, i;
+                    if (arguments.length > 2)
+                        for (a = 1, b = arguments.length; b > a; a += 1) extend(obj, arguments[a]);
+                    else
+                        for (i in extObj) extObj.hasOwnProperty(i) && (obj[i] = extObj[i]);
+                    return obj
+                },
+                that = this,
+                device = Modernizr.Detectizr.device,
+                docElement = document.documentElement,
+                deviceTypes = ["tv", "tablet", "mobile", "desktop"],
+                plugins2detect = {
+                    java: {
+                        substrs: ["Java"],
+                        progIds: ["JavaWebStart.isInstalled"]
+                    },
+                    acrobat: {
+                        substrs: ["Adobe", "Acrobat"],
+                        progIds: ["AcroPDF.PDF", "PDF.PDFCtrl.5"]
+                    },
+                    flash: {
+                        substrs: ["Shockwave", "Flash"],
+                        progIds: ["ShockwaveFlash.ShockwaveFlash"]
+                    },
+                    mediaplayer: {
+                        substrs: ["Windows Media"],
+                        progIds: ["MediaPlayer.MediaPlayer"]
+                    },
+                    silverlight: {
+                        substrs: ["Silverlight"],
+                        progIds: ["AgControl.AgControl"]
+                    }
+                };
+            if (options = extend({}, options, opt || {}), that.is = function(key) {
+                    return device.userAgent.indexOf(key) > -1
+                }, that.test = function(regex) {
+                    return regex.test(device.userAgent)
+                }, that.exec = function(regex) {
+                    return regex.exec(device.userAgent)
+                }, that.toCamel = function(string) {
+                    return null === string || void 0 === string ? "" : String(string).replace(/((\s|\-|\.)+[a-z0-9])/g, function($1) {
+                        return $1.toUpperCase().replace(/(\s|\-|\.)/g, "")
+                    })
+                }, that.addVersionTest = function(mainTest, version, maxLength) {
+                    null !== version && void 0 !== version && "" !== version && (version = that.toCamel(version), "" !== version && (void 0 !== maxLength && maxLength > 0 && (version = version.substr(0, maxLength)), that.addConditionalTest(mainTest + version, !0)))
+                }, that.checkOrientation = function() {
+                    window.clearTimeout(resizeTimeoutId), resizeTimeoutId = window.setTimeout(function() {
+                        oldOrientation = device.orientation, device.orientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape", that.addConditionalTest(device.orientation, !0), oldOrientation !== device.orientation && that.addConditionalTest(oldOrientation, !1)
+                    }, 10)
+                }, that.addConditionalTest = function(feature, test) {
+                    null !== feature && void 0 !== feature && "" !== feature && (options.addAllFeaturesAsClass ? Modernizr.addTest(feature, test) : (test = "function" == typeof test ? test() : test, test ? Modernizr.addTest(feature, !0) : (delete Modernizr[feature], re = new RegExp("\\b" + feature + "\\b"), docElement.className = docElement.className.replace(re, ""))))
+                }, options.detectDevice) {
+                for (that.test(/GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML/i) ? (device.type = deviceTypes[0], device.model = "smartTv") : that.test(/Xbox|PLAYSTATION.3|Wii/i) ? (device.type = deviceTypes[0], device.model = "gameConsole") : that.test(/iP(a|ro)d/i) ? (device.type = deviceTypes[1], device.model = "ipad") : that.test(/tablet/i) && !that.test(/RX-34/i) || that.test(/FOLIO/i) ? (device.type = deviceTypes[1], device.model = String(that.exec(/playbook/))) : that.test(/Linux/i) && that.test(/Android/i) && !that.test(/Fennec|mobi|HTC.Magic|HTCX06HT|Nexus.One|SC-02B|fone.945/i) ? (device.type = deviceTypes[1], device.model = "android") : that.test(/Kindle/i) || that.test(/Mac.OS/i) && that.test(/Silk/i) ? (device.type = deviceTypes[1], device.model = "kindle") : that.test(/GT-P10|SC-01C|SHW-M180S|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC(.Flyer|\_Flyer)|Sprint.ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos.S7|Dell.Streak.7|Advent.Vega|A101IT|A70BHT|MID7015|Next2|nook/i) || that.test(/MB511/i) && that.test(/RUTEM/i) ? (device.type = deviceTypes[1], device.model = "android") : that.test(/BB10/i) ? (device.type = deviceTypes[1], device.model = "blackberry") : (device.model = that.exec(/iphone|ipod|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec|j2me/i), null !== device.model ? (device.type = deviceTypes[2], device.model = String(device.model)) : (device.model = "", that.test(/BOLT|Fennec|Iris|Maemo|Minimo|Mobi|mowser|NetFront|Novarra|Prism|RX-34|Skyfire|Tear|XV6875|XV6975|Google.Wireless.Transcoder/i) ? device.type = deviceTypes[2] : that.test(/Opera/i) && that.test(/Windows.NT.5/i) && that.test(/HTC|Xda|Mini|Vario|SAMSUNG\-GT\-i8000|SAMSUNG\-SGH\-i9/i) ? device.type = deviceTypes[2] : that.test(/Windows.(NT|XP|ME|9)/i) && !that.test(/Phone/i) || that.test(/Win(9|.9|NT)/i) || that.test(/\(Windows 8\)/i) ? device.type = deviceTypes[3] : that.test(/Macintosh|PowerPC/i) && !that.test(/Silk/i) ? device.type = deviceTypes[3] : that.test(/Linux/i) && that.test(/X11/i) ? device.type = deviceTypes[3] : that.test(/Solaris|SunOS|BSD/i) ? device.type = deviceTypes[3] : that.test(/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye/i) && !that.test(/Mobile/i) ? (device.type = deviceTypes[3], device.model = "crawler") : device.type = deviceTypes[2])), i = 0, j = deviceTypes.length; j > i; i += 1) that.addConditionalTest(deviceTypes[i], device.type === deviceTypes[i]);
+                options.detectDeviceModel && that.addConditionalTest(that.toCamel(device.model), !0), (device.type === deviceTypes[1] || device.type === deviceTypes[2]) && (window.onresize = function(event) {
+                    that.checkOrientation(event)
+                }, that.checkOrientation())
+            }
+            if (options.detectScreen && Modernizr.mq && (that.addConditionalTest("smallScreen", Modernizr.mq("only screen and (max-width: 480px)")), that.addConditionalTest("verySmallScreen", Modernizr.mq("only screen and (max-width: 320px)")), that.addConditionalTest("veryVerySmallScreen", Modernizr.mq("only screen and (max-width: 240px)"))), options.detectOS && ("" !== device.model && ("ipad" === device.model || "iphone" === device.model || "ipod" === device.model ? (device.osVersion = that.test(/os\s(\d+)_/) ? RegExp.$1 : "", device.os = "ios", device.osVersionFull = that.test(/os ([^\s]+)/) ? RegExp.$1.replace(/_/g, ".") : "") : "android" === device.model ? (device.osVersion = (that.test(/os\s(\d+)_/) ? RegExp.$1 : "").substr(0, 2), device.osVersion || (device.osVersion = that.test(/android\s(\d+)\./) ? RegExp.$1 : "", device.osVersionFull = that.test(/android ([^\s]+)/) ? RegExp.$1.replace(/_/g, ".") : ""), device.os = "android") : "blackberry" === device.model ? (device.osVersion = that.test(/version\/([^\s]+)/) ? RegExp.$1 : "", device.os = "blackberry") : "playbook" === device.model && (device.osVersion = that.test(/os ([^\s]+)/) ? RegExp.$1.replace(";", "") : "", device.os = "blackberry")), "" === device.os && (that.is("win") || that.is("16bit") ? (device.os = "windows", that.is("windows nt 6.3") ? (device.osVersion = "8", device.osVersionFull = "8.1") : that.is("windows nt 6.2") || that.test(/\(windows 8\)/) ? device.osVersion = "8" : that.is("windows nt 6.1") ? device.osVersion = "7" : that.is("windows nt 6.0") ? device.osVersion = "vista" : that.is("windows nt 5.2") || that.is("windows nt 5.1") || that.is("windows xp") ? device.osVersion = "xp" : that.is("windows nt 5.0") || that.is("windows 2000") ? device.osVersion = "2k" : that.is("winnt") || that.is("windows nt") ? device.osVersion = "nt" : that.is("win98") || that.is("windows 98") ? device.osVersion = "98" : (that.is("win95") || that.is("windows 95")) && (device.osVersion = "95")) : that.is("mac") || that.is("darwin") ? (device.os = "mac", that.is("68k") || that.is("68000") ? device.osVersion = "68k" : that.is("ppc") || that.is("powerpc") ? device.osVersion = "ppc" : that.is("os x") && (device.osVersion = "os x")) : that.is("webtv") ? device.os = "webtv" : that.is("x11") || that.is("inux") ? device.os = "linux" : that.is("sunos") ? device.os = "sun" : that.is("irix") ? device.os = "irix" : that.is("freebsd") ? device.os = "freebsd" : that.is("bsd") && (device.os = "bsd")), "" !== device.os && (!device.osVersionFull && device.osVersion && (device.osVersionFull = device.osVersion), that.addConditionalTest(device.os, !0), that.addVersionTest(device.os, device.osVersionFull.replace(/\./g, "_")), that.addVersionTest(device.os, device.osVersion))), options.detectBrowser && (that.test(/opera|webtv/i) || !that.test(/msie\s([0-9]{1,})/) && !that.is("trident") ? that.is("firefox") ? (device.browserEngine = "gecko", device.browser = "firefox", device.browserVersion = (that.test(/firefox\/(\d+(\.?\d+)*)/) ? RegExp.$1 : "").substr(0, 2)) : that.is("gecko/") ? device.browserEngine = "gecko" : that.is("opera") ? (device.browser = "opera", device.browserEngine = "presto", device.browserVersion = that.test(/version\/(\d+)/) ? RegExp.$1 : that.test(/opera(\s|\/)(\d+)/) ? RegExp.$2 : "") : that.is("konqueror") ? device.browser = "konqueror" : that.is("chrome") ? (device.browserEngine = "webkit", device.browser = "chrome", device.browserVersion = that.test(/chrome\/(\d+)/) ? RegExp.$1 : "") : that.is("iron") ? (device.browserEngine = "webkit", device.browser = "iron") : that.is("applewebkit/") ? (device.browser = "safari", device.browserEngine = "webkit", device.browserVersion = that.test(/version\/(\d+)/) ? RegExp.$1 : "") : that.is("mozilla/") && (device.browserEngine = "gecko") : (device.browser = "ie", device.browserVersion = !window.addEventListener && document.documentMode && 7 === document.documentMode ? "8compat" : that.test(/trident.*rv[ :](\d+)\./) ? RegExp.$1 : that.test(/trident\/4\.0/) ? "8" : RegExp.$1), "" !== device.browser && (that.addConditionalTest(device.browser, !0), "" !== device.browserVersion && that.addVersionTest(device.browser, device.browserVersion)), that.addConditionalTest(device.browserEngine, !0)), options.detectPlugins) {
+                that.detectPlugin = function(substrs) {
+                    if (navigator.plugins)
+                        for (i = 0, j = navigator.plugins.length; j > i; i += 1) {
+                            var plugin = navigator.plugins[i],
+                                haystack = plugin.name + plugin.description,
+                                found = 0;
+                            for (k = 0, l = substrs.length; l > k; k += 1) - 1 !== haystack.indexOf(substrs[k]) && (found += 1);
+                            if (found === substrs.length) return !0
+                        }
+                    return !1
+                }, that.detectObject = function(progIds, fns) {
+                    if (window.ActiveXObject)
+                        for (i = 0, j = progIds.length; j > i; i += 1) try {
+                            var obj = new ActiveXObject(progIds[i]);
+                            if (obj) return fns && fns[i] ? fns[i].call(obj) : !0
+                        } catch (e) {}
+                    return !1
+                };
+                for (alias in plugins2detect) plugins2detect.hasOwnProperty(alias) && (plugin = plugins2detect[alias], (that.detectPlugin(plugin.substrs) || that.detectObject(plugin.progIds, plugin.fns)) && (device.browserPlugins.push(alias), that.addConditionalTest(alias, !0)))
+            }
+        }
+
+        function init() {
+            void 0 !== Modernizr && (Modernizr.Detectizr = Modernizr.Detectizr || {}, Modernizr.Detectizr.device = {
+                type: "",
+                model: "",
+                orientation: "",
+                browser: "",
+                browserEngine: "",
+                browserPlugins: [],
+                browserVersion: "",
+                os: "",
+                osVersion: "",
+                osVersionFull: "",
+                userAgent: (navigator.userAgent || navigator.vendor || window.opera).toLowerCase()
+            }, Modernizr.Detectizr.detect = function(settings) {
+                return new Detectizr(settings)
+            })
+        }
+        var Modernizr = window.Modernizr,
+            options = {
+                addAllFeaturesAsClass: !1,
+                detectDevice: !0,
+                detectDeviceModel: !0,
+                detectScreen: !0,
+                detectOS: !0,
+                detectBrowser: !0,
+                detectPlugins: !0
+            };
+        init()
+    }(this, navigator),
     function(window, undefined) {
         function isArraylike(obj) {
             var length = obj.length,
@@ -671,7 +1170,7 @@ window.console || (window.console = function() {
                     for (i in obj)
                         if (value = callback.call(obj[i], i, obj[i]), value === !1) break; return obj
             },
-            trim: core_trim && !core_trim.call("ï»¿Â ") ? function(text) {
+            trim: core_trim && !core_trim.call("﻿ ") ? function(text) {
                 return null == text ? "" : core_trim.call(text)
             } : function(text) {
                 return null == text ? "" : (text + "").replace(rtrim, "")
@@ -3247,7 +3746,18 @@ window.console || (window.console = function() {
         }, jQuery.fn.andSelf = jQuery.fn.addBack, "object" == typeof module && module && "object" == typeof module.exports ? module.exports = jQuery : (window.jQuery = window.$ = jQuery, "function" == typeof define && define.amd && define("jquery", [], function() {
             return jQuery
         }))
-    }(window),
+    }(window);
+var helper = {};
+! function() {
+    "use strict";
+
+    function mergeObj(currentObj, confObj) {
+        if (confObj)
+            for (var i in confObj) confObj.hasOwnProperty(i) ? currentObj[i] = confObj[i] : console.log("Property " + i + "not found");
+        return currentObj
+    }
+    helper.mergeObj = mergeObj
+}(),
     function(win) {
         function isLocalStorageNameSupported() {
             var testKey = "test",
@@ -3343,6 +3853,41 @@ window.console || (window.console = function() {
         store.enabled = !store.disabled, "undefined" != typeof module && module.exports && this.module !== module ? module.exports = store : "function" == typeof define && define.amd ? define(store) : win.store = store
     }(Function("return this")()),
     function($) {
+        var lastSize = 0,
+            interval = null;
+        $.fn.resetBreakpoints = function() {
+            $(window).unbind("resize"), interval && clearInterval(interval), lastSize = 0
+        }, $.fn.setBreakpoints = function(settings) {
+            var options = jQuery.extend({
+                distinct: !0,
+                breakpoints: [768, 1024, 1280]
+            }, settings);
+            interval = setInterval(function() {
+                var bp, w = window.innerWidth,
+                    done = !1,
+                    $body = $("body");
+                for (bp in options.breakpoints.sort(function(a, b) {
+                    return b - a
+                })) {
+                    if (!done && w >= options.breakpoints[bp] && lastSize < options.breakpoints[bp]) {
+                        if (options.distinct) {
+                            for (var x in options.breakpoints.sort(function(a, b) {
+                                return b - a
+                            })) $body.hasClass("breakpoint-" + options.breakpoints[x]) && ($body.removeClass("breakpoint-" + options.breakpoints[x]), $(window).trigger("exitBreakpoint" + options.breakpoints[x]));
+                            done = !0
+                        }
+                        $body.addClass("breakpoint-" + options.breakpoints[bp]), $(window).trigger("enterBreakpoint" + options.breakpoints[bp]).trigger("breakpointshift")
+                    }
+                    w < options.breakpoints[bp] && lastSize >= options.breakpoints[bp] && ($body.removeClass("breakpoint-" + options.breakpoints[bp]), $(window).trigger("exitBreakpoint" + options.breakpoints[bp])), options.distinct && w >= options.breakpoints[bp] && w < options.breakpoints[bp - 1] && lastSize > w && lastSize > 0 && !$body.hasClass("breakpoint-" + options.breakpoints[bp]) && ($body.addClass("breakpoint-" + options.breakpoints[bp]), $(window).trigger("enterBreakpoint" + options.breakpoints[bp]).trigger("breakpointshift"))
+                }
+                lastSize !== w && (lastSize = w)
+            }, 250)
+        }, $(window).setBreakpoints({
+            distinct: !0,
+            breakpoints: [768, 1024, 1280]
+        })
+    }(jQuery),
+    function($) {
         function check() {
             for (var docReady = $.isReady, i = checklist.length - 1; i >= 0; --i) {
                 var el = document.getElementById(checklist[i].id);
@@ -3362,12 +3907,89 @@ window.console || (window.console = function() {
             }), interval || (interval = setInterval(check, $.elementReady.interval_ms)), this
         }, $.elementReady.interval_ms = 23
     }(jQuery),
-    function() {
-        $.fn.refresh = function() {
-            var elems = $(this.selector);
-            return this.splice(0, this.length), this.push.apply(this, elems), this
-        }
-    }(window),
+    function($) {
+        "use strict";
+        Modernizr.Detectizr.detect(), shop.add("device", Modernizr.Detectizr.device), shop.add("device", {
+            hasTouch: Modernizr.touch
+        });
+        var isSurface = "ie" === shop.device.browser && shop.device.browserVersion >= "10" && "tablet" === shop.device.type && ("ontouchstart" in window || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0),
+            clickOrTouch = "ontouchstart" in window && !isSurface ? "touch" : "click",
+            isTouchDevice = function() {
+                var device = store.get("device") || shop.device;
+                return device.hasTouch === shop.device.hasTouch ? device.hasTouch : isSurface ? !0 : !1
+            },
+            setShopVariables = function(hasTouch, clickEvent) {
+                shop.device.hasTouch = hasTouch, shop.device.clickEvent = clickEvent, store.set("device", {
+                    hasTouch: hasTouch,
+                    clickEvent: clickEvent
+                })
+            };
+        isSurface && (shop.device.hasTouch = !0), setShopVariables(isTouchDevice(), clickOrTouch), $(function() {
+            shop.device.hasTouch ? ($("html").addClass("inputmethod-touch").removeClass("null"), $(document).trigger("input-touch")) : $("html").addClass("inputmethod-mouse"), isSurface && $("html").addClass("surface"), $(document).on("touchstart MSPointerDown", function() {
+                $("html").hasClass("inputmethod-touch") || ($("html").addClass("inputmethod-touch touch").removeClass("inputmethod-mouse no-touch"), $(document).trigger("input-touch"), setShopVariables(!0, clickOrTouch))
+            })
+        })
+    }(jQuery),
+    function($) {
+        "use strict";
+        var toolifyInputForEditability, changeFormActionOnClick, toggleEditability = function(target, editable) {
+                var $target = $(target);
+                $target.is(":input") || ($target = $target.find(":input")), $target.length > 0 && (editable ? $target.attr("disabled", !1).prop("disabled", !1) : $target.attr("disabled", !0).prop("disabled", !0))
+            },
+            toogleRequiredState = function($invoker, $target) {
+                var requiredClass = "js-required-element";
+                $invoker.is(':input[type="checkbox"]') && $invoker.on("change", function() {
+                    $target.toggleClass(requiredClass), shop.formValidation._hideError($target, !0), shop.formValidation.bindValidationEvents()
+                })
+            };
+        window.shop && (window.shop.toggleEditability = toggleEditability), toolifyInputForEditability = function($invoker, $target, uneditable) {
+            if (uneditable = uneditable || !1, null !== $invoker || null !== $target) {
+                if (null === $target) {
+                    var targetSelector = $invoker.data("editability-toggle-for");
+                    $target = $(targetSelector)
+                } else if (null === $invoker) {
+                    var invokerSelector = $target.data("editability-toggle-by");
+                    $invoker = $(invokerSelector)
+                }
+                if ($invoker.is(":radio")) {
+                    var $others = $("input[name='" + $invoker.attr("name") + "']");
+                    $others.each(function(ix, element) {
+                        var $element = $(element);
+                        $element.val() != $invoker.val() && $element.on("change.editablity-toggle", function() {
+                            uneditable ? window.shop.toggleEditability($target, !$invoker.is(":checked")) : window.shop.toggleEditability($target, $invoker.is(":checked"))
+                        })
+                    })
+                }
+                $invoker.on("change.editablity-toggle", function() {
+                    uneditable ? window.shop.toggleEditability($target, !$invoker.is(":checked")) : window.shop.toggleEditability($target, $invoker.is(":checked"))
+                })
+            }
+        }, changeFormActionOnClick = function($elem) {
+            $elem.on("click.changeForm", function() {
+                var data = $elem.data("change-form-action") || null;
+                data && $elem.prop("disable", !0).closest("form").attr("action", data).submit()
+            })
+        }, $(document).ready(function() {
+            $("[data-editability-toggle-for]").each(function(ix, element) {
+                var $invoker = $(element);
+                toolifyInputForEditability($invoker), $invoker.trigger("change")
+            }), $("[data-editability-toggle-by]").each(function(ix, element) {
+                var $target = $(element),
+                    $invoker = $($target.data("editability-toggle-by"));
+                toolifyInputForEditability($invoker, $target), $invoker.trigger("change")
+            }), $("[data-uneditability-toggle-by]").each(function(ix, element) {
+                var $target = $(element),
+                    $invoker = $($target.data("uneditability-toggle-by"));
+                toolifyInputForEditability($invoker, $target, !0), $invoker.trigger("change")
+            }), $("[data-change-form-action]").each(function() {
+                changeFormActionOnClick($(this))
+            }), $("[data-change-required-state-for]").each(function(ix, element) {
+                var $invoker = $(element),
+                    target = $(this).data("change-required-state-for") || 0;
+                target.length > 0 && toogleRequiredState($invoker, $('[id="' + target + '"]'))
+            })
+        })
+    }(jQuery),
     function($) {
         var ajaxQueue = $({});
         $.ajaxQueue = function(ajaxOpts) {
@@ -3383,62 +4005,317 @@ window.console || (window.console = function() {
                 return index > -1 && queue.splice(index, 1), dfd.rejectWith(ajaxOpts.context || ajaxOpts, [promise, statusText, ""]), promise
             }, promise
         }
-    }(jQuery),
-    function($) {
-        $.ua = {
-            browser: {
-                name: "",
-                version: 0
+    }(jQuery);
+var self = "undefined" != typeof window ? window : {},
+    Prism = function() {
+        var e = /\blang(?:uage)?-(?!\*)(\w+)\b/i,
+            t = self.Prism = {
+                util: {
+                    encode: function(e) {
+                        return e instanceof n ? new n(e.type, t.util.encode(e.content)) : "Array" === t.util.type(e) ? e.map(t.util.encode) : e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\u00a0/g, " ")
+                    },
+                    type: function(e) {
+                        return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]
+                    },
+                    clone: function(e) {
+                        var n = t.util.type(e);
+                        switch (n) {
+                            case "Object":
+                                var r = {};
+                                for (var i in e) e.hasOwnProperty(i) && (r[i] = t.util.clone(e[i]));
+                                return r;
+                            case "Array":
+                                return e.slice()
+                        }
+                        return e
+                    }
+                },
+                languages: {
+                    extend: function(e, n) {
+                        var r = t.util.clone(t.languages[e]);
+                        for (var i in n) r[i] = n[i];
+                        return r
+                    },
+                    insertBefore: function(e, n, r, i) {
+                        i = i || t.languages;
+                        var s = i[e],
+                            o = {};
+                        for (var u in s)
+                            if (s.hasOwnProperty(u)) {
+                                if (u == n)
+                                    for (var a in r) r.hasOwnProperty(a) && (o[a] = r[a]);
+                                o[u] = s[u]
+                            }
+                        return i[e] = o
+                    },
+                    DFS: function(e, n) {
+                        for (var r in e) n.call(e, r, e[r]), "Object" === t.util.type(e) && t.languages.DFS(e[r], n)
+                    }
+                },
+                highlightAll: function(e, n) {
+                    for (var s, r = document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'), i = 0; s = r[i++];) t.highlightElement(s, e === !0, n)
+                },
+                highlightElement: function(r, i, s) {
+                    for (var o, u, a = r; a && !e.test(a.className);) a = a.parentNode;
+                    if (a && (o = (a.className.match(e) || [, ""])[1], u = t.languages[o]), u) {
+                        r.className = r.className.replace(e, "").replace(/\s+/g, " ") + " language-" + o, a = r.parentNode, /pre/i.test(a.nodeName) && (a.className = a.className.replace(e, "").replace(/\s+/g, " ") + " language-" + o);
+                        var f = r.textContent;
+                        if (f) {
+                            var l = {
+                                element: r,
+                                language: o,
+                                grammar: u,
+                                code: f
+                            };
+                            if (t.hooks.run("before-highlight", l), i && self.Worker) {
+                                var c = new Worker(t.filename);
+                                c.onmessage = function(e) {
+                                    l.highlightedCode = n.stringify(JSON.parse(e.data), o), t.hooks.run("before-insert", l), l.element.innerHTML = l.highlightedCode, s && s.call(l.element), t.hooks.run("after-highlight", l)
+                                }, c.postMessage(JSON.stringify({
+                                    language: l.language,
+                                    code: l.code
+                                }))
+                            } else l.highlightedCode = t.highlight(l.code, l.grammar, l.language), t.hooks.run("before-insert", l), l.element.innerHTML = l.highlightedCode, s && s.call(r), t.hooks.run("after-highlight", l)
+                        }
+                    }
+                },
+                highlight: function(e, r, i) {
+                    var s = t.tokenize(e, r);
+                    return n.stringify(t.util.encode(s), i)
+                },
+                tokenize: function(e, n) {
+                    var i = t.Token,
+                        s = [e],
+                        o = n.rest;
+                    if (o) {
+                        for (var u in o) n[u] = o[u];
+                        delete n.rest
+                    }
+                    e: for (var u in n)
+                        if (n.hasOwnProperty(u) && n[u]) {
+                            var a = n[u],
+                                f = a.inside,
+                                l = !!a.lookbehind,
+                                c = 0;
+                            a = a.pattern || a;
+                            for (var h = 0; h < s.length; h++) {
+                                var p = s[h];
+                                if (s.length > e.length) break e;
+                                if (!(p instanceof i)) {
+                                    a.lastIndex = 0;
+                                    var d = a.exec(p);
+                                    if (d) {
+                                        l && (c = d[1].length);
+                                        var v = d.index - 1 + c,
+                                            d = d[0].slice(c),
+                                            m = d.length,
+                                            g = v + m,
+                                            y = p.slice(0, v + 1),
+                                            b = p.slice(g + 1),
+                                            w = [h, 1];
+                                        y && w.push(y);
+                                        var E = new i(u, f ? t.tokenize(d, f) : d);
+                                        w.push(E), b && w.push(b), Array.prototype.splice.apply(s, w)
+                                    }
+                                }
+                            }
+                        }
+                    return s
+                },
+                hooks: {
+                    all: {},
+                    add: function(e, n) {
+                        var r = t.hooks.all;
+                        r[e] = r[e] || [], r[e].push(n)
+                    },
+                    run: function(e, n) {
+                        var r = t.hooks.all[e];
+                        if (r && r.length)
+                            for (var s, i = 0; s = r[i++];) s(n)
+                    }
+                }
             },
-            os: {
-                name: "",
-                version: ""
+            n = t.Token = function(e, t) {
+                this.type = e, this.content = t
+            };
+        if (n.stringify = function(e, r, i) {
+                if ("string" == typeof e) return e;
+                if ("[object Array]" == Object.prototype.toString.call(e)) return e.map(function(t) {
+                    return n.stringify(t, r, e)
+                }).join("");
+                var s = {
+                    type: e.type,
+                    content: n.stringify(e.content, r, i),
+                    tag: "span",
+                    classes: ["token", e.type],
+                    attributes: {},
+                    language: r,
+                    parent: i
+                };
+                "comment" == s.type && (s.attributes.spellcheck = "true"), t.hooks.run("wrap", s);
+                var o = "";
+                for (var u in s.attributes) o += u + '="' + (s.attributes[u] || "") + '"';
+                return "<" + s.tag + ' class="' + s.classes.join(" ") + '" ' + o + ">" + s.content + "</" + s.tag + ">"
+            }, !self.document) return self.addEventListener ? (self.addEventListener("message", function(e) {
+            var n = JSON.parse(e.data),
+                r = n.language,
+                i = n.code;
+            self.postMessage(JSON.stringify(t.tokenize(i, t.languages[r]))), self.close()
+        }, !1), self.Prism) : self.Prism;
+        var r = document.getElementsByTagName("script");
+        return r = r[r.length - 1], r && (t.filename = r.src, document.addEventListener && !r.hasAttribute("data-manual") && document.addEventListener("DOMContentLoaded", t.highlightAll)), self.Prism
+    }();
+"undefined" != typeof module && module.exports && (module.exports = Prism), Prism.languages.markup = {
+    comment: /<!--[\w\W]*?-->/g,
+    prolog: /<\?.+?\?>/,
+    doctype: /<!DOCTYPE.+?>/,
+    cdata: /<!\[CDATA\[[\w\W]*?]]>/i,
+    tag: {
+        pattern: /<\/?[\w:-]+\s*(?:\s+[\w:-]+(?:=(?:("|')(\\?[\w\W])*?\1|[^\s'">=]+))?\s*)*\/?>/gi,
+        inside: {
+            tag: {
+                pattern: /^<\/?[\w:-]+/i,
+                inside: {
+                    punctuation: /^<\/?/,
+                    namespace: /^[\w-]+?:/
+                }
+            },
+            "attr-value": {
+                pattern: /=(?:('|")[\w\W]*?(\1)|[^\s>]+)/gi,
+                inside: {
+                    punctuation: /=|>|"/g
+                }
+            },
+            punctuation: /\/?>/g,
+            "attr-name": {
+                pattern: /[\w:-]+/g,
+                inside: {
+                    namespace: /^[\w-]+?:/
+                }
             }
-        };
-        var name, version, engine, os, osversion, ua = navigator.userAgent.toLowerCase(),
-            info = {};
-        ua.replace(/[\(\)]/g, ";").replace(/\s*(\w*?\ ?\w+[\:\s\;]?[^\d\s]*?)[\/\ ]([\d\.]*)/g, function(f, key, value) {
-            info[key] = info[key] || value || !0
-        }), $.each(["msie", "opera", "firefox", "seamonkey", "arora", "iron", "chrome", "safari"], function() {
-            !name && info[this] && (name = this)
-        }), version = info.version || info[name] || "", $.each(["trident", "gecko", "webkit", "presto"], function() {
-            !engine && info[this] && (engine = this)
-        }), $.extend($.ua.browser, {
-            name: name,
-            version: parseFloat(version),
-            versionDetail: version.split("."),
-            engine: {
-                name: engine,
-                version: info[engine]
-            }
-        }), $.each(["windows nt", "windows", "intel mac", "ppc mac", "linux"], function() {
-            !os && info[this] && (os = this)
-        }), "windows nt" == os ? (osversion = {
-            "4.0": "nt",
-            "5.0": "2000",
-            5.1: "xp",
-            5.2: "2003",
-            "6.0": "vista",
-            6.1: "7"
-        }[info[os]], os = "windows") : "intel mac" == os ? (os = "mac os", osversion = "intel") : "ppc mac" == os && (os = "mac os", osversion = "ppc"), $.extend($.ua.os, {
-            name: os,
-            version: osversion,
-            "64bit": /\ (wow64|win64|x64)/.test(ua),
-            ospatchlevel: /windows\ nt\ 5\.1.*sv1/.test(ua) ? "sp2" : null
-        }), /msie\ (\d+).*trident[ \/](\d+)/.test(ua) && $.extend($.ua.browser, {
-            version: 1 * RegExp.$2 + 4,
-            renderMode: 1 * RegExp.$1
-        }), $.ua.browser[name] = $.ua.browser.version, $.ua.browser[engine] = info[engine]
-    }(jQuery),
+        }
+    },
+    entity: /\&#?[\da-z]{1,8};/gi
+}, Prism.hooks.add("wrap", function(e) {
+    "entity" === e.type && (e.attributes.title = e.content.replace(/&amp;/, "&"))
+}), Prism.languages.css = {
+    comment: /\/\*[\w\W]*?\*\//g,
+    atrule: {
+        pattern: /@[\w-]+?.*?(;|(?=\s*{))/gi,
+        inside: {
+            punctuation: /[;:]/g
+        }
+    },
+    url: /url\((["']?).*?\1\)/gi,
+    selector: /[^\{\}\s][^\{\};]*(?=\s*\{)/g,
+    property: /(\b|\B)[\w-]+(?=\s*:)/gi,
+    string: /("|')(\\?.)*?\1/g,
+    important: /\B!important\b/gi,
+    punctuation: /[\{\};:]/g,
+    "function": /[-a-z0-9]+(?=\()/gi
+}, Prism.languages.markup && Prism.languages.insertBefore("markup", "tag", {
+    style: {
+        pattern: /<style[\w\W]*?>[\w\W]*?<\/style>/gi,
+        inside: {
+            tag: {
+                pattern: /<style[\w\W]*?>|<\/style>/gi,
+                inside: Prism.languages.markup.tag.inside
+            },
+            rest: Prism.languages.css
+        }
+    }
+}), Prism.languages.clike = {
+    comment: {
+        pattern: /(^|[^\\])(\/\*[\w\W]*?\*\/|(^|[^:])\/\/.*?(\r?\n|$))/g,
+        lookbehind: !0
+    },
+    string: /("|')(\\?.)*?\1/g,
+    "class-name": {
+        pattern: /((?:(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[a-z0-9_\.\\]+/gi,
+        lookbehind: !0,
+        inside: {
+            punctuation: /(\.|\\)/
+        }
+    },
+    keyword: /\b(if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\b/g,
+    "boolean": /\b(true|false)\b/g,
+    "function": {
+        pattern: /[a-z0-9_]+\(/gi,
+        inside: {
+            punctuation: /\(/
+        }
+    },
+    number: /\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?)\b/g,
+    operator: /[-+]{1,2}|!|<=?|>=?|={1,3}|&{1,2}|\|?\||\?|\*|\/|\~|\^|\%/g,
+    ignore: /&(lt|gt|amp);/gi,
+    punctuation: /[{}[\];(),.:]/g
+}, Prism.languages.javascript = Prism.languages.extend("clike", {
+    keyword: /\b(break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|false|finally|for|function|get|if|implements|import|in|instanceof|interface|let|new|null|package|private|protected|public|return|set|static|super|switch|this|throw|true|try|typeof|var|void|while|with|yield)\b/g,
+    number: /\b-?(0x[\dA-Fa-f]+|\d*\.?\d+([Ee]-?\d+)?|NaN|-?Infinity)\b/g
+}), Prism.languages.insertBefore("javascript", "keyword", {
+    regex: {
+        pattern: /(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,
+        lookbehind: !0
+    }
+}), Prism.languages.markup && Prism.languages.insertBefore("markup", "tag", {
+    script: {
+        pattern: /<script[\w\W]*?>[\w\W]*?<\/script>/gi,
+        inside: {
+            tag: {
+                pattern: /<script[\w\W]*?>|<\/script>/gi,
+                inside: Prism.languages.markup.tag.inside
+            },
+            rest: Prism.languages.javascript
+        }
+    }
+}), Prism.languages.scss = Prism.languages.extend("css", {
+    comment: {
+        pattern: /(^|[^\\])(\/\*[\w\W]*?\*\/|\/\/.*?(\r?\n|$))/g,
+        lookbehind: !0
+    },
+    atrule: /@[\w-]+(?=\s+(\(|\{|;))/gi,
+    url: /([-a-z]+-)*url(?=\()/gi,
+    selector: /([^@;\{\}\(\)]?([^@;\{\}\(\)]|&|\#\{\$[-_\w]+\})+)(?=\s*\{(\}|\s|[^\}]+(:|\{)[^\}]+))/gm
+}), Prism.languages.insertBefore("scss", "atrule", {
+    keyword: /@(if|else if|else|for|each|while|import|extend|debug|warn|mixin|include|function|return|content)|(?=@for\s+\$[-_\w]+\s)+from/i
+}), Prism.languages.insertBefore("scss", "property", {
+    variable: /((\$[-_\w]+)|(#\{\$[-_\w]+\}))/i
+}), Prism.languages.insertBefore("scss", "ignore", {
+    placeholder: /%[-_\w]+/i,
+    statement: /\B!(default|optional)\b/gi,
+    "boolean": /\b(true|false)\b/g,
+    "null": /\b(null)\b/g,
+    operator: /\s+([-+]{1,2}|={1,2}|!=|\|?\||\?|\*|\/|\%)\s+/g
+}), Prism.hooks.add("after-highlight", function(e) {
+    var t = e.element.parentNode;
+    if (t && /pre/i.test(t.nodeName) && -1 !== t.className.indexOf("line-numbers")) {
+        var r, n = 1 + e.code.split("\n").length;
+        lines = new Array(n), lines = lines.join("<span></span>"), r = document.createElement("span"), r.className = "line-numbers-rows", r.innerHTML = lines, t.hasAttribute("data-start") && (t.style.counterReset = "linenumber " + (parseInt(t.getAttribute("data-start"), 10) - 1)), e.element.appendChild(r)
+    }
+}),
+    function() {
+        if (self.Prism) {
+            var e = {
+                csharp: "C#",
+                cpp: "C++"
+            };
+            Prism.hooks.add("before-highlight", function(t) {
+                var n = e[t.language] || t.language;
+                t.element.setAttribute("data-language", n)
+            })
+        }
+    }(),
     function($) {
+        "use strict";
         $.fn.selectOrDie = function(method) {
-            "use strict";
             var $_sodFilterTimeout, $_sodViewportTimeout, $defaults = {
                     customID: null,
                     customClass: "",
                     placeholder: null,
+                    placeholderOption: !1,
                     prefix: null,
                     cycle: !1,
+                    stripEmpty: !1,
                     links: !1,
                     linksExternal: !1,
                     size: 0,
@@ -3446,29 +4323,35 @@ window.console || (window.console = function() {
                     onChange: $.noop
                 },
                 $_settings = {},
+                $_sodKeysWhenClosed = !1,
                 _private = {
                     initSoD: function(options) {
                         return $_settings = $.extend({}, $defaults, options), this.each(function() {
                             if ($(this).parent().hasClass("sod_select")) console.log("Select or Die: It looks like the SoD already exists");
                             else {
                                 var $sod, $sodListWrapper, $sodList, $select = $(this),
-                                    $settingsId = $_settings.customID ? $_settings.customID : $select.data("custom-id") ? $select.data("custom-id") : $_settings.customID,
-                                    $settingsClass = $_settings.customClass ? $_settings.customClass : $select.data("custom-class") ? $select.data("custom-class") : $_settings.customClass,
-                                    $settingsPrefix = $_settings.prefix ? $_settings.prefix : $select.data("prefix") ? $select.data("prefix") : $_settings.prefix,
-                                    $settingsPlaceholder = $_settings.placeholder ? $_settings.placeholder : $select.data("placeholder") ? $select.data("placeholder") : $_settings.placeholder,
-                                    $settingsCycle = $_settings.cycle || $select.data("cycle") ? !0 : $_settings.cycle,
-                                    $settingsLinks = $_settings.links || $select.data("links") ? !0 : $_settings.links,
-                                    $settingsLinksExternal = $_settings.linksExternal || $select.data("links-external") ? !0 : $_settings.linksExternal,
-                                    $settingsSize = $_settings.size ? $_settings.size : $select.data("size") ? $select.data("size") : $_settings.size,
-                                    $settingsTabIndex = $_settings.tabIndex ? $_settings.tabIndex : $select.data("tabindex") ? $select.data("tabindex") : $select.attr("tabindex") ? $select.attr("tabindex") : $_settings.tabIndex,
+                                    selectCssClass = $.trim((" " + ($select.attr("class") || "")).replace(/[\s]js-[\w|-]+\b/g, "")),
+                                    $settingsId = $select.data("custom-id") ? $select.data("custom-id") : $_settings.customID,
+                                    $settingsClass = $select.data("custom-class") ? $select.data("custom-class") : $_settings.customClass,
+                                    $settingsPrefix = $select.data("prefix") ? $select.data("prefix") : $_settings.prefix,
+                                    $settingsPlaceholder = $select.data("placeholder") ? $select.data("placeholder") : $_settings.placeholder,
+                                    $settingsPlaceholderOption = $select.data("placeholder-option") ? $select.data("placeholder-option") : $_settings.placeholderOption,
+                                    $settingsCycle = $select.data("cycle") ? $select.data("cycle") : $_settings.cycle,
+                                    $settingsLinks = $select.data("links") ? $select.data("links") : $_settings.links,
+                                    $settingsLinksExternal = $select.data("links-external") ? $select.data("links-external") : $_settings.linksExternal,
+                                    $settingsSize = parseInt($select.data("size")) ? $select.data("size") : $_settings.size,
+                                    $settingsTabIndex = parseInt($select.data("tabindex")) ? $select.data("tabindex") : $_settings.tabIndex ? $_settings.tabIndex : $select.attr("tabindex") ? $select.attr("tabindex") : $_settings.tabIndex,
+                                    $settingsStripEmpty = $select.data("strip-empty") ? $select.data("strip-empty") : $_settings.stripEmpty,
                                     $selectTitle = $select.prop("title") ? $select.prop("title") : null,
                                     $selectDisabled = $select.is(":disabled") ? " disabled" : "",
                                     $sodPrefix = "",
                                     $sodHtml = "",
-                                    $sodHeight = 0;
+                                    $sodHeight = 0,
+                                    $sodMinCssWidth = parseInt($(this).parent().find("select").css("min-width") || 0, 10),
+                                    $sodWidth = $(this).parent().find("select").width();
                                 $settingsPrefix && ($sodPrefix = '<span class="sod_prefix">' + $settingsPrefix + "</span> "), $sodHtml += $settingsPlaceholder && !$settingsPrefix ? '<span class="sod_label sod_placeholder">' + $settingsPlaceholder + "</span>" : '<span class="sod_label">' + $sodPrefix + "</span>", $sod = $("<span/>", {
                                     id: $settingsId,
-                                    "class": "sod_select " + $settingsClass + $selectDisabled,
+                                    "class": "sod_select " + $settingsClass + $selectDisabled + " " + selectCssClass,
                                     title: $selectTitle,
                                     tabindex: $settingsTabIndex,
                                     html: $sodHtml,
@@ -3476,29 +4359,31 @@ window.console || (window.console = function() {
                                     "data-links": $settingsLinks,
                                     "data-links-external": $settingsLinksExternal,
                                     "data-placeholder": $settingsPlaceholder,
+                                    "data-placeholder-option": $settingsPlaceholderOption,
                                     "data-prefix": $settingsPrefix,
                                     "data-filter": ""
                                 }).insertAfter(this), _private.isTouch() && $sod.addClass("touch"), $sodListWrapper = $("<span/>", {
                                     "class": "sod_list_wrapper"
                                 }).appendTo($sod), $sodList = $("<span/>", {
                                     "class": "sod_list"
-                                }).appendTo($sodListWrapper), $("option, optgroup", $select).each(function() {
-                                    _private.populateSoD($(this), $sodList, $sod)
+                                }).appendTo($sodListWrapper), $("option, optgroup", $select).each(function(i) {
+                                    var $this = $(this);
+                                    $settingsStripEmpty && !$.trim($this.text()) ? $this.remove() : 0 === i && $settingsPlaceholderOption && !$sodPrefix ? _private.populateSoD($this, $sodList, $sod, !0) : _private.populateSoD($this, $sodList, $sod, !1)
                                 }), $settingsSize && ($sodListWrapper.show(), $(".sod_option:lt(" + $settingsSize + ")", $sodList).each(function() {
                                     $sodHeight += $(this).outerHeight()
                                 }), $sodListWrapper.removeAttr("style"), $sodList.css({
                                     "max-height": $sodHeight
-                                })), $select.appendTo($sod), $sod.on("focusin", _private.focusSod).on("click", _private.triggerSod).on("click", ".sod_option", _private.optionClick).on("mousemove", ".sod_option", _private.optionHover).on("keydown keypress", _private.keyboardUse), $select.on("change", _private.selectChange), $("html").on("click", function() {
-                                    _private.blurSod($sod)
-                                }), $(document).on("click", "label[for='" + $select.attr("id") + "']", function(e) {
+                                })), $sodMinCssWidth && $sodMinCssWidth > 0 && ($sod.find(".sod_label").width($sodMinCssWidth), $sod.find(".sod_list_wrapper").width($sodWidth + 22)), $select.appendTo($sod), $sod.on("focusin", _private.focusSod).on("click", _private.triggerSod).on("click", ".sod_option", _private.optionClick).on("mousemove", ".sod_option", _private.optionHover).on("keydown", _private.keyboardUse), $select.on("change", _private.selectChange), $(document).on("click", "label[for='" + $select.attr("id") + "']", function(e) {
                                     e.preventDefault(), $sod.focus()
                                 })
                             }
                         })
                     },
-                    populateSoD: function($option, $sodList, $sod) {
+                    populateSoD: function($option, $sodList, $sod, $isPlaceholder) {
                         var $sodPlaceholder = $sod.data("placeholder"),
+                            $sodPlaceholderOption = $sod.data("placeholder-option"),
                             $sodPrefix = $sod.data("prefix"),
+                            $sodLabel = $sod.find(".sod_label"),
                             $optionParent = $option.parent(),
                             $optionText = $option.text(),
                             $optionHTML = $option.data("item-html") ? $option.data("item-html") : $option.text(),
@@ -3508,32 +4393,36 @@ window.console || (window.console = function() {
                             $optionIsDisabled = $option.is(":disabled") ? " disabled " : "",
                             $optionIsSelected = $option.is(":selected") ? " selected active " : "",
                             $optionLink = $option.data("link") ? " link " : "",
-                            $optionLinkExternal = $option.data("link-external") ? " linkexternal" : "";
-                        $option.is("option, li") ? ($("<span/>", {
+                            $optionLinkExternal = $option.data("link-external") ? " linkexternal" : "",
+                            $optgroupLabel = $option.prop("label");
+                        $option.is("option") ? ($("<span/>", {
                             "class": "sod_option " + $optionCustomClass + $optionIsDisabled + $optionIsSelected + $optionLink + $optionLinkExternal,
                             id: $optionCustomId,
                             title: $optionText,
                             html: $optionHTML,
                             "data-value": $optionValue
-                        }).appendTo($sodList), ($optionIsSelected && !$sodPlaceholder || $optionIsSelected && $sodPrefix) && $sod.find(".sod_label").append($optionHTML), $optionIsSelected && $sodPlaceholder && !$sodPrefix ? $sod.data("label", $sodPlaceholder) : $optionIsSelected && $sod.data("label", $optionText), $optionParent.is("optgroup") && ($sodList.find(".sod_option:last").addClass("groupchild"), $optionParent.is(":disabled") && $sodList.find(".sod_option:last").addClass("disabled"))) : $("<span/>", {
+                        }).appendTo($sodList), $isPlaceholder && !$sodPrefix ? ($sod.data("label", $optionText), $sod.data("placeholder", $optionText), $option.prop("disabled", !0), $sodList.find(".sod_option:last").addClass("is-placeholder disabled"), $sod.find(".sod_label").append($optionHTML), $optionIsSelected && $sodLabel.addClass("sod_placeholder")) : $optionIsSelected && $sodPlaceholder && !$sodPlaceholderOption && !$sodPrefix ? $sod.data("label", $sodPlaceholder) : $optionIsSelected && $sod.data("label", $optionHTML || $optionText), ($optionIsSelected && !$sodPlaceholder || $optionIsSelected && $sodPlaceholderOption || $optionIsSelected && $sodPrefix) && $sodLabel.html($optionHTML || $optionText), $optionParent.is("optgroup") && ($sodList.find(".sod_option:last").addClass("groupchild"), $optionParent.is(":disabled") && $sodList.find(".sod_option:last").addClass("disabled"))) : $("<span/>", {
                             "class": "sod_option optgroup " + $optionIsDisabled,
-                            title: $option.prop("label"),
-                            html: $option.prop("label"),
-                            "data-label": $option.prop("label")
+                            title: $optgroupLabel,
+                            html: $optgroupLabel,
+                            "data-label": $optgroupLabel
                         }).appendTo($sodList)
                     },
                     focusSod: function() {
-                        var $sod = $(this),
-                            $sodInFocus = $(".sod_select.focus");
-                        $sod.hasClass("disabled") ? _private.blurSod($sod) : (_private.blurSod($sodInFocus), $sod.addClass("focus"))
+                        var $sod = $(this);
+                        $sod.hasClass("disabled") ? _private.blurSod($sod) : (_private.blurSod($(".sod_select.focus").not($sod)), $sod.addClass("focus"), $("html").on("click.sodBlur", function() {
+                            _private.blurSod($sod)
+                        }))
                     },
                     triggerSod: function(e) {
                         e.stopPropagation();
                         var $sod = $(this),
+                            hasTouch = $sod.hasClass("touch"),
                             $sodList = $sod.find(".sod_list"),
                             $sodPlaceholder = $sod.data("placeholder"),
+                            $optionActive = hasTouch ? $sod.find("option:selected", "select") : $sod.find(".active"),
                             $optionSelected = $sod.find(".selected");
-                        $sod.hasClass("disabled") || $sod.hasClass("open") || $sod.hasClass("touch") ? (clearTimeout($_sodViewportTimeout), $sod.removeClass("open above")) : ($sod.addClass("open"), $(".sod_select").not(this).removeClass("open focus"), $sodPlaceholder && !$sod.data("prefix") && $sod.find(".sod_label").addClass("sod_placeholder").html($sodPlaceholder), _private.listScroll($sodList, $optionSelected), _private.checkViewport($sod, $sodList))
+                        $sod.hasClass("disabled") || $sod.hasClass("open") || hasTouch ? (clearTimeout($_sodViewportTimeout), $sod.removeClass("open"), $sodPlaceholder && ($sod.find(".sod_label").get(0).lastChild.nodeValue = $optionActive.text())) : ($sod.addClass("open"), $sodPlaceholder && !$sod.data("prefix") && $sod.find(".sod_label").addClass("sod_placeholder").html($sodPlaceholder), _private.listScroll($sodList, $optionSelected), _private.checkViewport($sod, $sodList))
                     },
                     keyboardUse: function(e) {
                         var $sodFilterHit, $optionNext, $optionCycle, $sod = $(this),
@@ -3542,11 +4431,11 @@ window.console || (window.console = function() {
                             $sodLabel = $sod.find(".sod_label"),
                             $sodCycle = $sod.data("cycle"),
                             $optionActive = $sodOptions.filter(".active");
-                        return 0 !== e.which && 0 !== e.charCode && (clearTimeout($_sodFilterTimeout), $sod.data("filter", $sod.data("filter") + String.fromCharCode(e.keyCode | e.charCode)), $sodFilterHit = $sodOptions.filter(function() {
+                        return e.which > 36 && e.which < 41 ? (37 === e.which || 38 === e.which ? ($optionNext = $optionActive.prevAll(":not('.disabled, .optgroup')").first(), $optionCycle = $sodOptions.not(".disabled, .optgroup").last()) : (39 === e.which || 40 === e.which) && ($optionNext = $optionActive.nextAll(":not('.disabled, .optgroup')").first(), $optionCycle = $sodOptions.not(".disabled, .optgroup").first()), !$optionNext.hasClass("sod_option") && $sodCycle && ($optionNext = $optionCycle), ($optionNext.hasClass("sod_option") || $sodCycle) && ($optionActive.removeClass("active"), $optionNext.addClass("active"), $sodLabel.get(0).lastChild.nodeValue = $optionNext.text(), _private.listScroll($sodList, $optionNext), $sod.hasClass("open") || ($_sodKeysWhenClosed = !0)), !1) : (13 === e.which || 32 === e.which && $sod.hasClass("open") && (" " === $sod.data("filter")[0] || "" === $sod.data("filter")) ? (e.preventDefault(), $optionActive.click()) : 32 !== e.which || $sod.hasClass("open") || " " !== $sod.data("filter")[0] && "" !== $sod.data("filter") ? 27 === e.which && _private.blurSod($sod) : (e.preventDefault(), $_sodKeysWhenClosed = !1, $sod.click()), void(0 !== e.which && (clearTimeout($_sodFilterTimeout), $sod.data("filter", $sod.data("filter") + String.fromCharCode(e.which)), $sodFilterHit = $sodOptions.filter(function() {
                             return 0 === $(this).text().toLowerCase().indexOf($sod.data("filter").toLowerCase())
-                        }).not(".disabled, .optgroup").first(), $sodFilterHit.length && ($optionActive.removeClass("active"), $sodFilterHit.addClass("active"), _private.listScroll($sodList, $sodFilterHit), $sodLabel.get(0).lastChild.nodeValue = $sodFilterHit.text()), $_sodFilterTimeout = setTimeout(function() {
+                        }).not(".disabled, .optgroup").first(), $sodFilterHit.length && ($optionActive.removeClass("active"), $sodFilterHit.addClass("active"), _private.listScroll($sodList, $sodFilterHit), $sodLabel.get(0).lastChild.nodeValue = $sodFilterHit.text(), $sod.hasClass("open") || ($_sodKeysWhenClosed = !0)), $_sodFilterTimeout = setTimeout(function() {
                             $sod.data("filter", "")
-                        }, 500)), e.which > 36 && e.which < 41 ? (37 === e.which || 38 === e.which ? ($optionNext = $optionActive.prevAll(":not('.disabled, .optgroup')").first(), $optionCycle = $sodOptions.not(".disabled, .optgroup").last()) : (39 === e.which || 40 === e.which) && ($optionNext = $optionActive.nextAll(":not('.disabled, .optgroup')").first(), $optionCycle = $sodOptions.not(".disabled, .optgroup").first()), !$optionNext.hasClass("sod_option") && $sodCycle && ($optionNext = $optionCycle), ($optionNext.hasClass("sod_option") || $sodCycle) && ($optionActive.removeClass("active"), $optionNext.addClass("active"), $sodLabel.get(0).lastChild.nodeValue = $optionNext.text(), _private.listScroll($sodList, $optionNext)), !1) : void(13 === e.which || 32 === e.which && $sod.hasClass("open") && "" === $sod.data("filter") ? (e.preventDefault(), $optionActive.click()) : 32 !== e.which || $sod.hasClass("open") || "" !== $sod.data("filter") ? 27 === e.which && _private.blurSod($sod) : (e.preventDefault(), $sod.click()))
+                        }, 500))))
                     },
                     optionHover: function() {
                         var $option = $(this);
@@ -3559,7 +4448,7 @@ window.console || (window.console = function() {
                             $optionDisabled = $clicked.hasClass("disabled"),
                             $optionOptgroup = $clicked.hasClass("optgroup"),
                             $optionIndex = $sod.find(".sod_option:not('.optgroup')").index(this);
-                        $sod.hasClass("touch") || ($optionDisabled || $optionOptgroup || ($sod.find(".selected, .sod_placeholder").removeClass("selected sod_placeholder"), $clicked.addClass("selected"), $sod.find("select option")[$optionIndex].selected = !0, $sod.find("select").change()), clearTimeout($_sodViewportTimeout), $sod.removeClass("open above"))
+                        $sod.hasClass("touch") || ($optionDisabled || $optionOptgroup || ($sod.find(".selected, .sod_placeholder").removeClass("selected sod_placeholder"), $clicked.addClass("selected"), $sod.find("select option")[$optionIndex].selected = !0, $sod.find("select").change()), clearTimeout($_sodViewportTimeout), $sod.removeClass("open"))
                     },
                     selectChange: function() {
                         var $select = $(this),
@@ -3572,9 +4461,11 @@ window.console || (window.console = function() {
                     blurSod: function($sod) {
                         if ($("body").find($sod).length) {
                             var $sodLabel = $sod.data("label"),
-                                $optionActive = $sod.find(".active"),
-                                $optionSelected = $sod.find(".selected");
-                            clearTimeout($_sodViewportTimeout), $sod.hasClass("focus") && !$sod.hasClass("open") ? $optionActive.click() : $optionActive.hasClass("selected") || ($sod.find(".sod_label").get(0).lastChild.nodeValue = $sodLabel, $optionActive.removeClass("active"), $optionSelected.addClass("active")), $sod.removeClass("open focus above"), $sod.blur()
+                                $sodPlaceholder = $sod.data("placeholder"),
+                                $optionActive = $sod.hasClass("touch") ? $sod.find("option:selected", "select") : $sod.find(".active"),
+                                $optionSelected = $sod.hasClass("touch") ? $sod.find("option:selected", "select") : $sod.find(".selected"),
+                                $optionHasChanged = !1;
+                            clearTimeout($_sodViewportTimeout), $_sodKeysWhenClosed && !$optionActive.hasClass("selected") ? ($optionActive.click(), $optionHasChanged = !0) : $optionActive.hasClass("selected") || ($optionActive.removeClass("active"), $optionSelected.addClass("active")), !$optionHasChanged && $sodPlaceholder ? $sod.find(".sod_label").get(0).lastChild.nodeValue = $optionSelected.text() : $optionHasChanged || ($sod.find(".sod_label").get(0).lastChild.nodeValue = $sodLabel), $_sodKeysWhenClosed = !1, $sod.removeClass("open focus"), $sod.blur(), $("html").off(".sodBlur")
                         }
                     },
                     checkViewport: function($sod, $sodList) {
@@ -3608,7 +4499,7 @@ window.console || (window.console = function() {
                                 $sodList = $sod.find(".sod_list:first");
                             $sod.hasClass("sod_select") ? ($sodList.empty(), $sod.find(".sod_label").get(0).lastChild.nodeValue = "", $select.is(":disabled") && $sod.addClass("disabled"), $("option, optgroup", $select).each(function() {
                                 _private.populateSoD($(this), $sodList, $sod)
-                            })) : console.log("There's no SoD to update")
+                            })) : console.log("Select or Die: There's no SoD to update")
                         })
                     },
                     disable: function($value) {
@@ -3630,15 +4521,19 @@ window.console || (window.console = function() {
         }
     }(jQuery);
 var SimpleComponentLoader = function($elem, options, callback, failCallback) {
-    if (this.$elem = $elem || null, this.options = {
-            parameters: {}
-        }, this.callback = callback, this.failCallback = failCallback, this.loaderIndicator = this.$elem ? new LoaderOverlay(this.$elem, !0).hide() : null, this.requestURL = (this.$elem.data("url") ? shop.url.base + this.$elem.data("url") : "").replace("//", "/"), this.states = {
-            isLoaded: !1,
-            hasError: !1,
-            textStatus: ""
-        }, void 0 !== options)
-        for (var i in options) this.options.hasOwnProperty(i) && (this.options[i] = options[i]);
-    this.options.parameters.componentUid = this.$elem.data("uid"), $elem && this.load()
+    var self = this;
+    this.$elem = $elem || null, this.elemDataObj = this.$elem.data(), this.options = {
+        parameters: function() {
+            var prop, newDataObj = {},
+                propStartsWith = "param";
+            for (prop in self.elemDataObj) 0 === prop.indexOf(propStartsWith) && (newDataObj[prop.replace(propStartsWith).toLowerCase()] = self.elemDataObj[prop]);
+            return newDataObj
+        }()
+    }, this.callback = callback, this.failCallback = failCallback, this.loaderIndicator = this.$elem ? new LoaderOverlay(this.$elem, !0).hide() : null, this.requestURL = (this.$elem.data("url") ? shop.url.base + this.$elem.data("url") : "").replace("//", "/"), this.states = {
+        isLoaded: !1,
+        hasError: !1,
+        textStatus: ""
+    }, this.options = helper.mergeObj(this.options, options), this.options.parameters.componentUid = this.$elem.data("uid"), $elem && this.load()
 };
 SimpleComponentLoader.prototype = {
     _setStates: function(hasError, isLoaded, textStatus) {
@@ -3664,6 +4559,51 @@ SimpleComponentLoader.prototype = {
         }), this
     }
 },
+    function($, shop) {
+        "use strict";
+        var setCloudinaryImageSize = function(slotWidth, image) {
+                var windowWidth = window.innerWidth,
+                    isSubnaviContent = void 0 !== image ? image.parents().hasClass("subnavi-content") : !1;
+                return 1024 > windowWidth ? (slotWidth = isSubnaviContent ? "FULL" : slotWidth, shop.componentImageSizes[slotWidth].m) : 1280 > windowWidth ? shop.componentImageSizes[slotWidth].l : shop.componentImageSizes[slotWidth].xl
+            },
+            cloudinaryImageHandler = function($imageCloudinary) {
+                var size, componentType, cloudinaryURL, slotWidth, isThird, isThreeQuarters, fn = {
+                    loadImage: function($elem, url) {
+                        $("<img/>", {
+                            src: cloudinaryURL
+                        }).load(function() {
+                            $elem.attr("src", url).show(), $elem.attr("usemap") && $elem.rwdImageMaps()
+                        })
+                    }
+                };
+                $imageCloudinary = void 0 !== $imageCloudinary ? $imageCloudinary : $(".js-component-image-cloudinary"), shop && $imageCloudinary.each(function() {
+                    var $this = $(this);
+                    if (componentType = $this.data("component-type"), cloudinaryURL = $this.data("cloudinary-url"), slotWidth = "" !== $this.data("slot-width") ? $this.data("slot-width") : "FULL", "Search result Page" === shop.page.name && (isThird = $this.parents().hasClass("js-cloudinary-third"), isThreeQuarters = $this.parents().hasClass("js-cloudinary-three-quarters"), slotWidth = isThird ? "THIRD" : isThreeQuarters ? "THREE_QUARTERS" : slotWidth), cloudinaryURL) {
+                        switch (componentType) {
+                            case "ImageLinkComponent":
+                                var isCategoryTeaser = $this.parents().hasClass("js-category-teaser");
+                                size = setCloudinaryImageSize(isCategoryTeaser ? "THIRD" : slotWidth);
+                                break;
+                            case "InspirationsTeaserComponent":
+                                size = setCloudinaryImageSize("QUARTER");
+                                break;
+                            case "ThreeTeaserTileComponent":
+                            case "ThreeTeaserNewsletterComponent":
+                                size = setCloudinaryImageSize("THIRD");
+                                break;
+                            default:
+                                size = setCloudinaryImageSize(slotWidth, $this)
+                        }
+                        size && (cloudinaryURL = cloudinaryURL.replace("upload/", "upload/c_lfill,g_west,w_" + size + "/").replace("http:", ""), fn.loadImage($this, cloudinaryURL))
+                    }
+                })
+            };
+        shop && (shop.cloudinaryImageHandler = cloudinaryImageHandler), $(function() {
+            shop.cloudinaryImageHandler(), $(window).on("enterBreakpoint768.cloudinary enterBreakpoint1024.cloudinary enterBreakpoint1280.cloudinary", function() {
+                shop.cloudinaryImageHandler()
+            })
+        })
+    }(jQuery, window.shop),
     function($) {
         $.fn.delayKeyup = function(callback, ms) {
             return $(this).keyup(function(event) {
@@ -3675,24 +4615,39 @@ SimpleComponentLoader.prototype = {
         }
     }(jQuery),
     function($) {
-        $.url = function(url) {
-            for (var uriDecode = function(text) {
-                return decodeURIComponent(text || "").replace(/\+/g, " ")
-            }, urlparser = /^([^:\/\?#\.]*:?)(\/\/([^\/\?#:]*))?:?(\d*)(\.*\/[^?#]*)(\\?[^#]*)?(#.*)?$/, urlkey = ["href", "protocol", "base", "hostname", "port", "pathname", "search", "hash"], urlobj = {
-                params: {}
-            }, urldata = (url || location.href).match(urlparser), i = urlkey.length; i--;) urlobj[urlkey[i]] = urldata[i] || "";
-            return urlobj.host = urlobj.hostname + ("" != urlobj.port ? ":" : "") + urlobj.port, urlobj.host.match(/^\.\.?$/) && (urlobj.path = urlobj.host + urlobj.path, urlobj.host = ""), urlobj.search.replace(/([^\?&=]+)=?([^&]*)?/g, function(full, key, data) {
-                key && (urlobj.params[uriDecode(key)] = uriDecode(data))
-            }), urlobj.toString = function(baseurl) {
-                var params = $.param(urlobj.params);
-                if (baseurl === !1 || "" != urlobj.protocol && "" != urlobj.host) return urlobj.protocol + ("" != urlobj.host ? "//" : "") + urlobj.host + urlobj.pathname + (params ? "?" + params : "") + urlobj.hash;
-                var base = $.url(baseurl || location.href),
-                    abspath = urlobj.pathname;
-                if (!urlobj.pathname.match(/^\//))
-                    for (abspath = (base.pathname.replace(/[^\/]*$/, "") + urlobj.pathname).replace(/\/\.\//, "/"); abspath.match(/\.\./);) abspath = abspath.replace(/\/[^\/]*\/\.\.\//g, "/");
-                return base.protocol + "//" + base.host + abspath + (params ? "?" + params : "") + urlobj.hash
-            }, urlobj
-        }, $.extend($.url, $.url())
+        $.fn.rwdImageMaps = function() {
+            var $img = this,
+                rwdImageMap = function() {
+                    $img.each(function() {
+                        var self = this,
+                            $self = $(self);
+                        $(this).attr("usemap") && $("<img />").load(function() {
+                            var attrW = "width",
+                                attrH = "height",
+                                w = $self.attr(attrW),
+                                h = $self.attr(attrH);
+                            if (!w || !h) {
+                                var temp = new Image;
+                                temp.src = $self.attr("src"), w || (w = temp.width), h || (h = temp.height)
+                            }
+                            var wPercent = $self.width() / 100,
+                                hPercent = $self.height() / 100,
+                                map = $self.attr("usemap").replace("#", ""),
+                                c = "coords";
+                            $('map[name="' + map + '"]').find("area").each(function() {
+                                var $this = $(this);
+                                $this.data(c) || $this.data(c, $this.attr(c));
+                                for (var coords = $this.data(c).split(","), coordsPercent = new Array(coords.length), i = 0; i < coordsPercent.length; ++i) coordsPercent[i] = parseInt(i % 2 === 0 ? coords[i] / w * 100 * wPercent : coords[i] / h * 100 * hPercent);
+                                $this.attr(c, coordsPercent.toString())
+                            })
+                        }).attr("src", $self.attr("src"))
+                    })
+                };
+            return $(window).on("resize updateRWD", rwdImageMap).trigger("resize"), this
+        }, $(function() {
+            "use strict";
+            $("img[usemap]").rwdImageMaps()
+        })
     }(jQuery),
     function() {
         var Mobify = window.Mobify = window.Mobify || {},
@@ -3738,7 +4693,7 @@ SimpleComponentLoader.prototype = {
                     }
                 },
                 Magnifik = function(element, options) {
-                    this.options = $.extend({}, Magnifik.defaults, options), this.options.classNames = $.extend(defaults.classNames, this.options.classNames), this.options.imageStyle.width = 100 * this.options.ratio + "%", this.options.stage || (this.options.stage = $("body"), this.options.global = !0), this.$element = $(element), this.bind()
+                    this.options = $.extend({}, Magnifik.defaults, options), this.options.classNames = $.extend(defaults.classNames, this.options.classNames), this.options.imageStyle.width = 100 * this.options.ratio + "%", this.options.stage || (this.options.stage = $("html"), this.options.global = !0), this.$element = $(element), this.bind()
                 };
             return Magnifik.defaults = defaults, Magnifik.prototype.unbind = function() {
                 return this.bind(!0)
@@ -3769,7 +4724,7 @@ SimpleComponentLoader.prototype = {
                                 break
                             }
                     } else leftRatio = event.offsetX / $img.prop("offsetWidth"), topRatio = event.offsetY / $img.prop("offsetHeight");
-                    $link = $img.filter("[href]").add($img.parent("[href]")), src = $link.attr("href") || $img.attr("src") || $img.data("zoom-image"), this.$thumb.attr("src", $img.attr("src")), this.$full.attr("src", src), this.options.global && (this.oldScrollTop = document.body.scrollTop), this.$stage.append(this.$canvas), this.$stage.addClass(this._getClass("zooming"));
+                    $link = $img.filter("[href]").add($img.parent("[href]")), src = $img.attr("data-zoom-image") || $link.attr("href") || $img.attr("src"), this.$thumb.attr("src", $img.attr("src")), this.$full.attr("src", ""), this.$full.attr("src", src), this.options.global && (this.oldScrollTop = document.body.scrollTop), this.$stage.append(this.$canvas), this.$stage.addClass(this._getClass("zooming"));
                     var imgAspect = $img.prop("naturalHeight") / $img.prop("naturalWidth"),
                         thumbWidth = this.$thumb.prop("offsetWidth"),
                         smallWidth = this.$canvas.prop("offsetWidth"),
@@ -3866,8 +4821,6 @@ SimpleComponentLoader.prototype = {
                 })
             }), $(document).ready(function() {
                 update()
-            }), $(window).load(function() {
-                update()
             }), this
         }, $.belowthefold = function(element, settings) {
             var fold;
@@ -3926,6 +4879,477 @@ SimpleComponentLoader.prototype = {
             }
         })
     }(jQuery, window, document),
+    function($) {
+        function getVendorPropertyName(prop) {
+            if (prop in div.style) return prop;
+            var prefixes = ["Moz", "Webkit", "O", "ms"],
+                prop_ = prop.charAt(0).toUpperCase() + prop.substr(1);
+            if (prop in div.style) return prop;
+            for (var i = 0; i < prefixes.length; ++i) {
+                var vendorProp = prefixes[i] + prop_;
+                if (vendorProp in div.style) return vendorProp
+            }
+        }
+
+        function checkTransform3dSupport() {
+            return div.style[support.transform] = "", div.style[support.transform] = "rotateY(90deg)", "" !== div.style[support.transform]
+        }
+
+        function Transform(str) {
+            return "string" == typeof str && this.parse(str), this
+        }
+
+        function callOrQueue(self, queue, fn) {
+            queue === !0 ? self.queue(fn) : queue ? self.queue(queue, fn) : fn()
+        }
+
+        function getProperties(props) {
+            var re = [];
+            return $.each(props, function(key) {
+                key = $.camelCase(key), key = $.transit.propertyMap[key] || $.cssProps[key] || key, key = uncamel(key), -1 === $.inArray(key, re) && re.push(key)
+            }), re
+        }
+
+        function getTransition(properties, duration, easing, delay) {
+            var props = getProperties(properties);
+            $.cssEase[easing] && (easing = $.cssEase[easing]);
+            var attribs = "" + toMS(duration) + " " + easing;
+            parseInt(delay, 10) > 0 && (attribs += " " + toMS(delay));
+            var transitions = [];
+            return $.each(props, function(i, name) {
+                transitions.push(name + " " + attribs)
+            }), transitions.join(", ")
+        }
+
+        function registerCssHook(prop, isPixels) {
+            isPixels || ($.cssNumber[prop] = !0), $.transit.propertyMap[prop] = support.transform, $.cssHooks[prop] = {
+                get: function(elem) {
+                    var t = $(elem).css("transit:transform");
+                    return t.get(prop)
+                },
+                set: function(elem, value) {
+                    var t = $(elem).css("transit:transform");
+                    t.setFromString(prop, value), $(elem).css({
+                        "transit:transform": t
+                    })
+                }
+            }
+        }
+
+        function uncamel(str) {
+            return str.replace(/([A-Z])/g, function(letter) {
+                return "-" + letter.toLowerCase()
+            })
+        }
+
+        function unit(i, units) {
+            return "string" != typeof i || i.match(/^[\-0-9\.]+$/) ? "" + i + units : i
+        }
+
+        function toMS(duration) {
+            var i = duration;
+            return $.fx.speeds[i] && (i = $.fx.speeds[i]), unit(i, "ms")
+        }
+        $.transit = {
+            version: "0.9.9",
+            propertyMap: {
+                marginLeft: "margin",
+                marginRight: "margin",
+                marginBottom: "margin",
+                marginTop: "margin",
+                paddingLeft: "padding",
+                paddingRight: "padding",
+                paddingBottom: "padding",
+                paddingTop: "padding"
+            },
+            enabled: !0,
+            useTransitionEnd: !1
+        };
+        var div = document.createElement("div"),
+            support = {},
+            isChrome = navigator.userAgent.toLowerCase().indexOf("chrome") > -1;
+        support.transition = getVendorPropertyName("transition"), support.transitionDelay = getVendorPropertyName("transitionDelay"), support.transform = getVendorPropertyName("transform"), support.transformOrigin = getVendorPropertyName("transformOrigin"), support.transform3d = checkTransform3dSupport();
+        var eventNames = {
+                transition: "transitionEnd",
+                MozTransition: "transitionend",
+                OTransition: "oTransitionEnd",
+                WebkitTransition: "webkitTransitionEnd",
+                msTransition: "MSTransitionEnd"
+            },
+            transitionEnd = support.transitionEnd = eventNames[support.transition] || null;
+        for (var key in support) support.hasOwnProperty(key) && "undefined" == typeof $.support[key] && ($.support[key] = support[key]);
+        div = null, $.cssEase = {
+            _default: "ease",
+            "in": "ease-in",
+            out: "ease-out",
+            "in-out": "ease-in-out",
+            snap: "cubic-bezier(0,1,.5,1)",
+            easeOutCubic: "cubic-bezier(.215,.61,.355,1)",
+            easeInOutCubic: "cubic-bezier(.645,.045,.355,1)",
+            easeInCirc: "cubic-bezier(.6,.04,.98,.335)",
+            easeOutCirc: "cubic-bezier(.075,.82,.165,1)",
+            easeInOutCirc: "cubic-bezier(.785,.135,.15,.86)",
+            easeInExpo: "cubic-bezier(.95,.05,.795,.035)",
+            easeOutExpo: "cubic-bezier(.19,1,.22,1)",
+            easeInOutExpo: "cubic-bezier(1,0,0,1)",
+            easeInQuad: "cubic-bezier(.55,.085,.68,.53)",
+            easeOutQuad: "cubic-bezier(.25,.46,.45,.94)",
+            easeInOutQuad: "cubic-bezier(.455,.03,.515,.955)",
+            easeInQuart: "cubic-bezier(.895,.03,.685,.22)",
+            easeOutQuart: "cubic-bezier(.165,.84,.44,1)",
+            easeInOutQuart: "cubic-bezier(.77,0,.175,1)",
+            easeInQuint: "cubic-bezier(.755,.05,.855,.06)",
+            easeOutQuint: "cubic-bezier(.23,1,.32,1)",
+            easeInOutQuint: "cubic-bezier(.86,0,.07,1)",
+            easeInSine: "cubic-bezier(.47,0,.745,.715)",
+            easeOutSine: "cubic-bezier(.39,.575,.565,1)",
+            easeInOutSine: "cubic-bezier(.445,.05,.55,.95)",
+            easeInBack: "cubic-bezier(.6,-.28,.735,.045)",
+            easeOutBack: "cubic-bezier(.175, .885,.32,1.275)",
+            easeInOutBack: "cubic-bezier(.68,-.55,.265,1.55)"
+        }, $.cssHooks["transit:transform"] = {
+            get: function(elem) {
+                return $(elem).data("transform") || new Transform
+            },
+            set: function(elem, v) {
+                var value = v;
+                value instanceof Transform || (value = new Transform(value)), elem.style[support.transform] = "WebkitTransform" !== support.transform || isChrome ? value.toString() : value.toString(!0), $(elem).data("transform", value)
+            }
+        }, $.cssHooks.transform = {
+            set: $.cssHooks["transit:transform"].set
+        }, $.fn.jquery < "1.8" && ($.cssHooks.transformOrigin = {
+            get: function(elem) {
+                return elem.style[support.transformOrigin]
+            },
+            set: function(elem, value) {
+                elem.style[support.transformOrigin] = value
+            }
+        }, $.cssHooks.transition = {
+            get: function(elem) {
+                return elem.style[support.transition]
+            },
+            set: function(elem, value) {
+                elem.style[support.transition] = value
+            }
+        }), registerCssHook("scale"), registerCssHook("translate"), registerCssHook("rotate"), registerCssHook("rotateX"), registerCssHook("rotateY"), registerCssHook("rotate3d"), registerCssHook("perspective"), registerCssHook("skewX"), registerCssHook("skewY"), registerCssHook("x", !0), registerCssHook("y", !0), Transform.prototype = {
+            setFromString: function(prop, val) {
+                var args = "string" == typeof val ? val.split(",") : val.constructor === Array ? val : [val];
+                args.unshift(prop), Transform.prototype.set.apply(this, args)
+            },
+            set: function(prop) {
+                var args = Array.prototype.slice.apply(arguments, [1]);
+                this.setter[prop] ? this.setter[prop].apply(this, args) : this[prop] = args.join(",")
+            },
+            get: function(prop) {
+                return this.getter[prop] ? this.getter[prop].apply(this) : this[prop] || 0
+            },
+            setter: {
+                rotate: function(theta) {
+                    this.rotate = unit(theta, "deg")
+                },
+                rotateX: function(theta) {
+                    this.rotateX = unit(theta, "deg")
+                },
+                rotateY: function(theta) {
+                    this.rotateY = unit(theta, "deg")
+                },
+                scale: function(x, y) {
+                    void 0 === y && (y = x), this.scale = x + "," + y
+                },
+                skewX: function(x) {
+                    this.skewX = unit(x, "deg")
+                },
+                skewY: function(y) {
+                    this.skewY = unit(y, "deg")
+                },
+                perspective: function(dist) {
+                    this.perspective = unit(dist, "px")
+                },
+                x: function(x) {
+                    this.set("translate", x, null)
+                },
+                y: function(y) {
+                    this.set("translate", null, y)
+                },
+                translate: function(x, y) {
+                    void 0 === this._translateX && (this._translateX = 0), void 0 === this._translateY && (this._translateY = 0), null !== x && void 0 !== x && (this._translateX = unit(x, "px")), null !== y && void 0 !== y && (this._translateY = unit(y, "px")), this.translate = this._translateX + "," + this._translateY
+                }
+            },
+            getter: {
+                x: function() {
+                    return this._translateX || 0
+                },
+                y: function() {
+                    return this._translateY || 0
+                },
+                scale: function() {
+                    var s = (this.scale || "1,1").split(",");
+                    return s[0] && (s[0] = parseFloat(s[0])), s[1] && (s[1] = parseFloat(s[1])), s[0] === s[1] ? s[0] : s
+                },
+                rotate3d: function() {
+                    for (var s = (this.rotate3d || "0,0,0,0deg").split(","), i = 0; 3 >= i; ++i) s[i] && (s[i] = parseFloat(s[i]));
+                    return s[3] && (s[3] = unit(s[3], "deg")), s
+                }
+            },
+            parse: function(str) {
+                var self = this;
+                str.replace(/([a-zA-Z0-9]+)\((.*?)\)/g, function(x, prop, val) {
+                    self.setFromString(prop, val)
+                })
+            },
+            toString: function(use3d) {
+                var re = [];
+                for (var i in this)
+                    if (this.hasOwnProperty(i)) {
+                        if (!support.transform3d && ("rotateX" === i || "rotateY" === i || "perspective" === i || "transformOrigin" === i)) continue;
+                        "_" !== i[0] && re.push(use3d && "scale" === i ? i + "3d(" + this[i] + ",1)" : use3d && "translate" === i ? i + "3d(" + this[i] + ",0)" : i + "(" + this[i] + ")")
+                    }
+                return re.join(" ")
+            }
+        }, $.fn.transition = $.fn.transit = function(properties, duration, easing, callback) {
+            var self = this,
+                delay = 0,
+                queue = !0;
+            "function" == typeof duration && (callback = duration, duration = void 0), "function" == typeof easing && (callback = easing, easing = void 0), "undefined" != typeof properties.easing && (easing = properties.easing, delete properties.easing), "undefined" != typeof properties.duration && (duration = properties.duration, delete properties.duration), "undefined" != typeof properties.complete && (callback = properties.complete, delete properties.complete), "undefined" != typeof properties.queue && (queue = properties.queue, delete properties.queue), "undefined" != typeof properties.delay && (delay = properties.delay, delete properties.delay), "undefined" == typeof duration && (duration = $.fx.speeds._default), "undefined" == typeof easing && (easing = $.cssEase._default), duration = toMS(duration);
+            var transitionValue = getTransition(properties, duration, easing, delay),
+                work = $.transit.enabled && support.transition,
+                i = work ? parseInt(duration, 10) + parseInt(delay, 10) : 0;
+            if (0 === i) {
+                var fn = function(next) {
+                    self.css(properties), callback && callback.apply(self), next && next()
+                };
+                return callOrQueue(self, queue, fn), self
+            }
+            var oldTransitions = {},
+                run = function(nextCall) {
+                    var bound = !1,
+                        cb = function() {
+                            bound && self.unbind(transitionEnd, cb), i > 0 && self.each(function() {
+                                this.style[support.transition] = oldTransitions[this] || null
+                            }), "function" == typeof callback && callback.apply(self), "function" == typeof nextCall && nextCall()
+                        };
+                    i > 0 && transitionEnd && $.transit.useTransitionEnd ? (bound = !0, self.bind(transitionEnd, cb)) : window.setTimeout(cb, i), self.each(function() {
+                        i > 0 && (this.style[support.transition] = transitionValue), $(this).css(properties)
+                    })
+                },
+                deferredRun = function(next) {
+                    this.offsetWidth, run(next)
+                };
+            return callOrQueue(self, queue, deferredRun), this
+        }, $.transit.getTransitionValue = getTransition
+    }(jQuery),
+    function() {
+        eTrackerCommerceAPI = function() {
+            return this instanceof eTrackerCommerceAPI ? (this.__ORDER__ = "order", this.__VIEW_PRODUCT__ = "viewProduct", this.__INSERT_TO_BASKET__ = "insertToBasket", void(this.__REMOVE_FROM_BASKET__ = "removeFromBasket")) : new eTrackerCommerceAPI
+        }, eTrackerCommerceAPI.prototype = {
+            _sendEvent: function(type, product, quantity) {
+                var _isLegalQuantity = !!quantity;
+                new Log({
+                    type: "info",
+                    message: "Call: eTrackerCommerceAPI._sendEvent( " + type + ", " + JSON.stringify(product) + (_isLegalQuantity ? ", " + quantity : "") + ")",
+                    level: 1
+                }), _isLegalQuantity || type !== this.__INSERT_TO_BASKET__ && type !== this.__REMOVE_FROM_BASKET__ || new Log({
+                    type: "error",
+                    message: 'Could not send Event! "' + type + '" Events need a quantity!',
+                    level: 4
+                });
+                try {
+                    return _isLegalQuantity ? etCommerce.sendEvent(type, product, parseInt(quantity, 10)) : etCommerce.sendEvent(type, product)
+                } catch (error) {
+                    new Log({
+                        type: "error",
+                        message: "etCommerce not defined",
+                        level: 4
+                    })
+                }
+            },
+            viewProduct: function(product) {
+                return this._sendEvent(this.__VIEW_PRODUCT__, this._encodeProductJson(product))
+            },
+            insertToBasket: function(product, quantity) {
+                return this._sendEvent(this.__INSERT_TO_BASKET__, this._encodeProductJson(product), quantity)
+            },
+            removeFromBasket: function(product, quantity) {
+                return this._sendEvent(this.__REMOVE_FROM_BASKET__, this._encodeProductJson(product), quantity)
+            },
+            order: function(order) {
+                var self = this,
+                    products = order.basket.products || null;
+                if (products && $.isArray(order.basket.products)) {
+                    for (var i = 0, l = products.length; l > i; i++) products[i].product && (products[i].product = this._encodeProductJson(products[i].product));
+                    order.basket.products = products
+                }
+                return self._sendEvent(self.__ORDER__, order)
+            },
+            getProductBySku: function(sku) {
+                sku || new Log({
+                    type: "error",
+                    message: 'Argument "SKU" could not be empty',
+                    level: 4
+                });
+                for (var i = 0, o = shop.etracker.products, l = o.length; l > i; i++)
+                    if (o[i].id == sku) return o[i];
+                return !1
+            },
+            getProductByAjax: function(sku, quantity, error) {
+                var self = this;
+                return quantity = quantity ? quantity : 1, self.product = !1, self.error = error ? !0 : !1, $.ajax({
+                    url: shop.url.base + "eTracker/getJsonProduct/" + sku + "?quantity=" + quantity,
+                    type: "GET",
+                    cache: !0,
+                    async: !1,
+                    success: function(data) {
+                        self.product = data
+                    },
+                    error: function() {
+                        return self.error ? void 0 : (self.error = !0, self.getProductByAjax("l" + sku, quantity, !0))
+                    }
+                }), self.product
+            },
+            _encodeProductJson: function(productObj) {
+                if (productObj && $.isPlainObject(productObj))
+                    for (var prop in productObj)
+                        if ($.isArray(productObj[prop]))
+                            for (var i = 0, l = productObj[prop].length; l > i; i++) productObj[prop][i] = shop.encodeRfc3986(productObj[prop][i]);
+                        else if ($.isPlainObject(productObj[prop])) {
+                            var newObj = {};
+                            for (var propInObj in productObj[prop]) newObj[propInObj] = shop.encodeRfc3986(productObj[prop][propInObj]);
+                            productObj[prop] = newObj
+                        } else productObj[prop] = shop.encodeRfc3986(productObj[prop]);
+                return productObj
+            },
+            getProductJSON: function(sku, quantity) {
+                var product = this.getProductBySku(sku),
+                    productObj = quantity || !product ? this.getProductByAjax(sku, quantity) : product;
+                return productObj
+            }
+        }
+    }();
+var PrudsysApi;
+! function() {
+    "use strict";
+    PrudsysApi = function(amountOfAllCarousels) {
+        this.initalProducts = "", this.amountOfAllCarousels = amountOfAllCarousels, this.currentCarouselsLoaded = 0, this.allCarouselLoaded = !1, this.$carousels = null
+    }, PrudsysApi.prototype = {
+        _validateProductData: function(data) {
+            var newData = data || null;
+            return newData && (newData = $.trim(newData.replace(/undefined,\s|undefined,/g, "")), newData.lastIndexOf(",") === newData.length - 1 && (newData = newData.slice(0, data.length - 2))), newData
+        },
+        send: function(data) {
+            var url = shop.url.base + "tracking/prudsysRecommitEvent";
+            data = this._validateProductData(data), data && "" !== data && $.ajaxQueue({
+                type: "POST",
+                url: url,
+                data: {
+                    orderNumbers: data,
+                    CSRFToken: shop.config.CSRFToken
+                }
+            })
+        },
+        count: function() {
+            this.allCarouselLoaded || (this.currentCarouselsLoaded += 1, this.amountOfAllCarousels === this.currentCarouselsLoaded && (this.allCarouselLoaded = !0)), this.allCarouselLoaded && this.initalProducts && this.send(this.initalProducts)
+        },
+        add: function(productData) {
+            productData && (this.initalProducts += productData)
+        }
+    }
+}(),
+    function() {
+        "use strict";
+        $(function() {
+            window.shop && (window.shop.encodeRfc3986 = function(string) {
+                var encodeString = "";
+                return string && (window.et_escape ? encodeString = et_escape(string) : window.escape ? encodeString = escape(string) : window.encodeURIComponent && (encodeString = encodeURIComponent(string))), encodeString
+            })
+        })
+    }();
+var Template = function() {
+    this.placeholder = !1, this.exceptions = !1, this.template = !1, this.output = !1
+};
+Template.prototype = {
+    setPlaceholder: function(placeholder) {
+        return "object" != typeof placeholder ? (Log({
+            level: 4,
+            message: "Template.setPlaceholder: Error placeholder is not an object",
+            type: "error"
+        }), !1) : (this.placeholder = placeholder, this)
+    },
+    setExceptions: function(exceptions) {
+        return exceptions && "object" != typeof exceptions ? (Log({
+            level: 4,
+            message: "Template.setExceptions: Error exception(s) is not an object",
+            type: "error"
+        }), !1) : (this.exceptions = exceptions, this)
+    },
+    setTemplate: function(template) {
+        var _templatePath = document.getElementById(template);
+        return template && "" === template && !_templatePath ? (Log({
+            level: 4,
+            message: "Template.setTemplate: Error template is not a string or is empty",
+            type: "error"
+        }), !1) : (_templatePath && (this.template = _templatePath.innerHTML), this)
+    },
+    render: function() {
+        return this.template && this.placeholder && (this.output = this.template.replace(new RegExp("{{([a-zA-Z0-9_:]+)}}", "gi"), function(context) {
+            return function(a, b) {
+                var content, ixOf = b.indexOf(":"),
+                    modMethod = ixOf > 0 ? b.substr(0, ixOf) : "",
+                    b = ixOf >= 0 ? b.substr(ixOf + 1) : b;
+                return content = context.exceptions && "function" == typeof context.exceptions[b] ? context.exceptions[b](context.placeholder[b]) : b in context.placeholder ? context.placeholder[b] : "", "escape" === modMethod && (content = window.shop.escapeHTML(content)), content
+            }
+        }(this))), this.output
+    }
+},
+    function($) {
+        "use strict";
+        $.extend($.fn, {
+            pstrength: function(options) {
+                var options = $.extend({
+                    verdicts: ["sehr schwach", "schwach", "mittel", "stark", "sehr stark"],
+                    colors: ["#f00", "#c06", "#f60", "#3c0", "#3f0"],
+                    scores: [10, 15, 30, 40],
+                    minchar: 5,
+                    tooShort: "nicht ausreichend"
+                }, options);
+                return this.each(function() {
+                    var infoarea = $(this).attr("id"),
+                        infoareaIndexOfPoint = infoarea.indexOf("."); - 1 !== infoareaIndexOfPoint && (infoarea = infoarea.substr(infoareaIndexOfPoint + 1)), $(this).after('<div class="pstrength"><div class="pstrength-info" id="' + infoarea + '_text"></div><div class="pstrength-bar" id="' + infoarea + '_bar"></div></div>'), "" !== $(this).val() && $.fn.runPassword($(this).val(), infoarea, options), $(this).keyup(function() {
+                        $.fn.runPassword($(this).val(), infoarea, options)
+                    })
+                })
+            },
+            runPassword: function(password, infoarea, options) {
+                var strColor, strText, nPerc = $.fn.checkPassword(password, options),
+                    ctlBar = "#" + infoarea + "_bar",
+                    ctlText = "#" + infoarea + "_text",
+                    containsANumberRegex = /[0-9]+/,
+                    containsThreeDifferentLettersRegex = /([a-zA-Z][^a-zA-Z]*){3,}/;
+                0 > nPerc || !containsANumberRegex.test(password) || !containsThreeDifferentLettersRegex.test(password) ? (strColor = "#ccc", strText = options.tooShort, $(ctlBar).css({
+                    width: "5%"
+                })) : nPerc <= options.scores[0] ? (strColor = options.colors[0], strText = options.verdicts[0], $(ctlBar).css({
+                    width: "10%"
+                })) : nPerc > options.scores[0] && nPerc <= options.scores[1] ? (strColor = options.colors[1], strText = options.verdicts[1], $(ctlBar).css({
+                    width: "20%"
+                })) : nPerc > options.scores[1] && nPerc <= options.scores[2] ? (strColor = options.colors[2], strText = options.verdicts[2], $(ctlBar).css({
+                    width: "40%"
+                })) : nPerc > options.scores[2] && nPerc <= options.scores[3] ? (strColor = options.colors[3], strText = options.verdicts[3], $(ctlBar).css({
+                    width: "60%"
+                })) : (strColor = options.colors[4], strText = options.verdicts[4], $(ctlBar).css({
+                    width: "80%"
+                })), $(ctlBar).css({
+                    backgroundColor: strColor,
+                    display: "block"
+                }), $(ctlText).html("<span style='color: " + strColor + ";'>" + strText + "</span>")
+            },
+            checkPassword: function(password, options) {
+                {
+                    var intScore = 0;
+                    options.verdicts[0]
+                }
+                return password.length < options.minchar ? intScore -= 100 : password.length >= options.minchar && password.length <= options.minchar + 2 ? intScore += 6 : password.length >= options.minchar + 3 && password.length <= options.minchar + 4 ? intScore += 12 : password.length >= options.minchar + 5 && (intScore += 18), password.match(/[a-z]/) && (intScore += 1), password.match(/[A-Z]/) && (intScore += 5), password.match(/\d+/) && (intScore += 5), password.match(/(.*[0-9].*[0-9].*[0-9])/) && (intScore += 7), password.match(/.[!,@,#,$,%,^,&,*,?,_,~]/) && (intScore += 5), password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~].*[!,@,#,$,%,^,&,*,?,_,~])/) && (intScore += 7), password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/) && (intScore += 2), password.match(/([a-zA-Z])/) && password.match(/([0-9])/) && (intScore += 3), password.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/) && (intScore += 3), intScore
+            }
+        })
+    }(jQuery),
     function(window, undefined) {
         "use strict";
 
@@ -4354,2110 +5778,119 @@ SimpleComponentLoader.prototype = {
             }
         }, window.Hammer = Hammer, "object" == typeof module && module.exports && (module.exports = Hammer), "function" == typeof define && define.amd ? define(["hammerjs", "jquery"], setupPlugin) : setupPlugin(window.Hammer, window.jQuery || window.Zepto)
     }(window),
-    function($) {
-        function getVendorPropertyName(prop) {
-            if (prop in div.style) return prop;
-            var prefixes = ["Moz", "Webkit", "O", "ms"],
-                prop_ = prop.charAt(0).toUpperCase() + prop.substr(1);
-            if (prop in div.style) return prop;
-            for (var i = 0; i < prefixes.length; ++i) {
-                var vendorProp = prefixes[i] + prop_;
-                if (vendorProp in div.style) return vendorProp
-            }
+    function(root, undefined) {
+        function isString(obj) {
+            return !!("" === obj || obj && obj.charCodeAt && obj.substr)
         }
 
-        function checkTransform3dSupport() {
-            return div.style[support.transform] = "", div.style[support.transform] = "rotateY(90deg)", "" !== div.style[support.transform]
+        function isArray(obj) {
+            return nativeIsArray ? nativeIsArray(obj) : "[object Array]" === toString.call(obj)
         }
 
-        function Transform(str) {
-            return "string" == typeof str && this.parse(str), this
+        function isObject(obj) {
+            return obj && "[object Object]" === toString.call(obj)
         }
 
-        function callOrQueue(self, queue, fn) {
-            queue === !0 ? self.queue(fn) : queue ? self.queue(queue, fn) : fn()
+        function defaults(object, defs) {
+            var key;
+            object = object || {}, defs = defs || {};
+            for (key in defs) defs.hasOwnProperty(key) && null == object[key] && (object[key] = defs[key]);
+            return object
         }
 
-        function getProperties(props) {
-            var re = [];
-            return $.each(props, function(key) {
-                key = $.camelCase(key), key = $.transit.propertyMap[key] || $.cssProps[key] || key, key = uncamel(key), -1 === $.inArray(key, re) && re.push(key)
-            }), re
+        function map(obj, iterator, context) {
+            var i, j, results = [];
+            if (!obj) return results;
+            if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
+            for (i = 0, j = obj.length; j > i; i++) results[i] = iterator.call(context, obj[i], i, obj);
+            return results
         }
 
-        function getTransition(properties, duration, easing, delay) {
-            var props = getProperties(properties);
-            $.cssEase[easing] && (easing = $.cssEase[easing]);
-            var attribs = "" + toMS(duration) + " " + easing;
-            parseInt(delay, 10) > 0 && (attribs += " " + toMS(delay));
-            var transitions = [];
-            return $.each(props, function(i, name) {
-                transitions.push(name + " " + attribs)
-            }), transitions.join(", ")
+        function checkPrecision(val, base) {
+            return val = Math.round(Math.abs(val)), isNaN(val) ? base : val
         }
 
-        function registerCssHook(prop, isPixels) {
-            isPixels || ($.cssNumber[prop] = !0), $.transit.propertyMap[prop] = support.transform, $.cssHooks[prop] = {
-                get: function(elem) {
-                    var t = $(elem).css("transit:transform");
-                    return t.get(prop)
-                },
-                set: function(elem, value) {
-                    var t = $(elem).css("transit:transform");
-                    t.setFromString(prop, value), $(elem).css({
-                        "transit:transform": t
-                    })
-                }
-            }
+        function checkCurrencyFormat(format) {
+            var defaults = lib.settings.currency.format;
+            return "function" == typeof format && (format = format()), isString(format) && format.match("%v") ? {
+                pos: format,
+                neg: format.replace("-", "").replace("%v", "-%v"),
+                zero: format
+            } : format && format.pos && format.pos.match("%v") ? format : isString(defaults) ? lib.settings.currency.format = {
+                pos: defaults,
+                neg: defaults.replace("%v", "-%v"),
+                zero: defaults
+            } : defaults
         }
-
-        function uncamel(str) {
-            return str.replace(/([A-Z])/g, function(letter) {
-                return "-" + letter.toLowerCase()
-            })
-        }
-
-        function unit(i, units) {
-            return "string" != typeof i || i.match(/^[\-0-9\.]+$/) ? "" + i + units : i
-        }
-
-        function toMS(duration) {
-            var i = duration;
-            return $.fx.speeds[i] && (i = $.fx.speeds[i]), unit(i, "ms")
-        }
-        $.transit = {
-            version: "0.9.9",
-            propertyMap: {
-                marginLeft: "margin",
-                marginRight: "margin",
-                marginBottom: "margin",
-                marginTop: "margin",
-                paddingLeft: "padding",
-                paddingRight: "padding",
-                paddingBottom: "padding",
-                paddingTop: "padding"
+        var lib = {};
+        lib.version = "0.4.1", lib.settings = {
+            currency: {
+                symbol: "$",
+                format: "%s%v",
+                decimal: ".",
+                thousand: ",",
+                precision: 2,
+                grouping: 3
             },
-            enabled: !0,
-            useTransitionEnd: !1
+            number: {
+                precision: 0,
+                grouping: 3,
+                thousand: ",",
+                decimal: "."
+            }
         };
-        var div = document.createElement("div"),
-            support = {},
-            isChrome = navigator.userAgent.toLowerCase().indexOf("chrome") > -1;
-        support.transition = getVendorPropertyName("transition"), support.transitionDelay = getVendorPropertyName("transitionDelay"), support.transform = getVendorPropertyName("transform"), support.transformOrigin = getVendorPropertyName("transformOrigin"), support.transform3d = checkTransform3dSupport();
-        var eventNames = {
-                transition: "transitionEnd",
-                MozTransition: "transitionend",
-                OTransition: "oTransitionEnd",
-                WebkitTransition: "webkitTransitionEnd",
-                msTransition: "MSTransitionEnd"
-            },
-            transitionEnd = support.transitionEnd = eventNames[support.transition] || null;
-        for (var key in support) support.hasOwnProperty(key) && "undefined" == typeof $.support[key] && ($.support[key] = support[key]);
-        div = null, $.cssEase = {
-            _default: "ease",
-            "in": "ease-in",
-            out: "ease-out",
-            "in-out": "ease-in-out",
-            snap: "cubic-bezier(0,1,.5,1)",
-            easeOutCubic: "cubic-bezier(.215,.61,.355,1)",
-            easeInOutCubic: "cubic-bezier(.645,.045,.355,1)",
-            easeInCirc: "cubic-bezier(.6,.04,.98,.335)",
-            easeOutCirc: "cubic-bezier(.075,.82,.165,1)",
-            easeInOutCirc: "cubic-bezier(.785,.135,.15,.86)",
-            easeInExpo: "cubic-bezier(.95,.05,.795,.035)",
-            easeOutExpo: "cubic-bezier(.19,1,.22,1)",
-            easeInOutExpo: "cubic-bezier(1,0,0,1)",
-            easeInQuad: "cubic-bezier(.55,.085,.68,.53)",
-            easeOutQuad: "cubic-bezier(.25,.46,.45,.94)",
-            easeInOutQuad: "cubic-bezier(.455,.03,.515,.955)",
-            easeInQuart: "cubic-bezier(.895,.03,.685,.22)",
-            easeOutQuart: "cubic-bezier(.165,.84,.44,1)",
-            easeInOutQuart: "cubic-bezier(.77,0,.175,1)",
-            easeInQuint: "cubic-bezier(.755,.05,.855,.06)",
-            easeOutQuint: "cubic-bezier(.23,1,.32,1)",
-            easeInOutQuint: "cubic-bezier(.86,0,.07,1)",
-            easeInSine: "cubic-bezier(.47,0,.745,.715)",
-            easeOutSine: "cubic-bezier(.39,.575,.565,1)",
-            easeInOutSine: "cubic-bezier(.445,.05,.55,.95)",
-            easeInBack: "cubic-bezier(.6,-.28,.735,.045)",
-            easeOutBack: "cubic-bezier(.175, .885,.32,1.275)",
-            easeInOutBack: "cubic-bezier(.68,-.55,.265,1.55)"
-        }, $.cssHooks["transit:transform"] = {
-            get: function(elem) {
-                return $(elem).data("transform") || new Transform
-            },
-            set: function(elem, v) {
-                var value = v;
-                value instanceof Transform || (value = new Transform(value)), elem.style[support.transform] = "WebkitTransform" !== support.transform || isChrome ? value.toString() : value.toString(!0), $(elem).data("transform", value)
-            }
-        }, $.cssHooks.transform = {
-            set: $.cssHooks["transit:transform"].set
-        }, $.fn.jquery < "1.8" && ($.cssHooks.transformOrigin = {
-            get: function(elem) {
-                return elem.style[support.transformOrigin]
-            },
-            set: function(elem, value) {
-                elem.style[support.transformOrigin] = value
-            }
-        }, $.cssHooks.transition = {
-            get: function(elem) {
-                return elem.style[support.transition]
-            },
-            set: function(elem, value) {
-                elem.style[support.transition] = value
-            }
-        }), registerCssHook("scale"), registerCssHook("translate"), registerCssHook("rotate"), registerCssHook("rotateX"), registerCssHook("rotateY"), registerCssHook("rotate3d"), registerCssHook("perspective"), registerCssHook("skewX"), registerCssHook("skewY"), registerCssHook("x", !0), registerCssHook("y", !0), Transform.prototype = {
-            setFromString: function(prop, val) {
-                var args = "string" == typeof val ? val.split(",") : val.constructor === Array ? val : [val];
-                args.unshift(prop), Transform.prototype.set.apply(this, args)
-            },
-            set: function(prop) {
-                var args = Array.prototype.slice.apply(arguments, [1]);
-                this.setter[prop] ? this.setter[prop].apply(this, args) : this[prop] = args.join(",")
-            },
-            get: function(prop) {
-                return this.getter[prop] ? this.getter[prop].apply(this) : this[prop] || 0
-            },
-            setter: {
-                rotate: function(theta) {
-                    this.rotate = unit(theta, "deg")
-                },
-                rotateX: function(theta) {
-                    this.rotateX = unit(theta, "deg")
-                },
-                rotateY: function(theta) {
-                    this.rotateY = unit(theta, "deg")
-                },
-                scale: function(x, y) {
-                    void 0 === y && (y = x), this.scale = x + "," + y
-                },
-                skewX: function(x) {
-                    this.skewX = unit(x, "deg")
-                },
-                skewY: function(y) {
-                    this.skewY = unit(y, "deg")
-                },
-                perspective: function(dist) {
-                    this.perspective = unit(dist, "px")
-                },
-                x: function(x) {
-                    this.set("translate", x, null)
-                },
-                y: function(y) {
-                    this.set("translate", null, y)
-                },
-                translate: function(x, y) {
-                    void 0 === this._translateX && (this._translateX = 0), void 0 === this._translateY && (this._translateY = 0), null !== x && void 0 !== x && (this._translateX = unit(x, "px")), null !== y && void 0 !== y && (this._translateY = unit(y, "px")), this.translate = this._translateX + "," + this._translateY
-                }
-            },
-            getter: {
-                x: function() {
-                    return this._translateX || 0
-                },
-                y: function() {
-                    return this._translateY || 0
-                },
-                scale: function() {
-                    var s = (this.scale || "1,1").split(",");
-                    return s[0] && (s[0] = parseFloat(s[0])), s[1] && (s[1] = parseFloat(s[1])), s[0] === s[1] ? s[0] : s
-                },
-                rotate3d: function() {
-                    for (var s = (this.rotate3d || "0,0,0,0deg").split(","), i = 0; 3 >= i; ++i) s[i] && (s[i] = parseFloat(s[i]));
-                    return s[3] && (s[3] = unit(s[3], "deg")), s
-                }
-            },
-            parse: function(str) {
-                var self = this;
-                str.replace(/([a-zA-Z0-9]+)\((.*?)\)/g, function(x, prop, val) {
-                    self.setFromString(prop, val)
-                })
-            },
-            toString: function(use3d) {
-                var re = [];
-                for (var i in this)
-                    if (this.hasOwnProperty(i)) {
-                        if (!support.transform3d && ("rotateX" === i || "rotateY" === i || "perspective" === i || "transformOrigin" === i)) continue;
-                        "_" !== i[0] && re.push(use3d && "scale" === i ? i + "3d(" + this[i] + ",1)" : use3d && "translate" === i ? i + "3d(" + this[i] + ",0)" : i + "(" + this[i] + ")")
-                    }
-                return re.join(" ")
-            }
-        }, $.fn.transition = $.fn.transit = function(properties, duration, easing, callback) {
-            var self = this,
-                delay = 0,
-                queue = !0;
-            "function" == typeof duration && (callback = duration, duration = void 0), "function" == typeof easing && (callback = easing, easing = void 0), "undefined" != typeof properties.easing && (easing = properties.easing, delete properties.easing), "undefined" != typeof properties.duration && (duration = properties.duration, delete properties.duration), "undefined" != typeof properties.complete && (callback = properties.complete, delete properties.complete), "undefined" != typeof properties.queue && (queue = properties.queue, delete properties.queue), "undefined" != typeof properties.delay && (delay = properties.delay, delete properties.delay), "undefined" == typeof duration && (duration = $.fx.speeds._default), "undefined" == typeof easing && (easing = $.cssEase._default), duration = toMS(duration);
-            var transitionValue = getTransition(properties, duration, easing, delay),
-                work = $.transit.enabled && support.transition,
-                i = work ? parseInt(duration, 10) + parseInt(delay, 10) : 0;
-            if (0 === i) {
-                var fn = function(next) {
-                    self.css(properties), callback && callback.apply(self), next && next()
-                };
-                return callOrQueue(self, queue, fn), self
-            }
-            var oldTransitions = {},
-                run = function(nextCall) {
-                    var bound = !1,
-                        cb = function() {
-                            bound && self.unbind(transitionEnd, cb), i > 0 && self.each(function() {
-                                this.style[support.transition] = oldTransitions[this] || null
-                            }), "function" == typeof callback && callback.apply(self), "function" == typeof nextCall && nextCall()
-                        };
-                    i > 0 && transitionEnd && $.transit.useTransitionEnd ? (bound = !0, self.bind(transitionEnd, cb)) : window.setTimeout(cb, i), self.each(function() {
-                        i > 0 && (this.style[support.transition] = transitionValue), $(this).css(properties)
-                    })
-                },
-                deferredRun = function(next) {
-                    this.offsetWidth, run(next)
-                };
-            return callOrQueue(self, queue, deferredRun), this
-        }, $.transit.getTransitionValue = getTransition
-    }(jQuery),
-    function() {
-        eTrackerCommerceAPI = function() {
-            return this instanceof eTrackerCommerceAPI ? (this.__ORDER__ = "order", this.__VIEW_PRODUCT__ = "viewProduct", this.__INSERT_TO_BASKET__ = "insertToBasket", void(this.__REMOVE_FROM_BASKET__ = "removeFromBasket")) : new eTrackerCommerceAPI
-        }, eTrackerCommerceAPI.prototype = {
-            _sendEvent: function(type, product, quantity) {
-                var _isLegalQuantity = !!quantity;
-                new Log({
-                    type: "info",
-                    message: "Call: eTrackerCommerceAPI._sendEvent( " + type + ", " + (JSON.stringify(product) + (_isLegalQuantity ? ", " + quantity : "")) + ")",
-                    level: 1
-                }), _isLegalQuantity || type !== this.__INSERT_TO_BASKET__ && type !== this.__REMOVE_FROM_BASKET__ || new Log({
-                    type: "error",
-                    message: 'Could not send Event! "' + type + '" Events need a quantity!',
-                    level: 4
+        var nativeMap = Array.prototype.map,
+            nativeIsArray = Array.isArray,
+            toString = Object.prototype.toString,
+            unformat = lib.unformat = lib.parse = function(value, decimal) {
+                if (isArray(value)) return map(value, function(val) {
+                    return unformat(val, decimal)
                 });
-                try {
-                    return _isLegalQuantity ? etCommerce.sendEvent(type, product, parseInt(quantity, 10)) : etCommerce.sendEvent(type, product)
-                } catch (error) {
-                    new Log({
-                        type: "error",
-                        message: "etCommerce not defined",
-                        level: 4
-                    })
-                }
+                if (value = value || 0, "number" == typeof value) return value;
+                decimal = decimal || lib.settings.number.decimal;
+                var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
+                    unformatted = parseFloat(("" + value).replace(/\((.*)\)/, "-$1").replace(regex, "").replace(decimal, "."));
+                return isNaN(unformatted) ? 0 : unformatted
             },
-            viewProduct: function(product) {
-                return this._sendEvent(this.__VIEW_PRODUCT__, product)
+            toFixed = lib.toFixed = function(value, precision) {
+                precision = checkPrecision(precision, lib.settings.number.precision);
+                var power = Math.pow(10, precision);
+                return (Math.round(lib.unformat(value) * power) / power).toFixed(precision)
             },
-            insertToBasket: function(product, quantity) {
-                return this._sendEvent(this.__INSERT_TO_BASKET__, product, quantity)
-            },
-            removeFromBasket: function(product, quantity) {
-                return this._sendEvent(this.__REMOVE_FROM_BASKET__, product, quantity)
-            },
-            order: function(order) {
-                var products = order.basket.products || null;
-                if (products && $.isArray(order.basket.products)) {
-                    for (var i = 0, l = products.length; l > i; i++) products[i].product && (products[i].product = this._encodeProductJson(products[i].product));
-                    order.basket.products = products
-                }
-                return this._sendEvent(this.__ORDER__, order)
-            },
-            getProductBySku: function(sku) {
-                sku || new Log({
-                    type: "error",
-                    message: 'Argument "SKU" could not be empty',
-                    level: 4
+            formatNumber = lib.formatNumber = lib.format = function(number, precision, thousand, decimal) {
+                if (isArray(number)) return map(number, function(val) {
+                    return formatNumber(val, precision, thousand, decimal)
                 });
-                var i = 0,
-                    o = shop.etracker.products,
-                    l = o.length;
-                for (i; l > i; i++)
-                    if (o[i].id === sku) return o[i];
-                return !1
+                number = unformat(number);
+                var opts = defaults(isObject(precision) ? precision : {
+                        precision: precision,
+                        thousand: thousand,
+                        decimal: decimal
+                    }, lib.settings.number),
+                    usePrecision = checkPrecision(opts.precision),
+                    negative = 0 > number ? "-" : "",
+                    base = parseInt(toFixed(Math.abs(number || 0), usePrecision), 10) + "",
+                    mod = base.length > 3 ? base.length % 3 : 0;
+                return negative + (mod ? base.substr(0, mod) + opts.thousand : "") + base.substr(mod).replace(/(\d{3})(?=\d)/g, "$1" + opts.thousand) + (usePrecision ? opts.decimal + toFixed(Math.abs(number), usePrecision).split(".")[1] : "")
             },
-            getProductByAjax: function(sku, quantity, error) {
-                var self = this;
-                return quantity = quantity ? quantity : 1, self.product = !1, self.error = error ? !0 : !1, $.ajax({
-                    url: shop.url.origin + shop.url.base + "eTracker/getJsonProduct/" + sku + "?quantity=" + quantity,
-                    type: "GET",
-                    cache: !0,
-                    async: !1,
-                    success: function(data) {
-                        self.product = data
-                    },
-                    error: function() {
-                        return self.error ? void 0 : (self.error = !0, self.getProductByAjax("l" + sku, quantity, !0))
-                    }
-                }), self.product
-            },
-            _encodeProductJson: function(productObj) {
-                if (productObj && $.isPlainObject(productObj))
-                    for (var prop in productObj)
-                        if ($.isArray(productObj[prop]))
-                            for (var i = 0, l = productObj[prop].length; l > i; i++) productObj[prop][i] = shop.encodeRfc3986(productObj[prop][i]);
-                        else if ($.isPlainObject(productObj[prop])) {
-                            var newObj = {};
-                            for (var propInObj in productObj[prop]) newObj[propInObj] = shop.encodeRfc3986(productObj[prop][propInObj]);
-                            productObj[prop] = newObj
-                        } else productObj[prop] = shop.encodeRfc3986(productObj[prop]);
-                return productObj
-            },
-            getProductJSON: function(sku, quantity) {
-                var product = this.getProductBySku(sku),
-                    productObj = quantity || !product ? this.getProductByAjax(sku, quantity) : product;
-                return this._encodeProductJson(productObj)
-            }
-        }
-    }(),
-    function($) {
-        var ocNavMoving = !1,
-            ocNavOpened = !1,
-            privateMethods = {
-                isUrl: function(str) {
-                    var pattern = new RegExp("^(https?:\\/\\/)?((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$", "i");
-                    return pattern.test(str) ? !0 : !1
-                },
-                loadContent: function($menu, content) {
-                    $menu.html(content)
-                },
-                addPrefix: function($element) {
-                    var elementId = $element.attr("id"),
-                        elementClass = $element.attr("class");
-                    "string" == typeof elementId && "" !== elementId && $element.attr("id", elementId.replace(/([A-Za-z0-9_.\-]+)/g, "ocNav-id-$1")), "string" == typeof elementClass && "" !== elementClass && "ocNav-inner" !== elementClass && $element.attr("class", elementClass.replace(/([A-Za-z0-9_.\-]+)/g, "ocNav-class-$1")), $element.removeAttr("style")
-                },
-                execute: function(action, name, callback) {
-                    "function" == typeof name ? (callback = name, name = "ocNav") : name || (name = "ocNav");
-                    var bodyAnimation, menuAnimation, scrollTop, $menu = $("#" + name),
-                        $body = $($menu.data("body")),
-                        $html = $("html"),
-                        menuWidth = $menu.outerWidth(!0),
-                        speed = $menu.data("speed"),
-                        side = $menu.data("side"),
-                        displace = $menu.data("displace"),
-                        onOpen = $menu.data("onOpen"),
-                        onClose = $menu.data("onClose"),
-                        bodyClass = "ocNav" === name ? "ocNav-open" : "ocNav-open " + name + "-open";
-                    if ("open" === action || "toggle" === action && !$menu.is(":visible")) {
-                        if ($menu.is(":visible") || ocNavMoving) return;
-                        if (ocNavOpened !== !1) return void methods.close(ocNavOpened, function() {
-                            methods.open(name)
-                        });
-                        ocNavMoving = !0, "left" === side ? (bodyAnimation = {
-                            left: menuWidth + "px"
-                        }, menuAnimation = {
-                            left: "0px"
-                        }) : (bodyAnimation = {
-                            right: menuWidth + "px"
-                        }, menuAnimation = {
-                            right: "0px"
-                        }), $body.is("body") && (scrollTop = $html.scrollTop(), $html.css("overflow-x", "hidden").scrollTop(scrollTop)), displace ? $body.addClass("ocNav-animating").css({
-                            width: $body.width(),
-                            position: "absolute",
-                            overflow: "hidden"
-                        }).animate(bodyAnimation, speed, function() {
-                            $(this).addClass(bodyClass)
-                        }) : setTimeout(function() {
-                            $(this).addClass(bodyClass)
-                        }, speed), $menu.css("display", "block").animate(menuAnimation, speed, function() {
-                            ocNavMoving = !1, ocNavOpened = name, "function" == typeof callback && callback(name), $body.removeClass("ocNav-animating")
-                        }), onOpen()
-                    } else {
-                        if (!$menu.is(":visible") || ocNavMoving) return;
-                        ocNavMoving = !0, "left" === side ? (bodyAnimation = {
-                            left: 0
-                        }, menuAnimation = {
-                            left: "-" + menuWidth + "px"
-                        }) : (bodyAnimation = {
-                            right: 0
-                        }, menuAnimation = {
-                            right: "-" + menuWidth + "px"
-                        }), $body.is("body") && (scrollTop = $html.scrollTop(), $html.removeAttr("style").scrollTop(scrollTop)), $body.addClass("ocNav-animating").animate(bodyAnimation, speed).removeClass(bodyClass), $menu.animate(menuAnimation, speed, function() {
-                            $menu.removeAttr("style").hide(), $body.removeAttr("style"), $("html").removeAttr("style"), ocNavMoving = !1, ocNavOpened = !1, "function" == typeof callback && callback(name), $body.removeClass("ocNav-animating")
-                        }), onClose()
-                    }
-                }
-            },
-            methods = {
-                open: function(name, callback) {
-                    privateMethods.execute("open", name, callback)
-                },
-                close: function(name, callback) {
-                    privateMethods.execute("close", name, callback)
-                },
-                toggle: function(name, callback) {
-                    privateMethods.execute("toggle", name, callback)
-                },
-                toogle: function(name, callback) {
-                    privateMethods.execute("toggle", name, callback)
-                }
+            formatMoney = lib.formatMoney = function(number, symbol, precision, thousand, decimal, format) {
+                if (isArray(number)) return map(number, function(val) {
+                    return formatMoney(val, symbol, precision, thousand, decimal, format)
+                });
+                number = unformat(number);
+                var opts = defaults(isObject(symbol) ? symbol : {
+                        symbol: symbol,
+                        precision: precision,
+                        thousand: thousand,
+                        decimal: decimal,
+                        format: format
+                    }, lib.settings.currency),
+                    formats = checkCurrencyFormat(opts.format),
+                    useFormat = number > 0 ? formats.pos : 0 > number ? formats.neg : formats.zero;
+                return useFormat.replace("%s", opts.symbol).replace("%v", formatNumber(Math.abs(number), checkPrecision(opts.precision), opts.thousand, opts.decimal))
             };
-        $.ocNav = function(method) {
-            return methods[method] ? methods[method].apply(this, Array.prototype.slice.call(arguments, 1)) : "function" != typeof method && "string" != typeof method && method ? void $.error("Method " + method + " does not exist on jQuery.ocNav") : methods.toggle.apply(this, arguments)
-        }, $.fn.ocNav = function(options) {
-            var settings = $.extend({
-                    name: "ocNav",
-                    speed: 200,
-                    side: "left",
-                    source: null,
-                    renaming: !0,
-                    body: "body",
-                    displace: !0,
-                    onOpen: function() {},
-                    onClose: function() {}
-                }, options),
-                name = settings.name,
-                $sideMenu = $("#" + name);
-            if (0 === $sideMenu.length && ($sideMenu = $("<div />").attr("id", name).appendTo($("body"))), $sideMenu.addClass("ocNav").addClass(settings.side).data({
-                    speed: settings.speed,
-                    side: settings.side,
-                    body: settings.body,
-                    displace: settings.displace,
-                    onOpen: settings.onOpen,
-                    onClose: settings.onClose
-                }), "function" == typeof settings.source) {
-                var newContent = settings.source(name);
-                privateMethods.loadContent($sideMenu, newContent)
-            } else if ("string" == typeof settings.source && privateMethods.isUrl(settings.source)) $.get(settings.source, function(data) {
-                privateMethods.loadContent($sideMenu, data)
-            });
-            else if ("string" == typeof settings.source) {
-                var htmlContent = "",
-                    selectors = settings.source.split(",");
-                if ($.each(selectors, function(index, element) {
-                        htmlContent += '<div class="ocNav-inner">' + $(element).html() + "</div>"
-                    }), settings.renaming) {
-                    var $htmlContent = $("<div />").html(htmlContent);
-                    $htmlContent.find("*").each(function(index, element) {
-                        var $element = $(element);
-                        privateMethods.addPrefix($element)
-                    }), htmlContent = $htmlContent.html()
-                }
-                privateMethods.loadContent($sideMenu, htmlContent)
-            } else null !== settings.source && $.error("Invalid ocNav Source");
-            return this.each(function() {
-                var $this = $(this),
-                    data = $this.data("ocNav");
-                data || ($this.data("ocNav", name), $this.hammer().on("touch tab click", function(e) {
-                    "click" === e.type && e.preventDefault(), e.gesture.preventDefault(), e.gesture.stopPropagation(), "click" !== e.type && methods.toggle(name)
-                }))
-            })
-        }
-    }(jQuery);
-var PrudsysApi;
-! function() {
-    "use strict";
-    PrudsysApi = function(amountOfAllCarousels) {
-        this.initalProducts = "", this.amountOfAllCarousels = amountOfAllCarousels, this.currentCarouselsLoaded = 0, this.allCarouselLoaded = !1, this.$carousels = null
-    }, PrudsysApi.prototype = {
-        _validateProductData: function(data) {
-            var newData = data || null;
-            return newData && (newData = $.trim(newData.replace(/undefined,\s|undefined,/g, "")), newData.lastIndexOf(",") === newData.length - 1 && (newData = newData.slice(0, data.length - 2))), newData
-        },
-        send: function(data) {
-            var url = shop.url.base + "tracking/prudsysRecommitEvent";
-            data = this._validateProductData(data), data && "" !== data && $.ajaxQueue({
-                type: "POST",
-                url: url,
-                data: {
-                    orderNumbers: data,
-                    CSRFToken: shop.config.CSRFToken
-                }
-            })
-        },
-        count: function() {
-            this.allCarouselLoaded || (this.currentCarouselsLoaded += 1, this.amountOfAllCarousels === this.currentCarouselsLoaded && (this.allCarouselLoaded = !0)), this.allCarouselLoaded, this.allCarouselLoaded && this.initalProducts && this.send(this.initalProducts)
-        },
-        add: function(productData) {
-            productData && (this.initalProducts += productData)
-        }
-    }
-}(),
-    function() {
-        "use strict";
-        $(function() {
-            window.shop && (window.shop.encodeRfc3986 = function(string) {
-                var encodeString = "",
-                    replaceSigns = ",";
-                return string && (string = string.replace(replaceSigns, "_"), window.et_escape ? encodeString = et_escape(string) : window.escape ? encodeString = escape(string) : window.encodeURIComponent && (encodeString = encodeURIComponent(string))), encodeString
-            })
-        })
-    }();
-var featuredimagezoomer = {
-    loadinggif: "spinningred.gif",
-    magnifycursor: "crosshair"
-};
-! function($) {
-    $("head").append('<style type="text/css">.featuredimagezoomerhidden {visibility: hidden!important;}</style>'), $.fn.multizoomhide = function() {
-        return $('<style type="text/css">' + this.selector + " {visibility: hidden;}</style>").appendTo("head")
-    }, $.fn.addmultizoom = function(options) {
-        function loadfunction() {
-            var lnkd, lnkt, lnko, w, h, lnk = this,
-                styleobj1 = {},
-                styleobj2 = {};
-            (lnkd = lnk.getAttribute("data-dims")) && (lnkd = lnkd.split(splitre), w = lnkd[0], h = lnkd[1]), $(new Image).error(function() {
-                lnk.tagName && !options.notmulti && (alert("Error: I couldn't find the image:\n\n" + lnk.href + ((lnkt = lnk.getAttribute("data-title")) ? '\n\n"' + lnkt + '"' : "")), (lnko = $imgObj.data("last-trigger")) && (first = !0, $(lnko).trigger("click")))
-            }).load(function() {
-                var $parent, opacity = $imgObj.css("opacity"),
-                    combinedoptions = {};
-                isNaN(opacity) && (opacity = 1), (options.notmulti || !indoptions.largeimage) && (w = options.width || $imgObj.width(), h = options.height || $imgObj.height()), $imgObj.attr("src", this.src).css({
-                    width: w || options.width || this.width,
-                    height: h = +(h || options.height || this.height)
-                }), $imgObj.data("added") && $imgObj.data("added").remove(), $imgObj.data("last-trigger", lnk), options.imagevertcenter && (styleobj1 = {
-                    top: ($imgObj.parent().innerHeight() - h) / 2
-                }), $imgObj.css(styleobj1).addimagezoom($.extend(combinedoptions, options, indoptions)).data("added", $(".magnifyarea:last" + (combinedoptions.cursorshade ? ", .cursorshade:last" : "") + ", .zoomstatus:last, .zoomtracker:last")), options.magvertcenter && $(".magnifyarea:last").css({
-                    marginTop: (h - $(".magnifyarea:last").height()) / 2
-                }), options.descpos && ($parent = $imgObj.parent(), styleobj2 = {
-                    left: $parent.offset().left + ($parent.outerWidth() - $parent.width()) / 2,
-                    top: h + $imgObj.offset().top
-                }), options.notmulti ? $descArea.css(styleobj2) : $descArea.css(styleobj2).empty().append(lnk.getAttribute("data-title") || ""), 1 > +opacity && $imgObj.add($descArea).animate({
-                    opacity: 1
-                }, options.speed)
-            }).attr("src", $imgObj.data("src"))
-        }
-        var indoptions = {
-                largeimage: options.largeimage
-            },
-            $imgObj = $(options.imgObj + ':not(".thumbs")'),
-            $descArea = $(options.descArea),
-            first = !0,
-            splitre = /, ?/;
-        return options = $.extend({
-            speed: "slow",
-            initzoomablefade: !0,
-            zoomablefade: !0
-        }, options), this.click(function(e) {
-            e.preventDefault();
-            var src = $imgObj.attr("src"),
-                ms, zr, cs, opacityObj = {
-                    opacity: 0
-                };
-            (first || src !== this.href && src !== this.getAttribute("href")) && ((first && !options.initzoomablefade || !options.zoomablefade) && (opacityObj = {}), first = !1, indoptions.largeimage = this.getAttribute("data-large") || options.largeimage || "", "none" === indoptions.largeimage && (indoptions.largeimage = ""), (ms = this.getAttribute("data-magsize")) || options.magnifiersize ? indoptions.magnifiersize = (ms ? ms.split(splitre) : "") || options.magnifiersize : delete indoptions.magnifiersize, indoptions.zoomrange = ((zr = this.getAttribute("data-zoomrange")) ? zr = zr.split(splitre) : "") || options.zoomrange || "", zr && (zr[0] = +zr[0], zr[1] = +zr[1]), indoptions.cursorshade = ((cs = this.getAttribute("data-lens")) ? cs : "") || options.cursorshade || "", cs && (indoptions.cursorshade = eval(cs)), $imgObj.data("added") && $imgObj.stop(!0, !0).data("added").not(".zoomtracker").remove().end().css({
-                background: "url(" + featuredimagezoomer.loadinggif + ") center no-repeat"
-            }), $imgObj.css($.extend({
-                visibility: "visible"
-            }, $imgObj.data("added") && options.zoomablefade ? {
-                opacity: .25
-            } : opacityObj)).data("src", this.href), $descArea.css($.extend({
-                visibility: "visible"
-            }, opacityObj)), loadfunction.call(this))
-        }).eq(0).trigger("click"), this
-    }, $.extend(featuredimagezoomer, {
-        dsetting: {
-            magnifierpos: "right",
-            magnifiersize: [200, 200],
-            cursorshadecolor: "#fff",
-            cursorshadeopacity: .3,
-            cursorshadeborder: "1px solid black",
-            cursorshade: !1,
-            leftoffset: 15,
-            rightoffset: 10
-        },
-        isie: function() {
-            return !1
-        }(),
-        showimage: function($tracker, $mag, showstatus) {
-            var specs = $tracker.data("specs"),
-                d = specs.magpos,
-                fiz = this,
-                coords = $tracker.data("specs").coords;
-            specs.windimensions = {
-                w: $(window).width(),
-                h: $(window).height()
-            };
-            var magcoords = {};
-            magcoords.left = coords.left + ("left" === d ? -specs.magsize.w - specs.lo : $tracker.width() + specs.ro), "left" !== d && magcoords.left + specs.magsize.w + specs.lo >= specs.windimensions.w && coords.left - specs.magsize.w >= specs.lo ? magcoords.left = coords.left - specs.magsize.w - specs.lo : "left" === d && magcoords.left < specs.ro && (magcoords.left = coords.left + $tracker.width() + specs.ro), $mag.css({
-                left: magcoords.left,
-                top: coords.top
-            }).show(), specs.$statusdiv.html("Current Zoom: " + specs.curpower + '<div style="font-size:80%">Use Mouse Wheel to Zoom In/Out</div>'), showstatus && fiz.showstatusdiv(specs, 400, 2e3)
-        },
-        hideimage: function($tracker, $mag, showstatus) {
-            var specs = $tracker.data("specs");
-            $mag.hide(), showstatus && this.hidestatusdiv(specs)
-        },
-        showstatusdiv: function(specs, fadedur, showdur) {
-            clearTimeout(specs.statustimer), specs.$statusdiv.css({
-                visibility: "visible"
-            }).fadeIn(fadedur), specs.statustimer = setTimeout(function() {
-                featuredimagezoomer.hidestatusdiv(specs)
-            }, showdur)
-        },
-        hidestatusdiv: function(specs) {
-            specs.$statusdiv.stop(!0, !0).hide()
-        },
-        getboundary: function(b, val, specs) {
-            if ("left" == b) {
-                var rb = -specs.imagesize.w * specs.curpower + specs.magsize.w;
-                return val > 0 ? 0 : rb > val ? rb : val
-            }
-            var tb = -specs.imagesize.h * specs.curpower + specs.magsize.h;
-            return val > 0 ? 0 : tb > val ? tb : val
-        },
-        moveimage: function($tracker, $maginner, $cursorshade, e) {
-            var specs = $tracker.data("specs"),
-                csw = Math.round(specs.magsize.w / specs.curpower),
-                csh = Math.round(specs.magsize.h / specs.curpower),
-                csb = specs.csborder,
-                fiz = this,
-                imgcoords = specs.coords,
-                pagex = e.pageX || specs.lastpagex,
-                pagey = e.pageY || specs.lastpagey,
-                x = pagex - imgcoords.left,
-                y = pagey - imgcoords.top;
-            $cursorshade.css({
-                visibility: "",
-                width: csw,
-                height: csh,
-                top: Math.min(specs.imagesize.h - csh - csb, Math.max(0, y - (csb + csh) / 2)) + imgcoords.top,
-                left: Math.min(specs.imagesize.w - csw - csb, Math.max(0, x - (csb + csw) / 2)) + imgcoords.left
-            });
-            var newx = -x * specs.curpower + specs.magsize.w / 2,
-                newy = -y * specs.curpower + specs.magsize.h / 2;
-            $maginner.css({
-                left: fiz.getboundary("left", newx, specs),
-                top: fiz.getboundary("top", newy, specs)
-            }), specs.$statusdiv.css({
-                left: pagex - 10,
-                top: pagey + 20
-            }), specs.lastpagex = pagex, specs.lastpagey = pagey
-        },
-        magnifyimage: function($tracker, e, zoomrange) {
-            e.detail || e.wheelDelta || (e = e.originalEvent);
-            var delta = e.detail ? -120 * e.detail : e.wheelDelta,
-                zoomdir = -120 >= delta ? "out" : "in",
-                specs = $tracker.data("specs"),
-                magnifier = specs.magnifier,
-                od = specs.imagesize,
-                power = specs.curpower,
-                newpower = "in" == zoomdir ? Math.min(power + 1, zoomrange[1]) : Math.max(power - 1, zoomrange[0]),
-                nd = [od.w * newpower, od.h * newpower];
-            magnifier.$image.css({
-                width: nd[0],
-                height: nd[1]
-            }), specs.curpower = newpower, specs.$statusdiv.html("Current Zoom: " + specs.curpower), this.showstatusdiv(specs, 0, 500), $tracker.trigger("mousemove")
-        },
-        highestzindex: function($img) {
-            var elz, z = 0,
-                $els = $img.parents().add($img);
-            return $els.each(function() {
-                elz = $(this).css("zIndex"), elz = isNaN(elz) ? 0 : +elz, z = Math.max(z, elz)
-            }), z
-        },
-        init: function($img, options) {
-            function getspecs($maginner, $bigimage) {
-                var magsize = {
-                        w: $magnifier.width(),
-                        h: $magnifier.height()
-                    },
-                    imagesize = {
-                        w: w,
-                        h: h
-                    },
-                    power = setting.zoomrange ? setting.zoomrange[0] : ($bigimage.width() / w).toFixed(5);
-                $tracker.data("specs", {
-                    $statusdiv: $statusdiv,
-                    statustimer: null,
-                    magnifier: {
-                        $outer: $magnifier,
-                        $inner: $maginner,
-                        $image: $bigimage
-                    },
-                    magsize: magsize,
-                    magpos: setting.magnifierpos,
-                    imagesize: imagesize,
-                    curpower: power,
-                    coords: getcoords(),
-                    csborder: $cursorshade.outerWidth(),
-                    lo: setting.leftoffset,
-                    ro: setting.rightoffset
-                })
-            }
-
-            function getcoords() {
-                var offset = $tracker.offset();
-                return {
-                    left: offset.left,
-                    top: offset.top
-                }
-            }
-            var $tracker, $cursorshade, $statusdiv, $magnifier, setting = $.extend({}, this.dsetting, options),
-                w = $img.width(),
-                h = $img.height(),
-                o = $img.offset(),
-                fiz = this,
-                lastpage = {
-                    pageX: 0,
-                    pageY: 0
-                },
-                basezindex = setting.zIndex || this.highestzindex($img);
-            return 0 === h || 0 === w ? void $(new Image).load(function() {
-                featuredimagezoomer.init($img, options)
-            }).attr("src", $img.attr("src")) : ($img.css({
-                visibility: "visible"
-            }), setting.largeimage = setting.largeimage || $img.get(0).src, $magnifier = $('<div class="magnifyarea" style="position:absolute;z-index:' + basezindex + ";width:" + setting.magnifiersize[0] + "px;height:" + setting.magnifiersize[1] + 'px;left:-10000px;top:-10000px;visibility:hidden;overflow:hidden;border:1px solid black;" />').append('<div style="position:relative;left:0;top:0;z-index:' + basezindex + ';" />').appendTo(document.body), $cursorshade = setting.cursorshade ? $('<div class="cursorshade" style="visibility:hidden;position:absolute;left:0;top:0;z-index:' + basezindex + ';" />').css({
-                border: setting.cursorshadeborder,
-                opacity: setting.cursorshadeopacity,
-                backgroundColor: setting.cursorshadecolor
-            }).appendTo(document.body) : $("<div />"), $statusdiv = $('<div class="zoomstatus preloadevt" style="position:absolute;visibility:hidden;left:0;top:0;z-index:' + basezindex + ';" />').html('<img src="' + this.loadinggif + '" />').appendTo(document.body), $tracker = $('<div class="zoomtracker" style="cursor:progress;position:absolute;z-index:' + basezindex + ";left:" + o.left + "px;top:" + o.top + "px;height:" + h + "px;width:" + w + 'px;" />').css({
-                backgroundImage: this.isie ? "url(cannotbe)" : "none"
-            }).appendTo(document.body), $(window).bind("load resize", function() {
-                var $parent, o = $img.offset();
-                $tracker.css({
-                    left: o.left,
-                    top: o.top
-                }), options.descpos && options.descArea && ($parent = $img.parent(), $(options.descArea).css({
-                    left: $parent.offset().left + ($parent.outerWidth() - $parent.width()) / 2,
-                    top: $img.height() + o.top
-                }))
-            }), $tracker.mouseover(function() {
-                $cursorshade.add($magnifier).add($statusdiv).removeClass("featuredimagezoomerhidden"), $tracker.data("premouseout", !1)
-            }).mouseout(function() {
-                $cursorshade.add($magnifier).add($statusdiv.not(".preloadevt")).addClass("featuredimagezoomerhidden"), $tracker.data("premouseout", !0)
-            }).mousemove(function(e) {
-                lastpage.pageX = e.pageX, lastpage.pageY = e.pageY
-            }), void $tracker.one("mouseover", function() {
-                var $maginner = $magnifier.find("div:eq(0)"),
-                    $bigimage = $('<img src="' + setting.largeimage + '"/>').appendTo($maginner),
-                    largeloaded = featuredimagezoomer.loaded[$('<a href="' + setting.largeimage + '"></a>').get(0).href],
-                    showstatus = setting.zoomrange && setting.zoomrange[1] > setting.zoomrange[0],
-                    imgcoords = getcoords();
-                largeloaded || ($img.stop(!0, !0).css({
-                    opacity: .1
-                }), $statusdiv.css({
-                    left: imgcoords.left + w / 2 - $statusdiv.width() / 2,
-                    top: imgcoords.top + h / 2 - $statusdiv.height() / 2,
-                    visibility: "visible"
-                })), $bigimage.bind("loadevt", function(event, e) {
-                    if ("error" === e.type) {
-                        $img.css({
-                            opacity: 1
-                        }).data("added").remove();
-                        var src = $('<a href="' + $bigimage.attr("src") + '"></a>').get(0).href;
-                        return void(window.console && console.error ? console.error("Cannot find Featured Image Zoomer larger image: " + src) : alert("Cannot find Featured Image Zoomer larger image:\n\n" + src))
-                    }
-                    if (featuredimagezoomer.loaded[this.src] = !0, $img.css({
-                            opacity: 1
-                        }), $statusdiv.empty().css({
-                            border: "1px solid black",
-                            background: "#C0C0C0",
-                            padding: "4px",
-                            font: "bold 13px Arial",
-                            opacity: .8
-                        }).hide().removeClass("preloadevt"), $tracker.data("premouseout") && $statusdiv.addClass("featuredimagezoomerhidden"), setting.zoomrange) {
-                        var nd = [w * setting.zoomrange[0], h * setting.zoomrange[0]];
-                        $bigimage.css({
-                            width: nd[0],
-                            height: nd[1]
-                        })
-                    }
-                    getspecs($maginner, $bigimage), $magnifier.css({
-                        display: "none",
-                        visibility: "visible"
-                    }), $tracker.mouseover(function() {
-                        $tracker.data("specs").coords = getcoords(), fiz.showimage($tracker, $magnifier, showstatus)
-                    }), $tracker.mousemove(function(e) {
-                        fiz.moveimage($tracker, $maginner, $cursorshade, e)
-                    }), $tracker.data("premouseout") || (fiz.showimage($tracker, $magnifier, showstatus), fiz.moveimage($tracker, $maginner, $cursorshade, lastpage)), $tracker.mouseout(function() {
-                        fiz.hideimage($tracker, $magnifier, showstatus)
-                    }).css({
-                        cursor: fiz.magnifycursor
-                    }), setting.zoomrange && setting.zoomrange[1] > setting.zoomrange[0] ? $tracker.bind("DOMMouseScroll mousewheel", function(e) {
-                        fiz.magnifyimage($tracker, e, setting.zoomrange), e.preventDefault()
-                    }) : setting.disablewheel && $tracker.bind("DOMMouseScroll mousewheel", function(e) {
-                        e.preventDefault()
-                    })
-                }), $bigimage.get(0).complete ? $bigimage.trigger("loadevt", {
-                    type: "load"
-                }) : $bigimage.bind("load error", function(e) {
-                    $bigimage.trigger("loadevt", e)
-                })
-            }))
-        },
-        iname: function() {
-            var itag = $("<img />"),
-                iname = itag.get(0).tagName;
-            return itag.remove(), iname
-        }(),
-        loaded: {},
-        hashre: /^#/
-    }), $.fn.addimagezoom = function(options) {
-        var sel = this.selector,
-            $thumbs = $(sel.replace(featuredimagezoomer.hashre, ".") + ".thumbs a");
-        return options = options || {}, null !== options.multizoom && $thumbs.size() ? ($thumbs.addmultizoom($.extend(options, {
-            imgObj: sel,
-            multizoom: null
-        })), this) : options.multizoom ? ($(options.multizoom).addmultizoom($.extend(options, {
-            imgObj: sel,
-            multizoom: null
-        })), this) : this.each(null !== options.multizoom ? function() {
-            return this.tagName !== featuredimagezoomer.iname ? !0 : void $('<a href="' + this.src + '"></a>').addmultizoom($.extend(options, {
-                imgObj: sel,
-                multizoom: null,
-                notmulti: !0
-            }))
-        } : function() {
-            return this.tagName !== featuredimagezoomer.iname ? !0 : void featuredimagezoomer.init($(this), options)
-        })
-    }
-}(jQuery),
-    function(a) {
-        a.fn.etalage = function(b) {
-            var c = a.extend({
-                align: "left",
-                thumb_image_width: 300,
-                thumb_image_height: 400,
-                source_image_width: 900,
-                source_image_height: 1200,
-                zoom_area_width: 600,
-                zoom_area_height: "justify",
-                zoom_area_distance: 10,
-                zoom_easing: !0,
-                click_to_zoom: !1,
-                zoom_element: "auto",
-                show_descriptions: !0,
-                description_location: "bottom",
-                description_opacity: .7,
-                small_thumbs: 3,
-                smallthumb_inactive_opacity: .4,
-                smallthumb_hide_single: !0,
-                smallthumb_select_on_hover: !1,
-                smallthumbs_position: "bottom",
-                show_begin_end_smallthumb: !0,
-                magnifier_opacity: .5,
-                magnifier_invert: !0,
-                show_icon: !0,
-                icon_offset: 20,
-                hide_cursor: !1,
-                show_hint: !1,
-                hint_offset: 15,
-                speed: 600,
-                autoplay: !0,
-                autoplay_interval: 6e3,
-                keyboard: !0,
-                right_to_left: !1,
-                click_callback: function() {
-                    return !0
-                },
-                change_callback: function() {
-                    return !0
-                }
-            }, b);
-            return a.each(this, function() {
-                function aP(a2) {
-                    z = z ? z - 1 : 0, ai = !0;
-                    var a3, j, a5, a4, a1 = aG.find(".etalage_smallthumb_first").removeClass("etalage_smallthumb_first"),
-                        i = aG.find(".etalage_smallthumb_last").removeClass("etalage_smallthumb_last");
-                    "left" === a2 ? (a3 = a1.prev().addClass("etalage_smallthumb_first"), j = i.prev().addClass("etalage_smallthumb_last"), a5 = a1) : (a3 = a1.next().addClass("etalage_smallthumb_first"), j = i.next().addClass("etalage_smallthumb_last"), a5 = i), z ? "left" === a2 ? a3.trigger("click") : j.trigger("click") : (a4 = "vert" === aF ? a3.position().top : a3.position().left, G(a4, a3, j, a5))
-                }
-
-                function m(a5) {
-                    ai = !0; {
-                        var a2, j, a4;
-                        aG.find(".etalage_smallthumb_first").removeClass("etalage_smallthumb_first"), aG.find(".etalage_smallthumb_last").removeClass("etalage_smallthumb_last")
-                    }
-                    "end" === a5 ? (a2 = aV.eq(y - aj).addClass("etalage_smallthumb_first"), j = aV.eq(y - 1).addClass("etalage_smallthumb_last"), a4 = j, j.hasClass("etalage_smallthumb_navtostart") && (a4 = j.prev())) : (a2 = aV.eq(0).addClass("etalage_smallthumb_first"), j = aV.eq(aj - 1).addClass("etalage_smallthumb_last"), a4 = a2, a2.hasClass("etalage_smallthumb_navtoend") && (a4 = a2.next()));
-                    var a3 = "vert" === aF ? a2.position().top : a2.position().left;
-                    G(a3, a2, j, a4)
-                }
-
-                function ac() {
-                    m("start")
-                }
-
-                function F() {
-                    m("end")
-                }
-                var aG = a(this);
-                if (aG.is("ul") && aG.children("li").length && aG.find("img.etalage_source_image").length) {
-                    var ad, ab, Q, I, aq, t, f, aS, aL, aw, aR = aG.attr("id"),
-                        aZ = Math.floor(.7 * c.speed),
-                        aC = Math.round(c.speed / 100),
-                        ai = !1,
-                        z = 0,
-                        e = !1,
-                        ao = !0,
-                        A = !1,
-                        x = 0,
-                        al = 0,
-                        ak = 0,
-                        Y = 0,
-                        X = 0,
-                        aF = "hori";
-                    "undefined" != typeof aR && aR || (aR = "[no id]"), ("left" === c.smallthumbs_position || "right" === c.smallthumbs_position) && (aF = "vert"), "object" == typeof a.browser && a.browser.msie && a.browser.version < 9 && (ao = !1, a.browser.version < 7 && (e = !0)), aG.addClass("etalage").show();
-                    var w = aG.children("li").addClass("etalage_thumb");
-                    w.first().show().addClass("etalage_thumb_active");
-                    var q = w.length,
-                        aJ = c.autoplay;
-                    2 > q && (aJ = !1), "right" === c.align && aG.addClass("etalage_right"), a.each(w, function(a1) {
-                        a1 += 1;
-                        var a4 = a(this),
-                            j = a4.find(".etalage_thumb_image").removeAttr("alt").show(),
-                            a3 = a4.find(".etalage_source_image"),
-                            a2 = a4.find("a");
-                        a4.data("id", a1).addClass("thumb_" + a1), !j.length && a3.length ? a4.prepend('<img class="etalage_thumb_image" src="' + a3.attr("src") + '" />') : j.length || a3.length || a4.remove(), a2.length && a4.find(".etalage_thumb_image").data("anchor", a2.attr("href"))
-                    });
-                    var av = w.find(".etalage_thumb_image").css({
-                        width: c.thumb_image_width,
-                        height: c.thumb_image_height
-                    }).show();
-                    a.each(av, function() {
-                        a(this).data("src", this.src)
-                    });
-                    var aO = a('<li class="etalage_magnifier"><div><img /></div></li>').appendTo(aG),
-                        aa = aO.children("div"),
-                        h = aa.children("img"),
-                        E = a('<li class="etalage_icon">&nbsp;</li>').appendTo(aG);
-                    c.show_icon && E.show();
-                    var r;
-                    c.show_hint && (r = a('<li class="etalage_hint">&nbsp;</li>').appendTo(aG).show());
-                    var K, s = c.zoom_element;
-                    "auto" !== s && s && a(s).length ? K = a(s).addClass("etalage_zoom_area").html('<div><img class="etalage_zoom_img" /></div>') : (s = "auto", K = a('<li class="etalage_zoom_area"><div><img class="etalage_zoom_img" /></div></li>').appendTo(aG));
-                    var an, W = K.children("div");
-                    ao && (an = a('<img class="etalage_zoom_preview" />').css({
-                        width: c.source_image_width,
-                        height: c.source_image_height,
-                        opacity: .3
-                    }).prependTo(W).show());
-                    var az, aB = W.children(".etalage_zoom_img").css({
-                        width: c.source_image_width,
-                        height: c.source_image_height
-                    });
-                    c.show_descriptions && (az = a('<div class="etalage_description' + (c.right_to_left ? " rtl" : "") + '"></div>').prependTo(K));
-                    var aQ, l, aV, u, y, aj = c.small_thumbs;
-                    (q > 1 || !c.smallthumb_hide_single) && (aQ = a('<li class="etalage_small_thumbs"><ul></ul></li>').appendTo(aG), l = aQ.children("ul"), a.each(av, function() {
-                        var i = a(this);
-                        Q = i.data("src"), I = i.parents(".etalage_thumb").data("id"), a('<li><img class="etalage_small_thumb" src="' + Q + '" /></li>').data("thumb_id", I).appendTo(l)
-                    }), aV = l.children("li").css({
-                        opacity: c.smallthumb_inactive_opacity
-                    }), 3 > aj && (aj = 3), q > aj ? (c.show_begin_end_smallthumb ? (Q = av.eq(q - 1).data("src"), I = w.eq(q - 1).data("id"), a('<li class="etalage_smallthumb_first etalage_smallthumb_navtoend"><img class="etalage_small_thumb" src="' + Q + '" /></li>').data("src", Q).data("thumb_id", I).css({
-                        opacity: c.smallthumb_inactive_opacity
-                    }).prependTo(l), Q = av.eq(0).data("src"), I = w.eq(0).data("id"), a('<li class="etalage_smallthumb_navtostart"><img class="etalage_small_thumb" src="' + Q + '" /></li>').data("src", Q).data("thumb_id", I).css({
-                        opacity: c.smallthumb_inactive_opacity
-                    }).appendTo(l), aV = l.children("li"), aV.eq(1).addClass("etalage_smallthumb_active").css({
-                        opacity: 1
-                    })) : aV.eq(0).addClass("etalage_smallthumb_first etalage_smallthumb_active").css({
-                        opacity: 1
-                    }), aV.eq(aj - 1).addClass("etalage_smallthumb_last")) : aV.eq(0).addClass("etalage_smallthumb_active").css({
-                        opacity: 1
-                    }), a.each(aV, function(j) {
-                        a(this).data("id", j + 1)
-                    }), u = aV.children("img"), y = aV.length, "vert" === aF && aV.addClass("vertical")), aq = c.magnifier_invert ? 1 : c.magnifier_opacity;
-                    var aN = parseInt(w.css("borderLeftWidth"), 10) + parseInt(w.css("borderRightWidth"), 10) + parseInt(av.css("borderLeftWidth"), 10) + parseInt(av.css("borderRightWidth"), 10),
-                        Z = parseInt(w.css("marginLeft"), 10) + parseInt(w.css("marginRight"), 10),
-                        B = parseInt(w.css("paddingLeft"), 10) + parseInt(w.css("paddingRight"), 10) + parseInt(av.css("marginLeft"), 10) + parseInt(av.css("marginRight"), 10) + parseInt(av.css("paddingLeft"), 10) + parseInt(av.css("paddingRight"), 10),
-                        N = c.thumb_image_width + aN + Z + B,
-                        O = c.thumb_image_height + aN + Z + B,
-                        aE = 0,
-                        P = 0,
-                        ax = 0,
-                        ag = 0,
-                        aD = 0,
-                        o = 0,
-                        aH = 0;
-                    (q > 1 || !c.smallthumb_hide_single) && (aE = parseInt(aV.css("borderLeftWidth"), 10) + parseInt(aV.css("borderRightWidth"), 10) + parseInt(u.css("borderLeftWidth"), 10) + parseInt(u.css("borderRightWidth"), 10), P = parseInt(aV.css("marginTop"), 10), ax = parseInt(aV.css("paddingLeft"), 10) + parseInt(aV.css("paddingRight"), 10) + parseInt(u.css("marginLeft"), 10) + parseInt(u.css("marginRight"), 10) + parseInt(u.css("paddingLeft"), 10) + parseInt(u.css("paddingRight"), 10), "vert" === aF ? (aD = Math.round((O - (aj - 1) * P) / aj) - (aE + ax), ag = Math.round(c.thumb_image_width * aD / c.thumb_image_height), o = ag + aE + ax, aH = aD + aE + ax) : (ag = Math.round((N - (aj - 1) * P) / aj) - (aE + ax), aD = Math.round(c.thumb_image_height * ag / c.thumb_image_width), o = ag + aE + ax, aH = aD + aE + ax));
-                    var T, a0, d = parseInt(K.css("borderTopWidth"), 10),
-                        aA = parseInt(c.zoom_area_distance, 10),
-                        J = parseInt(K.css("paddingTop"), 10);
-                    T = c.zoom_area_width - 2 * d - 2 * J > c.source_image_width ? c.source_image_width : c.zoom_area_width - 2 * d - 2 * J, a0 = "justify" === c.zoom_area_height ? O + P + aH - 2 * d - 2 * J : c.zoom_area_height - 2 * d - 2 * J, a0 > c.source_image_height && (a0 = c.source_image_height);
-                    var aX, at, v, ar;
-                    c.show_descriptions && (aX = parseInt(az.css("borderLeftWidth"), 10) + parseInt(az.css("borderRightWidth"), 10), at = parseInt(az.css("marginLeft"), 10) + parseInt(az.css("marginRight"), 10), v = parseInt(az.css("paddingLeft"), 10) + parseInt(az.css("paddingRight"), 10), ar = T - aX - at - v);
-                    var aM;
-                    e && (aM = a('<iframe marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="javascript:\'<html></html>\'"></iframe>').css({
-                        position: "absolute",
-                        zIndex: 1
-                    }).prependTo(K));
-                    var S = parseInt(aO.css("borderTopWidth"), 10),
-                        aK = parseInt(w.css("borderTopWidth"), 10) + parseInt(w.css("marginTop"), 10) + parseInt(w.css("paddingTop"), 10) + parseInt(av.css("borderTopWidth"), 10) + parseInt(av.css("marginTop"), 10) - S,
-                        am = av.offset().left - aG.offset().left - S;
-                    "left" === c.smallthumbs_position ? am = am + o + P : "top" === c.smallthumbs_position && (aK = aK + aH + P);
-                    var H, C, V = Math.round(T * (c.thumb_image_width / c.source_image_width)),
-                        R = Math.round(a0 * (c.thumb_image_height / c.source_image_height)),
-                        M = aK + c.thumb_image_height - R,
-                        p = am + c.thumb_image_width - V,
-                        af = Math.round(V / 2),
-                        ae = Math.round(R / 2);
-                    if (c.show_hint && (H = parseInt(c.hint_offset, 10) + parseInt(r.css("marginTop"), 10), C = parseInt(c.hint_offset, 10) + parseInt(r.css("marginRight"), 10), "right" === c.smallthumbs_position && (C = C - o - P)), "vert" === aF ? (aS = N + P + o, aG.css({
-                            width: aS,
-                            height: O
-                        })) : (aS = N, aG.css({
-                            width: aS,
-                            height: O + P + aH
-                        })), c.show_icon && (aw = {
-                            top: O - E.outerHeight(!0) - parseInt(c.icon_offset, 10),
-                            left: parseInt(c.icon_offset, 10)
-                        }, "left" === c.smallthumbs_position ? aw.left = o + P + parseInt(c.icon_offset, 10) : "top" === c.smallthumbs_position && (aw.top += aH + P), E.css(aw)), c.show_hint && r.css({
-                            margin: 0,
-                            top: -H,
-                            right: -C
-                        }), h.css({
-                            margin: 0,
-                            padding: 0,
-                            width: c.thumb_image_width,
-                            height: c.thumb_image_height
-                        }), aa.css({
-                            margin: 0,
-                            padding: 0,
-                            width: V,
-                            height: R
-                        }), aw = {
-                            margin: 0,
-                            padding: 0,
-                            left: (p - am) / 2,
-                            top: (M - aK) / 2
-                        }, "left" === c.smallthumbs_position ? aw.left = "+=" + o + P : "top" === c.smallthumbs_position && (aw.top = "+=" + aH + P), aO.css(aw).hide(), W.css({
-                            width: T,
-                            height: a0
-                        }), aw = {
-                            margin: 0,
-                            opacity: 0
-                        }, "right" === c.align && "auto" === s ? aw.left = -(T + 2 * d + 2 * J + aA) : "auto" === s && (aw.left = aS + aA), K.css(aw).hide(), c.show_descriptions && (aw = {
-                            width: ar,
-                            bottom: J,
-                            left: J,
-                            opacity: c.description_opacity
-                        }, "top" === c.description_location && (aw.top = J, aw.bottom = "auto"), az.css(aw).hide()), q > 1 || !c.smallthumb_hide_single)
-                        if ("vert" === aF ? (aw = {
-                                top: 0,
-                                height: O
-                            }, "left" === c.smallthumbs_position ? w.css({
-                                left: o + P
-                            }) : aw.marginLeft = N + P, aQ.css(aw), l.css({
-                                height: aH * y + y * P + 100
-                            }), u.css({
-                                width: ag,
-                                height: aD
-                            }).attr("height", aD), aV.css({
-                                margin: 0,
-                                marginBottom: P
-                            })) : (aw = {
-                                width: N
-                            }, "top" === c.smallthumbs_position ? w.css({
-                                top: aH + P
-                            }) : aw.top = O + P, aQ.css(aw), l.css({
-                                width: o * y + y * P + 100
-                            }), u.css({
-                                width: ag,
-                                height: aD
-                            }).attr("width", ag), aV.css({
-                                margin: 0,
-                                marginRight: P
-                            })), aL = "vert" === aF ? aH * aj + (aj - 1) * P - O : o * aj + (aj - 1) * P - N, aL > 0)
-                            for (ad = 1; y - 1 >= ad; ad += aj - 1)
-                                for (ab = 1; aL >= ab; ab += 1) aV.eq(ad + ab - 1).css("vert" === aF ? {
-                                    marginBottom: P - 1
-                                } : {
-                                    marginRight: P - 1
-                                });
-                        else if (0 > aL)
-                            for (ad = 1; y - 1 >= ad; ad += aj - 1)
-                                for (ab = 1; - aL >= ab; ab += 1) "vert" === aF ? (aV.eq(ad + ab - 1).css({
-                                    marginBottom: P + 1
-                                }), l.css({
-                                    height: parseInt(l.css("height"), 10) + 1
-                                })) : (aV.eq(ad + ab - 1).css({
-                                    marginRight: P + 1
-                                }), l.css({
-                                    width: parseInt(l.css("width"), 10) + 1
-                                }));
-                    c.show_icon && !c.magnifier_invert && aO.css({
-                        background: aO.css("background-color") + " " + E.css("background-image") + " center no-repeat"
-                    }), c.hide_cursor && aO.add(E).css({
-                        cursor: "none"
-                    }), e && aM.css({
-                        width: W.css("width"),
-                        height: W.css("height")
-                    });
-                    var ay = w.first().find(".etalage_thumb_image"),
-                        ap = w.first().find(".etalage_source_image");
-                    c.magnifier_invert && h.attr("src", ay.data("src")).show(), ao && an.attr("src", ay.data("src")), aB.attr("src", ap.attr("src")), c.show_descriptions && (f = ap.attr("title"), f && az.html(f).show());
-                    var D = function() {
-                            t && (clearInterval(t), t = !1)
-                        },
-                        k = function() {
-                            t && D(), t = setInterval(function() {
-                                au()
-                            }, c.autoplay_interval)
-                        },
-                        U = function() {
-                            aO.stop().fadeTo(aZ, aq), E.stop().animate({
-                                opacity: 0
-                            }, aZ), K.stop().show().animate({
-                                opacity: 1
-                            }, aZ), c.magnifier_invert && ay.stop().animate({
-                                opacity: c.magnifier_opacity
-                            }, aZ), aJ && D()
-                        },
-                        aW = function() {
-                            aO.stop().fadeOut(c.speed), E.stop().animate({
-                                opacity: 1
-                            }, c.speed), K.stop().animate({
-                                opacity: 0
-                            }, c.speed, function() {
-                                a(this).hide()
-                            }), c.magnifier_invert && ay.stop().animate({
-                                opacity: 1
-                            }, c.speed, function() {
-                                c.click_to_zoom && (A = !1)
-                            }), clearTimeout(x), aJ && k()
-                        },
-                        g = function(a3, a1) {
-                            var j, a2, i = aG.find(".etalage_smallthumb_active").removeClass("etalage_smallthumb_active");
-                            a3.addClass("etalage_smallthumb_active"), aO.stop().hide(), K.stop().hide(), a1 || (ai = !0, i.stop(!0, !0).animate({
-                                opacity: c.smallthumb_inactive_opacity
-                            }, aZ), a3.stop(!0, !0).animate({
-                                opacity: 1
-                            }, aZ, function() {
-                                ai = !1
-                            })), aG.find(".etalage_thumb_active").removeClass("etalage_thumb_active").stop().animate({
-                                opacity: 0
-                            }, c.speed, function() {
-                                a(this).hide()
-                            }), j = w.filter(".thumb_" + a3.data("thumb_id")).addClass("etalage_thumb_active").show().stop().css({
-                                opacity: 0
-                            }).animate({
-                                opacity: 1
-                            }, c.speed), ay = j.find(".etalage_thumb_image"), ap = j.find(".etalage_source_image"), c.magnifier_invert && h.attr("src", ay.data("src")), ao && an.attr("src", ay.data("src")), aB.attr("src", ap.attr("src")), c.show_descriptions && (f = ap.attr("title"), f ? az.html(f).show() : az.hide()), aJ && (D(), k()), a2 = a3.data("id"), q >= aj && a2--, ah(a2)
-                        },
-                        G = function(a2, j, i, a1) {
-                            a.each(aV, function() {
-                                var a4 = a(this),
-                                    a3 = {
-                                        opacity: c.smallthumb_inactive_opacity
-                                    };
-                                a4.data("id") === a1.data("id") && (a3.opacity = 1), "vert" === aF ? a3.top = "-=" + a2 : a3.left = "-=" + a2, a4.animate(a3, aZ, "swing", function() {
-                                    ai && (a1.addClass("etalage_smallthumb_active"), ai = !1)
-                                })
-                            }), g(a1, !0)
-                        },
-                        aY = function() {
-                            var a2 = Y - al,
-                                a1 = X - ak,
-                                j = -a2 / aC,
-                                i = -a1 / aC;
-                            al -= j, ak -= i, 1 > a2 && a2 > -1 && (al = Y), 1 > a1 && a1 > -1 && (ak = X), aB.css({
-                                left: al,
-                                top: ak
-                            }), ao && an.css({
-                                left: al,
-                                top: ak
-                            }), (a2 > 1 || a1 > 1 || 1 > a2 || 1 > a1) && (x = setTimeout(function() {
-                                aY()
-                            }, 25))
-                        },
-                        L = function() {
-                            var i;
-                            if (c.magnifier_invert && aG.find(".etalage_thumb_active").mouseleave(), c.right_to_left) {
-                                if (i = aG.find(".etalage_smallthumb_active").next(), !i.length) return q > aj ? ac() : aV.first().trigger("click"), !0
-                            } else if (i = aG.find(".etalage_smallthumb_active").prev(), !i.length) return q > aj ? F() : aV.last().trigger("click"), !0;
-                            i.trigger("click")
-                        },
-                        au = function() {
-                            var i;
-                            if (c.magnifier_invert && aG.find(".etalage_thumb_active").mouseleave(), c.right_to_left) {
-                                if (i = aG.find(".etalage_smallthumb_active").prev(), !i.length) return q > aj ? F() : aV.last().trigger("click"), !0
-                            } else if (i = aG.find(".etalage_smallthumb_active").next(), !i.length) return q > aj ? ac() : aV.first().trigger("click"), !0;
-                            i.trigger("click")
-                        },
-                        n = function(a2) {
-                            (aj >= q || !c.show_begin_end_smallthumb) && (a2 -= 1);
-                            var a6 = aV.eq(a2);
-                            if (a6.length && !ai) {
-                                var j, a5 = aG.find(".etalage_smallthumb_active"),
-                                    a1 = a5.data("id") - 1;
-                                if (a1 > a2) {
-                                    z = a1 - a2;
-                                    var a3 = aG.find(".etalage_smallthumb_first"),
-                                        a7 = a3.data("id");
-                                    a7 > a2 ? (j = a1 - a7, z -= j, a3.trigger("click")) : g(a6, !1)
-                                } else if (a2 > a1) {
-                                    z = a2 - a1;
-                                    var a4 = aG.find(".etalage_smallthumb_last"),
-                                        i = a4.data("id") - 1;
-                                    a2 >= i ? (j = i - a1 - 1, z -= j, a4.trigger("click")) : g(a6, !1)
-                                }
-                            }
-                        };
-                    window[aR + "_previous"] = function() {
-                        L()
-                    }, window[aR + "_next"] = function() {
-                        au()
-                    }, window[aR + "_show"] = function(i) {
-                        n(i)
-                    };
-                    var aI = function(i) {
-                            return c.click_callback(i, aR) ? "function" == typeof etalage_click_callback ? (etalage_click_callback(i, aR), !1) : !0 : !1
-                        },
-                        ah = function(i) {
-                            c.change_callback(i, aR) && "function" == typeof etalage_change_callback && etalage_change_callback(i, aR)
-                        };
-                    w.add(aO).add(E).mouseenter(function() {
-                        c.show_hint && r.hide(), (!c.click_to_zoom || A) && U()
-                    }).mouseleave(function() {
-                        aW()
-                    });
-                    var aU = -(c.source_image_width - T),
-                        aT = -(c.source_image_height - a0);
-                    w.add(aO).add(E).mousemove(function(a5) {
-                        var j = Math.round(a5.pageX - ay.offset().left + am),
-                            i = Math.round(a5.pageY - ay.offset().top + aK),
-                            a4 = j - af,
-                            a3 = i - ae;
-                        if (am > a4 && (a4 = am), a4 > p && (a4 = p), aK > a3 && (a3 = aK), a3 > M && (a3 = M), aO.css({
-                                left: a4,
-                                top: a3
-                            }), c.magnifier_invert) {
-                            var a2 = a4 - am,
-                                a1 = a3 - aK;
-                            h.css({
-                                left: -a2,
-                                top: -a1
-                            })
-                        }
-                        Y = -((a4 - am) * (1 / (c.thumb_image_width / c.source_image_width))), X = -((a3 - aK) * (1 / (c.thumb_image_height / c.source_image_height))), aU > Y && (Y = aU), aT > X && (X = aT), c.zoom_easing ? (clearTimeout(x), aY()) : (ao && an.css({
-                            left: Y,
-                            top: X
-                        }), aB.css({
-                            left: Y,
-                            top: X
-                        }))
-                    }), (q > 1 || !c.smallthumb_hide_single) && (aV.click(function() {
-                        var a7 = a(this);
-                        if (!a7.hasClass("etalage_smallthumb_active") && (!ai || z))
-                            if (a7.hasClass("etalage_smallthumb_first") && a7.prev().length) aP("left");
-                            else if (a7.hasClass("etalage_smallthumb_navtoend")) F();
-                            else if (a7.hasClass("etalage_smallthumb_last") && a7.next().length) aP("right");
-                            else if (a7.hasClass("etalage_smallthumb_navtostart")) ac();
-                            else {
-                                if (z && !a(this).next().length) return F(), !0;
-                                if (z && !a(this).prev().length) return ac(), !0;
-                                g(a7, !1)
-                            }
-                    }), c.smallthumb_select_on_hover && aV.mouseenter(function() {
-                        a(this).trigger("click")
-                    })), c.click_to_zoom ? w.click(function() {
-                        A = !0, U()
-                    }) : aO.click(function() {
-                        var i = ay.data("anchor");
-                        i && aI(i) && (window.location = i)
-                    }), q > 1 && c.keyboard && a(document).keydown(function(i) {
-                        (39 === i.keyCode || "39" === i.keyCode) && (c.right_to_left ? L() : au()), (37 === i.keyCode || "37" === i.keyCode) && (c.right_to_left ? au() : L())
-                    }), a(window).bind("load", function() {
-                        w.css({
-                            "background-image": "none"
-                        }), K.css({
-                            "background-image": "none"
-                        }), ao && (ao = !1, an.remove())
-                    }), aJ && k()
-                }
-            }), this
-        }
-    }(jQuery), window.Modernizr = function(window, document, undefined) {
-    function setCss(str) {
-        mStyle.cssText = str
-    }
-
-    function is(obj, type) {
-        return typeof obj === type
-    }
-
-    function contains(str, substr) {
-        return !!~("" + str).indexOf(substr)
-    }
-
-    function testProps(props, prefixed) {
-        for (var i in props) {
-            var prop = props[i];
-            if (!contains(prop, "-") && mStyle[prop] !== undefined) return "pfx" == prefixed ? prop : !0
-        }
-        return !1
-    }
-
-    function testDOMProps(props, obj, elem) {
-        for (var i in props) {
-            var item = obj[props[i]];
-            if (item !== undefined) return elem === !1 ? props[i] : is(item, "function") ? item.bind(elem || obj) : item
-        }
-        return !1
-    }
-
-    function testPropsAll(prop, prefixed, elem) {
-        var ucProp = prop.charAt(0).toUpperCase() + prop.slice(1),
-            props = (prop + " " + cssomPrefixes.join(ucProp + " ") + ucProp).split(" ");
-        return is(prefixed, "string") || is(prefixed, "undefined") ? testProps(props, prefixed) : (props = (prop + " " + domPrefixes.join(ucProp + " ") + ucProp).split(" "), testDOMProps(props, prefixed, elem))
-    }
-
-    function webforms() {
-        Modernizr.input = function(props) {
-            for (var i = 0, len = props.length; len > i; i++) attrs[props[i]] = !!(props[i] in inputElem);
-            return attrs.list && (attrs.list = !(!document.createElement("datalist") || !window.HTMLDataListElement)), attrs
-        }("autocomplete autofocus list placeholder max min multiple pattern required step".split(" ")), Modernizr.inputtypes = function(props) {
-            for (var bool, inputElemType, defaultView, i = 0, len = props.length; len > i; i++) inputElem.setAttribute("type", inputElemType = props[i]), bool = "text" !== inputElem.type, bool && (inputElem.value = smile, inputElem.style.cssText = "position:absolute;visibility:hidden;", /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ? (docElement.appendChild(inputElem), defaultView = document.defaultView, bool = defaultView.getComputedStyle && "textfield" !== defaultView.getComputedStyle(inputElem, null).WebkitAppearance && 0 !== inputElem.offsetHeight, docElement.removeChild(inputElem)) : /^(search|tel)$/.test(inputElemType) || (bool = /^(url|email)$/.test(inputElemType) ? inputElem.checkValidity && inputElem.checkValidity() === !1 : inputElem.value != smile)), inputs[props[i]] = !!bool;
-            return inputs
-        }("search tel url email datetime date month week time datetime-local number range color".split(" "))
-    }
-    var featureName, hasOwnProp, version = "2.7.0",
-        Modernizr = {},
-        enableClasses = !0,
-        docElement = document.documentElement,
-        mod = "modernizr",
-        modElem = document.createElement(mod),
-        mStyle = modElem.style,
-        inputElem = document.createElement("input"),
-        smile = ":)",
-        toString = {}.toString,
-        prefixes = " -webkit- -moz- -o- -ms- ".split(" "),
-        omPrefixes = "Webkit Moz O ms",
-        cssomPrefixes = omPrefixes.split(" "),
-        domPrefixes = omPrefixes.toLowerCase().split(" "),
-        ns = {
-            svg: "http://www.w3.org/2000/svg"
-        },
-        tests = {},
-        inputs = {},
-        attrs = {},
-        classes = [],
-        slice = classes.slice,
-        injectElementWithStyles = function(rule, callback, nodes, testnames) {
-            var style, ret, node, docOverflow, div = document.createElement("div"),
-                body = document.body,
-                fakeBody = body || document.createElement("body");
-            if (parseInt(nodes, 10))
-                for (; nodes--;) node = document.createElement("div"), node.id = testnames ? testnames[nodes] : mod + (nodes + 1), div.appendChild(node);
-            return style = ["&#173;", '<style id="s', mod, '">', rule, "</style>"].join(""), div.id = mod, (body ? div : fakeBody).innerHTML += style, fakeBody.appendChild(div), body || (fakeBody.style.background = "", fakeBody.style.overflow = "hidden", docOverflow = docElement.style.overflow, docElement.style.overflow = "hidden", docElement.appendChild(fakeBody)), ret = callback(div, rule), body ? div.parentNode.removeChild(div) : (fakeBody.parentNode.removeChild(fakeBody), docElement.style.overflow = docOverflow), !!ret
-        },
-        isEventSupported = function() {
-            function isEventSupported(eventName, element) {
-                element = element || document.createElement(TAGNAMES[eventName] || "div"), eventName = "on" + eventName;
-                var isSupported = eventName in element;
-                return isSupported || (element.setAttribute || (element = document.createElement("div")), element.setAttribute && element.removeAttribute && (element.setAttribute(eventName, ""), isSupported = is(element[eventName], "function"), is(element[eventName], "undefined") || (element[eventName] = undefined), element.removeAttribute(eventName))), element = null, isSupported
-            }
-            var TAGNAMES = {
-                select: "input",
-                change: "input",
-                submit: "form",
-                reset: "form",
-                error: "img",
-                load: "img",
-                abort: "img"
-            };
-            return isEventSupported
-        }(),
-        _hasOwnProperty = {}.hasOwnProperty;
-    hasOwnProp = is(_hasOwnProperty, "undefined") || is(_hasOwnProperty.call, "undefined") ? function(object, property) {
-        return property in object && is(object.constructor.prototype[property], "undefined")
-    } : function(object, property) {
-        return _hasOwnProperty.call(object, property)
-    }, Function.prototype.bind || (Function.prototype.bind = function(that) {
-        var target = this;
-        if ("function" != typeof target) throw new TypeError;
-        var args = slice.call(arguments, 1),
-            bound = function() {
-                if (this instanceof bound) {
-                    var F = function() {};
-                    F.prototype = target.prototype;
-                    var self = new F,
-                        result = target.apply(self, args.concat(slice.call(arguments)));
-                    return Object(result) === result ? result : self
-                }
-                return target.apply(that, args.concat(slice.call(arguments)))
-            };
-        return bound
-    }), tests.touch = function() {
-        var bool;
-        return "ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch ? bool = !0 : injectElementWithStyles(["@media (", prefixes.join("touch-enabled),("), mod, ")", "{#modernizr{top:9px;position:absolute}}"].join(""), function(node) {
-            bool = 9 === node.offsetTop
-        }), bool
-    }, tests.postmessage = function() {
-        return !!window.postMessage
-    }, tests.hashchange = function() {
-        return isEventSupported("hashchange", window) && (document.documentMode === undefined || document.documentMode > 7)
-    }, tests.cssanimations = function() {
-        return testPropsAll("animationName")
-    }, tests.cssgradients = function() {
-        var str1 = "background-image:",
-            str2 = "gradient(linear,left top,right bottom,from(#9f9),to(white));",
-            str3 = "linear-gradient(left top,#9f9, white);";
-        return setCss((str1 + "-webkit- ".split(" ").join(str2 + str1) + prefixes.join(str3 + str1)).slice(0, -str1.length)), contains(mStyle.backgroundImage, "gradient")
-    }, tests.csstransitions = function() {
-        return testPropsAll("transition")
-    }, tests.fontface = function() {
-        var bool;
-        return injectElementWithStyles('@font-face {font-family:"font";src:url("https://")}', function(node, rule) {
-            var style = document.getElementById("smodernizr"),
-                sheet = style.sheet || style.styleSheet,
-                cssText = sheet ? sheet.cssRules && sheet.cssRules[0] ? sheet.cssRules[0].cssText : sheet.cssText || "" : "";
-            bool = /src/i.test(cssText) && 0 === cssText.indexOf(rule.split(" ")[0])
-        }), bool
-    }, tests.generatedcontent = function() {
-        var bool;
-        return injectElementWithStyles(["#", mod, "{font:0/0 a}#", mod, ':after{content:"', smile, '";visibility:hidden;font:3px/1 a}'].join(""), function(node) {
-            bool = node.offsetHeight >= 3
-        }), bool
-    }, tests.video = function() {
-        var elem = document.createElement("video"),
-            bool = !1;
-        try {
-            (bool = !!elem.canPlayType) && (bool = new Boolean(bool), bool.ogg = elem.canPlayType('video/ogg; codecs="theora"').replace(/^no$/, ""), bool.h264 = elem.canPlayType('video/mp4; codecs="avc1.42E01E"').replace(/^no$/, ""), bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/, ""))
-        } catch (e) {}
-        return bool
-    }, tests.localstorage = function() {
-        try {
-            return localStorage.setItem(mod, mod), localStorage.removeItem(mod), !0
-        } catch (e) {
-            return !1
-        }
-    }, tests.svg = function() {
-        return !!document.createElementNS && !!document.createElementNS(ns.svg, "svg").createSVGRect
-    }, tests.inlinesvg = function() {
-        var div = document.createElement("div");
-        return div.innerHTML = "<svg/>", (div.firstChild && div.firstChild.namespaceURI) == ns.svg
-    }, tests.svgclippaths = function() {
-        return !!document.createElementNS && /SVGClipPath/.test(toString.call(document.createElementNS(ns.svg, "clipPath")))
-    };
-    for (var feature in tests) hasOwnProp(tests, feature) && (featureName = feature.toLowerCase(), Modernizr[featureName] = tests[feature](), classes.push((Modernizr[featureName] ? "" : "no-") + featureName));
-    return Modernizr.input || webforms(), Modernizr.addTest = function(feature, test) {
-        if ("object" == typeof feature)
-            for (var key in feature) hasOwnProp(feature, key) && Modernizr.addTest(key, feature[key]);
-        else {
-            if (feature = feature.toLowerCase(), Modernizr[feature] !== undefined) return Modernizr;
-            test = "function" == typeof test ? test() : test, "undefined" != typeof enableClasses && enableClasses && (docElement.className += " " + (test ? "" : "no-") + feature), Modernizr[feature] = test
-        }
-        return Modernizr
-    }, setCss(""), modElem = inputElem = null,
-        function(window, document) {
-            function addStyleSheet(ownerDocument, cssText) {
-                var p = ownerDocument.createElement("p"),
-                    parent = ownerDocument.getElementsByTagName("head")[0] || ownerDocument.documentElement;
-                return p.innerHTML = "x<style>" + cssText + "</style>", parent.insertBefore(p.lastChild, parent.firstChild)
-            }
-
-            function getElements() {
-                var elements = html5.elements;
-                return "string" == typeof elements ? elements.split(" ") : elements
-            }
-
-            function getExpandoData(ownerDocument) {
-                var data = expandoData[ownerDocument[expando]];
-                return data || (data = {}, expanID++, ownerDocument[expando] = expanID, expandoData[expanID] = data), data
-            }
-
-            function createElement(nodeName, ownerDocument, data) {
-                if (ownerDocument || (ownerDocument = document), supportsUnknownElements) return ownerDocument.createElement(nodeName);
-                data || (data = getExpandoData(ownerDocument));
-                var node;
-                return node = data.cache[nodeName] ? data.cache[nodeName].cloneNode() : saveClones.test(nodeName) ? (data.cache[nodeName] = data.createElem(nodeName)).cloneNode() : data.createElem(nodeName), !node.canHaveChildren || reSkip.test(nodeName) || node.tagUrn ? node : data.frag.appendChild(node)
-            }
-
-            function createDocumentFragment(ownerDocument, data) {
-                if (ownerDocument || (ownerDocument = document), supportsUnknownElements) return ownerDocument.createDocumentFragment();
-                data = data || getExpandoData(ownerDocument);
-                for (var clone = data.frag.cloneNode(), i = 0, elems = getElements(), l = elems.length; l > i; i++) clone.createElement(elems[i]);
-                return clone
-            }
-
-            function shivMethods(ownerDocument, data) {
-                data.cache || (data.cache = {}, data.createElem = ownerDocument.createElement, data.createFrag = ownerDocument.createDocumentFragment, data.frag = data.createFrag()), ownerDocument.createElement = function(nodeName) {
-                    return html5.shivMethods ? createElement(nodeName, ownerDocument, data) : data.createElem(nodeName)
-                }, ownerDocument.createDocumentFragment = Function("h,f", "return function(){var n=f.cloneNode(),c=n.createElement;h.shivMethods&&(" + getElements().join().replace(/[\w\-]+/g, function(nodeName) {
-                        return data.createElem(nodeName), data.frag.createElement(nodeName), 'c("' + nodeName + '")'
-                    }) + ");return n}")(html5, data.frag)
-            }
-
-            function shivDocument(ownerDocument) {
-                ownerDocument || (ownerDocument = document);
-                var data = getExpandoData(ownerDocument);
-                return !html5.shivCSS || supportsHtml5Styles || data.hasCSS || (data.hasCSS = !!addStyleSheet(ownerDocument, "article,aside,dialog,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}mark{background:#FF0;color:#000}template{display:none}")), supportsUnknownElements || shivMethods(ownerDocument, data), ownerDocument
-            }
-            var supportsHtml5Styles, supportsUnknownElements, version = "3.7.0",
-                options = window.html5 || {},
-                reSkip = /^<|^(?:button|map|select|textarea|object|iframe|option|optgroup)$/i,
-                saveClones = /^(?:a|b|code|div|fieldset|h1|h2|h3|h4|h5|h6|i|label|li|ol|p|q|span|strong|style|table|tbody|td|th|tr|ul)$/i,
-                expando = "_html5shiv",
-                expanID = 0,
-                expandoData = {};
-            ! function() {
-                try {
-                    var a = document.createElement("a");
-                    a.innerHTML = "<xyz></xyz>", supportsHtml5Styles = "hidden" in a, supportsUnknownElements = 1 == a.childNodes.length || function() {
-                            document.createElement("a");
-                            var frag = document.createDocumentFragment();
-                            return "undefined" == typeof frag.cloneNode || "undefined" == typeof frag.createDocumentFragment || "undefined" == typeof frag.createElement
-                        }()
-                } catch (e) {
-                    supportsHtml5Styles = !0, supportsUnknownElements = !0
-                }
-            }();
-            var html5 = {
-                elements: options.elements || "abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video",
-                version: version,
-                shivCSS: options.shivCSS !== !1,
-                supportsUnknownElements: supportsUnknownElements,
-                shivMethods: options.shivMethods !== !1,
-                type: "default",
-                shivDocument: shivDocument,
-                createElement: createElement,
-                createDocumentFragment: createDocumentFragment
-            };
-            window.html5 = html5, shivDocument(document)
-        }(this, document), Modernizr._version = version, Modernizr._prefixes = prefixes, Modernizr._domPrefixes = domPrefixes, Modernizr._cssomPrefixes = cssomPrefixes, Modernizr.hasEvent = isEventSupported, Modernizr.testProp = function(prop) {
-        return testProps([prop])
-    }, Modernizr.testAllProps = testPropsAll, Modernizr.testStyles = injectElementWithStyles, Modernizr.prefixed = function(prop, obj, elem) {
-        return obj ? testPropsAll(prop, obj, elem) : testPropsAll(prop, "pfx")
-    }, docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, "$1$2") + (enableClasses ? " js " + classes.join(" ") : ""), Modernizr
-}(this, this.document),
-    function(a, b, c) {
-        function d(a) {
-            return "[object Function]" == o.call(a)
-        }
-
-        function e(a) {
-            return "string" == typeof a
-        }
-
-        function f() {}
-
-        function g(a) {
-            return !a || "loaded" == a || "complete" == a || "uninitialized" == a
-        }
-
-        function h() {
-            var a = p.shift();
-            q = 1, a ? a.t ? m(function() {
-                ("c" == a.t ? B.injectCss : B.injectJs)(a.s, 0, a.a, a.x, a.e, 1)
-            }, 0) : (a(), h()) : q = 0
-        }
-
-        function i(a, c, d, e, f, i, j) {
-            function k(b) {
-                if (!o && g(l.readyState) && (u.r = o = 1, !q && h(), l.onload = l.onreadystatechange = null, b)) {
-                    "img" != a && m(function() {
-                        t.removeChild(l)
-                    }, 50);
-                    for (var d in y[c]) y[c].hasOwnProperty(d) && y[c][d].onload()
-                }
-            }
-            var j = j || B.errorTimeout,
-                l = b.createElement(a),
-                o = 0,
-                r = 0,
-                u = {
-                    t: d,
-                    s: c,
-                    e: f,
-                    a: i,
-                    x: j
-                };
-            1 === y[c] && (r = 1, y[c] = []), "object" == a ? l.data = c : (l.src = c, l.type = a), l.width = l.height = "0", l.onerror = l.onload = l.onreadystatechange = function() {
-                k.call(this, r)
-            }, p.splice(e, 0, u), "img" != a && (r || 2 === y[c] ? (t.insertBefore(l, s ? null : n), m(k, j)) : y[c].push(l))
-        }
-
-        function j(a, b, c, d, f) {
-            return q = 0, b = b || "j", e(a) ? i("c" == b ? v : u, a, b, this.i++, c, d, f) : (p.splice(this.i++, 0, a), 1 == p.length && h()), this
-        }
-
-        function k() {
-            var a = B;
-            return a.loader = {
-                load: j,
-                i: 0
-            }, a
-        }
-        var A, B, l = b.documentElement,
-            m = a.setTimeout,
-            n = b.getElementsByTagName("script")[0],
-            o = {}.toString,
-            p = [],
-            q = 0,
-            r = "MozAppearance" in l.style,
-            s = r && !!b.createRange().compareNode,
-            t = s ? l : n.parentNode,
-            l = a.opera && "[object Opera]" == o.call(a.opera),
-            l = !!b.attachEvent && !l,
-            u = r ? "object" : l ? "script" : "img",
-            v = l ? "script" : u,
-            w = Array.isArray || function(a) {
-                    return "[object Array]" == o.call(a)
-                },
-            x = [],
-            y = {},
-            z = {
-                timeout: function(a, b) {
-                    return b.length && (a.timeout = b[0]), a
-                }
-            };
-        B = function(a) {
-            function b(a) {
-                var e, f, g, a = a.split("!"),
-                    b = x.length,
-                    c = a.pop(),
-                    d = a.length,
-                    c = {
-                        url: c,
-                        origUrl: c,
-                        prefixes: a
-                    };
-                for (f = 0; d > f; f++) g = a[f].split("="), (e = z[g.shift()]) && (c = e(c, g));
-                for (f = 0; b > f; f++) c = x[f](c);
-                return c
-            }
-
-            function g(a, e, f, g, h) {
-                var i = b(a),
-                    j = i.autoCallback;
-                i.url.split(".").pop().split("?").shift(), i.bypass || (e && (e = d(e) ? e : e[a] || e[g] || e[a.split("/").pop().split("?")[0]]), i.instead ? i.instead(a, e, f, g, h) : (y[i.url] ? i.noexec = !0 : y[i.url] = 1, f.load(i.url, i.forceCSS || !i.forceJS && "css" == i.url.split(".").pop().split("?").shift() ? "c" : c, i.noexec, i.attrs, i.timeout), (d(e) || d(j)) && f.load(function() {
-                    k(), e && e(i.origUrl, h, g), j && j(i.origUrl, h, g), y[i.url] = 2
-                })))
-            }
-
-            function h(a, b) {
-                function c(a, c) {
-                    if (a) {
-                        if (e(a)) c || (j = function() {
-                            var a = [].slice.call(arguments);
-                            k.apply(this, a), l()
-                        }), g(a, j, b, 0, h);
-                        else if (Object(a) === a)
-                            for (n in m = function() {
-                                var c, b = 0;
-                                for (c in a) a.hasOwnProperty(c) && b++;
-                                return b
-                            }(), a) a.hasOwnProperty(n) && (!c && !--m && (d(j) ? j = function() {
-                                var a = [].slice.call(arguments);
-                                k.apply(this, a), l()
-                            } : j[n] = function(a) {
-                                return function() {
-                                    var b = [].slice.call(arguments);
-                                    a && a.apply(this, b), l()
-                                }
-                            }(k[n])), g(a[n], j, b, n, h))
-                    } else !c && l()
-                }
-                var m, n, h = !!a.test,
-                    i = a.load || a.both,
-                    j = a.callback || f,
-                    k = j,
-                    l = a.complete || f;
-                c(h ? a.yep : a.nope, !!i), i && c(i)
-            }
-            var i, j, l = this.yepnope.loader;
-            if (e(a)) g(a, 0, l, 0);
-            else if (w(a))
-                for (i = 0; i < a.length; i++) j = a[i], e(j) ? g(j, 0, l, 0) : w(j) ? B(j) : Object(j) === j && h(j, l);
-            else Object(a) === a && h(a, l)
-        }, B.addPrefix = function(a, b) {
-            z[a] = b
-        }, B.addFilter = function(a) {
-            x.push(a)
-        }, B.errorTimeout = 1e4, null == b.readyState && b.addEventListener && (b.readyState = "loading", b.addEventListener("DOMContentLoaded", A = function() {
-            b.removeEventListener("DOMContentLoaded", A, 0), b.readyState = "complete"
-        }, 0)), a.yepnope = k(), a.yepnope.executeStack = h, a.yepnope.injectJs = function(a, c, d, e, i, j) {
-            var l, o, k = b.createElement("script"),
-                e = e || B.errorTimeout;
-            k.src = a;
-            for (o in d) k.setAttribute(o, d[o]);
-            c = j ? h : c || f, k.onreadystatechange = k.onload = function() {
-                !l && g(k.readyState) && (l = 1, c(), k.onload = k.onreadystatechange = null)
-            }, m(function() {
-                l || (l = 1, c(1))
-            }, e), i ? k.onload() : n.parentNode.insertBefore(k, n)
-        }, a.yepnope.injectCss = function(a, c, d, e, g, i) {
-            var j, e = b.createElement("link"),
-                c = i ? h : c || f;
-            e.href = a, e.rel = "stylesheet", e.type = "text/css";
-            for (j in d) e.setAttribute(j, d[j]);
-            g || (n.parentNode.insertBefore(e, n), m(c, 0))
-        }
-    }(this, document), Modernizr.load = function() {
-    yepnope.apply(window, [].slice.call(arguments, 0))
-},
-    function(window, navigator) {
-        function Detectizr(opt) {
-            var i, j, k, l, alias, plugin, resizeTimeoutId, re, oldOrientation, extend = function(obj, extObj) {
-                    var a, b, i;
-                    if (arguments.length > 2)
-                        for (a = 1, b = arguments.length; b > a; a += 1) extend(obj, arguments[a]);
-                    else
-                        for (i in extObj) extObj.hasOwnProperty(i) && (obj[i] = extObj[i]);
-                    return obj
-                },
-                that = this,
-                device = Modernizr.Detectizr.device,
-                docElement = document.documentElement,
-                deviceTypes = ["tv", "tablet", "mobile", "desktop"],
-                plugins2detect = {
-                    java: {
-                        substrs: ["Java"],
-                        progIds: ["JavaWebStart.isInstalled"]
-                    },
-                    acrobat: {
-                        substrs: ["Adobe", "Acrobat"],
-                        progIds: ["AcroPDF.PDF", "PDF.PDFCtrl.5"]
-                    },
-                    flash: {
-                        substrs: ["Shockwave", "Flash"],
-                        progIds: ["ShockwaveFlash.ShockwaveFlash"]
-                    },
-                    mediaplayer: {
-                        substrs: ["Windows Media"],
-                        progIds: ["MediaPlayer.MediaPlayer"]
-                    },
-                    silverlight: {
-                        substrs: ["Silverlight"],
-                        progIds: ["AgControl.AgControl"]
-                    }
-                };
-            if (options = extend({}, options, opt || {}), that.is = function(key) {
-                    return device.userAgent.indexOf(key) > -1
-                }, that.test = function(regex) {
-                    return regex.test(device.userAgent)
-                }, that.exec = function(regex) {
-                    return regex.exec(device.userAgent)
-                }, that.toCamel = function(string) {
-                    return null === string || void 0 === string ? "" : String(string).replace(/((\s|\-|\.)+[a-z0-9])/g, function($1) {
-                        return $1.toUpperCase().replace(/(\s|\-|\.)/g, "")
-                    })
-                }, that.addVersionTest = function(mainTest, version, maxLength) {
-                    null !== version && void 0 !== version && "" !== version && (version = that.toCamel(version), "" !== version && (void 0 !== maxLength && maxLength > 0 && (version = version.substr(0, maxLength)), that.addConditionalTest(mainTest + version, !0)))
-                }, that.checkOrientation = function() {
-                    window.clearTimeout(resizeTimeoutId), resizeTimeoutId = window.setTimeout(function() {
-                        oldOrientation = device.orientation, device.orientation = window.innerHeight > window.innerWidth ? "portrait" : "landscape", that.addConditionalTest(device.orientation, !0), oldOrientation !== device.orientation && that.addConditionalTest(oldOrientation, !1)
-                    }, 10)
-                }, that.addConditionalTest = function(feature, test) {
-                    null !== feature && void 0 !== feature && "" !== feature && (options.addAllFeaturesAsClass ? Modernizr.addTest(feature, test) : (test = "function" == typeof test ? test() : test, test ? Modernizr.addTest(feature, !0) : (delete Modernizr[feature], re = new RegExp("\\b" + feature + "\\b"), docElement.className = docElement.className.replace(re, ""))))
-                }, options.detectDevice) {
-                for (that.test(/GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML/i) ? (device.type = deviceTypes[0], device.model = "smartTv") : that.test(/Xbox|PLAYSTATION.3|Wii/i) ? (device.type = deviceTypes[0], device.model = "gameConsole") : that.test(/iP(a|ro)d/i) ? (device.type = deviceTypes[1], device.model = "ipad") : that.test(/tablet/i) && !that.test(/RX-34/i) || that.test(/FOLIO/i) ? (device.type = deviceTypes[1], device.model = String(that.exec(/playbook/))) : that.test(/Linux/i) && that.test(/Android/i) && !that.test(/Fennec|mobi|HTC.Magic|HTCX06HT|Nexus.One|SC-02B|fone.945/i) ? (device.type = deviceTypes[1], device.model = "android") : that.test(/Kindle/i) || that.test(/Mac.OS/i) && that.test(/Silk/i) ? (device.type = deviceTypes[1], device.model = "kindle") : that.test(/GT-P10|SC-01C|SHW-M180S|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC(.Flyer|\_Flyer)|Sprint.ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos.S7|Dell.Streak.7|Advent.Vega|A101IT|A70BHT|MID7015|Next2|nook/i) || that.test(/MB511/i) && that.test(/RUTEM/i) ? (device.type = deviceTypes[1], device.model = "android") : that.test(/BB10/i) ? (device.type = deviceTypes[1], device.model = "blackberry") : (device.model = that.exec(/iphone|ipod|android|blackberry|opera mini|opera mobi|skyfire|maemo|windows phone|palm|iemobile|symbian|symbianos|fennec|j2me/i), null !== device.model ? (device.type = deviceTypes[2], device.model = String(device.model)) : (device.model = "", that.test(/BOLT|Fennec|Iris|Maemo|Minimo|Mobi|mowser|NetFront|Novarra|Prism|RX-34|Skyfire|Tear|XV6875|XV6975|Google.Wireless.Transcoder/i) ? device.type = deviceTypes[2] : that.test(/Opera/i) && that.test(/Windows.NT.5/i) && that.test(/HTC|Xda|Mini|Vario|SAMSUNG\-GT\-i8000|SAMSUNG\-SGH\-i9/i) ? device.type = deviceTypes[2] : that.test(/Windows.(NT|XP|ME|9)/i) && !that.test(/Phone/i) || that.test(/Win(9|.9|NT)/i) || that.test(/\(Windows 8\)/i) ? device.type = deviceTypes[3] : that.test(/Macintosh|PowerPC/i) && !that.test(/Silk/i) ? device.type = deviceTypes[3] : that.test(/Linux/i) && that.test(/X11/i) ? device.type = deviceTypes[3] : that.test(/Solaris|SunOS|BSD/i) ? device.type = deviceTypes[3] : that.test(/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye/i) && !that.test(/Mobile/i) ? (device.type = deviceTypes[3], device.model = "crawler") : device.type = deviceTypes[2])), i = 0, j = deviceTypes.length; j > i; i += 1) that.addConditionalTest(deviceTypes[i], device.type === deviceTypes[i]);
-                options.detectDeviceModel && that.addConditionalTest(that.toCamel(device.model), !0), (device.type === deviceTypes[1] || device.type === deviceTypes[2]) && (window.onresize = function(event) {
-                    that.checkOrientation(event)
-                }, that.checkOrientation())
-            }
-            if (options.detectScreen && Modernizr.mq && (that.addConditionalTest("smallScreen", Modernizr.mq("only screen and (max-width: 480px)")), that.addConditionalTest("verySmallScreen", Modernizr.mq("only screen and (max-width: 320px)")), that.addConditionalTest("veryVerySmallScreen", Modernizr.mq("only screen and (max-width: 240px)"))), options.detectOS && ("" !== device.model && ("ipad" === device.model || "iphone" === device.model || "ipod" === device.model ? (device.osVersion = that.test(/os\s(\d+)_/) ? RegExp.$1 : "", device.os = "ios", device.osVersionFull = that.test(/os ([^\s]+)/) ? RegExp.$1.replace(/_/g, ".") : "") : "android" === device.model ? (device.osVersion = (that.test(/os\s(\d+)_/) ? RegExp.$1 : "").substr(0, 2), device.osVersion || (device.osVersion = that.test(/android\s(\d+)\./) ? RegExp.$1 : "", device.osVersionFull = that.test(/android ([^\s]+)/) ? RegExp.$1.replace(/_/g, ".") : ""), device.os = "android") : "blackberry" === device.model ? (device.osVersion = that.test(/version\/([^\s]+)/) ? RegExp.$1 : "", device.os = "blackberry") : "playbook" === device.model && (device.osVersion = that.test(/os ([^\s]+)/) ? RegExp.$1.replace(";", "") : "", device.os = "blackberry")), "" === device.os && (that.is("win") || that.is("16bit") ? (device.os = "windows", that.is("windows nt 6.3") ? (device.osVersion = "8", device.osVersionFull = "8.1") : that.is("windows nt 6.2") || that.test(/\(windows 8\)/) ? device.osVersion = "8" : that.is("windows nt 6.1") ? device.osVersion = "7" : that.is("windows nt 6.0") ? device.osVersion = "vista" : that.is("windows nt 5.2") || that.is("windows nt 5.1") || that.is("windows xp") ? device.osVersion = "xp" : that.is("windows nt 5.0") || that.is("windows 2000") ? device.osVersion = "2k" : that.is("winnt") || that.is("windows nt") ? device.osVersion = "nt" : that.is("win98") || that.is("windows 98") ? device.osVersion = "98" : (that.is("win95") || that.is("windows 95")) && (device.osVersion = "95")) : that.is("mac") || that.is("darwin") ? (device.os = "mac", that.is("68k") || that.is("68000") ? device.osVersion = "68k" : that.is("ppc") || that.is("powerpc") ? device.osVersion = "ppc" : that.is("os x") && (device.osVersion = "os x")) : that.is("webtv") ? device.os = "webtv" : that.is("x11") || that.is("inux") ? device.os = "linux" : that.is("sunos") ? device.os = "sun" : that.is("irix") ? device.os = "irix" : that.is("freebsd") ? device.os = "freebsd" : that.is("bsd") && (device.os = "bsd")), "" !== device.os && (!device.osVersionFull && device.osVersion && (device.osVersionFull = device.osVersion), that.addConditionalTest(device.os, !0), that.addVersionTest(device.os, device.osVersionFull.replace(/\./g, "_")), that.addVersionTest(device.os, device.osVersion))), options.detectBrowser && (that.test(/opera|webtv/i) || !that.test(/msie\s([0-9]{1,})/) && !that.is("trident") ? that.is("firefox") ? (device.browserEngine = "gecko", device.browser = "firefox", device.browserVersion = (that.test(/firefox\/(\d+(\.?\d+)*)/) ? RegExp.$1 : "").substr(0, 2)) : that.is("gecko/") ? device.browserEngine = "gecko" : that.is("opera") ? (device.browser = "opera", device.browserEngine = "presto", device.browserVersion = that.test(/version\/(\d+)/) ? RegExp.$1 : that.test(/opera(\s|\/)(\d+)/) ? RegExp.$2 : "") : that.is("konqueror") ? device.browser = "konqueror" : that.is("chrome") ? (device.browserEngine = "webkit", device.browser = "chrome", device.browserVersion = that.test(/chrome\/(\d+)/) ? RegExp.$1 : "") : that.is("iron") ? (device.browserEngine = "webkit", device.browser = "iron") : that.is("applewebkit/") ? (device.browser = "safari", device.browserEngine = "webkit", device.browserVersion = that.test(/version\/(\d+)/) ? RegExp.$1 : "") : that.is("mozilla/") && (device.browserEngine = "gecko") : (device.browser = "ie", device.browserVersion = !window.addEventListener && document.documentMode && 7 === document.documentMode ? "8compat" : that.test(/trident.*rv[ :](\d+)\./) ? RegExp.$1 : that.test(/trident\/4\.0/) ? "8" : RegExp.$1), "" !== device.browser && (that.addConditionalTest(device.browser, !0), "" !== device.browserVersion && that.addVersionTest(device.browser, device.browserVersion)), that.addConditionalTest(device.browserEngine, !0)), options.detectPlugins) {
-                that.detectPlugin = function(substrs) {
-                    if (navigator.plugins)
-                        for (i = 0, j = navigator.plugins.length; j > i; i += 1) {
-                            var plugin = navigator.plugins[i],
-                                haystack = plugin.name + plugin.description,
-                                found = 0;
-                            for (k = 0, l = substrs.length; l > k; k += 1) - 1 !== haystack.indexOf(substrs[k]) && (found += 1);
-                            if (found === substrs.length) return !0
-                        }
-                    return !1
-                }, that.detectObject = function(progIds, fns) {
-                    if (window.ActiveXObject)
-                        for (i = 0, j = progIds.length; j > i; i += 1) try {
-                            var obj = new ActiveXObject(progIds[i]);
-                            if (obj) return fns && fns[i] ? fns[i].call(obj) : !0
-                        } catch (e) {}
-                    return !1
-                };
-                for (alias in plugins2detect) plugins2detect.hasOwnProperty(alias) && (plugin = plugins2detect[alias], (that.detectPlugin(plugin.substrs) || that.detectObject(plugin.progIds, plugin.fns)) && (device.browserPlugins.push(alias), that.addConditionalTest(alias, !0)))
-            }
-        }
-
-        function init() {
-            void 0 !== Modernizr && (Modernizr.Detectizr = Modernizr.Detectizr || {}, Modernizr.Detectizr.device = {
-                type: "",
-                model: "",
-                orientation: "",
-                browser: "",
-                browserEngine: "",
-                browserPlugins: [],
-                browserVersion: "",
-                os: "",
-                osVersion: "",
-                osVersionFull: "",
-                userAgent: (navigator.userAgent || navigator.vendor || window.opera).toLowerCase()
-            }, Modernizr.Detectizr.detect = function(settings) {
-                return new Detectizr(settings)
-            })
-        }
-        var Modernizr = window.Modernizr,
-            options = {
-                addAllFeaturesAsClass: !1,
-                detectDevice: !0,
-                detectDeviceModel: !0,
-                detectScreen: !0,
-                detectOS: !0,
-                detectBrowser: !0,
-                detectPlugins: !0
-            };
-        init()
-    }(this, navigator);
-var Log = function(object) {
-        if ("object" != typeof object) return !1;
-        if ((object.level || 0) < shop.code.log.level) return !1;
-        if (shop.code.log.frontend && window.console) switch (object.type) {
-            case "log":
-                console.log(object.message);
-                break;
-            case "warn":
-                console.warn(object.message);
-                break;
-            case "error":
-                console.error(object.message);
-                break;
-            case "table":
-                console.table(object.message);
-                break;
-            case "dir":
-                console.dir(object.message);
-                break;
-            default:
-            case "info":
-                console.info(object.message)
-        }
-        shop.code.log.backend && ("string" != typeof message && (message = JSON.stringify(object.message)), (new Image).src = shop.url.base + shop.code.log.url + "?l=" + object.type + "&u=" + encodeURIComponent(document.location.pathname) + "&t=" + encodeURIComponent(shop.url.template) + "&m=" + encodeURIComponent(message) + "&_=" + 1 * new Date)
-    },
-    Template = function() {
-        this.placeholder = !1, this.exceptions = !1, this.template = !1, this.output = !1
-    };
-Template.prototype = {
-    setPlaceholder: function(placeholder) {
-        return "object" != typeof placeholder ? (Log({
-            level: 4,
-            message: "Template.setOlaceholder: Error placeholder is not an object",
-            type: "error"
-        }), !1) : (this.placeholder = placeholder, this)
-    },
-    setExceptions: function(exceptions) {
-        return exceptions && "object" != typeof exceptions ? (Log({
-            level: 4,
-            message: "Template.setExceptions: Error exception(s) is not an object",
-            type: "error"
-        }), !1) : (this.exceptions = exceptions, this)
-    },
-    setTemplate: function(template) {
-        var _templatePath = document.getElementById(template);
-        return template && "" === template && !_templatePath ? (Log({
-            level: 4,
-            message: "Template.setTemplate: Error template is not a string or is empty",
-            type: "error"
-        }), !1) : (_templatePath && (this.template = _templatePath.innerHTML), this)
-    },
-    render: function() {
-        return this.template && this.placeholder && (this.output = this.template.replace(new RegExp("{{([a-zA-Z0-9_:]+)}}", "gi"), function(context) {
-            return function(a, b) {
-                var content, ixOf = b.indexOf(":"),
-                    modMethod = ixOf > 0 ? b.substr(0, ixOf) : "",
-                    b = ixOf >= 0 ? b.substr(ixOf + 1) : b;
-                return content = context.exceptions && "function" == typeof context.exceptions[b] ? context.exceptions[b](context.placeholder[b]) : b in context.placeholder ? context.placeholder[b] : "", "escape" === modMethod && (content = window.shop.escapeHTML(content)), content
-            }
-        }(this))), this.output
-    }
-}, jQuery.base64 = function() {
-    function _getbyte64(s, i) {
-        var idx = _ALPHA.indexOf(s.charAt(i));
-        if (-1 === idx) throw "Cannot decode base64";
-        return idx
-    }
-
-    function _decode(s) {
-        var i, b10, pads = 0,
-            imax = s.length,
-            x = [];
-        if (s = String(s), 0 === imax) return s;
-        if (imax % 4 !== 0) throw "Cannot decode base64";
-        for (s.charAt(imax - 1) === _PADCHAR && (pads = 1, s.charAt(imax - 2) === _PADCHAR && (pads = 2), imax -= 4), i = 0; imax > i; i += 4) b10 = _getbyte64(s, i) << 18 | _getbyte64(s, i + 1) << 12 | _getbyte64(s, i + 2) << 6 | _getbyte64(s, i + 3), x.push(String.fromCharCode(b10 >> 16, b10 >> 8 & 255, 255 & b10));
-        switch (pads) {
-            case 1:
-                b10 = _getbyte64(s, i) << 18 | _getbyte64(s, i + 1) << 12 | _getbyte64(s, i + 2) << 6, x.push(String.fromCharCode(b10 >> 16, b10 >> 8 & 255));
-                break;
-            case 2:
-                b10 = _getbyte64(s, i) << 18 | _getbyte64(s, i + 1) << 12, x.push(String.fromCharCode(b10 >> 16))
-        }
-        return x.join("")
-    }
-
-    function _getbyte(s, i) {
-        var x = s.charCodeAt(i);
-        if (x > 255) throw "INVALID_CHARACTER_ERR: DOM Exception 5";
-        return x
-    }
-
-    function _encode(s) {
-        if (1 !== arguments.length) throw "SyntaxError: exactly one argument required";
-        s = String(s);
-        var i, b10, x = [],
-            imax = s.length - s.length % 3;
-        if (0 === s.length) return s;
-        for (i = 0; imax > i; i += 3) b10 = _getbyte(s, i) << 16 | _getbyte(s, i + 1) << 8 | _getbyte(s, i + 2), x.push(_ALPHA.charAt(b10 >> 18)), x.push(_ALPHA.charAt(b10 >> 12 & 63)), x.push(_ALPHA.charAt(b10 >> 6 & 63)), x.push(_ALPHA.charAt(63 & b10));
-        switch (s.length - imax) {
-            case 1:
-                b10 = _getbyte(s, i) << 16, x.push(_ALPHA.charAt(b10 >> 18) + _ALPHA.charAt(b10 >> 12 & 63) + _PADCHAR + _PADCHAR);
-                break;
-            case 2:
-                b10 = _getbyte(s, i) << 16 | _getbyte(s, i + 1) << 8, x.push(_ALPHA.charAt(b10 >> 18) + _ALPHA.charAt(b10 >> 12 & 63) + _ALPHA.charAt(b10 >> 6 & 63) + _PADCHAR)
-        }
-        return x.join("")
-    }
-    var _PADCHAR = "=",
-        _ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-        _VERSION = "1.0";
-    return {
-        decode: _decode,
-        encode: _encode,
-        VERSION: _VERSION
-    }
-}(jQuery),
-    function($) {
-        "use strict";
-        $.extend($.fn, {
-            pstrength: function(options) {
-                var options = $.extend({
-                    verdicts: ["sehr schwach", "schwach", "mittel", "stark", "sehr stark"],
-                    colors: ["#f00", "#c06", "#f60", "#3c0", "#3f0"],
-                    scores: [10, 15, 30, 40],
-                    minchar: 5,
-                    tooShort: "nicht ausreichend"
-                }, options);
-                return this.each(function() {
-                    var infoarea = $(this).attr("id"),
-                        infoareaIndexOfPoint = infoarea.indexOf("."); - 1 !== infoareaIndexOfPoint && (infoarea = infoarea.substr(infoareaIndexOfPoint + 1)), $(this).after('<div class="pstrength"><div class="pstrength-info" id="' + infoarea + '_text"></div><div class="pstrength-bar" id="' + infoarea + '_bar"></div></div>'), "" !== $(this).val() && $.fn.runPassword($(this).val(), infoarea, options), $(this).keyup(function() {
-                        $.fn.runPassword($(this).val(), infoarea, options)
-                    })
-                })
-            },
-            runPassword: function(password, infoarea, options) {
-                var strColor, strText, nPerc = $.fn.checkPassword(password, options),
-                    ctlBar = "#" + infoarea + "_bar",
-                    ctlText = "#" + infoarea + "_text",
-                    containsANumberRegex = /[0-9]+/,
-                    containsThreeDifferentLettersRegex = /([a-zA-Z][^a-zA-Z]*){3,}/;
-                0 > nPerc || !containsANumberRegex.test(password) || !containsThreeDifferentLettersRegex.test(password) ? (strColor = "#ccc", strText = options.tooShort, $(ctlBar).css({
-                    width: "5%"
-                })) : nPerc <= options.scores[0] ? (strColor = options.colors[0], strText = options.verdicts[0], $(ctlBar).css({
-                    width: "10%"
-                })) : nPerc > options.scores[0] && nPerc <= options.scores[1] ? (strColor = options.colors[1], strText = options.verdicts[1], $(ctlBar).css({
-                    width: "20%"
-                })) : nPerc > options.scores[1] && nPerc <= options.scores[2] ? (strColor = options.colors[2], strText = options.verdicts[2], $(ctlBar).css({
-                    width: "40%"
-                })) : nPerc > options.scores[2] && nPerc <= options.scores[3] ? (strColor = options.colors[3], strText = options.verdicts[3], $(ctlBar).css({
-                    width: "60%"
-                })) : (strColor = options.colors[4], strText = options.verdicts[4], $(ctlBar).css({
-                    width: "80%"
-                })), $(ctlBar).css({
-                    backgroundColor: strColor
-                }), $(ctlText).html("<span style='color: " + strColor + ";'>" + strText + "</span>")
-            },
-            checkPassword: function(password, options) {
-                {
-                    var intScore = 0;
-                    options.verdicts[0]
-                }
-                return password.length < options.minchar ? intScore -= 100 : password.length >= options.minchar && password.length <= options.minchar + 2 ? intScore += 6 : password.length >= options.minchar + 3 && password.length <= options.minchar + 4 ? intScore += 12 : password.length >= options.minchar + 5 && (intScore += 18), password.match(/[a-z]/) && (intScore += 1), password.match(/[A-Z]/) && (intScore += 5), password.match(/\d+/) && (intScore += 5), password.match(/(.*[0-9].*[0-9].*[0-9])/) && (intScore += 7), password.match(/.[!,@,#,$,%,^,&,*,?,_,~]/) && (intScore += 5), password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~].*[!,@,#,$,%,^,&,*,?,_,~])/) && (intScore += 7), password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/) && (intScore += 2), password.match(/([a-zA-Z])/) && password.match(/([0-9])/) && (intScore += 3), password.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/) && (intScore += 3), intScore
-            }
-        })
-    }(jQuery), ImageErrorHandler = function(object) {
-    "use strict";
-    return "object" != typeof object ? !1 : object.hasOwnProperty("selector") || "" == object.selector ? object.hasOwnProperty("replace") || "" == object.replace ? void $(function() {
-        $(object.selector).on("error", function(event) {
-            $(this).hide().attr("src", object.replace).fadeIn().unbind("error"), "function" == typeof object.callback && object.callback(), Log({
-                type: "error",
-                level: 0,
-                message: event
-            })
-        })
-    }) : (Log({
-        type: "error",
-        level: 0,
-        message: "object.replace not set"
-    }), !1) : (Log({
-        type: "error",
-        level: 0,
-        message: "object.selector not set"
-    }), !1)
-}(function(root, undefined) {
-    function isString(obj) {
-        return !!("" === obj || obj && obj.charCodeAt && obj.substr)
-    }
-
-    function isArray(obj) {
-        return nativeIsArray ? nativeIsArray(obj) : "[object Array]" === toString.call(obj)
-    }
-
-    function isObject(obj) {
-        return obj && "[object Object]" === toString.call(obj)
-    }
-
-    function defaults(object, defs) {
-        var key;
-        object = object || {}, defs = defs || {};
-        for (key in defs) defs.hasOwnProperty(key) && null == object[key] && (object[key] = defs[key]);
-        return object
-    }
-
-    function map(obj, iterator, context) {
-        var i, j, results = [];
-        if (!obj) return results;
-        if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
-        for (i = 0, j = obj.length; j > i; i++) results[i] = iterator.call(context, obj[i], i, obj);
-        return results
-    }
-
-    function checkPrecision(val, base) {
-        return val = Math.round(Math.abs(val)), isNaN(val) ? base : val
-    }
-
-    function checkCurrencyFormat(format) {
-        var defaults = lib.settings.currency.format;
-        return "function" == typeof format && (format = format()), isString(format) && format.match("%v") ? {
-            pos: format,
-            neg: format.replace("-", "").replace("%v", "-%v"),
-            zero: format
-        } : format && format.pos && format.pos.match("%v") ? format : isString(defaults) ? lib.settings.currency.format = {
-            pos: defaults,
-            neg: defaults.replace("%v", "-%v"),
-            zero: defaults
-        } : defaults
-    }
-    var lib = {};
-    lib.version = "0.4.1", lib.settings = {
-        currency: {
-            symbol: "$",
-            format: "%s%v",
-            decimal: ".",
-            thousand: ",",
-            precision: 2,
-            grouping: 3
-        },
-        number: {
-            precision: 0,
-            grouping: 3,
-            thousand: ",",
-            decimal: "."
-        }
-    };
-    var nativeMap = Array.prototype.map,
-        nativeIsArray = Array.isArray,
-        toString = Object.prototype.toString,
-        unformat = lib.unformat = lib.parse = function(value, decimal) {
-            if (isArray(value)) return map(value, function(val) {
-                return unformat(val, decimal)
-            });
-            if (value = value || 0, "number" == typeof value) return value;
-            decimal = decimal || lib.settings.number.decimal;
-            var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
-                unformatted = parseFloat(("" + value).replace(/\((.*)\)/, "-$1").replace(regex, "").replace(decimal, "."));
-            return isNaN(unformatted) ? 0 : unformatted
-        },
-        toFixed = lib.toFixed = function(value, precision) {
-            precision = checkPrecision(precision, lib.settings.number.precision);
-            var power = Math.pow(10, precision);
-            return (Math.round(lib.unformat(value) * power) / power).toFixed(precision)
-        },
-        formatNumber = lib.formatNumber = lib.format = function(number, precision, thousand, decimal) {
-            if (isArray(number)) return map(number, function(val) {
-                return formatNumber(val, precision, thousand, decimal)
-            });
-            number = unformat(number);
-            var opts = defaults(isObject(precision) ? precision : {
-                    precision: precision,
-                    thousand: thousand,
-                    decimal: decimal
-                }, lib.settings.number),
-                usePrecision = checkPrecision(opts.precision),
-                negative = 0 > number ? "-" : "",
-                base = parseInt(toFixed(Math.abs(number || 0), usePrecision), 10) + "",
-                mod = base.length > 3 ? base.length % 3 : 0;
-            return negative + (mod ? base.substr(0, mod) + opts.thousand : "") + base.substr(mod).replace(/(\d{3})(?=\d)/g, "$1" + opts.thousand) + (usePrecision ? opts.decimal + toFixed(Math.abs(number), usePrecision).split(".")[1] : "")
-        },
-        formatMoney = lib.formatMoney = function(number, symbol, precision, thousand, decimal, format) {
-            if (isArray(number)) return map(number, function(val) {
-                return formatMoney(val, symbol, precision, thousand, decimal, format)
-            });
-            number = unformat(number);
+        lib.formatColumn = function(list, symbol, precision, thousand, decimal, format) {
+            if (!list) return [];
             var opts = defaults(isObject(symbol) ? symbol : {
                     symbol: symbol,
                     precision: precision,
@@ -6466,220 +5899,662 @@ Template.prototype = {
                     format: format
                 }, lib.settings.currency),
                 formats = checkCurrencyFormat(opts.format),
-                useFormat = number > 0 ? formats.pos : 0 > number ? formats.neg : formats.zero;
-            return useFormat.replace("%s", opts.symbol).replace("%v", formatNumber(Math.abs(number), checkPrecision(opts.precision), opts.thousand, opts.decimal))
-        };
-    lib.formatColumn = function(list, symbol, precision, thousand, decimal, format) {
-        if (!list) return [];
-        var opts = defaults(isObject(symbol) ? symbol : {
-                symbol: symbol,
-                precision: precision,
-                thousand: thousand,
-                decimal: decimal,
-                format: format
-            }, lib.settings.currency),
-            formats = checkCurrencyFormat(opts.format),
-            padAfterSymbol = formats.pos.indexOf("%s") < formats.pos.indexOf("%v") ? !0 : !1,
-            maxLength = 0,
-            formatted = map(list, function(val) {
-                if (isArray(val)) return lib.formatColumn(val, opts);
-                val = unformat(val);
-                var useFormat = val > 0 ? formats.pos : 0 > val ? formats.neg : formats.zero,
-                    fVal = useFormat.replace("%s", opts.symbol).replace("%v", formatNumber(Math.abs(val), checkPrecision(opts.precision), opts.thousand, opts.decimal));
-                return fVal.length > maxLength && (maxLength = fVal.length), fVal
-            });
-        return map(formatted, function(val) {
-            return isString(val) && val.length < maxLength ? padAfterSymbol ? val.replace(opts.symbol, opts.symbol + new Array(maxLength - val.length + 1).join(" ")) : new Array(maxLength - val.length + 1).join(" ") + val : val
+                padAfterSymbol = formats.pos.indexOf("%s") < formats.pos.indexOf("%v") ? !0 : !1,
+                maxLength = 0,
+                formatted = map(list, function(val) {
+                    if (isArray(val)) return lib.formatColumn(val, opts);
+                    val = unformat(val);
+                    var useFormat = val > 0 ? formats.pos : 0 > val ? formats.neg : formats.zero,
+                        fVal = useFormat.replace("%s", opts.symbol).replace("%v", formatNumber(Math.abs(val), checkPrecision(opts.precision), opts.thousand, opts.decimal));
+                    return fVal.length > maxLength && (maxLength = fVal.length), fVal
+                });
+            return map(formatted, function(val) {
+                return isString(val) && val.length < maxLength ? padAfterSymbol ? val.replace(opts.symbol, opts.symbol + new Array(maxLength - val.length + 1).join(" ")) : new Array(maxLength - val.length + 1).join(" ") + val : val
+            })
+        }, "undefined" != typeof exports ? ("undefined" != typeof module && module.exports && (exports = module.exports = lib), exports.accounting = lib) : "function" == typeof define && define.amd ? define([], function() {
+            return lib
+        }) : (lib.noConflict = function(oldAccounting) {
+            return function() {
+                return root.accounting = oldAccounting, lib.noConflict = undefined, lib
+            }
+        }(root.accounting), root.accounting = lib)
+    }(this),
+    function(factory) {
+        "use strict";
+        "function" == typeof define && define.amd ? define(["jquery"], factory) : "undefined" != typeof exports ? module.exports = factory(require("jquery")) : factory(jQuery)
+    }(function($) {
+        "use strict";
+        var Slick = window.Slick || {};
+        Slick = function() {
+            function Slick(element, settings) {
+                var dataSettings, responsiveSettings, breakpoint, _ = this;
+                if (_.defaults = {
+                        accessibility: !0,
+                        adaptiveHeight: !1,
+                        appendArrows: $(element),
+                        appendDots: $(element),
+                        arrows: !0,
+                        asNavFor: null,
+                        prevArrow: '<button type="button" data-role="none" class="slick-prev" aria-label="previous">Previous</button>',
+                        nextArrow: '<button type="button" data-role="none" class="slick-next" aria-label="next">Next</button>',
+                        autoplay: !1,
+                        autoplaySpeed: 3e3,
+                        centerMode: !1,
+                        centerPadding: "50px",
+                        cssEase: "ease",
+                        customPaging: function(slider, i) {
+                            return '<button type="button" data-role="none">' + (i + 1) + "</button>"
+                        },
+                        dots: !1,
+                        dotsClass: "slick-dots",
+                        draggable: !0,
+                        easing: "linear",
+                        edgeFriction: .35,
+                        fade: !1,
+                        focusOnSelect: !1,
+                        infinite: !0,
+                        initialSlide: 0,
+                        lazyLoad: "ondemand",
+                        mobileFirst: !1,
+                        pauseOnHover: !0,
+                        pauseOnDotsHover: !1,
+                        respondTo: "window",
+                        responsive: null,
+                        rtl: !1,
+                        slide: "",
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        speed: 500,
+                        swipe: !0,
+                        swipeToSlide: !1,
+                        touchMove: !0,
+                        touchThreshold: 5,
+                        useCSS: !0,
+                        variableWidth: !1,
+                        vertical: !1,
+                        waitForAnimate: !0
+                    }, _.initials = {
+                        animating: !1,
+                        dragging: !1,
+                        autoPlayTimer: null,
+                        currentDirection: 0,
+                        currentLeft: null,
+                        currentSlide: 0,
+                        direction: 1,
+                        $dots: null,
+                        listWidth: null,
+                        listHeight: null,
+                        loadIndex: 0,
+                        $nextArrow: null,
+                        $prevArrow: null,
+                        slideCount: null,
+                        slideWidth: null,
+                        $slideTrack: null,
+                        $slides: null,
+                        sliding: !1,
+                        slideOffset: 0,
+                        swipeLeft: null,
+                        $list: null,
+                        touchObject: {},
+                        transformsEnabled: !1
+                    }, $.extend(_, _.initials), _.activeBreakpoint = null, _.animType = null, _.animProp = null, _.breakpoints = [], _.breakpointSettings = [], _.cssTransitions = !1, _.hidden = "hidden", _.paused = !1, _.positionProp = null, _.respondTo = null, _.shouldClick = !0, _.$slider = $(element), _.$slidesCache = null, _.transformType = null, _.transitionType = null, _.visibilityChange = "visibilitychange", _.windowWidth = 0, _.windowTimer = null, dataSettings = $(element).data("slick") || {}, _.options = $.extend({}, _.defaults, dataSettings, settings), _.currentSlide = _.options.initialSlide, _.originalSettings = _.options, responsiveSettings = _.options.responsive || null, responsiveSettings && responsiveSettings.length > -1) {
+                    _.respondTo = _.options.respondTo || "window";
+                    for (breakpoint in responsiveSettings) responsiveSettings.hasOwnProperty(breakpoint) && (_.breakpoints.push(responsiveSettings[breakpoint].breakpoint), _.breakpointSettings[responsiveSettings[breakpoint].breakpoint] = responsiveSettings[breakpoint].settings);
+                    _.breakpoints.sort(function(a, b) {
+                        return _.options.mobileFirst === !0 ? a - b : b - a
+                    })
+                }
+                "undefined" != typeof document.mozHidden ? (_.hidden = "mozHidden", _.visibilityChange = "mozvisibilitychange") : "undefined" != typeof document.msHidden ? (_.hidden = "msHidden", _.visibilityChange = "msvisibilitychange") : "undefined" != typeof document.webkitHidden && (_.hidden = "webkitHidden", _.visibilityChange = "webkitvisibilitychange"), _.autoPlay = $.proxy(_.autoPlay, _), _.autoPlayClear = $.proxy(_.autoPlayClear, _), _.changeSlide = $.proxy(_.changeSlide, _), _.clickHandler = $.proxy(_.clickHandler, _), _.selectHandler = $.proxy(_.selectHandler, _), _.setPosition = $.proxy(_.setPosition, _), _.swipeHandler = $.proxy(_.swipeHandler, _), _.dragHandler = $.proxy(_.dragHandler, _), _.keyHandler = $.proxy(_.keyHandler, _), _.autoPlayIterator = $.proxy(_.autoPlayIterator, _), _.instanceUid = instanceUid++, _.htmlExpr = /^(?:\s*(<[\w\W]+>)[^>]*)$/, _.init(), _.checkResponsive(!0)
+            }
+            var instanceUid = 0;
+            return Slick
+        }(), Slick.prototype.addSlide = Slick.prototype.slickAdd = function(markup, index, addBefore) {
+            var _ = this;
+            if ("boolean" == typeof index) addBefore = index, index = null;
+            else if (0 > index || index >= _.slideCount) return !1;
+            _.unload(), "number" == typeof index ? 0 === index && 0 === _.$slides.length ? $(markup).appendTo(_.$slideTrack) : addBefore ? $(markup).insertBefore(_.$slides.eq(index)) : $(markup).insertAfter(_.$slides.eq(index)) : addBefore === !0 ? $(markup).prependTo(_.$slideTrack) : $(markup).appendTo(_.$slideTrack), _.$slides = _.$slideTrack.children(this.options.slide), _.$slideTrack.children(this.options.slide).detach(), _.$slideTrack.append(_.$slides), _.$slides.each(function(index, element) {
+                $(element).attr("data-slick-index", index)
+            }), _.$slidesCache = _.$slides, _.reinit()
+        }, Slick.prototype.animateHeight = function() {
+            var _ = this;
+            if (1 === _.options.slidesToShow && _.options.adaptiveHeight === !0 && _.options.vertical === !1) {
+                var targetHeight = _.$slides.eq(_.currentSlide).outerHeight(!0);
+                _.$list.animate({
+                    height: targetHeight
+                }, _.options.speed)
+            }
+        }, Slick.prototype.animateSlide = function(targetLeft, callback) {
+            var animProps = {},
+                _ = this;
+            _.animateHeight(), _.options.rtl === !0 && _.options.vertical === !1 && (targetLeft = -targetLeft), _.transformsEnabled === !1 ? _.options.vertical === !1 ? _.$slideTrack.animate({
+                left: targetLeft
+            }, _.options.speed, _.options.easing, callback) : _.$slideTrack.animate({
+                top: targetLeft
+            }, _.options.speed, _.options.easing, callback) : _.cssTransitions === !1 ? (_.options.rtl === !0 && (_.currentLeft = -_.currentLeft), $({
+                animStart: _.currentLeft
+            }).animate({
+                animStart: targetLeft
+            }, {
+                duration: _.options.speed,
+                easing: _.options.easing,
+                step: function(now) {
+                    now = Math.ceil(now), _.options.vertical === !1 ? (animProps[_.animType] = "translate(" + now + "px, 0px)", _.$slideTrack.css(animProps)) : (animProps[_.animType] = "translate(0px," + now + "px)", _.$slideTrack.css(animProps))
+                },
+                complete: function() {
+                    callback && callback.call()
+                }
+            })) : (_.applyTransition(), targetLeft = Math.ceil(targetLeft), animProps[_.animType] = _.options.vertical === !1 ? "translate3d(" + targetLeft + "px, 0px, 0px)" : "translate3d(0px," + targetLeft + "px, 0px)", _.$slideTrack.css(animProps), callback && setTimeout(function() {
+                _.disableTransition(), callback.call()
+            }, _.options.speed))
+        }, Slick.prototype.asNavFor = function(index) {
+            var _ = this,
+                asNavFor = null !== _.options.asNavFor ? $(_.options.asNavFor).slick("getSlick") : null;
+            null !== asNavFor && asNavFor.slideHandler(index, !0)
+        }, Slick.prototype.applyTransition = function(slide) {
+            var _ = this,
+                transition = {};
+            transition[_.transitionType] = _.options.fade === !1 ? _.transformType + " " + _.options.speed + "ms " + _.options.cssEase : "opacity " + _.options.speed + "ms " + _.options.cssEase, _.options.fade === !1 ? _.$slideTrack.css(transition) : _.$slides.eq(slide).css(transition)
+        }, Slick.prototype.autoPlay = function() {
+            var _ = this;
+            _.autoPlayTimer && clearInterval(_.autoPlayTimer), _.slideCount > _.options.slidesToShow && _.paused !== !0 && (_.autoPlayTimer = setInterval(_.autoPlayIterator, _.options.autoplaySpeed))
+        }, Slick.prototype.autoPlayClear = function() {
+            var _ = this;
+            _.autoPlayTimer && clearInterval(_.autoPlayTimer)
+        }, Slick.prototype.autoPlayIterator = function() {
+            var _ = this;
+            _.options.infinite === !1 ? 1 === _.direction ? (_.currentSlide + 1 === _.slideCount - 1 && (_.direction = 0), _.slideHandler(_.currentSlide + _.options.slidesToScroll)) : (_.currentSlide - 1 === 0 && (_.direction = 1), _.slideHandler(_.currentSlide - _.options.slidesToScroll)) : _.slideHandler(_.currentSlide + _.options.slidesToScroll)
+        }, Slick.prototype.buildArrows = function() {
+            var _ = this;
+            _.options.arrows === !0 && _.slideCount > _.options.slidesToShow && (_.$prevArrow = $(_.options.prevArrow), _.$nextArrow = $(_.options.nextArrow), _.htmlExpr.test(_.options.prevArrow) && _.$prevArrow.appendTo(_.options.appendArrows), _.htmlExpr.test(_.options.nextArrow) && _.$nextArrow.appendTo(_.options.appendArrows), _.options.infinite !== !0 && _.$prevArrow.addClass("slick-disabled"))
+        }, Slick.prototype.buildDots = function() {
+            var i, dotString, _ = this;
+            if (_.options.dots === !0 && _.slideCount > _.options.slidesToShow) {
+                for (dotString = '<ul class="' + _.options.dotsClass + '">', i = 0; i <= _.getDotCount(); i += 1) dotString += "<li>" + _.options.customPaging.call(this, _, i) + "</li>";
+                dotString += "</ul>", _.$dots = $(dotString).appendTo(_.options.appendDots), _.$dots.find("li").first().addClass("slick-active").attr("aria-hidden", "false")
+            }
+        }, Slick.prototype.buildOut = function() {
+            var _ = this;
+            _.$slides = _.$slider.children(_.options.slide + ":not(.slick-cloned)").addClass("slick-slide"), _.slideCount = _.$slides.length, _.$slides.each(function(index, element) {
+                $(element).attr("data-slick-index", index)
+            }), _.$slidesCache = _.$slides, _.$slider.addClass("slick-slider"), _.$slideTrack = 0 === _.slideCount ? $('<div class="slick-track"/>').appendTo(_.$slider) : _.$slides.wrapAll('<div class="slick-track"/>').parent(), _.$list = _.$slideTrack.wrap('<div aria-live="polite" class="slick-list"/>').parent(), _.$slideTrack.css("opacity", 0), (_.options.centerMode === !0 || _.options.swipeToSlide === !0) && (_.options.slidesToScroll = 1), $("img[data-lazy]", _.$slider).not("[src]").addClass("slick-loading"), _.setupInfinite(), _.buildArrows(), _.buildDots(), _.updateDots(), _.options.accessibility === !0 && _.$list.prop("tabIndex", 0), _.setSlideClasses("number" == typeof this.currentSlide ? this.currentSlide : 0), _.options.draggable === !0 && _.$list.addClass("draggable")
+        }, Slick.prototype.checkResponsive = function(initial) {
+            var breakpoint, targetBreakpoint, respondToWidth, _ = this,
+                sliderWidth = _.$slider.width(),
+                windowWidth = window.innerWidth || $(window).width();
+            if ("window" === _.respondTo ? respondToWidth = windowWidth : "slider" === _.respondTo ? respondToWidth = sliderWidth : "min" === _.respondTo && (respondToWidth = Math.min(windowWidth, sliderWidth)), _.originalSettings.responsive && _.originalSettings.responsive.length > -1 && null !== _.originalSettings.responsive) {
+                targetBreakpoint = null;
+                for (breakpoint in _.breakpoints) _.breakpoints.hasOwnProperty(breakpoint) && (_.originalSettings.mobileFirst === !1 ? respondToWidth < _.breakpoints[breakpoint] && (targetBreakpoint = _.breakpoints[breakpoint]) : respondToWidth > _.breakpoints[breakpoint] && (targetBreakpoint = _.breakpoints[breakpoint]));
+                null !== targetBreakpoint ? null !== _.activeBreakpoint ? targetBreakpoint !== _.activeBreakpoint && (_.activeBreakpoint = targetBreakpoint, "unslick" === _.breakpointSettings[targetBreakpoint] ? _.unslick() : (_.options = $.extend({}, _.originalSettings, _.breakpointSettings[targetBreakpoint]), initial === !0 && (_.currentSlide = _.options.initialSlide), _.refresh())) : (_.activeBreakpoint = targetBreakpoint, "unslick" === _.breakpointSettings[targetBreakpoint] ? _.unslick() : (_.options = $.extend({}, _.originalSettings, _.breakpointSettings[targetBreakpoint]), initial === !0 && (_.currentSlide = _.options.initialSlide), _.refresh())) : null !== _.activeBreakpoint && (_.activeBreakpoint = null, _.options = _.originalSettings, initial === !0 && (_.currentSlide = _.options.initialSlide), _.refresh())
+            }
+        }, Slick.prototype.changeSlide = function(event, dontAnimate) {
+            var indexOffset, slideOffset, unevenOffset, _ = this,
+                $target = $(event.target);
+            switch ($target.is("a") && event.preventDefault(), unevenOffset = _.slideCount % _.options.slidesToScroll !== 0, indexOffset = unevenOffset ? 0 : (_.slideCount - _.currentSlide) % _.options.slidesToScroll, event.data.message) {
+                case "previous":
+                    slideOffset = 0 === indexOffset ? _.options.slidesToScroll : _.options.slidesToShow - indexOffset, _.slideCount > _.options.slidesToShow && _.slideHandler(_.currentSlide - slideOffset, !1, dontAnimate);
+                    break;
+                case "next":
+                    slideOffset = 0 === indexOffset ? _.options.slidesToScroll : indexOffset, _.slideCount > _.options.slidesToShow && _.slideHandler(_.currentSlide + slideOffset, !1, dontAnimate);
+                    break;
+                case "index":
+                    var index = 0 === event.data.index ? 0 : event.data.index || $(event.target).parent().index() * _.options.slidesToScroll;
+                    _.slideHandler(_.checkNavigable(index), !1, dontAnimate);
+                    break;
+                default:
+                    return
+            }
+        }, Slick.prototype.checkNavigable = function(index) {
+            var navigables, prevNavigable, _ = this;
+            if (navigables = _.getNavigableIndexes(), prevNavigable = 0, index > navigables[navigables.length - 1]) index = navigables[navigables.length - 1];
+            else
+                for (var n in navigables) {
+                    if (index < navigables[n]) {
+                        index = prevNavigable;
+                        break
+                    }
+                    prevNavigable = navigables[n]
+                }
+            return index
+        }, Slick.prototype.clickHandler = function(event) {
+            var _ = this;
+            _.shouldClick === !1 && (event.stopImmediatePropagation(), event.stopPropagation(), event.preventDefault())
+        }, Slick.prototype.destroy = function() {
+            var _ = this;
+            _.autoPlayClear(), _.touchObject = {}, $(".slick-cloned", _.$slider).remove(), _.$dots && _.$dots.remove(), _.$prevArrow && "object" != typeof _.options.prevArrow && _.$prevArrow.remove(), _.$nextArrow && "object" != typeof _.options.nextArrow && _.$nextArrow.remove(), _.$slides.removeClass("slick-slide slick-active slick-center slick-visible").attr("aria-hidden", "true").removeAttr("data-slick-index").css({
+                position: "",
+                left: "",
+                top: "",
+                zIndex: "",
+                opacity: "",
+                width: ""
+            }), _.$slider.removeClass("slick-slider"), _.$slider.removeClass("slick-initialized"), _.$list.off(".slick"), $(window).off(".slick-" + _.instanceUid), $(document).off(".slick-" + _.instanceUid), _.$slider.html(_.$slides)
+        }, Slick.prototype.disableTransition = function(slide) {
+            var _ = this,
+                transition = {};
+            transition[_.transitionType] = "", _.options.fade === !1 ? _.$slideTrack.css(transition) : _.$slides.eq(slide).css(transition)
+        }, Slick.prototype.fadeSlide = function(slideIndex, callback) {
+            var _ = this;
+            _.cssTransitions === !1 ? (_.$slides.eq(slideIndex).css({
+                zIndex: 1e3
+            }), _.$slides.eq(slideIndex).animate({
+                opacity: 1
+            }, _.options.speed, _.options.easing, callback)) : (_.applyTransition(slideIndex), _.$slides.eq(slideIndex).css({
+                opacity: 1,
+                zIndex: 1e3
+            }), callback && setTimeout(function() {
+                _.disableTransition(slideIndex), callback.call()
+            }, _.options.speed))
+        }, Slick.prototype.filterSlides = Slick.prototype.slickFilter = function(filter) {
+            var _ = this;
+            null !== filter && (_.unload(), _.$slideTrack.children(this.options.slide).detach(), _.$slidesCache.filter(filter).appendTo(_.$slideTrack), _.reinit())
+        }, Slick.prototype.getCurrent = Slick.prototype.slickCurrentSlide = function() {
+            var _ = this;
+            return _.currentSlide
+        }, Slick.prototype.getDotCount = function() {
+            var _ = this,
+                breakPoint = 0,
+                counter = 0,
+                pagerQty = 0;
+            if (_.options.infinite === !0) pagerQty = Math.ceil(_.slideCount / _.options.slidesToScroll);
+            else if (_.options.centerMode === !0) pagerQty = _.slideCount;
+            else
+                for (; breakPoint < _.slideCount;) ++pagerQty, breakPoint = counter + _.options.slidesToShow, counter += _.options.slidesToScroll <= _.options.slidesToShow ? _.options.slidesToScroll : _.options.slidesToShow;
+            return pagerQty - 1
+        }, Slick.prototype.getLeft = function(slideIndex) {
+            var targetLeft, verticalHeight, targetSlide, _ = this,
+                verticalOffset = 0;
+            return _.slideOffset = 0, verticalHeight = _.$slides.first().outerHeight(), _.options.infinite === !0 ? (_.slideCount > _.options.slidesToShow && (_.slideOffset = _.slideWidth * _.options.slidesToShow * -1, verticalOffset = verticalHeight * _.options.slidesToShow * -1), _.slideCount % _.options.slidesToScroll !== 0 && slideIndex + _.options.slidesToScroll > _.slideCount && _.slideCount > _.options.slidesToShow && (slideIndex > _.slideCount ? (_.slideOffset = (_.options.slidesToShow - (slideIndex - _.slideCount)) * _.slideWidth * -1, verticalOffset = (_.options.slidesToShow - (slideIndex - _.slideCount)) * verticalHeight * -1) : (_.slideOffset = _.slideCount % _.options.slidesToScroll * _.slideWidth * -1, verticalOffset = _.slideCount % _.options.slidesToScroll * verticalHeight * -1))) : slideIndex + _.options.slidesToShow > _.slideCount && (_.slideOffset = (slideIndex + _.options.slidesToShow - _.slideCount) * _.slideWidth, verticalOffset = (slideIndex + _.options.slidesToShow - _.slideCount) * verticalHeight), _.slideCount <= _.options.slidesToShow && (_.slideOffset = 0, verticalOffset = 0), _.options.centerMode === !0 && _.options.infinite === !0 ? _.slideOffset += _.slideWidth * Math.floor(_.options.slidesToShow / 2) - _.slideWidth : _.options.centerMode === !0 && (_.slideOffset = 0, _.slideOffset += _.slideWidth * Math.floor(_.options.slidesToShow / 2)), targetLeft = _.options.vertical === !1 ? slideIndex * _.slideWidth * -1 + _.slideOffset : slideIndex * verticalHeight * -1 + verticalOffset, _.options.variableWidth === !0 && (targetSlide = _.$slideTrack.children(".slick-slide").eq(_.slideCount <= _.options.slidesToShow || _.options.infinite === !1 ? slideIndex : slideIndex + _.options.slidesToShow), targetLeft = targetSlide[0] ? -1 * targetSlide[0].offsetLeft : 0, _.options.centerMode === !0 && (targetSlide = _.$slideTrack.children(".slick-slide").eq(_.options.infinite === !1 ? slideIndex : slideIndex + _.options.slidesToShow + 1), targetLeft = targetSlide[0] ? -1 * targetSlide[0].offsetLeft : 0, targetLeft += (_.$list.width() - targetSlide.outerWidth()) / 2)), targetLeft
+        }, Slick.prototype.getOption = Slick.prototype.slickGetOption = function(option) {
+            var _ = this;
+            return _.options[option]
+        }, Slick.prototype.getNavigableIndexes = function() {
+            var max, _ = this,
+                breakPoint = 0,
+                counter = 0,
+                indexes = [];
+            for (_.options.infinite === !1 ? (max = _.slideCount - _.options.slidesToShow + 1, _.options.centerMode === !0 && (max = _.slideCount)) : (breakPoint = -1 * _.slideCount, counter = -1 * _.slideCount, max = 2 * _.slideCount); max > breakPoint;) indexes.push(breakPoint), breakPoint = counter + _.options.slidesToScroll, counter += _.options.slidesToScroll <= _.options.slidesToShow ? _.options.slidesToScroll : _.options.slidesToShow;
+            return indexes
+        }, Slick.prototype.getSlick = function() {
+            return this
+        }, Slick.prototype.getSlideCount = function() {
+            var slidesTraversed, swipedSlide, centerOffset, _ = this;
+            return centerOffset = _.options.centerMode === !0 ? _.slideWidth * Math.floor(_.options.slidesToShow / 2) : 0, _.options.swipeToSlide === !0 ? (_.$slideTrack.find(".slick-slide").each(function(index, slide) {
+                return slide.offsetLeft - centerOffset + $(slide).outerWidth() / 2 > -1 * _.swipeLeft ? (swipedSlide = slide, !1) : void 0
+            }), slidesTraversed = Math.abs($(swipedSlide).attr("data-slick-index") - _.currentSlide) || 1) : _.options.slidesToScroll
+        }, Slick.prototype.goTo = Slick.prototype.slickGoTo = function(slide, dontAnimate) {
+            var _ = this;
+            _.changeSlide({
+                data: {
+                    message: "index",
+                    index: parseInt(slide)
+                }
+            }, dontAnimate)
+        }, Slick.prototype.init = function() {
+            var _ = this;
+            $(_.$slider).hasClass("slick-initialized") || ($(_.$slider).addClass("slick-initialized"), _.buildOut(), _.setProps(), _.startLoad(), _.loadSlider(), _.initializeEvents(), _.updateArrows(), _.updateDots()), _.$slider.trigger("init", [_])
+        }, Slick.prototype.initArrowEvents = function() {
+            var _ = this;
+            _.options.arrows === !0 && _.slideCount > _.options.slidesToShow && (_.$prevArrow.on("click.slick", {
+                message: "previous"
+            }, _.changeSlide), _.$nextArrow.on("click.slick", {
+                message: "next"
+            }, _.changeSlide))
+        }, Slick.prototype.initDotEvents = function() {
+            var _ = this;
+            _.options.dots === !0 && _.slideCount > _.options.slidesToShow && $("li", _.$dots).on("click.slick", {
+                message: "index"
+            }, _.changeSlide), _.options.dots === !0 && _.options.pauseOnDotsHover === !0 && _.options.autoplay === !0 && $("li", _.$dots).on("mouseenter.slick", function() {
+                _.paused = !0, _.autoPlayClear()
+            }).on("mouseleave.slick", function() {
+                _.paused = !1, _.autoPlay()
+            })
+        }, Slick.prototype.initializeEvents = function() {
+            var _ = this;
+            _.initArrowEvents(), _.initDotEvents(), _.$list.on("touchstart.slick mousedown.slick", {
+                action: "start"
+            }, _.swipeHandler), _.$list.on("touchmove.slick mousemove.slick", {
+                action: "move"
+            }, _.swipeHandler), _.$list.on("touchend.slick mouseup.slick", {
+                action: "end"
+            }, _.swipeHandler), _.$list.on("touchcancel.slick mouseleave.slick", {
+                action: "end"
+            }, _.swipeHandler), _.$list.on("click.slick", _.clickHandler), _.options.autoplay === !0 && ($(document).on(_.visibilityChange, function() {
+                _.visibility()
+            }), _.options.pauseOnHover === !0 && (_.$list.on("mouseenter.slick", function() {
+                _.paused = !0, _.autoPlayClear()
+            }), _.$list.on("mouseleave.slick", function() {
+                _.paused = !1, _.autoPlay()
+            }))), _.options.accessibility === !0 && _.$list.on("keydown.slick", _.keyHandler), _.options.focusOnSelect === !0 && $(_.$slideTrack).children().on("click.slick", _.selectHandler), $(window).on("orientationchange.slick.slick-" + _.instanceUid, function() {
+                _.checkResponsive(), _.setPosition()
+            }), $(window).on("resize.slick.slick-" + _.instanceUid, function() {
+                $(window).width() !== _.windowWidth && (clearTimeout(_.windowDelay), _.windowDelay = window.setTimeout(function() {
+                    _.windowWidth = $(window).width(), _.checkResponsive(), _.setPosition()
+                }, 50))
+            }), $("*[draggable!=true]", _.$slideTrack).on("dragstart", function(e) {
+                e.preventDefault()
+            }), $(window).on("load.slick.slick-" + _.instanceUid, _.setPosition), $(document).on("ready.slick.slick-" + _.instanceUid, _.setPosition)
+        }, Slick.prototype.initUI = function() {
+            var _ = this;
+            _.options.arrows === !0 && _.slideCount > _.options.slidesToShow && (_.$prevArrow.show(), _.$nextArrow.show()), _.options.dots === !0 && _.slideCount > _.options.slidesToShow && _.$dots.show(), _.options.autoplay === !0 && _.autoPlay()
+        }, Slick.prototype.keyHandler = function(event) {
+            var _ = this;
+            37 === event.keyCode && _.options.accessibility === !0 ? _.changeSlide({
+                data: {
+                    message: "previous"
+                }
+            }) : 39 === event.keyCode && _.options.accessibility === !0 && _.changeSlide({
+                data: {
+                    message: "next"
+                }
+            })
+        }, Slick.prototype.lazyLoad = function() {
+            function loadImages(imagesScope) {
+                $("img[data-lazy]", imagesScope).each(function() {
+                    var image = $(this),
+                        imageSource = $(this).attr("data-lazy");
+                    image.load(function() {
+                        image.animate({
+                            opacity: 1
+                        }, 200)
+                    }).css({
+                        opacity: 0
+                    }).attr("src", imageSource).removeAttr("data-lazy").removeClass("slick-loading")
+                })
+            }
+            var loadRange, cloneRange, rangeStart, rangeEnd, _ = this;
+            _.options.centerMode === !0 ? _.options.infinite === !0 ? (rangeStart = _.currentSlide + (_.options.slidesToShow / 2 + 1), rangeEnd = rangeStart + _.options.slidesToShow + 2) : (rangeStart = Math.max(0, _.currentSlide - (_.options.slidesToShow / 2 + 1)), rangeEnd = 2 + (_.options.slidesToShow / 2 + 1) + _.currentSlide) : (rangeStart = _.options.infinite ? _.options.slidesToShow + _.currentSlide : _.currentSlide, rangeEnd = rangeStart + _.options.slidesToShow, _.options.fade === !0 && (rangeStart > 0 && rangeStart--, rangeEnd <= _.slideCount && rangeEnd++)), loadRange = _.$slider.find(".slick-slide").slice(rangeStart, rangeEnd), loadImages(loadRange), _.slideCount <= _.options.slidesToShow ? (cloneRange = _.$slider.find(".slick-slide"), loadImages(cloneRange)) : _.currentSlide >= _.slideCount - _.options.slidesToShow ? (cloneRange = _.$slider.find(".slick-cloned").slice(0, _.options.slidesToShow), loadImages(cloneRange)) : 0 === _.currentSlide && (cloneRange = _.$slider.find(".slick-cloned").slice(-1 * _.options.slidesToShow), loadImages(cloneRange))
+        }, Slick.prototype.loadSlider = function() {
+            var _ = this;
+            _.setPosition(), _.$slideTrack.css({
+                opacity: 1
+            }), _.$slider.removeClass("slick-loading"), _.initUI(), "progressive" === _.options.lazyLoad && _.progressiveLazyLoad()
+        }, Slick.prototype.next = Slick.prototype.slickNext = function() {
+            var _ = this;
+            _.changeSlide({
+                data: {
+                    message: "next"
+                }
+            })
+        }, Slick.prototype.pause = Slick.prototype.slickPause = function() {
+            var _ = this;
+            _.autoPlayClear(), _.paused = !0
+        }, Slick.prototype.play = Slick.prototype.slickPlay = function() {
+            var _ = this;
+            _.paused = !1, _.autoPlay()
+        }, Slick.prototype.postSlide = function(index) {
+            var _ = this;
+            _.$slider.trigger("afterChange", [_, index]), _.animating = !1, _.setPosition(), _.swipeLeft = null, _.options.autoplay === !0 && _.paused === !1 && _.autoPlay()
+        }, Slick.prototype.prev = Slick.prototype.slickPrev = function() {
+            var _ = this;
+            _.changeSlide({
+                data: {
+                    message: "previous"
+                }
+            })
+        }, Slick.prototype.progressiveLazyLoad = function() {
+            var imgCount, targetImage, _ = this;
+            imgCount = $("img[data-lazy]", _.$slider).length, imgCount > 0 && (targetImage = $("img[data-lazy]", _.$slider).first(), targetImage.attr("src", targetImage.attr("data-lazy")).removeClass("slick-loading").load(function() {
+                targetImage.removeAttr("data-lazy"), _.progressiveLazyLoad(), _.options.adaptiveHeight === !0 && _.setPosition()
+            }).error(function() {
+                targetImage.removeAttr("data-lazy"), _.progressiveLazyLoad()
+            }))
+        }, Slick.prototype.refresh = function() {
+            var _ = this,
+                currentSlide = _.currentSlide;
+            _.destroy(), $.extend(_, _.initials), _.init(), _.changeSlide({
+                data: {
+                    message: "index",
+                    index: currentSlide
+                }
+            }, !0)
+        }, Slick.prototype.reinit = function() {
+            var _ = this;
+            _.$slides = _.$slideTrack.children(_.options.slide).addClass("slick-slide"), _.slideCount = _.$slides.length, _.currentSlide >= _.slideCount && 0 !== _.currentSlide && (_.currentSlide = _.currentSlide - _.options.slidesToScroll), _.slideCount <= _.options.slidesToShow && (_.currentSlide = 0), _.setProps(), _.setupInfinite(), _.buildArrows(), _.updateArrows(), _.initArrowEvents(), _.buildDots(), _.updateDots(), _.initDotEvents(), _.options.focusOnSelect === !0 && $(_.$slideTrack).children().on("click.slick", _.selectHandler), _.setSlideClasses(0), _.setPosition(), _.$slider.trigger("reInit", [_])
+        }, Slick.prototype.removeSlide = Slick.prototype.slickRemove = function(index, removeBefore, removeAll) {
+            var _ = this;
+            return "boolean" == typeof index ? (removeBefore = index, index = removeBefore === !0 ? 0 : _.slideCount - 1) : index = removeBefore === !0 ? --index : index, _.slideCount < 1 || 0 > index || index > _.slideCount - 1 ? !1 : (_.unload(), removeAll === !0 ? _.$slideTrack.children().remove() : _.$slideTrack.children(this.options.slide).eq(index).remove(), _.$slides = _.$slideTrack.children(this.options.slide), _.$slideTrack.children(this.options.slide).detach(), _.$slideTrack.append(_.$slides), _.$slidesCache = _.$slides, void _.reinit())
+        }, Slick.prototype.setCSS = function(position) {
+            var x, y, _ = this,
+                positionProps = {};
+            _.options.rtl === !0 && (position = -position), x = "left" == _.positionProp ? Math.ceil(position) + "px" : "0px", y = "top" == _.positionProp ? Math.ceil(position) + "px" : "0px", positionProps[_.positionProp] = position, _.transformsEnabled === !1 ? _.$slideTrack.css(positionProps) : (positionProps = {}, _.cssTransitions === !1 ? (positionProps[_.animType] = "translate(" + x + ", " + y + ")", _.$slideTrack.css(positionProps)) : (positionProps[_.animType] = "translate3d(" + x + ", " + y + ", 0px)", _.$slideTrack.css(positionProps)))
+        }, Slick.prototype.setDimensions = function() {
+            var _ = this;
+            if (_.options.vertical === !1 ? _.options.centerMode === !0 && _.$list.css({
+                    padding: "0px " + _.options.centerPadding
+                }) : (_.$list.height(_.$slides.first().outerHeight(!0) * _.options.slidesToShow), _.options.centerMode === !0 && _.$list.css({
+                    padding: _.options.centerPadding + " 0px"
+                })), _.listWidth = _.$list.width(), _.listHeight = _.$list.height(), _.options.vertical === !1 && _.options.variableWidth === !1) _.slideWidth = Math.ceil(_.listWidth / _.options.slidesToShow), _.$slideTrack.width(Math.ceil(_.slideWidth * _.$slideTrack.children(".slick-slide").length));
+            else if (_.options.variableWidth === !0) {
+                var trackWidth = 0;
+                _.slideWidth = Math.ceil(_.listWidth / _.options.slidesToShow), _.$slideTrack.children(".slick-slide").each(function() {
+                    trackWidth += _.listWidth
+                }), _.$slideTrack.width(Math.ceil(trackWidth) + 1)
+            } else _.slideWidth = Math.ceil(_.listWidth), _.$slideTrack.height(Math.ceil(_.$slides.first().outerHeight(!0) * _.$slideTrack.children(".slick-slide").length));
+            var offset = _.$slides.first().outerWidth(!0) - _.$slides.first().width();
+            _.options.variableWidth === !1 && _.$slideTrack.children(".slick-slide").width(_.slideWidth - offset)
+        }, Slick.prototype.setFade = function() {
+            var targetLeft, _ = this;
+            _.$slides.each(function(index, element) {
+                targetLeft = _.slideWidth * index * -1, $(element).css(_.options.rtl === !0 ? {
+                    position: "relative",
+                    right: targetLeft,
+                    top: 0,
+                    zIndex: 800,
+                    opacity: 0
+                } : {
+                    position: "relative",
+                    left: targetLeft,
+                    top: 0,
+                    zIndex: 800,
+                    opacity: 0
+                })
+            }), _.$slides.eq(_.currentSlide).css({
+                zIndex: 900,
+                opacity: 1
+            })
+        }, Slick.prototype.setHeight = function() {
+            var _ = this;
+            if (1 === _.options.slidesToShow && _.options.adaptiveHeight === !0 && _.options.vertical === !1) {
+                var targetHeight = _.$slides.eq(_.currentSlide).outerHeight(!0);
+                _.$list.css("height", targetHeight)
+            }
+        }, Slick.prototype.setOption = Slick.prototype.slickSetOption = function(option, value, refresh) {
+            var _ = this;
+            _.options[option] = value, refresh === !0 && (_.unload(), _.reinit())
+        }, Slick.prototype.setPosition = function() {
+            var _ = this;
+            _.setDimensions(), _.setHeight(), _.options.fade === !1 ? _.setCSS(_.getLeft(_.currentSlide)) : _.setFade(), _.$slider.trigger("setPosition", [_])
+        }, Slick.prototype.setProps = function() {
+            var _ = this,
+                bodyStyle = document.body.style;
+            _.positionProp = _.options.vertical === !0 ? "top" : "left", "top" === _.positionProp ? _.$slider.addClass("slick-vertical") : _.$slider.removeClass("slick-vertical"), (void 0 !== bodyStyle.WebkitTransition || void 0 !== bodyStyle.MozTransition || void 0 !== bodyStyle.msTransition) && _.options.useCSS === !0 && (_.cssTransitions = !0), void 0 !== bodyStyle.OTransform && (_.animType = "OTransform", _.transformType = "-o-transform", _.transitionType = "OTransition", void 0 === bodyStyle.perspectiveProperty && void 0 === bodyStyle.webkitPerspective && (_.animType = !1)), void 0 !== bodyStyle.MozTransform && (_.animType = "MozTransform", _.transformType = "-moz-transform", _.transitionType = "MozTransition", void 0 === bodyStyle.perspectiveProperty && void 0 === bodyStyle.MozPerspective && (_.animType = !1)), void 0 !== bodyStyle.webkitTransform && (_.animType = "webkitTransform", _.transformType = "-webkit-transform", _.transitionType = "webkitTransition", void 0 === bodyStyle.perspectiveProperty && void 0 === bodyStyle.webkitPerspective && (_.animType = !1)), void 0 !== bodyStyle.msTransform && (_.animType = "msTransform", _.transformType = "-ms-transform", _.transitionType = "msTransition", void 0 === bodyStyle.msTransform && (_.animType = !1)), void 0 !== bodyStyle.transform && _.animType !== !1 && (_.animType = "transform", _.transformType = "transform", _.transitionType = "transition"), _.transformsEnabled = null !== _.animType && _.animType !== !1
+        }, Slick.prototype.setSlideClasses = function(index) {
+            var centerOffset, allSlides, indexOffset, remainder, _ = this;
+            _.$slider.find(".slick-slide").removeClass("slick-active").attr("aria-hidden", "true").removeClass("slick-center"), allSlides = _.$slider.find(".slick-slide"), _.options.centerMode === !0 ? (centerOffset = Math.floor(_.options.slidesToShow / 2), _.options.infinite === !0 && (index >= centerOffset && index <= _.slideCount - 1 - centerOffset ? _.$slides.slice(index - centerOffset, index + centerOffset + 1).addClass("slick-active").attr("aria-hidden", "false") : (indexOffset = _.options.slidesToShow + index, allSlides.slice(indexOffset - centerOffset + 1, indexOffset + centerOffset + 2).addClass("slick-active").attr("aria-hidden", "false")), 0 === index ? allSlides.eq(allSlides.length - 1 - _.options.slidesToShow).addClass("slick-center") : index === _.slideCount - 1 && allSlides.eq(_.options.slidesToShow).addClass("slick-center")), _.$slides.eq(index).addClass("slick-center")) : index >= 0 && index <= _.slideCount - _.options.slidesToShow ? _.$slides.slice(index, index + _.options.slidesToShow).addClass("slick-active").attr("aria-hidden", "false") : allSlides.length <= _.options.slidesToShow ? allSlides.addClass("slick-active").attr("aria-hidden", "false") : (remainder = _.slideCount % _.options.slidesToShow, indexOffset = _.options.infinite === !0 ? _.options.slidesToShow + index : index, _.options.slidesToShow == _.options.slidesToScroll && _.slideCount - index < _.options.slidesToShow ? allSlides.slice(indexOffset - (_.options.slidesToShow - remainder), indexOffset + remainder).addClass("slick-active").attr("aria-hidden", "false") : allSlides.slice(indexOffset, indexOffset + _.options.slidesToShow).addClass("slick-active").attr("aria-hidden", "false")), "ondemand" === _.options.lazyLoad && _.lazyLoad()
+        }, Slick.prototype.setupInfinite = function() {
+            var i, slideIndex, infiniteCount, _ = this;
+            if (_.options.fade === !0 && (_.options.centerMode = !1), _.options.infinite === !0 && _.options.fade === !1 && (slideIndex = null, _.slideCount > _.options.slidesToShow)) {
+                for (infiniteCount = _.options.centerMode === !0 ? _.options.slidesToShow + 1 : _.options.slidesToShow, i = _.slideCount; i > _.slideCount - infiniteCount; i -= 1) slideIndex = i - 1, $(_.$slides[slideIndex]).clone(!0).attr("id", "").attr("data-slick-index", slideIndex - _.slideCount).prependTo(_.$slideTrack).addClass("slick-cloned");
+                for (i = 0; infiniteCount > i; i += 1) slideIndex = i, $(_.$slides[slideIndex]).clone(!0).attr("id", "").attr("data-slick-index", slideIndex + _.slideCount).appendTo(_.$slideTrack).addClass("slick-cloned");
+                _.$slideTrack.find(".slick-cloned").find("[id]").each(function() {
+                    $(this).attr("id", "")
+                })
+            }
+        }, Slick.prototype.selectHandler = function(event) {
+            var _ = this,
+                index = parseInt($(event.target).parents(".slick-slide").attr("data-slick-index"));
+            return index || (index = 0), _.slideCount <= _.options.slidesToShow ? (_.$slider.find(".slick-slide").removeClass("slick-active").attr("aria-hidden", "true"), _.$slides.eq(index).addClass("slick-active").attr("aria-hidden", "false"), _.options.centerMode === !0 && (_.$slider.find(".slick-slide").removeClass("slick-center"), _.$slides.eq(index).addClass("slick-center")), void _.asNavFor(index)) : void _.slideHandler(index)
+        }, Slick.prototype.slideHandler = function(index, sync, dontAnimate) {
+            var targetSlide, animSlide, oldSlide, slideLeft, targetLeft = null,
+                _ = this;
+            return sync = sync || !1, _.animating === !0 && _.options.waitForAnimate === !0 || _.options.fade === !0 && _.currentSlide === index || _.slideCount <= _.options.slidesToShow ? void 0 : (sync === !1 && _.asNavFor(index), targetSlide = index, targetLeft = _.getLeft(targetSlide), slideLeft = _.getLeft(_.currentSlide), _.currentLeft = null === _.swipeLeft ? slideLeft : _.swipeLeft, _.options.infinite === !1 && _.options.centerMode === !1 && (0 > index || index > _.getDotCount() * _.options.slidesToScroll) ? void(_.options.fade === !1 && (targetSlide = _.currentSlide, dontAnimate !== !0 ? _.animateSlide(slideLeft, function() {
+                _.postSlide(targetSlide)
+            }) : _.postSlide(targetSlide))) : _.options.infinite === !1 && _.options.centerMode === !0 && (0 > index || index > _.slideCount - _.options.slidesToScroll) ? void(_.options.fade === !1 && (targetSlide = _.currentSlide, dontAnimate !== !0 ? _.animateSlide(slideLeft, function() {
+                _.postSlide(targetSlide)
+            }) : _.postSlide(targetSlide))) : (_.options.autoplay === !0 && clearInterval(_.autoPlayTimer), animSlide = 0 > targetSlide ? _.slideCount % _.options.slidesToScroll !== 0 ? _.slideCount - _.slideCount % _.options.slidesToScroll : _.slideCount + targetSlide : targetSlide >= _.slideCount ? _.slideCount % _.options.slidesToScroll !== 0 ? 0 : targetSlide - _.slideCount : targetSlide, _.animating = !0, _.$slider.trigger("beforeChange", [_, _.currentSlide, animSlide]), oldSlide = _.currentSlide, _.currentSlide = animSlide, _.setSlideClasses(_.currentSlide), _.updateDots(), _.updateArrows(), _.options.fade === !0 ? (dontAnimate !== !0 ? _.fadeSlide(animSlide, function() {
+                _.postSlide(animSlide)
+            }) : _.postSlide(animSlide), void _.animateHeight()) : void(dontAnimate !== !0 ? _.animateSlide(targetLeft, function() {
+                _.postSlide(animSlide)
+            }) : _.postSlide(animSlide))))
+        }, Slick.prototype.startLoad = function() {
+            var _ = this;
+            _.options.arrows === !0 && _.slideCount > _.options.slidesToShow && (_.$prevArrow.hide(), _.$nextArrow.hide()), _.options.dots === !0 && _.slideCount > _.options.slidesToShow && _.$dots.hide(), _.$slider.addClass("slick-loading")
+        }, Slick.prototype.swipeDirection = function() {
+            var xDist, yDist, r, swipeAngle, _ = this;
+            return xDist = _.touchObject.startX - _.touchObject.curX, yDist = _.touchObject.startY - _.touchObject.curY, r = Math.atan2(yDist, xDist), swipeAngle = Math.round(180 * r / Math.PI), 0 > swipeAngle && (swipeAngle = 360 - Math.abs(swipeAngle)), 45 >= swipeAngle && swipeAngle >= 0 ? _.options.rtl === !1 ? "left" : "right" : 360 >= swipeAngle && swipeAngle >= 315 ? _.options.rtl === !1 ? "left" : "right" : swipeAngle >= 135 && 225 >= swipeAngle ? _.options.rtl === !1 ? "right" : "left" : "vertical"
+        }, Slick.prototype.swipeEnd = function() {
+            var slideCount, _ = this;
+            if (_.dragging = !1, _.shouldClick = _.touchObject.swipeLength > 10 ? !1 : !0, void 0 === _.touchObject.curX) return !1;
+            if (_.touchObject.edgeHit === !0 && _.$slider.trigger("edge", [_, _.swipeDirection()]), _.touchObject.swipeLength >= _.touchObject.minSwipe) switch (_.swipeDirection()) {
+                case "left":
+                    slideCount = _.options.swipeToSlide ? _.checkNavigable(_.currentSlide + _.getSlideCount()) : _.currentSlide + _.getSlideCount(), _.slideHandler(slideCount), _.currentDirection = 0, _.touchObject = {}, _.$slider.trigger("swipe", [_, "left"]);
+                    break;
+                case "right":
+                    slideCount = _.options.swipeToSlide ? _.checkNavigable(_.currentSlide - _.getSlideCount()) : _.currentSlide - _.getSlideCount(), _.slideHandler(slideCount), _.currentDirection = 1, _.touchObject = {}, _.$slider.trigger("swipe", [_, "right"])
+            } else _.touchObject.startX !== _.touchObject.curX && (_.slideHandler(_.currentSlide), _.touchObject = {})
+        }, Slick.prototype.swipeHandler = function(event) {
+            var _ = this;
+            if (!(_.options.swipe === !1 || "ontouchend" in document && _.options.swipe === !1 || _.options.draggable === !1 && -1 !== event.type.indexOf("mouse"))) switch (_.touchObject.fingerCount = event.originalEvent && void 0 !== event.originalEvent.touches ? event.originalEvent.touches.length : 1, _.touchObject.minSwipe = _.listWidth / _.options.touchThreshold, event.data.action) {
+                case "start":
+                    _.swipeStart(event);
+                    break;
+                case "move":
+                    _.swipeMove(event);
+                    break;
+                case "end":
+                    _.swipeEnd(event)
+            }
+        }, Slick.prototype.swipeMove = function(event) {
+            var curLeft, swipeDirection, swipeLength, positionOffset, touches, _ = this;
+            return touches = void 0 !== event.originalEvent ? event.originalEvent.touches : null, !_.dragging || touches && 1 !== touches.length ? !1 : (curLeft = _.getLeft(_.currentSlide), _.touchObject.curX = void 0 !== touches ? touches[0].pageX : event.clientX, _.touchObject.curY = void 0 !== touches ? touches[0].pageY : event.clientY, _.touchObject.swipeLength = Math.round(Math.sqrt(Math.pow(_.touchObject.curX - _.touchObject.startX, 2))), swipeDirection = _.swipeDirection(), "vertical" !== swipeDirection ? (void 0 !== event.originalEvent && _.touchObject.swipeLength > 4 && event.preventDefault(), positionOffset = (_.options.rtl === !1 ? 1 : -1) * (_.touchObject.curX > _.touchObject.startX ? 1 : -1), swipeLength = _.touchObject.swipeLength, _.touchObject.edgeHit = !1, _.options.infinite === !1 && (0 === _.currentSlide && "right" === swipeDirection || _.currentSlide >= _.getDotCount() && "left" === swipeDirection) && (swipeLength = _.touchObject.swipeLength * _.options.edgeFriction, _.touchObject.edgeHit = !0), _.swipeLeft = _.options.vertical === !1 ? curLeft + swipeLength * positionOffset : curLeft + swipeLength * (_.$list.height() / _.listWidth) * positionOffset, _.options.fade === !0 || _.options.touchMove === !1 ? !1 : _.animating === !0 ? (_.swipeLeft = null, !1) : void _.setCSS(_.swipeLeft)) : void 0)
+        }, Slick.prototype.swipeStart = function(event) {
+            var touches, _ = this;
+            return 1 !== _.touchObject.fingerCount || _.slideCount <= _.options.slidesToShow ? (_.touchObject = {}, !1) : (void 0 !== event.originalEvent && void 0 !== event.originalEvent.touches && (touches = event.originalEvent.touches[0]), _.touchObject.startX = _.touchObject.curX = void 0 !== touches ? touches.pageX : event.clientX, _.touchObject.startY = _.touchObject.curY = void 0 !== touches ? touches.pageY : event.clientY, void(_.dragging = !0))
+        }, Slick.prototype.unfilterSlides = Slick.prototype.slickUnfilter = function() {
+            var _ = this;
+            null !== _.$slidesCache && (_.unload(), _.$slideTrack.children(this.options.slide).detach(), _.$slidesCache.appendTo(_.$slideTrack), _.reinit())
+        }, Slick.prototype.unload = function() {
+            var _ = this;
+            $(".slick-cloned", _.$slider).remove(), _.$dots && _.$dots.remove(), _.$prevArrow && "object" != typeof _.options.prevArrow && _.$prevArrow.remove(), _.$nextArrow && "object" != typeof _.options.nextArrow && _.$nextArrow.remove(), _.$slides.removeClass("slick-slide slick-active slick-visible").attr("aria-hidden", "true").css("width", "")
+        }, Slick.prototype.unslick = function() {
+            var _ = this;
+            _.destroy()
+        }, Slick.prototype.updateArrows = function() {
+            var centerOffset, _ = this;
+            centerOffset = Math.floor(_.options.slidesToShow / 2), _.options.arrows === !0 && _.options.infinite !== !0 && _.slideCount > _.options.slidesToShow && (_.$prevArrow.removeClass("slick-disabled"), _.$nextArrow.removeClass("slick-disabled"), 0 === _.currentSlide ? (_.$prevArrow.addClass("slick-disabled"), _.$nextArrow.removeClass("slick-disabled")) : _.currentSlide >= _.slideCount - _.options.slidesToShow && _.options.centerMode === !1 ? (_.$nextArrow.addClass("slick-disabled"), _.$prevArrow.removeClass("slick-disabled")) : _.currentSlide >= _.slideCount - 1 && _.options.centerMode === !0 && (_.$nextArrow.addClass("slick-disabled"), _.$prevArrow.removeClass("slick-disabled")))
+        }, Slick.prototype.updateDots = function() {
+            var _ = this;
+            null !== _.$dots && (_.$dots.find("li").removeClass("slick-active").attr("aria-hidden", "true"), _.$dots.find("li").eq(Math.floor(_.currentSlide / _.options.slidesToScroll)).addClass("slick-active").attr("aria-hidden", "false"))
+        }, Slick.prototype.visibility = function() {
+            var _ = this;
+            document[_.hidden] ? (_.paused = !0, _.autoPlayClear()) : (_.paused = !1, _.autoPlay())
+        }, $.fn.slick = function() {
+            var ret, _ = this,
+                opt = arguments[0],
+                args = Array.prototype.slice.call(arguments, 1),
+                l = _.length,
+                i = 0;
+            for (i; l > i; i++)
+                if ("object" == typeof opt || "undefined" == typeof opt ? _[i].slick = new Slick(_[i], opt) : ret = _[i].slick[opt].apply(_[i].slick, args), "undefined" != typeof ret) return ret;
+            return _
+        }, $(function() {
+            $("[data-slick]").slick()
         })
-    }, "undefined" != typeof exports ? ("undefined" != typeof module && module.exports && (exports = module.exports = lib), exports.accounting = lib) : "function" == typeof define && define.amd ? define([], function() {
-        return lib
-    }) : (lib.noConflict = function(oldAccounting) {
-        return function() {
-            return root.accounting = oldAccounting, lib.noConflict = undefined, lib
-        }
-    }(root.accounting), root.accounting = lib)
-}(this));
+    });
 var Slider = function(element, options) {
     var self = this;
-    if (element || Log({
-            level: 4,
-            message: "Slider: Element " + element + " not found",
-            type: "error"
-        }), this.options = {
-            orientation: "horizontal",
-            intervalTime: 5e3,
-            transitionTime: 1,
-            pagerSteps: 1,
-            startPosition: 0,
-            auto: !0,
-            autoDirection: "next",
-            pauseOnHover: !0,
-            showControls: !0,
-            height: null,
-            width: null,
-            wrapper: ".slider-wrapper",
-            productcarousel: !1,
-            animation: "slide",
-            initPrudsysEvent: !0,
-            halfslider: !1,
-            contentSlider: !1
-        }, void 0 !== options)
-        for (var i in options) this.options.hasOwnProperty(i) && (this.options[i] = options[i]);
-    self.init(element)
+    element || Log({
+        level: 4,
+        message: "Slider: Element " + element + " not found",
+        type: "error"
+    }), this.options = {
+        orientation: "horizontal",
+        intervalTime: 5e3,
+        pagerSteps: 1,
+        startPosition: 0,
+        adaptiveHeight: !1,
+        auto: !0,
+        autoDirection: "next",
+        pauseOnHover: !0,
+        showControls: !0,
+        wrapper: ".slick-wrapper",
+        productcarousel: !1,
+        initPrudsysEvent: !0,
+        halfslider: !1,
+        contentSlider: !1,
+        focusOnSelect: !1,
+        responsive: [],
+        animation: "slide",
+        prevArrow: '<div class="slick-slide-prev slide-navigator-left"></div>',
+        nextArrow: '<div class="slick-slide-next slide-navigator-right"></div>',
+        prevArrowTop: '<div class="slick-slide-prev slide-navigator-top"></div>',
+        nextArrowBottom: '<div class="slick-slide-next slide-navigator-bottom"></div>',
+        dots: !1,
+        slidesToShow: null,
+        asNavFor: null
+    }, this.options = helper.mergeObj(this.options, options), self.init(element)
 };
 Slider.prototype = {
     init: function(element) {
-        var loadFn, self = this;
-        this.element = $(element), this.prudsysProductData = (this.element.data("prudsys-products") || "") + "", this.prudsysProductArray = this.prudsysProductData.length <= 0 ? [] : this.prudsysProductData.split(","), this.wrapper = $(this.options.wrapper, this.element), this.imgs = this.element.find("img"), this.imgHeight = this.imgs.eq(0).height(), this.imgWidth = this.imgs.eq(0).width(), this.intervalWrapper = void 0, this.imgs.eq(0).length > 0 && (loadFn = function() {
-            if (self.itemCount = self.getSliderItemCount(), self.stageWidth = self.getRealStageWidth(), "fade" === self.options.animation) self.hideOtherSlides(), self.stageHeight = self.options.height, self.element.addClass("slider-component-fade"), self.element.height(self.stageHeight), self.setMaxSteps(Math.ceil(self.itemCount * self.getItemHeight() / self.options.height)), self.setCurrentStep(1), self.fade(), self.options.showControls && self.appendControls(), self.options.pauseOnHover && self.pauseOnHover();
-            else {
-                if (self.stageHeight = self.getRealStageHeight(), self.options.height ? (self.element.addClass("slider-component-vertical"), self.setMaxSteps(self.itemCount / Math.floor(self.stageHeight / self.getItemHeight()) === 1 ? 1 : Math.ceil(self.itemCount / self.options.pagerSteps)), self.setPagingDimension()) : (self.setDimensions(), self.setPagingDimension(), self.setMaxSteps(self.isOrientationVertical() ? Math.ceil(self.itemCount * self.getItemHeight() / self.getRealStageHeight()) : self.options.halfslider ? self.itemCount : Math.ceil(self.itemCount * self.getItemWidth() / self.options.width))), self.setCurrentStep(1), self.setTransistionTime(self.options.transitionTime), self.options.showControls && self.appendControls(), self.options.startPosition > 0 && self.options.startPosition < self.imgs.length - 1) {
-                    "VIDEO" === self.imgs.eq(self.options.startPosition).data("product-media-type") && self.options.startPosition++;
-                    for (var i = 0, l = self.options.startPosition; l > i; i++) self.next()
-                }
-                self.options.auto && (self.setAutoDirection(self.options.autoDirection), self.startAutoPlay()), self.options.pauseOnHover && self.pauseOnHover()
-            }
-        }, self.options.contentSlider || (this.imgs.eq(0).attr("height") || "").length > 0 ? loadFn() : this.imgs.eq(0).on("load", loadFn), this.sendPrudsysRecommitEvent(this.options.initPrudsysEvent)), this.sendPrudsysRecommitEvent(this.options.initPrudsysEvent)
+        var outerThis = this,
+            isVertical = "vertical" === this.options.orientation;
+        this.element = $(element), this.prudsysProductData = (this.element.data("prudsys-products") || "") + "", this.prudsysProductArray = this.prudsysProductData.length <= 0 ? [] : this.prudsysProductData.toString().split(","), this.wrapper = $(this.options.wrapper, this.element), this.moveDirection = "next" === this.options.autoDirection ? "next" : "prev", this.itemCount = this.getSliderItemCount(), this.setMaxSteps(this.options.halfslider ? this.itemCount : Math.ceil(this.itemCount / this.options.pagerSteps)), this.setCurrentStep(1), $(this.wrapper).closest(".scroller").addClass(isVertical ? "border" : "").end().slick({
+            adaptiveHeight: this.options.adaptiveHeight,
+            mobileFirst: !0,
+            prevArrow: isVertical ? this.options.prevArrowTop : this.options.prevArrow,
+            nextArrow: isVertical ? this.options.nextArrowBottom : this.options.nextArrow,
+            autoplay: this.options.auto,
+            autoplaySpeed: this.options.intervalTime,
+            fade: "slide" !== this.options.animation,
+            speed: 800,
+            infinite: "fade" === this.options.animation,
+            arrows: this.options.showControls,
+            vertical: isVertical,
+            focusOnSelect: this.options.focusOnSelect,
+            rtl: "next" !== this.options.autoDirection,
+            responsive: this.options.responsive,
+            pauseOnHover: this.options.pauseOnHover,
+            slidesToShow: this.options.slidesToShow || this.options.pagerSteps,
+            slidesToScroll: this.options.pagerSteps,
+            initialSlide: this.options.startPosition,
+            dots: this.options.dots,
+            asNavFor: this.options.asNavFor
+        }), shop.device.hasTouch && this.options.auto && ($(document).on("layeropen", function() {
+            $(outerThis.wrapper).slick("slickPause")
+        }), $(document).on("layerclose", function() {
+            $(outerThis.wrapper).slick("slickPlay")
+        })), this.slick = $(this.wrapper).slick("getSlick"), this.slick.length > 0 && (this.sendPrudsysRecommitEvent(this.options.initPrudsysEvent), $(this.wrapper).on("beforeChange", function(event, slick, currentSlide, nextSlide) {
+            this.moveDirection = nextSlide > currentSlide ? "next" : "prev"
+        }), $(this.wrapper).on("afterChange", function() {
+            "next" === this.moveDirection ? outerThis.next() : outerThis.prev()
+        }))
     },
     getOrderNumbersFromView: function() {
         var i, l, pagerSteps = this.options.pagerSteps,
-            currentStep = this.getCurrentStep(),
+            currentStep = this.slick.slickCurrentSlide(),
             maxSteps = this.getMaxSteps(),
-            startAtIndex = (currentStep - 1) * pagerSteps,
-            pArray = this.prudsysProductArray,
+            startAtIndex = currentStep,
+            pArray = this.prudsysProductArray || [],
             totalItems = this.getSliderItemCount(),
             dataString = "";
-        for (currentStep === maxSteps && totalItems > pagerSteps ? startAtIndex = totalItems - pagerSteps : pagerSteps > totalItems && (pagerSteps = totalItems), i = startAtIndex, l = startAtIndex + pagerSteps; l > i; i++) dataString += pArray[i] + ",";
-        return dataString
+        if (pArray.length > 0)
+            for (currentStep === maxSteps && totalItems > pagerSteps ? startAtIndex = totalItems - pagerSteps : pagerSteps > totalItems && (pagerSteps = totalItems), i = startAtIndex, l = startAtIndex + pagerSteps; l > i; i++) dataString += pArray[i] ? pArray[i] + "," : "";
+        return "" !== dataString ? dataString.replace(/,$/, "") : null
     },
     sendPrudsysRecommitEvent: function(init) {
-        var prudsysData = this.prudsysProductArray.length > 0 ? this.getOrderNumbersFromView() : null;
+        var prudsysData = this.getOrderNumbersFromView();
         !init && prudsysData ? shop.prudsysTracking.send(prudsysData) : init && prudsysData && shop.prudsysTracking.add(prudsysData)
     },
-    appendControls: function() {
-        if (1 == this.getMaxSteps()) return !1;
-        if (this.element.prepend('<a href="#prev" class="js-slider-prev slider-controls prev hide"></a><a href="#next" class="js-slider-next slider-controls next"></a>'), "fade" === this.options.animation && this.element.find(".js-slider-prev").removeClass("hide"), $(".js-slider-prev", this.element).on("click.slider", function(self) {
-                return function(event) {
-                    event.preventDefault(), self.prev()
-                }
-            }(this)), $(".js-slider-next", this.element).on("click.slider", function(self) {
-                return function(event) {
-                    event.preventDefault(), self.next()
-                }
-            }(this)), shop.device.hasTouch) {
-            var touchConfObj = {
-                    swipe_velocity: .2
-                },
-                gestures = "";
-            this.isOrientationVertical() ? (gestures = "dragup dragdown dragend swipeup swipedown", this.element.hammer(touchConfObj).off(gestures), this.element.hammer(touchConfObj).on(gestures, function(self) {
-                return function(event) {
-                    event.gesture.stopPropagation(), event.gesture.preventDefault(), "dragend" === event.type && (event.gesture.deltaY >= 20 ? self.prev() : event.gesture.deltaY <= -20 && self.next())
-                }
-            }(this))) : (gestures = "dragleft dragright dragend swipeleft swiperight", this.element.hammer(touchConfObj).off(gestures), this.element.hammer(touchConfObj).on(gestures, function(self) {
-                return function(event) {
-                    event.gesture.stopPropagation(), event.gesture.preventDefault(), "dragend" === event.type && (event.gesture.deltaX >= 20 ? self.prev() : event.gesture.deltaX <= -20 && self.next())
-                }
-            }(this)))
-        }
-    },
-    _showOrHideControls: function() {
-        var _currentStep = this.getCurrentStep(),
-            _maxSteps = this.getMaxSteps(),
-            $next = $(".next", this.element),
-            $prev = $(".prev", this.element),
-            $controlls = $next.add($prev);
-        this.options.showControls && _currentStep !== _maxSteps ? 0 === _currentStep || 1 === _currentStep ? ($prev.addClass("hide"), $next.removeClass("hide")) : _currentStep >= 2 && ($prev.removeClass("hide"), $next.removeClass("hide")) : this.options.showControls && _currentStep === _maxSteps ? ($next.addClass("hide"), $prev.removeClass("hide")) : this.options.showControls || $controlls.addClass("hide")
-    },
     next: function() {
-        var _currentStep = this.getCurrentStep(),
-            _maxSteps = this.getMaxSteps(),
-            _leftoverItem = this.getSliderItemCount() % this.options.pagerSteps,
-            _nextStep = _currentStep + 1 > this.getMaxSteps() ? 1 : _currentStep + 1,
-            _fadeInterval = 800,
-            _self = this.element;
-        if ("fade" === this.options.animation) $(".slider-item:nth-child(" + _currentStep + ")", this.element).stop(!1, !0).removeClass("fadein"), $(".slider-item:nth-child(" + _nextStep + ")", this.element).stop(!1, !0).addClass("fadein").fadeIn(_fadeInterval, function() {
-            $(".slider-item:nth-child(" + _currentStep + ")", _self).stop(!1, !0).hide()
-        }), this.setCurrentStep(_nextStep);
-        else {
-            if (_maxSteps > _currentStep) {
-                if (this.isProductCarousel())
-                    if (this.isOrientationVertical() || this.getCurrentStep() !== parseInt(_maxSteps - 1, 10) || 0 === _leftoverItem)
-                        if (this.isProductCarousel() && this.getCurrentStep() === parseInt(_maxSteps - 1, 10) && 0 !== _leftoverItem) this.wrapper.css(this.getAnimationProperty(), "-" + parseInt(parseInt(_currentStep - 1, 10) * this.getPagingDimensions() + _leftoverItem * this.getItemHeight(), 10) + "px");
-                        else if (this.isOrientationVertical() && this.getCurrentStep() === parseInt(_maxSteps - 1, 10)) {
-                            var calculateHeight = Math.abs(_currentStep * this.getPagingDimensions() - this.options.pagerSteps * this.getItemHeight()) + _leftoverItem * this.getItemHeight();
-                            this.wrapper.css(this.getAnimationProperty(), "-" + parseInt(calculateHeight, 10) + "px")
-                        } else this.options.halfslider ? this.wrapper.css(this.getAnimationProperty(), "-" + parseInt(_currentStep * this.getItemWidth() - this.getItemWidth() / 2, 10) + "px") : this.wrapper.css(this.getAnimationProperty(), "-" + parseInt(_currentStep * this.getPagingDimensions(), 10) + "px");
-                    else this.options.halfslider ? this.wrapper.css(this.getAnimationProperty(), "-" + parseInt((parseInt(_currentStep - 1, 10) * this.getPagingDimensions() + _leftoverItem * this.getItemWidth()) / 2, 10) + "px") : this.wrapper.css(this.getAnimationProperty(), "-" + parseInt(parseInt(_currentStep - 1, 10) * this.getPagingDimensions() + _leftoverItem * this.getItemWidth(), 10) + "px");
-                else {
-                    var _pagingDimension = _currentStep * this.getItemHeight() * this.options.pagerSteps;
-                    if (_currentStep + 1 === _maxSteps) {
-                        _leftoverItem = 0 === _leftoverItem ? 3 : _leftoverItem;
-                        var calculateHeight = _pagingDimension - (this.options.height - _leftoverItem * this.getItemHeight());
-                        this.wrapper.css(this.getAnimationProperty(), "-" + parseInt(calculateHeight, 10) + "px")
-                    } else this.wrapper.css(this.getAnimationProperty(), "-" + parseInt(_pagingDimension, 10) + "px")
-                }
-                this.setCurrentStep(_currentStep + 1)
-            }
-            this._showOrHideControls()
-        }
-        this.sendPrudsysRecommitEvent()
+        var _nextStep, _currentStep = this.getCurrentStep(),
+            _maxSteps = this.getMaxSteps();
+        _nextStep = this.slick.slickGetOption("infinite") ? _currentStep + 1 > _maxSteps ? 1 : _currentStep + 1 : _currentStep + 1 > _maxSteps ? _currentStep : _currentStep + 1, this.setCurrentStep(_nextStep), this.sendPrudsysRecommitEvent()
     },
     prev: function() {
         var _currentStep = this.getCurrentStep(),
-            _prevStep = 0 >= _currentStep - 1 ? this.getMaxSteps() : _currentStep - 1,
-            _fadeInterval = 800,
-            _self = this.element;
-        "fade" === this.options.animation ? ($(".slider-item:nth-child(" + _currentStep + ")", this.element).stop(!1, !0).removeClass("fadein"), $(".slider-item:nth-child(" + _prevStep + ")", this.element).stop(!1, !0).addClass("fadein").fadeIn(_fadeInterval, function() {
-            $(".slider-item:nth-child(" + _currentStep + ")", _self).stop(!1, !0).hide()
-        }), this.setCurrentStep(_prevStep)) : (_currentStep - 1 > 0 && (this.options.height ? this.wrapper.css(this.getAnimationProperty(), "-" + parseInt((_currentStep - 2) * this.getItemHeight() * this.options.pagerSteps, 10) + "px") : this.options.halfslider ? this.wrapper.css(this.getAnimationProperty(), +parseInt(-1 * ((_currentStep - 2) * this.getItemWidth() - this.getItemWidth() / 2), 10) + "px") : this.wrapper.css(this.getAnimationProperty(), "-" + parseInt((_currentStep - 2) * this.getPagingDimensions(), 10) + "px"), this.setCurrentStep(_currentStep - 1)), this._showOrHideControls()), this.sendPrudsysRecommitEvent()
-    },
-    pauseOnHover: function() {
-        this.element.on("mouseover.slider", function(self) {
-            return function() {
-                self.stopAutoPlay()
-            }
-        }(this)).on("mouseleave.slider", {
-            test: this
-        }, function(self) {
-            return function() {
-                "fade" === self.options.animation ? self.fade() : self.startAutoPlay()
-            }
-        }(this))
-    },
-    startAutoPlay: function() {
-        void 0 === this.intervalWrapper && (this.intervalWrapper = window.setInterval(function(self) {
-            return function() {
-                "next" == self.getAutoDirection() && (self.getCurrentStep() < self.getMaxSteps() ? self.next() : self.setAutoDirection("prev")), "prev" == self.getAutoDirection() && (self.getCurrentStep() > 0 && self.prev(), 1 == self.getCurrentStep() && self.setAutoDirection("next"))
-            }
-        }(this), this.options.intervalTime))
-    },
-    stopAutoPlay: function() {
-        void 0 !== this.intervalWrapper && (this.intervalWrapper = clearInterval(this.intervalWrapper))
-    },
-    setDimensions: function() {
-        var _stageDimension = 0,
-            _maxItemHeight = 0;
-        if (this.isOrientationVertical()) $(".slider-item", this.element).each(function(_index, _element) {
-            var $_element = $(_element),
-                _elementHeight = $_element.outerHeight();
-            _stageDimension = 0 !== _stageDimension ? parseInt(_stageDimension + _elementHeight, 10) : _elementHeight, _maxItemHeight = _elementHeight > _maxItemHeight ? _elementHeight : _maxItemHeight
-        }), this.stageDimension = _stageDimension, this.isProductCarousel() ? (this.element.addClass("slider-component-vertical").height(this.itemCount <= this.options.pagerSteps ? this.getItemHeight() * this.itemCount : this.getItemHeight() * this.options.pagerSteps), this.wrapper.height(this.stageDimension + "px"), this.wrapper.width(this.getItemWidth() + "px"), this.wrapper.css(this.getAnimationProperty(), "-0px")) : (this.wrapper.height(this.getRealStageWidth() + "px"), this.element.addClass("slider-component-vertical").height(_maxItemHeight + "px"));
-        else {
-            var _elementWidth = this.options.width ? this.options.width : this.element.width();
-            $(".slider-item", this.element).width(_elementWidth / this.options.pagerSteps + "px").each(function(_index, _element) {
-                _stageDimension = 0 !== _stageDimension ? parseInt(_stageDimension + $(_element).outerWidth(), 10) : $(_element).outerWidth(), _maxItemHeight = $(_element).outerHeight() > _maxItemHeight ? $(_element).outerHeight() : _maxItemHeight
-            }), this._stageDimension = _stageDimension, this.wrapper.width(_elementWidth / this.options.pagerSteps * this.itemCount + "px"), this.element.height(_maxItemHeight + "px"), this.options.halfslider ? this.wrapper.css(this.getAnimationProperty(), this.getItemWidth() / 2 + "px") : this.wrapper.css(this.getAnimationProperty(), "-0px")
-        }
-    },
-    setPagingDimension: function() {
-        this.options.height ? this.pagingDimension = this.isOrientationVertical() ? this.options.height : parseInt(this.getItemHeight(), 10) : (this.pagingDimension = parseInt(this.options.pagerSteps * this.getItemWidth(), 10), this.isOrientationVertical() && (this.pagingDimension = parseInt(this.options.pagerSteps * this.getItemHeight(), 10)))
-    },
-    fade: function() {
-        void 0 === this.intervalWrapper && (this.intervalWrapper = window.setInterval(function(self) {
-            return function() {
-                self.next()
-            }
-        }(this), this.options.intervalTime))
+            _maxSteps = this.getMaxSteps(),
+            _prevStep = 0 >= _currentStep - 1 ? _maxSteps : _currentStep - 1;
+        _prevStep = this.slick.slickGetOption("infinite") ? 0 >= _currentStep - 1 ? _maxSteps : _currentStep - 1 : 0 >= _currentStep - 1 ? _currentStep : _currentStep - 1, this.setCurrentStep(_prevStep), this.sendPrudsysRecommitEvent()
     },
     setCurrentStep: function(step) {
         this.element.attr("data-slider-current", parseInt(step, 10))
@@ -6687,20 +6562,11 @@ Slider.prototype = {
     setMaxSteps: function(steps) {
         this.element.attr("data-slider-max", parseInt(steps, 10))
     },
-    setAutoDirection: function(direction) {
-        return this.element.attr("data-slider-direction", direction) ? !0 : !1
-    },
-    setTransistionTime: function(time) {
-        return this.wrapper.css("transitionDuration", time + "s") ? !0 : !1
-    },
     getCurrentStep: function() {
         return parseInt(this.element.attr("data-slider-current"), 10)
     },
     getMaxSteps: function() {
         return parseInt(this.element.attr("data-slider-max"), 10)
-    },
-    getAutoDirection: function() {
-        return this.element.attr("data-slider-direction")
     },
     getAnimationProperty: function() {
         return this.isOrientationVertical() ? "top" : "left"
@@ -6710,15 +6576,6 @@ Slider.prototype = {
     },
     getSliderItemCount: function() {
         return parseInt($(".slider-item", this.element).length, 10)
-    },
-    getRealStageWidth: function() {
-        return parseInt(this.element.width(), 10)
-    },
-    getRealStageHeight: function() {
-        return parseInt(this.element.height(), 10)
-    },
-    getPagingDimensions: function() {
-        return parseInt(this.pagingDimension, 10)
     },
     getItemHeight: function() {
         return parseInt($(".slider-item", this.element).outerHeight(), 10)
@@ -6730,261 +6587,159 @@ Slider.prototype = {
         return parseInt($(".slider-item", this.element).outerWidth(), 10)
     },
     isOrientationVertical: function() {
-        return "vertical" === this.getOrientation() ? !0 : !1
+        return "vertical" === this.getOrientation()
     },
     isProductCarousel: function() {
         return this.options.productcarousel
     },
     remove: function() {
-        this.element.find(".slider-controls").remove(), this.element.find(".slider-component-vertical").removeClass("slider-component-vertical"), this.wrapper.css("top", 0)
+        this.slick("unslick")
     },
     hideOtherSlides: function() {
         $(".slider-item", this.element).each(function(_index, _element) {
             _index > 0 && $(_element).hide()
         })
-    },
-    updateSlider: function(options) {
-        if (void 0 !== options)
-            for (var i in options) this.options.hasOwnProperty(i) && (this.options[i] = options[i]);
-        $(".slider-item", this.element).width(this.options.width / this.options.pagerSteps + "px"), this.setPagingDimension(), this.setMaxSteps(Math.ceil(this.itemCount * this.getItemWidth() / this.options.width)), this.wrapper.width(this.options.width / this.options.pagerSteps * this.itemCount + "px"), this.setCurrentStep(1), this.wrapper.css(this.getAnimationProperty(), "0px"), this._showOrHideControls()
     }
 }, $(function() {
-    var $contentSlider = $("#content-slider"),
-        $contentSliderLI = $contentSlider.find("ul > li"),
-        $contentSliderFirstImg = $contentSlider.find("img").eq(0),
-        contentSliderHeight = 400;
-    $contentSlider.height(contentSliderHeight), $contentSliderLI.length > 1 ? ($contentSlider.find("ul > li:not(:first-child)").hide(), ($contentSliderFirstImg.length || 0) > 0 && $contentSliderFirstImg.attr("src", $contentSliderFirstImg.attr("src") + "?" + (new Date).getTime()), $contentSliderFirstImg.load(function() {
-        if ("1" !== $contentSlider.data("sliderEnabled")) {
-            {
-                new Slider($contentSlider, {
-                    width: "960",
-                    height: $contentSliderFirstImg.height() || contentSliderHeight,
-                    animation: "fade",
-                    contentSlider: !0
-                })
-            }
-            $contentSlider.data("sliderEnabled", "1")
-        }
-    })) : 1 === $contentSliderLI.length ? ($contentSlider.find("ul").css("position", "static"), $contentSliderFirstImg.load(function() {
-        $contentSlider.height($contentSliderFirstImg.height())
-    })) : $contentSlider.remove()
-}),
-    function() {
-        Overlay = function(element, options, callback) {
-            if (this.element = "" !== element || null != element ? $(element) : "", this.options = {
-                    event: this.element.attr("data-overlay-event") ? this.element.attr("data-overlay-event") : "click",
-                    src: this.element.attr(this.element.attr("data-overlay-src") ? "data-overlay-src" : "href"),
-                    content: this.element.attr("data-overlay-content") ? this.element.attr("data-overlay-content") : "Keine Content ausgewÃ¤hlt",
-                    height: parseInt(this.element.attr("data-overlay-height"), 10) > 0 ? parseInt(this.element.attr("data-overlay-height"), 10) : 200,
-                    width: parseInt(this.element.attr("data-overlay-width"), 10) > 0 ? parseInt(this.element.attr("data-overlay-width"), 10) : 200,
-                    type: this.element.attr("data-overlay-type") ? this.element.attr("data-overlay-type") : "div",
-                    title: this.element.attr(this.element.attr("data-overlay-title") ? "data-overlay-title" : "title"),
-                    confirm: this.element.attr("data-overlay-confirm") ? this.element.attr("data-overlay-confirm") : !1,
-                    timeout: !1,
-                    "class": "js-has-element",
-                    styleClass: "overlay-standard",
-                    closeAlways: !0,
-                    header: !0,
-                    showGlobalMessages: !1
-                }, this.callback = callback || null, this.topPos = parseInt(this.options.height / 2.5, 10), void 0 !== options)
-                for (var i in options) options.hasOwnProperty(i) && (this.options[i] = options[i]);
-            return this.element.on(this.options.event, {
-                self: this
-            }, function(event) {
-                event.data.self.options.closeAlways === !0 && event.preventDefault(), event.stopPropagation();
-                var self = event.data.self;
-                Log({
-                    level: 1,
-                    message: "Overlay: open",
-                    type: "info"
-                }), self.wrap()
-            }), this
-        }, Overlay.prototype = {
-            showGlobalOverlayMessage: function() {
-                $(".global-overlay-messages").removeClass("hidden")
-            },
-            hideGlobalOverlayMessage: function() {
-                $(".global-overlay-messages").addClass("hidden")
-            },
-            executeCallback: function() {
-                $.isFunction(this.callback) && this.callback(this)
-            },
-            setTopPos: function(pos) {
-                $overlayContainer = $(".overlay-container"), this.topPos = pos, $overlayContainer.css("margin-top", "-" + this.topPos + "px")
-            },
-            bindCloseEvent: function() {
-                var closeClass = ".js-overlay-close",
-                    self = this,
-                    $overlayWrapper = $(".overlay-background");
-                this.options.timeout && setTimeout(function() {
-                    self.close()
-                }, 3e3), $overlayWrapper.hammer().on("touch click", {
-                    self: this
-                }, function(event) {
-                    var self = event.data.self,
-                        $target = $(event.target);
-                    (0 === $target.closest(".overlay-container").length || $target.closest(closeClass).length > 0) && (shop.device.hasTouch ? event.gesture.preventDefault() : event.preventDefault(), self.close())
-                }), $overlayWrapper.add(".overlay-container").each(function() {
-                    $(this).init.prototype.close = function() {
-                        self.close()
-                    }, $(this).init.prototype.showGlobalMessage = function() {
-                        self.showGlobalOverlayMessage()
-                    }, $(this).init.prototype.hideGlobalMessage = function() {
-                        self.hideGlobalOverlayMessage()
-                    }
-                })
-            },
-            bindResizeEvent: function() {
-                var $overlayer = $(".overlay-container"),
-                    self = this,
-                    positionTopClass = "position-top";
-                $(window).on("resize", function() {
-                    var overlayerHeight = $overlayer.height(),
-                        deathZone = 50,
-                        innerWindowHeight = window.innerHeight - deathZone,
-                        $overlayContainer = $(".overlay-container");
-                    overlayerHeight >= innerWindowHeight || shop.device.isMobile ? $overlayer.addClass(positionTopClass).css("margin-top", "0") : $overlayer.hasClass(positionTopClass) && ($overlayer.removeClass(positionTopClass), self.setTopPos($overlayContainer.height() / 2.5))
-                })
-            },
-            close: function() {
-                Log({
-                    level: 1,
-                    message: "Overlay: CLOSE",
-                    type: "info"
-                }), $("body").removeClass("js-has-overlay"), $(".overlay-background").remove()
-            },
-            wrap: function() {
-                var $overlayContainer, _html = this.buildBackground(),
-                    self = this,
-                    $body = $("body");
-                "div" === this.options.type && (Log({
-                    level: 1,
-                    message: "Overlay: WRAP | div",
-                    type: "info"
-                }), _html = _html.replace("{{replace}}", this.buildDivContainer())), "iframe" === this.options.type && (Log({
-                    level: 1,
-                    message: "Overlay: WRAP | iframe",
-                    type: "info"
-                }), _html = _html.replace("{{replace}}", this.buildIframeContainer())), $body.addClass("js-has-overlay").append(_html), $overlayContainer = $(".overlay-container"), $overlayContainer.find("iframe").load(function() {
-                    var $body = $("body");
-                    $body.scrollTop($body.scrollTop() - 1).scrollTop($body.scrollTop() + 1)
-                }), this.setTopPos($overlayContainer.height() / 2.5), setTimeout(function() {
-                    self.setTopPos($overlayContainer.height() / 2.5)
-                }, 25), this.bindCloseEvent(), this.bindResizeEvent(), this.executeCallback()
-            },
-            show: this.wrap,
-            buildBackground: function() {
-                var withConfirmBtn = this.options.confirm === !0 ? '<div class="overlay-btn-container p-t-m p-b-m"><a class="overlay-confirm js-overlay-close btn radius-m gradient-grey">OK</a></div>' : "",
-                    documentHeight = $(document).height(),
-                    windowHeight = $(window).height(),
-                    windowWidth = $(window).width(),
-                    containerHeight = this.options.height > windowHeight ? windowHeight : this.options.height,
-                    containerWidth = this.options.width > windowWidth ? windowWidth : this.options.width,
-                    getGlobalMessageHTML = function(show) {
-                        return '<div class="global-overlay-messages' + (show ? "" : " hidden") + '">' + $("#global-messages").html() + "</div>"
-                    },
-                    withHeader = this.options.header === !0 ? '<div class="overlay-header"><strong class="overlay-headline">' + (this.options.title ? this.options.title.replace("|", "") : "") + '</strong><a href="#close" class="overlay-close js-overlay-close"><i class="fa fa-times"></i></a></div>' : "";
-                return '<div class="overlay-background overlay-type-' + this.options.type + " " + this.options.styleClass + '" style="height:' + (windowHeight > documentHeight ? windowHeight : documentHeight) + 'px"><div class="overlay-container" style="width:' + containerWidth + "px; margin-left:-" + parseInt(containerWidth / 2, 10) + 'px">' + withHeader + '<div class="overlay-content" style="max-height:' + parseInt(containerHeight - $(".overlay-header").height(), 10) + "px" + ("webkit" === shop.device.browserEngine && shop.device.hasTouch ? '; overflow:auto; -webkit-overflow-scrolling: touch">' : '">') + '<div class="overlay-content-container">' + getGlobalMessageHTML(this.options.showGlobalMessages) + "{{replace}}</div>" + withConfirmBtn + "</div></div></div>"
-            },
-            buildDivContainer: function() {
-                return $(this.options.content).html()
-            },
-            buildIframeContainer: function() {
-                var windowHeight = $(window).height(),
-                    windowWidth = $(window).width(),
-                    containerHeight = this.options.height > windowHeight ? windowHeight : this.options.height,
-                    containerWidth = this.options.width > windowWidth ? windowWidth : this.options.width;
-                return '<iframe height="' + containerHeight + '" width="' + containerWidth + '" style="height:' + containerHeight + "px; width:" + containerWidth + "px; width:" + containerWidth + 'px" src="' + this.options.src + '"></iframe>'
-            }
-        }
-    }(), $(function() {
+    var $contentSlider = $("#content-slick-slider"),
+        $contentSliderItems = $(".slick-wrapper-hero > div", $contentSlider);
+    $contentSliderItems.length > 1 ? $(window).load(function() {
+        new Slider($contentSlider, {
+            prevArrow: '<div class="slick-slide-prev slide-navigator-left-big"></div>',
+            nextArrow: '<div class="slick-slide-next slide-navigator-right-big"></div>',
+            auto: !0,
+            intervalTime: 5e3,
+            animation: "fade",
+            dots: !0
+        });
+        $contentSlider.find("img[usemap]").length > 0 && $(window).trigger("updateRWD")
+    }) : 1 === $contentSliderItems.length ? $contentSlider.css("position", "static") : $contentSlider.remove()
+}), $(function() {
+    $(".js-slider-component").each(function() {
+        var $sliderComponent = $(this),
+            $sliderComponentItems = $(".slick-wrapper-hero > div", $sliderComponent);
+        $sliderComponentItems.length > 1 ? $(window).load(function() {
+            new Slider($sliderComponent, {
+                prevArrow: '<div class="slick-slide-prev slide-navigator-left-big"></div>',
+                nextArrow: '<div class="slick-slide-next slide-navigator-right-big"></div>',
+                auto: !0,
+                intervalTime: 5e3,
+                animation: "fade",
+                dots: !0
+            });
+            $sliderComponent.find("img[usemap]").length > 0 && $(window).trigger("updateRWD")
+        }) : 1 === $sliderComponentItems.length ? $sliderComponent.css("position", "static") : $sliderComponent.remove()
+    })
+});
+var AddToCart = function(list, area, productObject) {
     "use strict";
-    $(document).on("createOverlay", function() {
-        var overlaySelector = ".overlay",
-            $overlayElems = $(overlaySelector),
-            overlayElemsCounter = $overlayElems.length || 0;
-        overlayElemsCounter > 0 && (shop.overlays = {}, $.each($overlayElems, function() {
-            var overlayObjCounter = shop.overlays.length || 0;
-            shop.overlays["anchorOverlay" + (overlayObjCounter + 1)] = new Overlay($(this))
-        }))
-    }), $(document).trigger("createOverlay")
-}),
-    function($) {
+    this.listType = list ? list : "", this.addToWatchlistButtonSelector = ".js-add-to-watchlist", this.areaSelector = area ? area : "", this.productObject = productObject ? productObject : "", this.isMobile = shop.device.isMobile, this.mobilePageStep = 2, this.bindEvents()
+};
+AddToCart.prototype = {
+    handelAjaxRequest: function(requestURL, parameters, doneHandler, failHandler) {
         "use strict";
-        $(document).ready(function() {
-            "msie" == $.ua.browser.name && $.ua.browser.version < 10 && $("[placeholder]").focus(function() {
-                var i = $(this);
-                i.val() === i.attr("placeholder") && i.val("").removeClass("placeholder")
-            }).blur(function() {
-                var i = $(this);
-                ("" === i.val() || i.val() === i.attr("placeholder")) && i.addClass("placeholder").val(i.attr("placeholder"))
-            }).blur().parents("form").submit(function() {
-                $(this).find("[placeholder]").each(function() {
-                    var i = $(this);
-                    i.val() === i.attr("placeholder") && i.val("")
-                })
-            })
-        })
-    }(jQuery);
-var LoaderOverlay = function($) {
-        "use strict";
-        var LoaderOverlay = function($targetElement, isSimpleLoader) {
-            this.$targetElement = $($targetElement || $("body")), this.targetElementPosition = "body" === this.$targetElement.prop("tagName").toLowerCase() ? "fixed" : "absolute", this._classNameForTarget = "loader-overlay", this.cssClass = {
-                load: "on-load",
-                loadReady: "load-ready"
-            }, console.log("create"), this._create(isSimpleLoader)
-        };
-        return LoaderOverlay.prototype = {
-            _create: function(isSimpleLoader) {
-                if (this.$targetElement.length > 0 && !this.$targetElement.hasClass(this._classNameForTarget)) {
-                    var windowHeight = $(window).height(),
-                        self = this,
-                        targetElementHeight = "fixed" === this.targetElementPosition && windowHeight > this.$targetElement.height() ? windowHeight : this.$targetElement.height(),
-                        loaderOverlayHtml = '<div class="loader-overlay-bg' + (isSimpleLoader === !0 ? "-simple" : "") + ' js" style="height:' + targetElementHeight + 'px"><span class="loader-container" style="position: ' + this.targetElementPosition + ' "><i class="fa fa-spinner fa-spin loader"></i></span></div>';
-                    this.$targetElement.append(loaderOverlayHtml), this.$targetElement.addClass(this._classNameForTarget), $(window).load(function() {
-                        self._refreshBgHeight()
-                    })
-                }
+        var formMethod = "get" === (parameters.method || "").toLowerCase() ? "GET" : "POST";
+        $.ajax({
+            url: requestURL,
+            data: parameters,
+            dataType: "json",
+            type: formMethod,
+            async: !0,
+            context: this,
+            success: function(data) {
+                doneHandler(data)
             },
-            _refreshBgHeight: function() {
-                var windowHeight = $(window).height(),
-                    targetElementHeight = "fixed" === this.targetElementPosition && windowHeight > this.$targetElement.outerHeight() ? windowHeight : this.$targetElement.outerHeight();
-                this.$targetElement.find(".loader-overlay-bg, .loader-overlay-bg-simple").css({
-                    height: targetElementHeight
-                })
-            },
-            hide: function() {
-                return this.$targetElement.hasClass(this._classNameForTarget) && (this._refreshBgHeight(), this.$targetElement.find(".loader-overlay-bg, .loader-overlay-bg-simple").addClass("loader-hide").removeClass("loader-show")), this
-            },
-            show: function() {
-                return this.$targetElement.hasClass(this._classNameForTarget) ? (this._refreshBgHeight(), this.$targetElement.addClass(this.cssClass.load), this.$targetElement.find(".loader-overlay-bg, .loader-overlay-bg-simple").addClass("loader-show").removeClass("loader-hide")) : this._createLoader(), this
-            },
-            remove: function() {
-                this.$targetElement.removeClass(this._classNameForTarget + " " + this.cssClass.load).addClass(this.cssClass.loadReady), this.$targetElement.find(".loader-overlay-bg, .loader-overlay-bg-simple").remove()
+            error: function(xhr) {
+                failHandler(xhr.responseText)
             }
-        }, LoaderOverlay
-    }(jQuery),
-    AjaxForm = function(elemID, callbackAfterAjaxRequest, callbackBeforeAjaxRequest) {
-        this.elementName = elemID, this.elemID = "#" + this.elementName, this._eventsWithNamespace = "", this.singleItem = ".ajax-item-js", this.formElement = ".ajax-form-js", this.$globalMessages = $("#global-messages"), this._callbackAfterAjaxRequest = callbackAfterAjaxRequest, this._callbackBeforeAjaxRequest = callbackBeforeAjaxRequest, this.bindEventHandlers($(this.elemID + " " + this.singleItem))
-    };
+        })
+    },
+    updateMiniCart: function(miniCart) {
+        "use strict";
+        shop.miniCart && shop.miniCart.add(miniCart, $("#minicart"))
+    },
+    animateAddToCart: function(callbackAfterAnimation, flyingElement, target) {
+        return shop.addToCartAnimation(callbackAfterAnimation, flyingElement, target)
+    },
+    showOverlay: function(popup) {
+        return shop.addToCartOverlay(popup)
+    },
+    showErrorOverlay: function() {
+        "use strict"; {
+            var overlayMessage = "<div>Es ist ein Fehler aufgetreten.</div>";
+            new Overlay("", {
+                title: "Hinweis",
+                type: "div",
+                width: "450",
+                height: "150",
+                content: overlayMessage
+            }).wrap()
+        }
+    },
+    bindEvents: function() {
+        "use strict";
+        var self = this,
+            loaderOverlay = loaderOverlay || new LoaderOverlay,
+            buttonSelector = "",
+            eventType = "click",
+            sizeValidation = !0;
+        "cart" === self.listType ? (eventType = "submit", buttonSelector = ".add-to-cart-form") : "watchlist" === self.listType && (buttonSelector = self.addToWatchlistButtonSelector), $(this.areaSelector).on(eventType, buttonSelector, function(e) {
+            e.preventDefault(), e.stopPropagation();
+            var $quantityInput = $("input.quantity", self.areaSelector),
+                $productSizeError = $(".js-product-size-error"),
+                quantityVal = $quantityInput.val();
+            if (quantityVal >= 1)
+                if ("cart" === self.listType && (sizeValidation = self.productObject.isSizeVariant(), $productSizeError.addClass("helper-hide")), sizeValidation) {
+                    var etracker = new eTrackerCommerceAPI;
+                    etracker.insertToBasket(etracker.getProductJSON(self.productObject.getVariantIdentifier(), $quantityInput.val()), $quantityInput.val() || 1);
+                    var variants, i, formURL = "watchlist" === self.listType ? $(this).attr("data-url") + $(".js-variant-code", self.areaSelector).val() : $(this).attr("action"),
+                        $addToWishlistLink = $(".js-add-to-watchlist", self.areaSelector),
+                        $animationTarget = $("#wishlist-link .icon-heart"),
+                        selectedVariantCode = $(".js-variant-code", self.areaSelector).val(),
+                        formParameters = $(this).closest("form").serializeArray();
+                    formParameters.method = $(this).closest("form").attr("method"), loaderOverlay.show(), self.handelAjaxRequest(formURL, formParameters, function(data) {
+                        if (loaderOverlay.hide(), "cart" === self.listType) self.animateAddToCart(function() {
+                            self.updateMiniCart(data.miniCart), self.showOverlay(data.addToPopup)
+                        });
+                        else
+                            for (shop.pageInformation.wishlist.updateAddToWatchlistLinkPDS($addToWishlistLink, data.modificationDataResult, selectedVariantCode).updateWatchListTextInHeader(data.wishlistArticleSize).updateWatchlistIndicatorHeart(data.modificationDataResult, data.likeCounterNumber, selectedVariantCode).storeChanges(selectedVariantCode, data), "success" === data.modificationDataResult && self.animateAddToCart(function() {
+                                self.showOverlay(data.addToPopup)
+                            }, $addToWishlistLink, $animationTarget), variants = shop.product.variantOptions, i = 0; i < variants.length; i++) {
+                                var styleVariant = variants[i];
+                                null !== styleVariant && styleVariant.code === data.adjustedVariant && (styleVariant.likeCounter = data.likeCounterNumber)
+                            }
+                    }, function(data) {
+                        loaderOverlay.hide(), self.showErrorOverlay(data)
+                    })
+                } else $productSizeError.removeClass("helper-hide"), "#quick-shopper" === self.areaSelector && $("html,body").animate({
+                    scrollTop: $productSizeError.offset().top - 200
+                }, "slow");
+            else $quantityInput.val(1);
+            return !1
+        })
+    }
+};
+var AjaxForm = function(elemID, callbackAfterAjaxRequest, callbackBeforeAjaxRequest) {
+    this.elementName = elemID, this.elemID = "#" + this.elementName, this._eventsWithNamespace = "", this.singleItem = ".ajax-item-js", this.formElement = ".ajax-form-js", this.$globalMessages = $("#global-messages"), this._callbackAfterAjaxRequest = callbackAfterAjaxRequest, this._callbackBeforeAjaxRequest = callbackBeforeAjaxRequest, this.bindEventHandlers($(this.elemID + " " + this.singleItem))
+};
 AjaxForm.prototype = {
     handleNewDataController: function(data, $currentElem) {
         var pageMessages = data.messages || null,
-            pageMessagesTypeAndTextObj = pageMessages ? pageMessages.conf ? {
+            pageMessagesTypeAndTextObj = pageMessages ? pageMessages.conf && !$.isEmptyObject(pageMessages.conf) ? {
                 type: "conf",
                 msg: pageMessages.conf,
                 headline: pageMessages.headlines.conf,
                 confirmBtn: pageMessages.confirmBtn.conf,
                 width: pageMessages.width,
                 height: pageMessages.height
-            } : pageMessages.error ? {
+            } : pageMessages.error && !$.isEmptyObject(pageMessages.error) ? {
                 type: "error",
                 msg: pageMessages.error,
                 headline: pageMessages.headlines.error,
                 confirmBtn: pageMessages.confirmBtn.error,
                 width: pageMessages.width,
                 height: pageMessages.height
-            } : pageMessages.info ? {
+            } : pageMessages.info && !$.isEmptyObject(pageMessages.info) ? {
                 type: "info",
                 msg: pageMessages.info,
                 headline: pageMessages.headlines.info,
@@ -7023,34 +6778,39 @@ AjaxForm.prototype = {
             for (var prop in objWithDomIDs) {
                 var newContentForElem = objWithDomIDs[prop],
                     $findDomID = $("#" + prop);
-                $findDomID.length > 0 && newContentForElem.length > 0 && $findDomID.replaceWith(newContentForElem)
+                $findDomID.length > 0 && newContentForElem.length > 0 && ($findDomID.trigger("willbereplaced"), $findDomID.replaceWith(newContentForElem), $("#" + prop).trigger("hasreplaced"))
             }
     },
     replaceElem: function($target, $newElem, wholeItems) {
         wholeItems === !1 || null == wholeItems ? $target.replaceWith($newElem) : $target.children().remove().end().append($newElem)
     },
     loadNewPageJSON: function(requestURL, parameters) {
-        var formMethod = "get" === (parameters.method || "").toLowerCase() ? "GET" : "POST",
-            request = $.ajax({
-                url: requestURL,
-                data: parameters,
-                dataType: "json",
-                type: formMethod,
-                async: !0,
-                context: this,
-                beforeSend: function() {
-                    if (this._callbackBeforeAjaxRequest)
-                        for (var functions = this._callbackBeforeAjaxRequest.split(","), i = 0, l = functions.length; l > i; i++) Function(functions[i])()
-                }
-            });
+        var request = $.ajax({
+            url: requestURL,
+            data: parameters,
+            dataType: "json",
+            type: "POST",
+            async: !0,
+            context: this,
+            beforeSend: function() {
+                if (this._callbackBeforeAjaxRequest)
+                    for (var functions = this._callbackBeforeAjaxRequest.split(","), i = 0, l = functions.length; l > i; i++) Function(functions[i])()
+            }
+        });
         return request
     },
     showGlobalMsg: function(typeAndMessageObj) {
         var msgText, msgType;
         shop.globalMessage.hide(), msgText = typeAndMessageObj.msg, msgType = typeAndMessageObj.type, "info" === msgType || "conf" === msgType ? shop.globalMessage.success(msgText) : shop.globalMessage.error(msgText)
     },
+    formatMsgArray: function(msgArray) {
+        var i, l, newMsg = "";
+        for (i = 0, l = msgArray.length; l > i; i++) newMsg += msgArray[i] + "</br>";
+        return newMsg
+    },
     showMsgLayer: function(typeAndMessageObj) {
-        var msgOverlay, msgOverlayContent = "<div>" + typeAndMessageObj.msg + "</div>",
+        var msgOverlay, msg = $.isArray(typeAndMessageObj.msg) ? this.formatMsgArray(typeAndMessageObj.msg) : typeAndMessageObj.msg,
+            msgOverlayContent = "<div>" + msg + "</div>",
             msgOverlayStyleType = "overlay-" + typeAndMessageObj.type,
             msgOverlayHeadline = typeAndMessageObj.headline,
             msgOverlayConfirmBtn = typeAndMessageObj.confirmBtn ? typeAndMessageObj.confirmBtn : !1,
@@ -7085,10 +6845,10 @@ AjaxForm.prototype = {
                     formURL = $this.closest("form").attr("action"),
                     formParameters = $this.closest("form").serializeArray(),
                     initVal = $this.attr("data-init-value");
-                return formParameters.method = $this.closest("form").attr("method"), shop.globalMessage.hide(), ($this.is('a,button,input[type="submit"]') || initVal !== $this.val()) && (loaderOverlay.show(), self.lastElement = $(this), requestData = self.loadNewPageJSON(formURL, formParameters, $(this)), requestData.done(function(data) {
+                return shop.globalMessage.hide(), ($this.is('a,button,input[type="submit"]') || initVal !== $this.val()) && (loaderOverlay.show(), self.lastElement = $(this), requestData = self.loadNewPageJSON(formURL, formParameters, $(this)), requestData.done(function(data) {
                     window.setTimeout(function() {
                         loaderOverlay.hide()
-                    }, 500), self.handleNewDataController(data, $this)
+                    }, 500), self.handleNewDataController(data, $this), $(document).trigger("updateCart")
                 }), requestData.fail(function() {
                     loaderOverlay.hide()
                 })), !1
@@ -7124,156 +6884,7 @@ AjaxForm.prototype = {
         $(function() {
             ajaxFormFactory(".ajax-form-js")
         })
-    }(jQuery);
-var AddToCart = function(list, area, productObject) {
-    "use strict";
-    this.listType = list ? list : "", this.addToWatchlistButtonSelector = ".js-add-to-watchlist", this.areaSelector = area ? area : "", this.productObject = productObject ? productObject : "", this.bindEvents()
-};
-AddToCart.prototype = {
-    handelAjaxRequest: function(requestURL, parameters, doneHandler, failHandler) {
-        "use strict";
-        var formMethod = "get" === (parameters.method || "").toLowerCase() ? "GET" : "POST";
-        $.ajax({
-            url: requestURL,
-            data: parameters,
-            dataType: "json",
-            type: formMethod,
-            async: !0,
-            context: this,
-            success: function(data) {
-                doneHandler(data)
-            },
-            error: function(xhr) {
-                failHandler(xhr.responseText)
-            }
-        })
-    },
-    updateMiniCart: function(miniCart) {
-        "use strict";
-        shop.miniCart && shop.miniCart.add(miniCart, $("#minicart").parent())
-    },
-    animateAddToCart: function(callbackAfterAnimation) {
-        "use strict";
-        var $zoomImg = $("#product-image-detail").find("img.js-display-variant-primary-image"),
-            $animatedImg = $zoomImg.clone().css({
-                position: "absolute",
-                "z-index": "2000"
-            }).addClass("js-animate-pds-image"),
-            $target = $("#minicart"),
-            animation = {
-                step1: {
-                    speed: 800
-                },
-                step2: {
-                    speed: 600
-                },
-                step3: {
-                    speed: 140,
-                    width: 30
-                }
-            },
-            zoomImgLeftOffset = ($target.width() - animation.step3.width) / 2,
-            zoomImgOffset = $zoomImg.offset(),
-            targetOffset = $target.offset(),
-            methodForAnimation = Modernizr.csstransitions ? "transit" : "animate";
-        $zoomImg.length > 0 ? ($("html, body").animate({
-            scrollTop: 0
-        }, 150), $animatedImg.css({
-            top: zoomImgOffset.top,
-            left: zoomImgOffset.left,
-            width: $zoomImg.width()
-        }).prependTo("body")[methodForAnimation]({
-            top: targetOffset.top - $target.height(),
-            left: targetOffset.left + zoomImgLeftOffset,
-            width: animation.step3.width
-        }, animation.step1.speed, function() {
-            $animatedImg[methodForAnimation]({
-                top: targetOffset.top + 2,
-                opacity: .25
-            }, animation.step2.speed, function() {
-                $animatedImg[methodForAnimation]({
-                    opacity: 0
-                }, animation.step3.speed, function() {
-                    $animatedImg.remove(), callbackAfterAnimation && "function" == typeof callbackAfterAnimation && callbackAfterAnimation()
-                })
-            })
-        })) : callbackAfterAnimation && "function" == typeof callbackAfterAnimation && callbackAfterAnimation()
-    },
-    showOverlay: function(popup) {
-        "use strict";
-        var overlayContent = "<div>" + popup.content + "</div>",
-            $addToCartSlot = (new Overlay("", {
-                title: popup.headline,
-                type: "div",
-                width: "600",
-                height: "550",
-                content: overlayContent
-            }).wrap(), $(".js-add-to-cart-slot")),
-            newSlider = function($elem, optionObj) {
-                return new Slider($elem, optionObj)
-            },
-            loadSlider = function($elem, callback) {
-                var prudsysItemIdList = shop.prudsysItemIdList || null;
-                return new SimpleComponentLoader($elem, {
-                    parameters: {
-                        prudsysItemIdList: prudsysItemIdList
-                    }
-                }, callback)
-            };
-        $addToCartSlot.length > 0 && !shop.device.isMobile ? ($addToCartSlot.addClass("active"), loadSlider($addToCartSlot.find(".js-async-carousel"), function() {
-            newSlider($addToCartSlot.find(".pcarousel-smallArticle"), {
-                orientation: "horizontal",
-                pagerSteps: 4,
-                auto: !1,
-                wrapper: ".pcarousel-wrapper",
-                width: "520",
-                productcarousel: !0,
-                initPrudsysEvent: !1
-            }), $(".js-add-to-cart-slot .pcarousel .star-rating").makeStars()
-        })) : $addToCartSlot.addClass("hide"), $(".add-to-cart-content .review-bar-rating ").makeStars()
-    },
-    showErrorOverlay: function() {
-        "use strict"; {
-            var overlayMessage = "<div>Es ist ein Fehler aufgetreten.</div>";
-            new Overlay("", {
-                title: "Hinweis",
-                type: "div",
-                width: "450",
-                height: "150",
-                content: overlayMessage
-            }).wrap()
-        }
-    },
-    bindEvents: function() {
-        "use strict";
-        var self = this,
-            loaderOverlay = loaderOverlay || new LoaderOverlay,
-            buttonSelector = "",
-            eventType = "click",
-            sizeValidation = !0;
-        "cart" === self.listType ? (eventType = "submit", buttonSelector = "#add-to-cart-form") : "watchlist" === self.listType && (buttonSelector = self.addToWatchlistButtonSelector), $(this.areaSelector).on(eventType, buttonSelector, function(e) {
-            e.preventDefault(), e.stopPropagation();
-            var $quantityInput = $("#qty"),
-                quantityVal = $quantityInput.val();
-            if (quantityVal >= 1)
-                if ("cart" === self.listType && (sizeValidation = self.productObject.isSizeVariant(), $(".js-product-size-error").addClass("hide")), sizeValidation) {
-                    var etracker = new eTrackerCommerceAPI;
-                    etracker.insertToBasket(etracker.getProductJSON(self.productObject.getVariantIdentifier(), $quantityInput.val()), $quantityInput.val() || 1);
-                    var formURL = $(this).attr("watchlist" === self.listType ? "data-url" : "action"),
-                        formParameters = $(this).closest("form").serializeArray();
-                    formParameters.method = $(this).attr("method"), loaderOverlay.show(), self.handelAjaxRequest(formURL, formParameters, function(data) {
-                        loaderOverlay.hide(), "cart" === self.listType ? self.animateAddToCart(function() {
-                            self.updateMiniCart(data.miniCart), self.showOverlay(data.addToPopup)
-                        }) : self.showOverlay(data.addToPopup)
-                    }, function(data) {
-                        loaderOverlay.hide(), self.showErrorOverlay(data)
-                    })
-                } else $(".js-product-size-error").removeClass("hide");
-            else $quantityInput.val(1);
-            return !1
-        })
-    }
-},
+    }(jQuery),
     function() {
         Cache = function(namespace) {
             return this instanceof Cache ? (this.namespace = namespace, "" === namespace ? (Log({
@@ -7305,143 +6916,327 @@ AddToCart.prototype = {
                 return $("#" + this._getChecksum(id)).length > 0 ? !0 : !1
             }
         }
-    }(),
-    function() {
-        Mobile = function() {
-            return this instanceof Mobile ? (this.__MOBILE__ = "mobile", this.__TABLET__ = "tablet", this.__LARGE__ = "large", this.__FORCE_COOKIE__ = "force-default-view=true;", this._paramForDesktop = "desktopSwitch=true", this._paramForDeviceDetection = "clear=true", void(this.$deviceSwitchBtn = $("#deviceSwitchBtn"))) : new Mobile
-        }, Mobile.prototype = {
-            initOnDomReady: function() {
-                !shop.device.isMobile && this.getForceDefaultView() ? this.$deviceSwitchBtn.removeClass("hide-desktop").appendTo("#page-footer") : shop.device.isMobile && this.$deviceSwitchBtn.addClass("btn big gradient-green radius-l"), this.bindEventHandler()
-            },
-            bindEventHandler: function() {
-                var self = this;
-                this.$deviceSwitchBtn.on("click", function(e) {
-                    e.preventDefault(), self.deviceSwitchController()
-                })
-            },
-            viewport: function(name) {
-                var reference, name = name || "",
-                    indicator = window.getComputedStyle(document.getElementsByTagName("html")[0], ":before").content;
-                if (console.log("print name: " + window.getComputedStyle(document.getElementsByTagName("html")[0], ":before").content), 0 === name.length) return reference;
-                switch (name.toLowerCase()) {
-                    case "mobile":
-                        reference = this.__MOBILE__;
-                        break;
-                    case "tablet":
-                        reference = this.__TABLET__;
-                        break;
-                    case "large":
-                        reference = this.__LARGE__
-                }
-                return indicator !== reference || this.getForceDefaultView() ? !1 : !0
-            },
-            _getUrlParamToke: function(url) {
-                return url.indexOf("?") > 0 ? "&" : "?"
-            },
-            _getUrl: function() {
-                var currentUrl = window.location.href,
-                    regexp = new RegExp("(\\?|&)(" + this._paramForDeviceDetection + "|" + this._paramForDesktop + ")", "g");
-                return currentUrl = currentUrl.replace(regexp, "")
-            },
-            _switchToMobile: function() {
-                var url = this._getUrl();
-                url += this._getUrlParamToke(url) + this._paramForDeviceDetection, this.setForceDefaultView(), window.location.href = url
-            },
-            _switchToDesktop: function() {
-                var url = this._getUrl();
-                url += this._getUrlParamToke(url) + this._paramForDesktop, this.setForceDefaultView(), window.location.href = url
-            },
-            deviceSwitchController: function() {
-                shop.device.isMobile ? this._switchToDesktop() : this._switchToMobile()
-            },
-            removeStyleSheets: function() {
-                $("#breakpoint-mobile, #breakpoint-tablet, #breakpoint-large").each(function() {
-                    var $item = $(this);
-                    $item.attr("data-href", $item.attr("href")).attr("href", "")
-                })
-            },
-            insertStyleSheets: function() {
-                $("#breakpoint-mobile, #breakpoint-tablet, #breakpoint-large").each(function() {
-                    var $item = $(this);
-                    $item.attr("href", $item.attr("data-href"))
-                })
-            },
-            getBreakpointColor: function() {
-                return $("html").css("fill") || ""
-            },
-            setForceDefaultView: function() {
-                var expires = new Date;
-                return date = expires.getTime() + 432e6, expires.setTime(date), document.cookie = this.__FORCE_COOKIE__ + " expires=" + expires.toGMTString(), this
-            },
-            getForceDefaultView: function() {
-                return -1 !== document.cookie.indexOf(this.__FORCE_COOKIE__) ? !0 : !1
-            },
-            scrollbarWidth: function() {
-                if (jQuery(document).height() > jQuery(window).height()) {
-                    jQuery("body").append('<div id="fakescrollbar" style="width:50px;height:50px;overflow:hidden;position:absolute;top:-200px;left:-200px;"></div>'), fakeScrollBar = jQuery("#fakescrollbar"), fakeScrollBar.append('<div style="height:100px;">&nbsp;</div>');
-                    var w1 = fakeScrollBar.find("div").innerWidth();
-                    fakeScrollBar.css("overflow-y", "scroll");
-                    var w2 = jQuery("#fakescrollbar").find("div").html("html is required to init new width.").innerWidth();
-                    return fakeScrollBar.remove(), w1 - w2
-                }
-                return 0
-            },
-            detectViewPort: function(scrollBarWidth) {
-                var scrollBarWidth = scrollBarWidth || 0,
-                    viewPortWidth = jQuery(window).width();
-                return viewPortWidth + scrollBarWidth
-            }
-        }, $(function() {
-            window.device = new Mobile, window.device.initOnDomReady();
-            new Overlay(".filter-overlay", {
-                width: "98%",
-                styleClass: "filter-overlay",
-                closeAlways: !1
-            }, function() {})
-        })
     }();
+var LoaderOverlay = function($) {
+        "use strict";
+        var LoaderOverlay = function($targetElement, isSimpleLoader) {
+            this.$targetElement = $($targetElement || $("body")), this.tagName = void 0 !== this.$targetElement.prop("tagName") ? this.$targetElement.prop("tagName").toLowerCase() : "", this.targetElementPosition = "body" === this.tagName ? "fixed" : "absolute", this._classNameForTarget = "loader-overlay", this.cssClass = {
+                load: "on-load",
+                loadReady: "load-ready"
+            }, this._create(isSimpleLoader)
+        };
+        return LoaderOverlay.prototype = {
+            _create: function(isSimpleLoader) {
+                if (this.$targetElement.length > 0 && !this.$targetElement.hasClass(this._classNameForTarget)) {
+                    var windowHeight = $(window).height(),
+                        self = this,
+                        targetElementHeight = "fixed" === this.targetElementPosition && windowHeight > this.$targetElement.height() ? windowHeight : this.$targetElement.height(),
+                        loaderOverlayHtml = '<div class="loader-overlay-bg' + (isSimpleLoader === !0 ? "-simple" : "") + ' js" style="height:' + targetElementHeight + 'px"><span class="loader-container" style="position: ' + this.targetElementPosition + ' "><span class="icon icon-loading icon-spin"></span></span></div>';
+                    this.$targetElement.append(loaderOverlayHtml), this.$targetElement.addClass(this._classNameForTarget), $(window).load(function() {
+                        self._refreshBgHeight()
+                    })
+                }
+            },
+            _refreshBgHeight: function() {
+                var windowHeight = $(window).height(),
+                    targetElementHeight = "fixed" === this.targetElementPosition && windowHeight > this.$targetElement.outerHeight() ? windowHeight : this.$targetElement.outerHeight();
+                this.$targetElement.find(".loader-overlay-bg, .loader-overlay-bg-simple").css({
+                    height: targetElementHeight
+                })
+            },
+            hide: function() {
+                return this.$targetElement.hasClass(this._classNameForTarget) && (this._refreshBgHeight(), this.$targetElement.removeClass(this.cssClass.load).find(".loader-overlay-bg, .loader-overlay-bg-simple").addClass("loader-hide").removeClass("loader-show")), this
+            },
+            show: function() {
+                return this.$targetElement.hasClass(this._classNameForTarget) ? (this._refreshBgHeight(), this.$targetElement.addClass(this.cssClass.load), this.$targetElement.find(".loader-overlay-bg, .loader-overlay-bg-simple").addClass("loader-show").removeClass("loader-hide")) : this._create(), this
+            },
+            remove: function() {
+                this.$targetElement.removeClass(this._classNameForTarget + " " + this.cssClass.load).addClass(this.cssClass.loadReady), this.$targetElement.find(".loader-overlay-bg, .loader-overlay-bg-simple").remove()
+            }
+        }, LoaderOverlay
+    }(jQuery),
+    Log = function(object) {
+        if ("object" != typeof object) return !1;
+        if ((object.level || 0) < shop.code.log.level) return !1;
+        if (shop.code.log.frontend && window.console) switch (object.type) {
+            case "log":
+                console.log(object.message);
+                break;
+            case "warn":
+                console.warn(object.message);
+                break;
+            case "error":
+                console.error(object.message);
+                break;
+            case "table":
+                console.table(object.message);
+                break;
+            case "dir":
+                console.dir(object.message);
+                break;
+            default:
+            case "info":
+                console.info(object.message)
+        }
+        shop.code.log.backend && ("string" != typeof message && (message = JSON.stringify(object.message)), (new Image).src = shop.url.base + shop.code.log.url + "?l=" + object.type + "&u=" + encodeURIComponent(document.location.pathname) + "&t=" + encodeURIComponent(shop.url.template) + "&m=" + encodeURIComponent(message) + "&_=" + 1 * new Date)
+    };
+! function() {
+    Overlay = function(element, options, callback) {
+        return this.element = "" !== element || null != element ? $(element) : "", this.options = {
+            event: this.element.attr("data-overlay-event") ? this.element.attr("data-overlay-event") : "click",
+            src: this.element.attr(this.element.attr("data-overlay-src") ? "data-overlay-src" : "href"),
+            content: this.element.attr("data-overlay-content") ? this.element.attr("data-overlay-content") : "Keine Content ausgewählt",
+            contentScroll: this.element.attr("data-overlay-content-scroll") ? this.element.attr("data-overlay-content-scroll") : !1,
+            height: this.element.attr("data-overlay-height"),
+            width: this.element.attr("data-overlay-width"),
+            type: this.element.attr("data-overlay-type") ? this.element.attr("data-overlay-type") : "div",
+            title: this.element.attr("data-overlay-title") || this.element.attr("title") || this.element.text() || "",
+            confirm: this.element.attr("data-overlay-confirm") ? this.element.attr("data-overlay-confirm") : !1,
+            timeout: !1,
+            "class": "js-has-element",
+            styleClass: "overlay-standard",
+            closeAlways: !0,
+            header: !0,
+            fullScreenResponsive: !1,
+            showGlobalMessages: !1
+        }, this.options = helper.mergeObj(this.options, options), this.options.height = isNaN(this.options.height) ? "none" : parseInt(this.options.height || 200, 10), this.options.width = parseInt(this.options.width || 200, 10), this.callback = callback || null, this.topPos = parseInt(this.options.height / 2.5, 10), this.element.on(this.options.event, {
+            self: this
+        }, function(event) {
+            event.data.self.options.closeAlways === !0 && event.preventDefault(), event.stopPropagation();
+            var self = event.data.self;
+            Log({
+                level: 1,
+                message: "Overlay: open",
+                type: "info"
+            }), self.wrap()
+        }), this
+    }, Overlay.prototype = {
+        showGlobalOverlayMessage: function() {
+            $(".global-overlay-messages").removeClass("helper-hide")
+        },
+        hideGlobalOverlayMessage: function() {
+            $(".global-overlay-messages").addClass("helper-hide")
+        },
+        executeCallback: function() {
+            $.isFunction(this.callback) && this.callback()
+        },
+        setTopPos: function(pos) {
+            var $overlayContainer = $(".overlay-container");
+            this.topPos = pos, $overlayContainer.css("margin-top", "-" + this.topPos + "px")
+        },
+        bindCloseEvent: function() {
+            var closeClass = ".js-overlay-close",
+                self = this,
+                $overlayWrapper = $(".overlay-background");
+            this.options.timeout && setTimeout(function() {
+                self.close()
+            }, 3e3), $overlayWrapper.on("touch.overlay click.overlay", {
+                self: this
+            }, function(event) {
+                var self = event.data.self,
+                    $target = $(event.target);
+                (0 === $target.closest(".overlay-container").length || $target.closest(closeClass).length > 0 || $target.hasClass(closeClass)) && (shop.device.hasTouch && event.gesture ? (event.gesture.preventDefault(), event.gesture.stopPropagation()) : (event.preventDefault(), event.stopPropagation()), self.close())
+            }), $overlayWrapper.add(".overlay-container").each(function() {
+                $(this).init.prototype.close = function() {
+                    self.close()
+                }, $(this).init.prototype.showGlobalMessage = function() {
+                    self.showGlobalOverlayMessage()
+                }, $(this).init.prototype.hideGlobalMessage = function() {
+                    self.hideGlobalOverlayMessage()
+                }
+            })
+        },
+        updateIframeHeight: function() {
+            var $overlayContainer = $(".overlay-container").filter(":visible"),
+                $overlayContent = $overlayContainer.find(".overlay-content"),
+                $iframe = $overlayContainer.find("iframe"),
+                overlayHeaderHeight = $overlayContent.offset().top - $overlayContainer.offset().top,
+                iFrameHeight = parseInt($iframe.attr("height"), 10) || 0,
+                confObj = {
+                    height: iFrameHeight - overlayHeaderHeight
+                },
+                $actualHeaderPanel = null,
+                headerSpacing = null;
+            iFrameHeight > 0 && overlayHeaderHeight > 0 && (this.options.header && ($actualHeaderPanel = $overlayContainer.find(".overlay-headline").parent(), headerSpacing = $overlayContent.offset().top - $overlayContainer.offset().top - $actualHeaderPanel.outerHeight(), confObj = {
+                height: parseInt($overlayContent.css("max-height"), 10) - headerSpacing
+            }), $iframe.attr(confObj), $iframe.css(confObj))
+        },
+        bindResizeEvent: function() {
+            var self = this,
+                positionTopClass = "position-top";
+            $(window).on("resize updateOverlayPosition", function() {
+                var $overlayContainer = $(".overlay-container").filter(":visible"),
+                    $overlayContent = $overlayContainer.find(".overlay-content"),
+                    overlayContainerMaxWidth = $overlayContainer.css("max-width"),
+                    overlayContainerHeight = $overlayContainer.height(),
+                    overlayHeaderHeight = $overlayContent.offset().top - $overlayContainer.offset().top,
+                    overlayContentHeight = (parseInt($overlayContent.css("max-height"), 10) || 0) + overlayHeaderHeight,
+                    overlayerHeight = $overlayContainer.height(),
+                    overlayerWidth = $overlayContainer.width(),
+                    deathZone = shop.device.isMobile ? 0 : 10,
+                    deathZoneWidth = 80,
+                    responsiveClass = "responsive-overlay",
+                    innerWindowHeight = window.innerHeight - deathZone,
+                    innerWindowWidth = window.innerWidth - deathZoneWidth;
+                innerWindowHeight > overlayerHeight && overlayContentHeight > overlayContainerHeight && !self.options.contentScroll && $overlayContent.css({
+                    height: "auto",
+                    "max-height": ""
+                }), overlayerHeight >= innerWindowHeight ? $overlayContainer.addClass(positionTopClass).css("margin-top", "0") : ($overlayContainer.hasClass(positionTopClass) && $overlayContainer.removeClass(positionTopClass), self.setTopPos($overlayContainer.height() / 2)), overlayerWidth > innerWindowWidth ? (("none" === overlayContainerMaxWidth || "" === overlayContainerMaxWidth) && $overlayContainer.css("max-width", $overlayContainer.css("width")), self.options.fullScreenResponsive && $overlayContainer.addClass(responsiveClass)) : self.options.fullScreenResponsive && $overlayContainer.removeClass(responsiveClass)
+            })
+        },
+        close: function() {
+            Log({
+                level: 1,
+                message: "Overlay: CLOSE",
+                type: "info"
+            }), $("body").removeClass("js-has-overlay"), $(".overlay-background").remove()
+        },
+        wrap: function() {
+            var $overlayContainer, _html = this.buildBackground(),
+                $body = $("body"),
+                self = this;
+            "div" === this.options.type && (Log({
+                level: 1,
+                message: "Overlay: WRAP | div",
+                type: "info"
+            }), _html = _html.replace("{{replace}}", this.buildDivContainer())), "iframe" === this.options.type && (Log({
+                level: 1,
+                message: "Overlay: WRAP | iframe",
+                type: "info"
+            }), _html = _html.replace("{{replace}}", this.buildIframeContainer())), $body.addClass("js-has-overlay").append(_html), window.shop.cloudinaryImageHandler(), $overlayContainer = $(".overlay-container"), $overlayContainer.find("iframe").load(function() {
+                var $body = $("body");
+                $body.scrollTop($body.scrollTop() - 1).scrollTop($body.scrollTop() + 1), self.updateIframeHeight()
+            }), this.setTopPos($overlayContainer.height() / 2.5), setTimeout(function() {
+                $(window).trigger("updateOverlayPosition")
+            }, 25), this.bindCloseEvent(), this.bindResizeEvent(), this.executeCallback()
+        },
+        show: this.wrap,
+        buildBackground: function() {
+            var withConfirmBtn = this.options.confirm === !0 ? '<div class="overlay-btn-container panel"><a class="overlay-confirm js-overlay-close btn secondary helper-expand underline-alternative">OK</a></div>' : "",
+                documentHeight = $(document).height(),
+                windowHeight = $(window).height(),
+                windowWidth = $(window).width(),
+                containerHeight = this.options.height > windowHeight ? windowHeight : this.options.height,
+                containerWidth = this.options.width > windowWidth ? windowWidth : this.options.width,
+                containerMaxHeight = isNaN(containerHeight) ? containerHeight : parseInt(containerHeight - $(".overlay-header").height() - 15 - 15 - 24 - 15, 10) + "px",
+                getGlobalMessageHTML = function(show) {
+                    return '<div class="global-overlay-messages' + (show ? "" : " helper-hide") + '">' + $("#global-messages").html() + "</div>"
+                },
+                withHeader = this.options.header === !0 ? '<div class="panel spacing-bottom-8"><h2 class="overlay-headline typo-second clearfix">' + (this.options.title ? this.options.title.replace("|", "") : "") + '<span class="overlay-close js-overlay-close helper-right"></span><span class="icon icon-close icon-size-mini helper-right"></span></h2></div>' : "";
+            return '<div class="overlay-background overlay-type-' + this.options.type + " " + this.options.styleClass + '" style="height:' + (windowHeight > documentHeight ? windowHeight : documentHeight) + 'px"><div class="overlay-container ' + (this.options.fullScreenResponsive ? "responsive-overlay" : "") + '" style="width:' + containerWidth + "px; margin-left:-" + parseInt(containerWidth / 2, 10) + 'px">' + withHeader + '<div class="overlay-content' + (this.options.contentScroll ? " scroll" : "") + '" style="max-height:' + containerMaxHeight + ("webkit" === shop.device.browserEngine && shop.device.hasTouch ? '; overflow:auto; -webkit-overflow-scrolling: touch">' : '">') + '<div class="overlay-content-container"><div class="panel">' + getGlobalMessageHTML(this.options.showGlobalMessages) + "{{replace}}</div></div>" + withConfirmBtn + "</div></div></div>"
+        },
+        buildDivContainer: function() {
+            var self = this,
+                $content = $(self.options.content).clone();
+            return $content.hasClass("helper-hide") && ($content = $content.removeClass("helper-hide")), $("<div>", {
+                html: $content
+            }).html()
+        },
+        buildIframeContainer: function() {
+            var windowHeight = $(window).height(),
+                containerHeight = this.options.height > windowHeight ? windowHeight : this.options.height;
+            return '<iframe height="' + containerHeight + '" width="100%" style="height:' + containerHeight + 'px; width: 1px; min-width: 100%" src="' + this.options.src + '"></iframe>'
+        }
+    }
+}(), $(function() {
+    "use strict";
+    $(document).on("createOverlay", function() {
+        var overlaySelector = ".overlay",
+            $overlayElems = $(overlaySelector).not(".js-init"),
+            overlayElemsCounter = $overlayElems.length || 0;
+        overlayElemsCounter > 0 && (shop.overlays = {}, $.each($overlayElems, function() {
+            var overlayObjCounter = shop.overlays.length || 0;
+            $(this).addClass("js-init"), shop.overlays["anchorOverlay" + (overlayObjCounter + 1)] = new Overlay($(this))
+        }))
+    }), $(document).trigger("createOverlay")
+});
 var Product = function(element) {
-    if (this.currentVariantCode = null, this.currentVariantSizeCode = null, this.currentSpecialOfferDiscount = null, this.baseProductCode = null, this.cacheNamespace = "productView", this.miniProductDetails = !1, this.__SELECTED__ = "selected", this.__SOLDOUT__ = "soldout", this.__AVAILABLE__ = "available", this.hasWaConfigurator = $("#waCalculatorBox").length > 0, this.showOtherPrices = shop.net && "true" === shop.url.parameters.PLA, this.defaultPriceFormat = {
-            symbol: "â‚¬",
+    if (this.currentVariantCode = null, this.currentVariantSizeCode = null, this.currentSpecialOfferDiscount = null, this.baseProductCode = null, this.cacheNamespace = "productView", this.miniProductDetails = !1, this.quickShopper = !1, this.__SELECTED__ = "selected", this.__SOLDOUT__ = "soldout", this.__AVAILABLE__ = "available", this._sodSelectorColor = ".js-display-product-color-variants-dropdown", this._sodSelectorSize = ".js-display-product-size-variants-dropdown", this.hasWaConfigurator = $("#waCalculatorBox").length > 0, this.showOtherPrices = shop.net && "true" === shop.url.parameters.PLA, this.defaultPriceFormat = {
+            symbol: "€",
             format: "%s %v",
             decimal: ".",
             thousand: ",",
             precision: 2
-        }, this.__FORMAT_THUMBNAIL__ = "thumbnail", this.__FORMAT_ZOOM__ = "zoom", this.__FORMAT_PRODUCT__ = "product", this.__STATE_VISIBLE__ = "state-product-fadeable-visible", this.$element = $(element), this.$galleryElement = $(".slider-wrapper", this.$element), this.lastSendViewProduct = "", accounting.settings.currency = this.defaultPriceFormat, !shop.page.article) {
+        }, this.__FORMAT_THUMBNAIL__ = "thumbnail", this.__FORMAT_ZOOM__ = "zoom", this.__FORMAT_PRODUCT__ = "product", this.__STATE_VISIBLE__ = "state-product-fadeable-visible", this.imageGallerySizeM = "w_104,h_104", this.imageGallerySizeL = "w_120,h_120", this.imageGallerySizeXL = "w_150,h_150", this.imagePrimarySizeM = "w_476,h_476", this.imagePrimarySizeL = "w_460,h_460", this.imagePrimarySizeXL = "w_570,h_570", this.imageGallerySizeMobile = "w_476,h_476", this.imageQuickShopperSizeM = "w_54,h_54", this.imageQuickShopperSizeL = "w_60,h_60", this.imageQuickShopperSizeXL = "w_60,h_60", this.$element = $(element), this.$galleryElement = $(".js-gallery-items .slick-wrapper", this.$element), this.lastSendViewProduct = "", accounting.settings.currency = this.defaultPriceFormat, !shop.page.article) {
         console.log("Injecting shop.page.article for Standard-Variant");
         var firstSizeVariant = shop.product.variantOptions[0].sizeVariantOptions[0];
         this.isStandardSizeVariant(shop.product.variantOptions[0].sizeVariantOptions[0]) && (shop.page.article = firstSizeVariant.code)
     }
-    this.setVariantCode(), this.setVariantSizeCode(), this.setBaseProductCode(), this.bindEvents()
+    this.setVariantCode(), this.setVariantSizeCode(), this.setBaseProductCode(), this.bindEvents(), this.initSoD(this._sodSelectorColor, this._onChangeVariantColorCode), this.initSoD(this._sodSelectorSize, this._onChangeVariantSizeCode)
 };
 Product.prototype = {
-    displayVariantSize: function() {
-        return this.setStateInvisible()._setVariantArticleCode().setVariantSizeCode(this.getVariantCode())._displayVariantPrice().setVariantLocationUrl()._displayActiveVariantSize()._displayVariantAvailability()._displayVariantUserGuide().setStateVisible()._updateWaConfigurator(), this._sendViewProduct(), this
-    },
     displayVariant: function() {
-        return this.setStateInvisible()._setVariantArticleCode()._hideVariantAvailability()._displayVariantPrice().setVariantLocationUrl()._displayVariantArticleNumber()._displayProductName()._displayVariantColorSelector()._displayActiveVariantColor()._displayVariantSizeSelector().setStateVisible()._displayPrimaryImage()._displayVariantGallery()._updateWaConfigurator()._cacheSaveCurrentGallery()._displayVariantSocialSharing(), this.isSizeVariant() || this._sendViewProduct(), this
+        return this.setStateInvisible()._setVariantArticleCode()._hideVariantAvailability()._displayVariantPrice().setVariantLocationUrl()._displayVariantArticleNumber()._displayProductName()._displayVariantColorSelector()._displayActiveVariantColor()._updateSoDSelector(this._sodSelectorColor, "color")._displayVariantSizeSelector()._displayActiveVariantSize()._updateSoDSelector(this._sodSelectorSize, "size").setStateVisible()._displayPrimaryImage()._displayActionImg()._displayNewBadge()._displayDisrupterBadge()._displayVariantGallery()._updateWaConfigurator()._cacheSaveCurrentGallery(), $(document).trigger("createOverlay"), this.isSizeVariant() || this._sendViewProduct(), this
     },
-    _updateWaConfigurator: function(state) {
-        return this.hasWaConfigurator && shop.waConfigurator && shop.waConfigurator.updateCalculator(state), this
-    },
-    _displayVariantPrice: function() {
-        var $priceElem = $(".js-display-variant-price", this.$element),
-            $quantity = $("#qty"),
-            volumePriceDropdownID = "js-volume-dropdown";
-        return this.isSizeVariant() && this.hasSizeVariantVolumePrices() && !this.isMiniProductDetails() ? ($priceElem.html(this.getVariantVolumePriceDropdownHTML(volumePriceDropdownID, $quantity.val())), this._bindVolumePriceEventListener($("#" + volumePriceDropdownID), $quantity)) : $priceElem.html(this.getVariantPriceHTML()), this._displaySpecialOfferDiscount(), this._displayShippingCosts(), this
-    },
-    _displayShippingCosts: function() {
-        if (0 != $(".product-shipping-costs").length) {
-            var $plaGrossPriceElem = $(".pla-gross-price");
-            $(".product-shipping-costs.js-clone").remove(), $plaGrossPriceElem.length > 0 && $plaGrossPriceElem.append(this.getFreightCostHTML(this.showOtherPrices)), $(".js-display-variant-price").after(this.getFreightCostHTML()), this.hasFreightCost() ? $(".js-display-variant-freight-cost", this.$element).removeClass("hide") : $(".js-display-variant-freight-cost", this.$element).addClass("hide")
-        }
-        return this
+    displayVariantSize: function() {
+        return this.setStateInvisible()._setVariantArticleCode().setVariantSizeCode(this.getVariantCode())._displayVariantPrice().setVariantLocationUrl()._displayActiveVariantSize()._displayVariantAvailability()._displayVariantUserGuide()._displayActionImg()._displayNewBadge()._displayDisrupterBadge().setStateVisible()._updateWaConfigurator(), $(document).trigger("createOverlay"), this._sendViewProduct(), this
     },
     displayVariantForMiniProductDetails: function() {
-        return this.setMiniProductDetails(), this.setStateInvisible()._setVariantArticleCode()._hideVariantAvailability()._displayVariantPrice()._displayVariantArticleNumber()._displayProductName()._displayVariantColorSelector(!0)._displayActiveVariantColor()._displayVariantSizeSelector(!0).setStateVisible()._displayPrimaryImage(), this
+        return this.setMiniProductDetails(), this.setStateInvisible()._setVariantArticleCode()._hideVariantAvailability()._displayVariantPrice()._displayVariantArticleNumber()._displayProductName()._displayVariantColorSelector(!0)._displayActiveVariantColor()._updateSoDSelector(this._sodSelectorColor, "color")._displayVariantSizeSelector(!0)._displayActiveVariantSize()._updateSoDSelector(this._sodSelectorSize, "size").setStateVisible()._displayPrimaryImage(), $(document).trigger("createOverlay"), this
     },
     displayVariantSizeForMiniProductDetails: function() {
-        return this.setStateInvisible()._setVariantArticleCode().setVariantSizeCode(this.getVariantCode())._displayVariantPrice()._displayActiveVariantSize(!0)._displayVariantAvailability().setStateVisible(), this
+        return this.setStateInvisible()._setVariantArticleCode().setVariantSizeCode(this.getVariantCode())._displayVariantPrice()._displayActiveVariantSize(!0)._displayVariantAvailability().setStateVisible(), $(document).trigger("createOverlay"), this
+    },
+    displayVariantForQuickShopper: function() {
+        return this.setQuickShopper(), this.setStateInvisible()._setVariantArticleCode()._displayVariantPrice()._displayProductName()._displayVariantColorSelector(!0)._displayActiveVariantColor()._updateSoDSelector(this._sodSelectorColor, "color")._displayVariantSizeSelector(!0)._displayActiveVariantSize(!0)._updateSoDSelector(this._sodSelectorSize, "size").setStateVisible()._displayPrimaryImage(), $(document).trigger("createOverlay"), this
+    },
+    displayVariantSizeForQuickShopper: function() {
+        return this.setStateInvisible()._setVariantArticleCode().setVariantSizeCode(this.getVariantCode())._displayVariantPrice()._displayActiveVariantSize(!0).setStateVisible(), $(document).trigger("createOverlay"), this
+    },
+    initSoD: function(selector, onChangeMethod) {
+        var self = this;
+        $(selector, self.$element).selectOrDie({
+            onChange: function() {
+                onChangeMethod(self)
+            }
+        })
+    },
+    _onChangeVariantSizeCode: function(self) {
+        var _code = self._getSelectedVariantCode(self._sodSelectorSize);
+        self._hideErrorMessages().setAndDisplayVariantSize(_code)
+    },
+    _onChangeVariantColorCode: function(self) {
+        var _code = self._getSelectedVariantCode(self._sodSelectorColor);
+        self._hideErrorMessages().setAndDisplayVariant(_code)
+    },
+    _updateSoDSelector: function(selector, typeString) {
+        var $elem = $(selector, this.$element),
+            self = this,
+            onChangeMethod = "color" === typeString ? this._onChangeVariantColorCode : "size" === typeString ? this._onChangeVariantSizeCode : null;
+        return $elem.selectOrDie("destroy"), $elem.selectOrDie({
+            onChange: function() {
+                onChangeMethod(self)
+            }
+        }), this
+    },
+    _getSelectedVariantCode: function(selector) {
+        return $(selector + " option", this.$element).filter(":selected").data("variant-code")
+    },
+    _getSelectedVariantSize: function(selector) {
+        return $(selector + " option", this.$element).filter(":selected").data("variant-size")
+    },
+    _hideErrorMessages: function() {
+        return $(".js-product-size-error").addClass("helper-hide"), this
+    },
+    _updateWaConfigurator: function(state) {
+        return this.hasWaConfigurator && shop.waConfigurator && shop.waConfigurator.updateCalculator && shop.waConfigurator.updateCalculator(state), this
+    },
+    _displayVariantPrice: function() {
+        var $priceElem = $(".js-display-variant-price"),
+            $quantity = $("input.quantity:visible"),
+            $volumePriceDropdownClass = "js-volume-dropdown",
+            self = this;
+        return this.isSizeVariant() && this.hasSizeVariantVolumePrices() && !this.isMiniProductDetails() ? ($priceElem.each(function() {
+            $(this).html(self.getVariantVolumePriceDropdownHTML($volumePriceDropdownClass, $quantity.val()))
+        }), $("." + $volumePriceDropdownClass).each(function() {
+            self._bindVolumePriceEventListener($(this), $quantity)
+        })) : $priceElem.html(this.getVariantPriceHTML()), this._displaySpecialOfferDiscount(), this._displayShippingCosts(), this
+    },
+    _displayShippingCosts: function() {
+        var shippingCostsSelector = ".product-shipping-costs",
+            $shippingCostsElem = $(shippingCostsSelector, this.$element),
+            $plaGrossPriceElem = $(".pla-gross-price", this.$element);
+        return 0 !== $shippingCostsElem.length && (this.setFreightCostHTML($shippingCostsElem), $plaGrossPriceElem.length > 0 && (0 === $plaGrossPriceElem.find(shippingCostsSelector).length && $plaGrossPriceElem.append($shippingCostsElem.clone(!0, !0).removeAttr("id")), this.setFreightCostHTML($plaGrossPriceElem, this.showOtherPrices)), this.hasFreightCost() ? $(".js-display-variant-freight-cost", this.$element).removeClass("helper-hide") : $(".js-display-variant-freight-cost", this.$element).addClass("helper-hide")), this
     },
     _displayVariantUserGuide: function() {
         "use strict";
@@ -7450,7 +7245,7 @@ Product.prototype = {
         return this.hasVariantUserGuide() ? (_$userGuideLinkSelector.attr("href", this.getVariantUserGuide()), _$userGuideSelector.show()) : _$userGuideSelector.hide(), this
     },
     _displayVariantAvailability: function() {
-        var _preOrderDate = void 0 != this.getVariantPreOrderDate() ? this.getVariantPreOrderDate() : "",
+        var _$showDeliveryCommitment, _preOrderDate = void 0 != this.getVariantPreOrderDate() ? this.getVariantPreOrderDate() : "",
             _showPreOrder = void 0 != this.isVariantPreOrder() ? this.isVariantPreOrder() : !1,
             _preOrderText = $(".js-display-variant-availability-text", this.$element).attr("data-pre-order-text"),
             _preOrderDateText = $(".js-display-variant-availability-text", this.$element).attr("data-pre-order-date-text"),
@@ -7458,17 +7253,11 @@ Product.prototype = {
             _deliveryNotTo = $(".js-display-variant-availability-text", this.$element).attr("data-delivery-not-to-text"),
             _$availabilityLightSelector = $(".js-display-variant-availability-light", this.$element),
             _$availabilityTextSelector = $(".js-display-variant-availability-text", this.$element);
-        if ($(".product-availability", this.$element).removeClass("hide"), _showPreOrder && "" !== _preOrderDate) _$availabilityLightSelector.hide(), _$availabilityTextSelector.addClass("preorder-text").html(_preOrderDateText + _preOrderDate);
-        else if (_showPreOrder && "" === _preOrderDate) _$availabilityLightSelector.hide(), _$availabilityTextSelector.addClass("preorder-text").html(_preOrderText);
-        else {
-            var _$showDeliveryCommitment = this.showDeliveryCommitmentForVariant();
-            null != _$showDeliveryCommitment ? _$availabilityTextSelector.html(_$showDeliveryCommitment ? this.getVariantAvailabilityText() + " <span>" + _deliveryTo + "</span>" : this.getVariantAvailabilityText() + " <span>" + _deliveryNotTo + "</span>") : _$availabilityTextSelector.removeClass("preorder-text").html(this.getVariantAvailabilityText()), _$availabilityLightSelector.show().removeClass("availability availability-green availability-yellow availability-red").addClass(this.getVariantAvailabilityLight())
-        }
-        return this
+        return $(".product-availability", this.$element).removeClass("helper-hide"), _showPreOrder && "" !== _preOrderDate ? (_$availabilityLightSelector.hide(), _$availabilityTextSelector.addClass("preorder-text").html(_preOrderDateText + _preOrderDate)) : _showPreOrder && "" === _preOrderDate ? (_$availabilityLightSelector.hide(), _$availabilityTextSelector.addClass("preorder-text").html(_preOrderText)) : (_$showDeliveryCommitment = this.showDeliveryCommitmentForVariant(), null !== _$showDeliveryCommitment ? _$availabilityTextSelector.html(_$showDeliveryCommitment ? this.getVariantAvailabilityText() + " <span>" + _deliveryTo + "</span>" : this.getVariantAvailabilityText() + " <span>" + _deliveryNotTo + "</span>") : _$availabilityTextSelector.removeClass("preorder-text").html(this.getVariantAvailabilityText()), _$availabilityLightSelector.show().removeClass("availability availability-green availability-yellow availability-red").addClass(this.getVariantAvailabilityLight())), this
     },
     _hideVariantAvailability: function() {
         var _availabilitySelector = $(".product-availability", this.$element);
-        return _availabilitySelector.hasClass("hide") || _availabilitySelector.addClass("hide"), this
+        return _availabilitySelector.hasClass("helper-hide") || _availabilitySelector.addClass("helper-hide"), this
     },
     _displayVariantArticleNumber: function() {
         return $(".js-display-variant-number", this.$element).html(this.getVariantOrderNumber()), this
@@ -7479,32 +7268,108 @@ Product.prototype = {
     _displayProductName: function() {
         return $(".js-display-product-name", this.$element).html(this.getProductName()), this
     },
+    _setNewPrimaryImageUrl: function(regex, newImageSize) {
+        var _primaryImageSrc, _galleryItemProductImageUrl, $_primaryImage = $(".js-display-variant-primary-image", this.$element),
+            $_galleryImages = $(".js-gallery-image", this.$element);
+        _primaryImageSrc = $_primaryImage.attr("src").replace(regex, newImageSize), $_primaryImage.attr("src", _primaryImageSrc), $_galleryImages.each(function() {
+            var $this = $(this);
+            _galleryItemProductImageUrl = $this.attr("data-product-image").replace(regex, newImageSize), $this.attr("data-product-image", _galleryItemProductImageUrl)
+        })
+    },
+    _setNewGalleryImageUrl: function(regex, newImageSize) {
+        var _galleryItemImageUrl, $_galleryImages = $(".js-gallery-image", this.$element);
+        $_galleryImages.each(function() {
+            var $this = $(this);
+            _galleryItemImageUrl = $this.attr("src").replace(regex, newImageSize), $this.attr("src", _galleryItemImageUrl)
+        })
+    },
+    _bindResizeImageOnToggleBreakpoint: function(eventType, primaryImageRegex, primaryImageSize, galleryImageRegex, galleryImageSize) {
+        var self = this;
+        $(window).on(eventType, function() {
+            return function() {
+                self._setNewPrimaryImageUrl(primaryImageRegex, primaryImageSize), self._setNewGalleryImageUrl(galleryImageRegex, galleryImageSize)
+            }
+        }(this))
+    },
+    _bindResponsiveProductImage: function() {
+        var self = this,
+            primaryImageRegex = new RegExp(this.imagePrimarySizeL + "|" + this.imagePrimarySizeXL, "g"),
+            primaryImageSize = this.imagePrimarySizeM,
+            galleryImageRegex = new RegExp(this.imageGallerySizeL + "|" + this.imageGallerySizeXL, "g"),
+            galleryImageSize = this.imageGallerySizeM;
+        self._bindResizeImageOnToggleBreakpoint("enterBreakpoint768.product", primaryImageRegex, primaryImageSize, galleryImageRegex, galleryImageSize), primaryImageRegex = new RegExp(this.imagePrimarySizeM + "|" + this.imagePrimarySizeXL, "g"), primaryImageSize = this.imagePrimarySizeL, galleryImageRegex = new RegExp(this.imageGallerySizeM + "|" + this.imageGallerySizeXL, "g"), galleryImageSize = this.imageGallerySizeL, self._bindResizeImageOnToggleBreakpoint("enterBreakpoint1024.product", primaryImageRegex, primaryImageSize, galleryImageRegex, galleryImageSize), primaryImageRegex = new RegExp(this.imagePrimarySizeM + "|" + this.imagePrimarySizeL, "g"), primaryImageSize = this.imagePrimarySizeXL, galleryImageRegex = new RegExp(this.imageGallerySizeM + "|" + this.imageGallerySizeL, "g"), galleryImageSize = this.imageGallerySizeXL, self._bindResizeImageOnToggleBreakpoint("enterBreakpoint1280.product", primaryImageRegex, primaryImageSize, galleryImageRegex, galleryImageSize)
+    },
+    _getResponsiveImageUrl: function(_url, _sizeM, _sizeL, _sizeXL) {
+        var _sourceSize, _windowWidth = window.innerWidth;
+        try {
+            _sourceSize = _url.slice(_url.indexOf("c_pad,"), _url.indexOf(",q_80,fl_progressive"))
+        } catch (err) {
+            console.log("_url is undefined", err)
+        }
+        return _sourceSize && (_url = 1024 > _windowWidth ? _url.replace(_sourceSize, "c_pad," + _sizeM) : 1280 > _windowWidth ? _url.replace(_sourceSize, "c_pad," + _sizeL) : _url.replace(_sourceSize, "c_pad," + _sizeXL)), _url
+    },
+    _getResponsiveProductImageUrl: function(_url) {
+        return this._getResponsiveImageUrl(_url, this.imagePrimarySizeM, this.imagePrimarySizeL, this.imagePrimarySizeXL)
+    },
+    _getResponsiveGalleryImageUrl: function(_url) {
+        return this._getResponsiveImageUrl(_url, shop.device.isMobile ? this.imageGallerySizeMobile : this.imageGallerySizeM, this.imageGallerySizeL, this.imageGallerySizeXL)
+    },
+    _getResponsiveQuickShopperImageUrl: function(_url) {
+        return this._getResponsiveImageUrl(_url, this.imageQuickShopperSizeM, this.imageQuickShopperSizeL, this.imageQuickShopperSizeXL)
+    },
     _displayVariantGallery: function() {
-        var _item, _return = this._cacheLoadGallery(),
-            _gallery = this.getVariantThumbnails(),
+        var _item, _gallery = this.getVariantThumbnails(),
             _galleryCount = _gallery.length,
             _template = new Template;
-        if (this.$galleryElement.html(""), _return) this.$galleryElement.append(_return);
-        else {
-            _template.setTemplate("template-product-image-carrousel");
-            for (var i = 0; _galleryCount > i; i++) _item = _gallery[i], _item.productImage = this.getProductImage(_item.galleryIndex).url, _item.productMediaType = this.getProductImage(_item.galleryIndex).creatradeImageType, _item.zoomImage = "VIDEO" !== this.getProductImage(_item.galleryIndex).creatradeImageType && void 0 != this.getZoomImage(_item.galleryIndex) ? this.getZoomImage(_item.galleryIndex).url : "", this.$galleryElement.append(_template.setPlaceholder(_item).render())
-        }
-        return this.gallery && (this.gallery.remove(), this._bindGallery()), this
+        this.$galleryElement.removeClass("slick-initialized").html(""), _template.setTemplate("template-product-image-carrousel");
+        for (var i = 0; _galleryCount > i; i++) _item = _gallery[i], _item.url = this._getResponsiveGalleryImageUrl(_item.url), _item.productImage = this._getResponsiveProductImageUrl(this.getProductImage(_item.galleryIndex).url), _item.productMediaType = this.getProductImage(_item.galleryIndex).creatradeImageType, _item.zoomImage = "VIDEO" !== this.getProductImage(_item.galleryIndex).creatradeImageType && void 0 != this.getZoomImage(_item.galleryIndex) ? this.getZoomImage(_item.galleryIndex).url : "", this.$galleryElement.append(_template.setPlaceholder(_item).render());
+        return this._bindSliderGallery(), this
     },
-    _displayPrimaryImage: function(url, zoomUrl, mediaType) {
+    _displayPrimaryImage: function(url, zoomUrl, mediaType, $currentElem) {
         var _url = url ? url : this.getVariantPrimaryProductImage().url,
             _fallbackZoomUrl = void 0 != this.getZoomImage(0) ? this.getZoomImage(0).url : "",
             _zoom = zoomUrl ? zoomUrl : _fallbackZoomUrl,
-            $_image = $(".js-display-variant-primary-image"),
-            $_video = $(".js-display-variant-video");
-        return "https:" === location.protocol && (_url = url ? url : this.getVariantPrimaryProductImage().httpsUrl, _fallbackZoomUrl = void 0 != this.getZoomImage(0) ? this.getZoomImage(0).httpsUrl : "", _zoom = zoomUrl ? zoomUrl : _fallbackZoomUrl), "VIDEO" !== mediaType ? ($_video.hide(), $_image.show().attr("src", _url).attr("data-zoom-image", _zoom), shop.device.isMobile || this._bindZoomOverlay($_image, _url), this.isMiniProductDetails() || ($_image.attr("data-zoom-image", _zoom), this._bindZoomOverlay($_image, _zoom || _url))) : ($_image.hide(), $_video.show().html("<iframe width='490' height='400' src='" + _url + "' ></iframe>")), $.removeData($_image, "elevateZoom"), $(".zoomContainer").remove(), "VIDEO" === mediaType || shop.device.isMobile || this.isMiniProductDetails() || this._bindZoomImage(), this
+            self = this,
+            $_image = $(".js-display-variant-primary-image", this.$element),
+            $_video = $(".js-display-variant-video", this.$element),
+            $slickWrapper = $(".slick-wrapper", "#product-image");
+        return "https:" === location.protocol && (_url = url ? url : this.getVariantPrimaryProductImage().httpsUrl, _fallbackZoomUrl = void 0 != this.getZoomImage(0) ? this.getZoomImage(0).httpsUrl : "", _zoom = zoomUrl ? zoomUrl : _fallbackZoomUrl), _url = this.isQuickShopper() ? this._getResponsiveQuickShopperImageUrl(_url) : this._getResponsiveProductImageUrl(_url), "VIDEO" !== mediaType ? ($_video.hide(), $_image.show().attr("src", _url), this.isMiniProductDetails() && this.isQuickShopper() && shop.device.isMobile || $_image.attr("data-zoom-image", _zoom)) : $.fn.loadMovingImageVideo($currentElem, _url, $_image, $_video, self, $slickWrapper), $.removeData($_image, "elevateZoom"), $(".zoomContainer").remove(), "VIDEO" === mediaType || this.isMiniProductDetails() || this.isQuickShopper() || this._bindZoomImage(), this
+    },
+    _displayPrimaryOverlayImage: function(url, mediaType) {
+        var _url = url ? url : this.getVariantZoomImages().url,
+            $_image = $(".zoom-image-overlay", $(".overlay-container"));
+        return "https:" === location.protocol && (_url = url ? url : this.getVariantZoomImages().httpsUrl), _url = this._getResponsiveProductImageUrl(_url), "VIDEO" !== mediaType ? $_image.show().attr("src", _url) : $_image.hide(), this
+    },
+    _displayDisrupterBadge: function() {
+        var $_disrupter = $("#js-disrupter-badge"),
+            $_pdsImage = $("#product-image-detail"),
+            _topOfferText = $_disrupter.attr("data-price-top-offer-text") ? $_disrupter.attr("data-price-top-offer-text").split("-") : "",
+            _saleText = $_disrupter.attr("data-price-sale-text"),
+            _template = new Template,
+            variantPriceData = this._getVariantPriceData(parent),
+            stateClasses = ["state-badge-sale ", "state-badge-topoffer "],
+            stateClass = "",
+            placeholder = {
+                isTopOffer: "",
+                isSale: "",
+                text: ""
+            };
+        return $_pdsImage.removeClass(stateClasses[0]).removeClass(stateClasses[1]).find(".js-disrupter-badge").remove(), void 0 !== variantPriceData.formattedOldPriceValue && (placeholder.isSale = "sale", placeholder.text = '<span class="large">' + _saleText + "</span>", stateClass += stateClasses[0]), variantPriceData.showTopOfferHint && (placeholder.isTopOffer = "top-offer", placeholder.text = '<span class="text"><span class="large">' + _topOfferText[0] + '</span><br><span class="small">' + _topOfferText[1] + "</span></span>", stateClass += stateClasses[1]), "" !== placeholder.text && (_template = _template.setTemplate("js-disrupter-badge"), $_pdsImage.prepend(_template.setPlaceholder(placeholder).render() || "").addClass(stateClass)), this
     },
     _getSpecialOfferDiscountHTML: function(value) {
         var _template = new Template;
         return value ? _template.setTemplate("template-special-offer-discount").setPlaceholder({
-            specialOfferDiscount: value,
-            discountBadgeSizeClass: value.indexOf(".") >= 0 ? "small" : ""
+            specialOfferDiscount: value
         }).render() : ""
+    },
+    _getActionImgHTML: function(imgURL) {
+        var _template = new Template;
+        return _template.setTemplate("template-action-img").setPlaceholder({
+            imgURL: imgURL
+        }).render()
+    },
+    _getNewBadgeHTML: function() {
+        return (new Template).setTemplate("template-new-badge").setPlaceholder({}).render()
     },
     _getSpecialOfferDiscountTextHTML: function(value) {
         var _template = new Template;
@@ -7519,50 +7384,85 @@ Product.prototype = {
     },
     _displaySpecialOfferDiscount: function() {
         var specialOfferDiscount = this.getVariantSizeVariantSpecialOfferDiscount(),
-            $element = $(shop.device.isMobile ? "#product-information" : "#product-image-detail"),
+            $productDetailImage = $("#product-image-detail"),
             $productShippingCosts = $("#product-shipping-costs", "#product-information"),
-            discountBadgeSelector = ".discount-badge",
-            discountTextSelector = ".discount-text";
-        return specialOfferDiscount ? ($element.find(discountBadgeSelector).remove().end().append(this._getSpecialOfferDiscountHTML(specialOfferDiscount)), $productShippingCosts.find(discountTextSelector).remove().end().prepend(this._getSpecialOfferDiscountTextHTML(specialOfferDiscount))) : ($element.find(discountBadgeSelector).remove(), $productShippingCosts.find(discountTextSelector).remove()), this
+            discountBadgeSelector = ".badge.discount",
+            discountTextSelector = ".discount-text",
+            stateClass = "state-badge-discount";
+        return specialOfferDiscount ? ($productDetailImage.find(discountBadgeSelector).remove().end().prepend(this._getSpecialOfferDiscountHTML(specialOfferDiscount)).addClass(stateClass), $productShippingCosts.find(discountTextSelector).remove().end().prepend(this._getSpecialOfferDiscountTextHTML(specialOfferDiscount))) : ($productDetailImage.removeClass(stateClass).find(discountBadgeSelector).remove(), $productShippingCosts.find(discountTextSelector).remove()), this
     },
-    _displayVariantSocialSharing: function() {
-        var _return = this._cacheLoadSocialSharer(),
-            _template = new Template,
-            _$element = $(".js-display-product-social-sharing");
-        return this._cacheSaveCurrentSocialSharer(), _return ? _$element = _return : _$element.html(_template.setTemplate("template-product-social-sharing").setPlaceholder({
-            url: encodeURIComponent(window.location.href)
-        }).render()), this
+    _displayActionImg: function() {
+        var actionImgURL = this.getProductActionImgURL(),
+            $productDetailImage = $("#product-image-detail"),
+            badgeSelector = ".badge.action-img",
+            stateClass = "state-action-img";
+        return actionImgURL ? $productDetailImage.find(badgeSelector).remove().end().prepend(this._getActionImgHTML(actionImgURL)).addClass(stateClass) : $productDetailImage.removeClass(stateClass).find(badgeSelector).remove(), this
+    },
+    _displayNewBadge: function() {
+        var variantPriceData = this._getVariantPriceData(),
+            hasNewFlag = this.getVariantNewFlag(),
+            hasTopOffer = void 0 !== variantPriceData.formattedOldPriceValue,
+            hasSale = variantPriceData.showTopOfferHint,
+            $productDetailImage = $("#product-image-detail"),
+            badgeSelector = ".badge.new",
+            stateClass = "state-badge-new";
+        return hasNewFlag && shop.code.showNewBadge(hasTopOffer, hasSale) ? $productDetailImage.find(badgeSelector).remove().end().prepend(this._getNewBadgeHTML()).addClass(stateClass) : $productDetailImage.removeClass(stateClass).find(badgeSelector).remove(), this
+    },
+    _checkSelectDisabledState: function($select) {
+        $select.attr("disabled", !0)
+    },
+    _checkOptionsDisabledState: function($select) {
+        $select.find("." + this.__SOLDOUT__).attr("disabled", !0)
     },
     _checkDropdownDisabledState: function($elem) {
+        var self = this;
         $elem.each(function() {
             var $this = $(this),
-                $thisLiSize = $this.find("ul li").length,
+                $thisSelect = $this.find("select"),
+                $thisOptionSize = $thisSelect.find("option").length,
                 disabledClass = "disabled";
-            $thisLiSize > 1 ? $this.removeClass(disabledClass) : $this.addClass(disabledClass)
+            $thisOptionSize > 1 ? $this.removeClass(disabledClass) : (self._checkSelectDisabledState($thisSelect), $this.addClass(disabledClass)), self._checkOptionsDisabledState($thisSelect)
         })
     },
     _displayVariantColorSelector: function(noTiles) {
         if (!this.isStandardColorVariant()) {
-            for (var _tileTemplate, _variants = this.getVariantColorVariants(), _displayType = this.getProductStyleVariantSelectorDisplayType(), _displayTiles = "TILES" === _displayType && !noTiles, _template = _displayTiles ? new Template : (new Template).setTemplate("template-product-color-variants-dropdown"), _displayVariantSelector = $(_displayTiles ? ".js-display-product-color-variants-tiles" : ".js-display-product-color-variants-dropdown").html(""), i = 0, l = _variants.length; l > i; i++) _displayTiles && (_tileTemplate = "" !== _variants[i].hex3 ? "template-product-color-variants-tiles-three" : "" !== _variants[i].hex2 ? "template-product-color-variants-tiles-two" : "" !== _variants[i].hex ? "template-product-color-variants-tiles" : "" != _variants[i].image ? "template-product-color-variants-tiles-image" : !1, _tileTemplate && _template.setTemplate(_tileTemplate)), _displayVariantSelector.append(_template.setPlaceholder(_variants[i]).render());
+            var _displayVariantSelector, _tileTemplate, _variants = this.getVariantColorVariants(),
+                _displayType = this.getProductStyleVariantSelectorDisplayType(),
+                _displayTiles = "TILES" === _displayType && !noTiles && !shop.device.hasTouch,
+                _mainTemplate = (new Template).setTemplate(_displayTiles ? "template-product-color-tile" : "template-product-color-dropdown"),
+                _template = _displayTiles ? new Template : (new Template).setTemplate("template-product-color-dropdown-option"),
+                _$displayVariantOptionsSelector = $(".js-product-variant-options", this.$element);
+            0 === _$displayVariantOptionsSelector.find(".color-selector").length && _$displayVariantOptionsSelector.append(_mainTemplate.setPlaceholder({}).render()), _displayVariantSelector = (_displayTiles ? $(".js-display-product-color-variants-tiles", this.$element) : $(".js-display-product-color-variants-dropdown", this.$element)).html("");
+            for (var i = 0, l = _variants.length; l > i; i++) _displayTiles && (_tileTemplate = "" !== _variants[i].hex3 ? "template-product-color-variants-tiles-three" : "" !== _variants[i].hex2 ? "template-product-color-variants-tiles-two" : "" !== _variants[i].hex ? "template-product-color-variants-tiles" : "" != _variants[i].image ? "template-product-color-variants-tiles-image" : !1, _tileTemplate && _template.setTemplate(_tileTemplate)), _displayVariantSelector.append(_template.setPlaceholder(_variants[i]).render());
             _displayTiles || this._checkDropdownDisabledState(_displayVariantSelector.closest("#product-color-dropdown"))
         }
         return this
     },
     _displayActiveVariantColor: function() {
-        return this.isStandardColorVariant() || $(".js-display-chosen-color", this.$element).html(this.getVariantColorVariant().color), this
+        var color = this.getVariantColorVariant().color,
+            _code = this.getVariantColorCode();
+        return $(this._sodSelectorColor, this.$element).val(_code), $(".js-display-chosen-color .sod_label", this.$element).html(color), this
+    },
+    _addDefaultTextToSelect: function($select) {
+        $select && 0 === $select.find("option.placeholder").length && $select.prepend('<option class="placeholder">' + $select.data("js-placeholder") + "</option>").data({
+            "placeholder-option": !0
+        })
     },
     _displayVariantSizeSelector: function(noTiles) {
         if (!this.isStandardSizeVariant()) {
             var _displayVariantSelector, _variants = this.getVariantSizeVariants(),
                 _variantsLength = _variants.length,
-                _template = new Template,
                 _item = {},
-                _displayType = this.getProductStyleVariantSelectorDisplayType(),
                 _chosenSize = "",
-                _noTiles = void 0 != noTiles ? noTiles : !1;
-            "TILES" === _displayType & !_noTiles ? (_displayVariantSelector = $(".js-display-product-size-variants-tiles", this.$element), _chosenSize = $(".js-display-product-size-variants-tiles .selected", this.$element).attr("data-variant-size"), _template.setTemplate("template-product-size-variants-tiles")) : (_displayVariantSelector = $(".js-display-product-size-variants-dropdown", this.$element), _chosenSize = $(".js-display-chosen-size", this.$element).attr("data-variant-size"), $(".js-display-chosen-size", this.$element).html($(".js-display-chosen-size", this.$element).attr("data-default-text")), _template.setTemplate("template-product-size-variants-dropdown")), _displayVariantSelector.html("");
-            for (var i = 0; _variantsLength > i; i++) _item.code = _variants[i].code, _item.url = _variants[i].url, _item.active = this.getVariantSizeCode() === _item.code ? this.__SELECTED__ : "", _item.availability = "RED" === _variants[i].availabilityStatus.trafficLight ? this.__SOLDOUT__ : this.__AVAILABLE__, _item.soldoutText = void 0 !== _variants[i].availabilityStatus.displayText && "RED" === _variants[i].availabilityStatus.trafficLight ? " - " + _variants[i].availabilityStatus.displayText : "", _item.size = "size" === _variants[i].variantOptionQualifiers[0].qualifier ? _variants[i].variantOptionQualifiers[0].value : _variants[i].variantOptionQualifiers[1].value, _displayVariantSelector.append(_template.setPlaceholder(_item).render()), _chosenSize === _item.size && this.isAvailableSizeVariant(_item.code) && this.setAndDisplayVariantSize(_item.code);
-            this._checkDropdownDisabledState(_displayVariantSelector.closest("#product-size-dropdown"))
+                _useDefaultPlaceholderText = !0,
+                _displayTiles = "TILES" === this.getProductStyleVariantSelectorDisplayType() && !shop.device.hasTouch && !noTiles,
+                _$displayVariantOptionsSelector = $(".js-product-variant-options", this.$element),
+                _mainTemplate = (new Template).setTemplate(_displayTiles ? "template-product-size-tile" : "template-product-size-dropdown"),
+                _template = new Template,
+                $sizeSelector = null;
+            0 === _$displayVariantOptionsSelector.find(".size-selector").length && _$displayVariantOptionsSelector.append(_mainTemplate.setPlaceholder({}).render()), _displayTiles ? (_displayVariantSelector = $(".js-display-product-size-variants-tiles", this.$element), _chosenSize = $(".js-display-product-size-variants-tiles .selected", this.$element).attr("data-variant-size"), _template.setTemplate("template-product-size-variants-tiles")) : (_displayVariantSelector = $(".js-display-product-size-variants-dropdown", this.$element), _chosenSize = this._getSelectedVariantSize(this._sodSelectorSize), _template.setTemplate("template-product-size-option-dropdown")), _displayVariantSelector.html(""), $sizeSelector = $(this._sodSelectorSize, this.$element);
+            for (var i = 0; _variantsLength > i; i++) _item.code = _variants[i].code, _item.url = _variants[i].url, _item.active = this.getVariantSizeCode() === _item.code ? this.__SELECTED__ : "", _item.availability = "RED" === _variants[i].availabilityStatus.trafficLight ? this.__SOLDOUT__ : this.__AVAILABLE__, _item.soldoutText = void 0 !== _variants[i].availabilityStatus.displayText && "RED" === _variants[i].availabilityStatus.trafficLight ? " - " + _variants[i].availabilityStatus.displayText : "", _item.disabled = void 0 !== _variants[i].availabilityStatus.displayText && "RED" === _variants[i].availabilityStatus.trafficLight ? "disabled" : "", _item.size = "size" === _variants[i].variantOptionQualifiers[0].qualifier ? _variants[i].variantOptionQualifiers[0].value : _variants[i].variantOptionQualifiers[1].value, _chosenSize === _item.size && this.isAvailableSizeVariant(_item.code) ? (this.setAndDisplayVariantSize(_item.code), $sizeSelector.data("placeholder", ""), _useDefaultPlaceholderText = !1) : _useDefaultPlaceholderText && this._addDefaultTextToSelect($sizeSelector), _displayVariantSelector.append(_template.setPlaceholder(_item).render());
+            _displayTiles || this._checkDropdownDisabledState(_displayVariantSelector.closest("#product-size-dropdown"))
         }
         return this
     },
@@ -7571,7 +7471,7 @@ Product.prototype = {
         if (!this.isStandardSizeVariant() && null !== this.getVariantSizeCode()) {
             var _size = "size" === this.getVariantSizeVariant().variantOptionQualifiers[0].qualifier ? this.getVariantSizeVariant().variantOptionQualifiers[0].value : this.getVariantSizeVariant().variantOptionQualifiers[1].value,
                 _code = this.getVariantSizeCode();
-            "TILES" !== this.getProductStyleVariantSelectorDisplayType() || _noTiles ? $(".js-display-chosen-size", this.$element).attr("data-variant-size", _size).html(_size) : $(".js-display-product-size-variants-tiles li", this.$element).removeClass("selected").each(function() {
+            "TILES" !== this.getProductStyleVariantSelectorDisplayType() || _noTiles ? ($(this._sodSelectorSize, this.$element).val(_code), $(".js-display-chosen-size .sod_label", this.$element).html(_size)) : $(".js-display-product-size-variants-tiles li", this.$element).removeClass("selected").each(function() {
                 $(this).attr("data-variant-code") === _code && $(this).attr("data-variant-size", _size).addClass("selected")
             })
         }
@@ -7583,33 +7483,19 @@ Product.prototype = {
     _cacheLoadGallery: function() {
         return Cache(this.cacheNamespace).load(this._getCacheGalleryName())
     },
-    _cacheSaveCurrentSocialSharer: function() {
-        return Cache(this.cacheNamespace).save(this._getCacheSocialShareName(), $(".js-display-product-social-sharing").html()), this
-    },
-    _cacheLoadSocialSharer: function() {
-        return Cache(this.cacheNamespace).load(this._getCacheSocialShareName(), $(".js-display-product-social-sharing").html())
-    },
     _getCacheGalleryName: function() {
         return this.getVariantColorCode() + "-gallery"
     },
-    _getCacheSocialShareName: function() {
-        return this.getVariantColorCode() + "-social"
-    },
     bindEvents: function() {
-        var self = this,
-            eventHandler = shop.device.hasTouch ? "tab.product touch.product" : "mousedown.product";
-        return $(function() {
-            self._bindGallery()
-        }), self.$galleryElement.on("click.product", "img", function(self) {
+        {
+            var self = this;
+            shop.device.hasTouch ? "tab.product touch.product" : "mousedown.product"
+        }
+        return self.$galleryElement.on("click.product", "img", function(self) {
             return function(event) {
-                if (event.preventDefault(), event.stopPropagation(), self.$galleryElement.find("img").removeClass("active"), $(this).addClass("active"), self._displayPrimaryImage($(this).attr("data-product-image"), $(this).attr("data-zoom-image"), $(this).attr("data-product-media-type")), shop.device.isMobile) {
-                    var $navDetailSliderItem = $("#nav-detail-media-gallery").width($(window).width()).find(".slider-item");
-                    $.ocNav("nav-detail-media-gallery", "open"), $navDetailSliderItem.on("click", "img", function(e) {
-                        e.preventDefault(), $navDetailSliderItem.find("img").removeClass("active"), $(this).addClass("active"), self._displayPrimaryImage($(this).attr("data-product-image"), $(this).attr("data-zoom-image"), $(this).attr("data-product-media-type"))
-                    })
-                }
+                event.preventDefault(), event.stopPropagation(), self._displayPrimaryImage($(this).attr("data-product-image"), $(this).attr("data-zoom-image"), $(this).attr("data-product-media-type"), $(this))
             }
-        }(self)), this._bindDropDownToggle(eventHandler)._bindVariantColorDropdownSelector(eventHandler)._bindVariantSizeDropdownSelector(eventHandler)._bindVariantColorTileSelector()._bindVariantSizeTileSelector()._bindVariantUrl(), this
+        }(self)), this._bindVariantColorTileSelector()._bindVariantSizeTileSelector()._bindVariantUrl(), shop.device.isMobile || this._bindResponsiveProductImage(), this
     },
     _setSendViewProduct: function(code) {
         code && (this.lastSendViewProduct = code)
@@ -7619,7 +7505,7 @@ Product.prototype = {
     },
     _sendViewProduct: function() {
         var etracker, identifier = this.getVariantIdentifier(),
-            quantity = $("#qty").val();
+            quantity = $("input.quantity", this.$element).val();
         this._getSendViewProduct() !== identifier && (etracker = new eTrackerCommerceAPI, etracker.viewProduct(etracker.getProductJSON(this.getVariantIdentifier(), quantity))), this._setSendViewProduct(identifier)
     },
     _bindVolumePriceEventListener: function($volumePriceDropdown, $quantity) {
@@ -7627,49 +7513,60 @@ Product.prototype = {
         $volumePriceDropdown.selectOrDie({
             cycle: !0,
             onChange: function() {
-                $quantity.val($(this).find(":selected").val()), self._updateWaConfigurator("change"), self.showOtherPrices && ($(".pla-net-price-value").text($(this).find(":selected").data("formatted-price")), $(".pla-net-print-price-value").text($(this).find(":selected").data("formatted-print-price")))
+                $quantity.val(parseInt($(this).find(":selected").val(), 10) || 1), self._updateWaConfigurator("change"), self._displayVariantPrice(), self.showOtherPrices && self.isQuickShopper() && ($(".pla-net-price-value").text($(this).find(":selected").data("formatted-price")), $(".pla-net-print-price-value").text($(this).find(":selected").data("formatted-print-price")))
             }
         }), $quantity.delayKeyup(function() {
             self._displayVariantPrice()
         })
     },
-    _bindGallery: function() {
-        var $mediaGallery = $("#media-gallery"),
-            detailMediaGalleryName = "detail-media-gallery",
-            $productImageDetail = $("#product-image-detail");
-        shop.device.isMobile ? ($("#" + detailMediaGalleryName).remove(), $mediaGallery.clone().attr({
-            id: detailMediaGalleryName,
-            style: ""
-        }).addClass("m-t-l").find("ul").attr("style", "").end().appendTo($productImageDetail), this.gallery = new Slider($mediaGallery, {
-            orientation: "horizontal",
-            pagerSteps: 2,
-            startPosition: 0,
-            auto: !1,
-            width: $mediaGallery.width(),
-            productcarousel: !0,
-            halfslider: !0
-        }), $mediaGallery.height($mediaGallery.find("img").eq(0).attr("height") + 10), $productImageDetail.ocNav({
-            name: "nav-" + detailMediaGalleryName,
-            renaming: !1,
-            side: "left",
-            source: "#product-image-detail",
-            onOpen: function() {
-                shop.disableScrolling("#page-wrapper", !0)
-            },
-            onClose: function() {
-                shop.disableScrolling("#page-wrapper", !1)
-            }
-        }), $(".js-pds-close").on("click", function(e) {
-            e.preventDefault(), e.stopPropagation(), $.ocNav("nav-detail-media-gallery", "close")
-        })) : this.gallery = new Slider($mediaGallery, {
-            orientation: "vertical",
-            pagerSteps: 3,
-            height: 585,
-            auto: !1
+    _bindSliderGallery: function() {
+        var $sliderContainer = $(".js-gallery-items"),
+            $sliderContainerItems = $(".js-gallery-item", $sliderContainer),
+            $sliderImages = $sliderContainerItems.find("img"),
+            sliderImagesLength = $sliderImages.length,
+            loadedImagesCounter = 0,
+            imagesToShow = shop.device.isMobile ? 1 : 3,
+            fn = {
+                buildSlider: function() {
+                    $sliderContainerItems.length > 0 && new Slider($sliderContainer, {
+                        pagerSteps: imagesToShow,
+                        dots: shop.device.isMobile,
+                        auto: !1,
+                        adaptiveHeight: !0,
+                        animation: "slide",
+                        responsive: [{
+                            breakpoint: 768,
+                            settings: {
+                                vertical: !1,
+                                prevArrow: '<div class="slick-slide-prev slide-navigator-left"></div>',
+                                nextArrow: '<div class="slick-slide-next slide-navigator-right"></div>'
+                            }
+                        }, {
+                            breakpoint: 1023,
+                            settings: {
+                                vertical: !0,
+                                prevArrow: '<div class="slick-slide-prev slide-navigator-top"></div>',
+                                nextArrow: '<div class="slick-slide-next slide-navigator-bottom"></div>'
+                            }
+                        }, {
+                            breakpoint: 1280,
+                            settings: {
+                                vertical: !0,
+                                prevArrow: '<div class="slick-slide-prev slide-navigator-top"></div>',
+                                nextArrow: '<div class="slick-slide-next slide-navigator-bottom"></div>'
+                            }
+                        }]
+                    })
+                }
+            };
+        $sliderImages.each(function() {
+            $(this).ensureLoad(function() {
+                loadedImagesCounter += 1, sliderImagesLength === loadedImagesCounter && fn.buildSlider()
+            })
         })
     },
     _bindZoomImage: function() {
-        return "tablet" !== shop.device.type && "mobile" !== shop.device.type ? $(".js-display-variant-primary-image", this.$element).elevateZoom({
+        return shop.device.hasTouch || $(".js-display-variant-primary-image", this.$element).elevateZoom({
             cursor: "crosshair",
             easing: !0,
             easingAmount: 4,
@@ -7677,38 +7574,53 @@ Product.prototype = {
             zoomWindowFadeOut: 200,
             zoomWindowWidth: 480,
             zoomWindowHeight: 585
-        }) : $(".js-display-variant-primary-image").magnifik({
-            ratio: 1
         }), this
     },
-    _bindZoomOverlay: function(_image, _url) {
-        return "tablet" !== shop.device.type && "mobile" !== shop.device.type && (_image.off("click.zoomImage"), $(".js-zoom-image-overlay").remove(), _image.on("click.zoomImage", function() {
-            {
-                var zoomImageOverlayContent = '<div><img class="zoom-image-overlay" src="' + _url + '"/></div>';
-                new Overlay(".js-zoom-image-overlay", {
-                    type: "div",
-                    width: "500px",
-                    height: "500px",
-                    styleClass: "js-zoom-image-overlay",
-                    content: zoomImageOverlayContent,
-                    closeAlways: !0
-                }, function() {
-                    $(".zoom-image-overlay").on("load", function() {
-                        {
-                            var $img = $(this);
-                            $img.closest(".overlay-container")
-                        }
-                        $img.css({
-                            height: $(window).height() - 200,
-                            "min-height": $(window).height() / 2
-                        }), $overlayContainer.css({
-                            left: ($(window).width() - $(this).width()) / 2 + "px",
-                            "margin-top": "-" + $overlayContainer.height() / 2.5 + "px"
-                        })
-                    })
-                }).wrap()
-            }
-        })), this
+    _bindZoomOverlay: function(_image) {
+        var _templateGalleryContainer = new Template,
+            _templateGalleryItem = new Template,
+            _images = this.getVariantThumbnails(),
+            _galleryItemsHTML = "",
+            clickEvent = "click.zoom-overlay",
+            overlayZoomHeadline = $(".js-display-variant-primary-image ").data("overlay-headline"),
+            conf = {
+                dim: 600
+            };
+        return _templateGalleryContainer.setTemplate("template-product-image-zoom-container-carrousel"), $.each(_images, function(i) {
+            _images[i].url = (_images[i].url || "").replace(/w_.[0-9]*/, "w_" + conf.dim).replace(/h_.[0-9]*/, "h_" + conf.dim), _galleryItemsHTML += _templateGalleryItem.setTemplate("template-product-image-carrousel").setPlaceholder(_images[i]).render()
+        }), shop.device.isMobile || _image.hammer().off(clickEvent).on(clickEvent, function() {
+            new Overlay(".js-zoom-image-overlay", {
+                type: "div",
+                width: conf.dim,
+                height: "auto",
+                title: overlayZoomHeadline,
+                styleClass: "zoom-image-overlay",
+                content: _templateGalleryContainer.setPlaceholder({
+                    productImageCarrousel: _galleryItemsHTML
+                }).render(),
+                closeAlways: !1
+            }, function() {
+                var $sliderBigContainer = $(".js-gallery-big-items"),
+                    $sliderSmallContainer = $(".js-gallery-small-items"),
+                    $sliderContainerItems = $(".js-gallery-item", $sliderBigContainer),
+                    $sliderContainerImage = $sliderContainerItems.find("img").eq(0);
+                $(document).trigger("hasreplaced"), $sliderContainerItems.length > 0 && (new Slider($sliderBigContainer, {
+                    pagerSteps: 1,
+                    auto: !1,
+                    animation: "slide",
+                    asNavFor: ".js-gallery-small-items .slick-slider"
+                }), new Slider($sliderSmallContainer, {
+                    pagerSteps: 1,
+                    slidesToShow: 3,
+                    auto: !1,
+                    animation: "slide",
+                    focusOnSelect: !0,
+                    asNavFor: ".js-gallery-big-items .slick-slider"
+                }), $sliderContainerImage.ensureLoad(function() {
+                    $(window).trigger("updateOverlayPosition")
+                }), shop.pageInformation.wishlist.updateHearts())
+            }).wrap()
+        }), this
     },
     _bindVariantUrl: function() {
         return history.pushState && $(window).on("popstate.product", function(self) {
@@ -7719,73 +7631,29 @@ Product.prototype = {
             }
         }(this)), this
     },
-    _bindVariantColorDropdownSelector: function(eventHandler) {
-        var elementSelector = "li." + this.__AVAILABLE__;
-        return $(".js-event-select-color-variant").hammer().on(eventHandler, elementSelector, function(self) {
-            var $activeDropDown = $("#product-color-dropdown");
-            return function(event) {
-                shop.device.hasTouch ? (event.gesture.preventDefault(), event.gesture.stopPropagation(), window.setTimeout(function() {
-                    $activeDropDown.css("margin-bottom", $activeDropDown.data("margin-bottom"))
-                }, 1e3)) : (event.stopPropagation(), event.preventDefault()), $(this).parents("ul").hide().removeClass("drop-down-active"), $(".js-product-size-error").addClass("hide");
-                var _code = $(this).attr("data-variant-code");
-                self.setAndDisplayVariant(_code)
-            }
-        }(this)), this
-    },
-    _bindVariantSizeDropdownSelector: function(eventHandler) {
-        var elementSelector = "li." + this.__AVAILABLE__;
-        return $(".js-event-select-size-variant").hammer().on(eventHandler, elementSelector, function(self) {
-            var $activeDropDown = $("#product-size-dropdown");
-            return function(event) {
-                shop.device.hasTouch ? (event.gesture.preventDefault(), event.gesture.stopPropagation(), window.setTimeout(function() {
-                    $activeDropDown.css("margin-bottom", $activeDropDown.data("margin-bottom"))
-                }, 1e3)) : (event.stopPropagation(), event.preventDefault()), $(this).parents("ul").hide().removeClass("drop-down-active"), $(".js-product-size-error").addClass("hide");
-                var _code = $(this).attr("data-variant-code");
-                self.setAndDisplayVariantSize(_code)
-            }
-        }(this)), this
-    },
     _bindVariantColorTileSelector: function() {
         var elementSelector = "li." + this.__AVAILABLE__;
-        return $(".js-event-select-color-tile-variant").on("click.product", elementSelector, function(self) {
+        return $(".js-product-variant-options", this.$element).on("click.product", ".js-event-select-color-tile-variant " + elementSelector, function(self) {
             return function(event) {
-                event.stopPropagation(), event.preventDefault(), $(".js-product-size-error").addClass("hide");
-                var _code = $(this).attr("data-variant-code");
-                self.setAndDisplayVariant(_code)
+                event.stopPropagation(), event.preventDefault(), $(".js-product-size-error").addClass("helper-hide");
+                var _code = $(this).attr("data-variant-code"),
+                    _sizeSelector = $(".js-event-select-size-tile-variant .selected", this.$element),
+                    size = _sizeSelector ? _sizeSelector.attr("data-variant-size") : !1;
+                self.setAndDisplayVariant(_code, size)
             }
         }(this)), this
     },
     _bindVariantSizeTileSelector: function() {
         var elementSelector = "li." + this.__AVAILABLE__;
-        return $(".js-event-select-size-tile-variant").on("click.product", elementSelector, function(self) {
+        return $(".js-product-variant-options", this.$element).on("click.product", ".js-event-select-size-tile-variant " + elementSelector, function(self) {
             return function(event) {
-                event.stopPropagation(), event.preventDefault(), $(".js-product-size-error").addClass("hide");
+                event.stopPropagation(), event.preventDefault(), $(".js-product-size-error").addClass("helper-hide");
                 var _code = $(this).attr("data-variant-code");
                 self.setAndDisplayVariantSize(_code)
             }
-        }(this)), this
-    },
-    _bindDropDownToggle: function(eventHandler) {
-        var $sizeDropDown = $("#product-size-dropdown"),
-            $colorDropDown = $("#product-color-dropdown"),
-            $dropDowns = $().add($colorDropDown).add($sizeDropDown);
-        return $sizeDropDown.data("margin-bottom", $sizeDropDown.css("margin-bottom")), $colorDropDown.data("margin-bottom", $colorDropDown.css("margin-bottom")), $(".variant-options").hammer().on(eventHandler, ".js-event-toggle-drop-down", function() {
-            return function(event) {
-                shop.device.hasTouch ? (event.gesture.preventDefault(), event.gesture.stopPropagation()) : (event.stopPropagation(), event.preventDefault());
-                var $ul = $(this).nextAll("ul"),
-                    ulItemsSize = $ul.find("li").length,
-                    $activeDropDown = $(this).closest("#product-color-dropdown, #product-size-dropdown");
-                ulItemsSize > 1 && ($ul.hasClass("drop-down-active") ? ($(document).off("mousedown.js-event-toggle-drop-down"), $(".drop-down-active").each(function() {
-                    $(this).show().addClass("drop-down-active")
-                }), shop.device.hasTouch && $dropDowns.css("margin-bottom", ""), $ul.hide().removeClass("drop-down-active")) : ($(".drop-down-active").each(function() {
-                    $(this).hide().removeClass("drop-down-active")
-                }), $(this).nextAll("ul").show().addClass("drop-down-active"), shop.device.hasTouch && $activeDropDown.css("margin-bottom", $(".drop-down-active").height() + 10), $(document).on("mousedown.js-event-toggle-drop-down", function() {
-                    0 === $(this).closest(".js-event-toggle-drop-down").length && $(".drop-down-active").each(function() {
-                        shop.device.hasTouch && $dropDowns.css("margin-bottom", ""), $(this).hide().removeClass("drop-down-active")
-                    })
-                })))
-            }
-        }(this)), this
+        }(this)), shop.device.hasTouch && $(".js-product-variant-options", this.$element).hammer().on("touch", ".js-display-product-size-variants-dropdown", function() {
+            $(this).trigger("change")
+        }), this
     },
     setZoomImage: function(image) {
         var newImage = new Image;
@@ -7802,10 +7670,10 @@ Product.prototype = {
         }, this.getVariantCode(), this.getShopBaseUrl() + this.getVariantUrl() + location.search), this
     },
     setStateVisible: function() {
-        return $("body").addClass(this.__STATE_VISIBLE__), $("#add-to-cart-button").attr("disabled", !1).prop("disabled", !1), $("#add-to-watchlist-button").attr("disabled", !1).prop("disabled", !1), this
+        return $("body").addClass(this.__STATE_VISIBLE__), $(".js-add-to-cart").attr("disabled", !1).prop("disabled", !1), $("#add-to-watchlist-button").attr("disabled", !1).prop("disabled", !1), this
     },
     setStateInvisible: function() {
-        return $("body").removeClass(this.__STATE_VISIBLE__), $("#add-to-cart-button").attr("disabled", !0).prop("disabled", !0), $("#add-to-watchlist-button").attr("disabled", !0).prop("disabled", !0), this
+        return $("body").removeClass(this.__STATE_VISIBLE__), $(".js-add-to-cart").attr("disabled", !0).prop("disabled", !0), $("#add-to-watchlist-button").attr("disabled", !0).prop("disabled", !0), this
     },
     getProduct: function() {
         return shop.hasOwnProperty("product") ? shop.product : {}
@@ -7825,8 +7693,11 @@ Product.prototype = {
     getProductUrl: function() {
         return this.getObjectPath(this.getProduct().url)
     },
+    getProductActionImgURL: function() {
+        return this.getProduct().hasOwnProperty("actionFlagURL") ? this.getObjectPath(this.getProduct().actionFlagURL) : null
+    },
     getProductStyleVariantSelectorDisplayType: function() {
-        return this.getObjectPath(this.getProduct().styleVariantSelectorDisplayType)
+        return shop.device.hasTouch ? "dropdown" : this.getObjectPath(this.getProduct().styleVariantSelectorDisplayType)
     },
     _getEquivalentImage: function(image, type) {
         for (var _reference = "object" == typeof image ? this.getImageIndex() : image, _images = void 0 != this.getVariant().galleryImages ? this.getVariant().galleryImages : [], _imageCount = _images.length, i = 0; _imageCount > i; i++)
@@ -7854,6 +7725,12 @@ Product.prototype = {
                 type: "error"
             }), !1
         }
+    },
+    setQuickShopper: function(isQuickShopper) {
+        return this.quickShopper = isQuickShopper ? isQuickShopper : !0, this
+    },
+    isQuickShopper: function() {
+        return this.quickShopper
     },
     setMiniProductDetails: function(isMini) {
         return this.miniProductDetails = isMini ? isMini : !0, this
@@ -7888,27 +7765,44 @@ Product.prototype = {
         }
         return null
     },
-    getNextAvailableSizeVariant: function() {
-        for (var i = 0; i < this.getVariantSizeVariants().length; i++)
-            if ("RED" !== this.getVariantSizeVariants()[i].availabilityStatus.trafficLight) return this.getVariantSizeVariants()[i].code;
-        return null
-    },
     setVariantSizeCode: function(sizeCode) {
         var shopPageArticle = this.isAvailableSizeVariant(shop.page.article) ? shop.page.article : null;
-        return "" === shopPageArticle && (shopPageArticle = null), this.currentVariantSizeCode = this.isAvailableSizeVariant(sizeCode) ? sizeCode : shopPageArticle ? shopPageArticle : this.isStandardSizeVariant() ? this.getNextAvailableSizeVariant() : null, this
+        return "" === shopPageArticle && (shopPageArticle = null), this.currentVariantSizeCode = this.isAvailableSizeVariant(sizeCode) ? sizeCode : shopPageArticle, this
     },
     isAvailableSizeVariant: function(sizeCode) {
-        for (var _sizeVariant, _sizeVariantsLength = this.getVariant().sizeVariantOptions.length, _sizeAvailable = !1, i = 0; _sizeVariantsLength > i; i++) _sizeVariant = this.getVariant().sizeVariantOptions[i], _sizeVariant.code === sizeCode && "RED" !== _sizeVariant.availabilityStatus.trafficLight && (_sizeAvailable = !0);
+        for (var _sizeVariant, _sizeVariantsLength = this.getVariant().sizeVariantOptions ? this.getVariant().sizeVariantOptions.length : 0, _sizeAvailable = !1, i = 0; _sizeVariantsLength > i; i++) _sizeVariant = this.getVariant().sizeVariantOptions[i], _sizeVariant.code === sizeCode && "RED" !== _sizeVariant.availabilityStatus.trafficLight && (_sizeAvailable = !0);
         return _sizeAvailable
     },
     resetVariantSizeCode: function() {
         return this.currentVariantSizeCode = null, this
     },
-    setAndDisplayVariant: function(code) {
-        this.isVariantActive(code) || (this.setVariantCodeAndResetSizeCode(code), this.isMiniProductDetails() ? this.displayVariantForMiniProductDetails() : this.displayVariant()), this.isStandardSizeVariant() && this.setAndDisplayVariantSize(this.getVariant().sizeVariantOptions[0].code)
+    setAndDisplayVariant: function(code, size) {
+        if (!this.isVariantActive(code)) {
+            if (this.setVariantCodeAndResetSizeCode(code), this.isMiniProductDetails()) this.displayVariantForMiniProductDetails();
+            else if (this.isQuickShopper()) this.displayVariantForQuickShopper(), shop.productDetailsPage && shop.productDetailsPage.setVariantCodeAndResetSizeCode(code).displayVariant();
+            else if (this.displayVariant(), shop.quickShopperProduct && (shop.quickShopperProduct.setVariantCodeAndResetSizeCode(code).displayVariantForQuickShopper(), size)) {
+                var sizeCode = shop.quickShopperProduct.getVariantSizeCodeBySize(size);
+                sizeCode && shop.quickShopperProduct.setVariantSizeCode(sizeCode).displayVariantSizeForQuickShopper()
+            }
+            this.updateAddToWatchlistLinks(shop.productDetailsPage.currentVariantSizeCode || code), this.updateLikeCounterNumberDependentOnStyleVariant(code), shop.pageInformation.wishlist.updateWatchlistIndicatorProductCode(shop.productDetailsPage.currentVariantSizeCode || code), shop.pageInformation.wishlist.updateHearts()
+        }
+        this.isStandardSizeVariant() && this.setAndDisplayVariantSize(this.getVariant().sizeVariantOptions[0].code)
+    },
+    updateLikeCounterNumberDependentOnStyleVariant: function(code) {
+        if (void 0 !== code)
+            for (var variants = shop.product.variantOptions, i = 0; i < variants.length; i++) {
+                var styeVariant = variants[i];
+                void 0 !== styeVariant && styeVariant.code === code && shop.pageInformation.wishlist.updateLikeCounterNumber("#product-image-detail", styeVariant.likeCounter)
+            }
+    },
+    updateAddToWatchlistLinks: function(code) {
+        var wishlistArticleCodes = shop.pageInformation.wishlistArticleCodes,
+            $addToWishlistLink = $(".js-add-to-watchlist"),
+            modificationDataResult = wishlistArticleCodes.indexOf(code) >= 0 ? "success" : "deleted";
+        shop.pageInformation.wishlist.updateAddToWatchlistLinkPDS($addToWishlistLink, modificationDataResult, code).updateHearts()
     },
     setAndDisplayVariantSize: function(code) {
-        this.isVariantActive(code) || (this.setVariantSizeCode(code), this.isMiniProductDetails() ? this.displayVariantSizeForMiniProductDetails() : this.displayVariantSize())
+        this.isVariantActive(code) || (this.setVariantSizeCode(code), this.isMiniProductDetails() ? this.displayVariantSizeForMiniProductDetails() : this.isQuickShopper() ? (this.displayVariantSizeForQuickShopper(), shop.productDetailsPage && (shop.productDetailsPage.setVariantSizeCode(code), shop.productDetailsPage.displayVariantSize())) : (this.displayVariantSize(), shop.quickShopperProduct && (shop.quickShopperProduct.setVariantSizeCode(code), shop.quickShopperProduct.displayVariantSizeForQuickShopper())), this.updateAddToWatchlistLinks(code), shop.pageInformation.wishlist.updateWatchlistIndicatorProductCode(code), this.updateLikeCounterNumberDependentOnStyleVariant(code), shop.pageInformation.wishlist.updateHearts())
     },
     getVariant: function() {
         for (var _return = !1, i = 0; i < this.getProductVariants().length; i++)(this.getProductVariants()[i].code === this.getVariantColorCode() || this.getProductVariants()[i].code === this.getBaseProductCode()) && (_return = this.getProductVariants()[i]);
@@ -7951,6 +7845,9 @@ Product.prototype = {
     _getVariantPriceData: function(parent, amount) {
         return this.isSizeVariant() && parent !== !0 ? this.hasSizeVariantVolumePrices() ? this.getVariantSizeVariantVolumePrice(amount ? amount : 1) : this.getVariantSizeVariant().priceData : this.getVariant().priceData
     },
+    getVariantNewFlag: function() {
+        return this.getObjectPath(this.getVariant().newFlag) || !1
+    },
     getFormattedPrice: function(price, formatObj) {
         var newPrice;
         return newPrice = formatObj ? accounting.formatMoney(price, formatObj.symbol, formatObj.precision, formatObj.thousand, formatObj.decimal) : accounting.formatMoney(price, this.defaultPriceFormat.symbol, this.defaultPriceFormat.precision, this.defaultPriceFormat.thousand, this.defaultPriceFormat.decimal, this.defaultPriceFormat.format)
@@ -7959,7 +7856,7 @@ Product.prototype = {
         return this.getFormattedPrice(price + this._getTaxForPrice(price), formatObj)
     },
     getFormattedGrossOrNetPrice: function(price, formattedPrice, formatOptionObj, netOrGross) {
-        return "gross" === netOrGross && price || this.showOtherPrices && price && !netOrGross ? this.getFormattedPricePlusTax(price, formatOptionObj) : "net" === netOrGross && formattedPrice || formattedPrice && !netOrGross ? formattedPrice : void 0
+        return "gross" === netOrGross && price || this.showOtherPrices && price && !netOrGross && !this.isQuickShopper() ? this.getFormattedPricePlusTax(price, formatOptionObj) : "net" === netOrGross && formattedPrice || formattedPrice && !netOrGross ? formattedPrice : void 0
     },
     getPrintPrice: function(printPriceObj, netOrGross) {
         return printPriceObj ? this.getFormattedGrossOrNetPrice(printPriceObj.value, printPriceObj.formattedValue, {
@@ -7993,7 +7890,7 @@ Product.prototype = {
                 return "" !== printPrice ? "+" + printPrice : ""
             },
             getPriceClass: function() {
-                return printPriceObj && self.hasProductWaFlag() ? "visible" : "hidden"
+                return printPriceObj && self.hasProductWaFlag() ? "visible" : "helper-hide"
             },
             getSeperator: function() {
                 return itemObj.maxQuantity ? " - " : ""
@@ -8016,9 +7913,9 @@ Product.prototype = {
             amount = amount ? amount : 1,
             self = this,
             dropdownTemplate = "",
-            hasVolumePricesPrintData = this.hasVolumePricesPrintData() ? "visible" : "hidden";
+            hasVolumePricesPrintData = this.hasVolumePricesPrintData() ? "visible" : "helper-hide";
         return selectTemplate.setTemplate("template-product-volume-price-dropdown"), selectTemplate.setPlaceholder({
-            customID: customID ? customID : "js-volume-price-selector"
+            customClass: customID ? customID : "js-volume-price-selector"
         }).setExceptions({
             getPrintPriceDataClass: function() {
                 return hasVolumePricesPrintData
@@ -8027,7 +7924,7 @@ Product.prototype = {
                 for (var itemsHTML = "", i = 0, l = priceArray.length; l > i; i++) itemsHTML += self.getVariantPriceDropdownItemHTML(priceArray[i], amount);
                 return itemsHTML
             }
-        }), this.showOtherPrices ? (selectTemplate = selectTemplate.render(), priceTemplate.setTemplate("template-pla-price"), priceTemplate.setPlaceholder({
+        }), this.showOtherPrices && !this.isQuickShopper ? (selectTemplate = selectTemplate.render(), priceTemplate.setTemplate("template-pla-price"), priceTemplate.setPlaceholder({
             txtGross: txt.gross,
             priceHTML: selectTemplate,
             txtNet: txt.net + " ",
@@ -8042,9 +7939,9 @@ Product.prototype = {
     getVariantPriceHTML: function(parent) {
         var $price = $(".js-display-variant-price"),
             txtObj = $price.data(),
-            variantPriceData = this._getVariantPriceData(parent),
+            variantPriceData = this._getVariantPriceData(parent) || {},
             priceTemplate = new Template,
-            hasVolumePricesPrintData = this.hasVolumePricesPrintData() ? "visible" : "hidden",
+            hasVolumePricesPrintData = this.hasVolumePricesPrintData() ? "visible" : "helper-hide",
             priceHTML = {
                 merged: "",
                 formatted: "",
@@ -8073,7 +7970,7 @@ Product.prototype = {
                 price: variantPriceData.priceType,
                 topOffer: variantPriceData.showTopOfferHint
             };
-        return priceHTML.formatted = "FROM" === type.price ? void 0 !== variantPriceData.formattedValue ? '<span class="price-from-tag">' + txt.fromPrice + "</span> " + this.getFormattedGrossOrNetPrice(variantPriceData.value, variantPriceData.formattedValue, priceFormatObj) : "" : void 0 !== variantPriceData.formattedValue ? '<span class="price-formatted clearfix left">' + this.getFormattedGrossOrNetPrice(variantPriceData.value, variantPriceData.formattedValue, priceFormatObj) + "</span>" : "", priceHTML.old = void 0 !== variantPriceData.formattedOldPriceValue ? '<span class="price-old-tag left clearfix">' + txt.oldPrice + '</span> <span class="price-old left m-l-s">' + this.getFormattedGrossOrNetPrice(variantPriceData.oldPriceValue, variantPriceData.formattedOldPriceValue, priceFormatObj) + "</span>" : "", priceHTML.base = void 0 !== variantPriceData.formattedBasePrice ? '<span class="price-base left m-b-s">' + txt.basePrice + " " + this.getFormattedGrossOrNetPrice(variantPriceData.basePriceValue, variantPriceData.formattedBasePrice, priceFormatObj) + "</span>" : "", priceHTML.save = void 0 !== variantPriceData.formattedSaveValue ? '<span class="price-save left"><span class="price-save-tag">' + txt.savePrice + "</span> " + this.getFormattedGrossOrNetPrice(variantPriceData.saveValue, variantPriceData.formattedSaveValue, priceFormatObj) + "</span>" : "", priceHTML.print = void 0 !== variantPriceData.printPriceData && this.hasProductWaFlag() ? '<span class="print-price clearfix left"> + ' + this.getFormattedGrossOrNetPrice(variantPriceData.printPriceData.value, variantPriceData.printPriceData.formattedValue, priceFormatObj) + " (" + txt.print + ") </span>" : "", priceHTML.merged = type.topOffer ? priceHTML.base + '<span class="price-top-offer">' + priceHTML.formatted + '</span><span class="price-top-offer-tag">' + txt.topOffer + "</span>" + priceHTML.print : "" !== priceHTML.old ? priceHTML.base + priceHTML.old + '<span class="price-new clearfix left m-t-s">' + priceHTML.formatted + "</span>" + priceHTML.save + priceHTML.print : priceHTML.base + priceHTML.formatted + priceHTML.print, this.showOtherPrices && (priceTemplate.setTemplate("template-pla-price"), priceTemplate.setPlaceholder({
+        return priceHTML.formatted = "FROM" === type.price ? void 0 !== variantPriceData.formattedValue ? '<span validate-wrapperclass="price-from-tag">' + txt.fromPrice + '</span> <span class="price-from-number">' + this.getFormattedGrossOrNetPrice(variantPriceData.value, variantPriceData.formattedValue, priceFormatObj) + "</span>" : "" : void 0 !== variantPriceData.formattedValue ? '<span class="price-formatted">' + this.getFormattedGrossOrNetPrice(variantPriceData.value, variantPriceData.formattedValue, priceFormatObj) + "</span>" : "", priceHTML.old = void 0 !== variantPriceData.formattedOldPriceValue ? '<span class="price-old-tag spacing-bottom-2">' + txt.oldPrice + ' <span class="price-old">' + this.getFormattedGrossOrNetPrice(variantPriceData.oldPriceValue, variantPriceData.formattedOldPriceValue, priceFormatObj) + "</span></span>" : "", priceHTML.base = void 0 !== variantPriceData.formattedBasePrice ? '<span class="price-base">' + txt.basePrice + " " + this.getFormattedGrossOrNetPrice(variantPriceData.basePriceValue, variantPriceData.formattedBasePrice, priceFormatObj) + "</span>" : "", priceHTML.save = void 0 !== variantPriceData.formattedSaveValue ? '<span class="price-save"><span class="price-save-tag">' + txt.savePrice + "</span> " + this.getFormattedGrossOrNetPrice(variantPriceData.saveValue, variantPriceData.formattedSaveValue, priceFormatObj) + "</span>" : "", priceHTML.print = void 0 !== variantPriceData.printPriceData && this.hasProductWaFlag() ? '<span class="print-price clearfix"> + ' + this.getFormattedGrossOrNetPrice(variantPriceData.printPriceData.value, variantPriceData.printPriceData.formattedValue, priceFormatObj) + " (" + txt.print + ") </span>" : "", priceHTML.merged = type.topOffer ? priceHTML.base + '<span class="price-top-offer">' + priceHTML.formatted + '</span><span class="price-top-offer-tag">' + txt.topOffer + "</span>" + priceHTML.print : "" !== priceHTML.old ? priceHTML.base + priceHTML.old + '<span class="price-new">' + priceHTML.formatted + "</span>" + priceHTML.save + priceHTML.print : priceHTML.base + priceHTML.formatted + priceHTML.print, this.showOtherPrices && !this.isQuickShopper() && (priceTemplate.setTemplate("template-pla-price"), priceTemplate.setPlaceholder({
             txtGross: txt.gross,
             priceHTML: priceHTML.merged,
             txtNet: txt.net + " ",
@@ -8092,14 +7989,13 @@ Product.prototype = {
                 thousand: variantPriceData.formatGroupingSeparator,
                 precision: variantPriceData.formatDecimalDigits
             };
-        return freightCostValue = showOtherPrice ? this.getFormattedPricePlusTax(variantPriceData.freightCostValue, formatObj) : variantPriceData.formattedFreightCostValue, this.getObjectPath(freightCostValue)
+        return freightCostValue = showOtherPrice && !this.isQuickShopper() ? this.getFormattedPricePlusTax(variantPriceData.freightCostValue, formatObj) : variantPriceData.formattedFreightCostValue, this.getObjectPath(freightCostValue)
     },
-    getFreightCostHTML: function(showOtherPrice) {
-        var $elem = $("#product-shipping-costs"),
+    setFreightCostHTML: function($element, showOtherPrice) {
+        var $elem = $element.hasClass("product-shipping-costs") ? $element : $element.find(".product-shipping-costs", this.$element),
             textSelector = ".js-shipping-cost-text",
-            txtObj = $elem.data(),
-            $htmlElem = $elem.clone(!0, !0).removeAttr("id").removeClass("hide", "left").removeClass("left").addClass("js-clone");
-        return $htmlElem.find(textSelector).text(showOtherPrice ? shop.net ? txtObj.taxTextGross : txtObj.taxTextNet : shop.net ? txtObj.taxTextNet : txtObj.taxTextGross), $htmlElem.find(".js-display-variant-freight-cost-value").html(this._getFreightCost(showOtherPrice)), $htmlElem
+            txtObj = $elem.data();
+        $elem.find(textSelector, this.$element).text(showOtherPrice && !this.isQuickShopper() ? shop.net ? txtObj.taxTextGross : txtObj.taxTextNet : shop.net ? txtObj.taxTextNet : txtObj.taxTextGross), $elem.find(".js-display-variant-freight-cost-value", this.$element).html(this._getFreightCost(showOtherPrice))
     },
     hasFreightCost: function(parent) {
         var variantPriceData = this._getVariantPriceData(parent);
@@ -8116,13 +8012,15 @@ Product.prototype = {
         return void 0 != this.getVariantSizeVariant().userGuide
     },
     getVariantAvailabilityText: function() {
-        return this.getObjectPath(this.getVariantSizeVariant().availabilityStatus.displayText)
+        var availabilityStatus = this.getVariantSizeVariant().availabilityStatus ? this.getVariantSizeVariant().availabilityStatus.displayText : null;
+        return this.getObjectPath(availabilityStatus)
     },
     showDeliveryCommitmentForVariant: function() {
-        return this.getObjectPath(this.getVariantSizeVariant().deliveryCommitmentData.showDeliveryCommitment)
+        return void 0 !== this.getVariantSizeVariant().deliveryCommitmentData && void 0 !== this.getVariantSizeVariant().deliveryCommitmentData.showDeliveryCommitment ? this.getObjectPath(this.getVariantSizeVariant().deliveryCommitmentData.showDeliveryCommitment) : null
     },
     getVariantAvailabilityLight: function() {
-        var _light = this.getVariantSizeVariant().availabilityStatus.trafficLight,
+        var _availabilityStatus = this.getVariantSizeVariant().availabilityStatus,
+            _light = _availabilityStatus ? _availabilityStatus.trafficLight : "",
             _return = "";
         switch (_light) {
             case "GREEN":
@@ -8175,6 +8073,10 @@ Product.prototype = {
     getVariantSizeVariants: function() {
         return this.getObjectPath(this.getVariant().sizeVariantOptions)
     },
+    getVariantSizeCodeBySize: function(size) {
+        for (var sizeCode, variant, variantSize, i = 0; i < this.getVariantSizeVariants().length; i++) variant = this.getVariantSizeVariants()[i], variantSize = "size" === variant.variantOptionQualifiers[0].qualifier ? variant.variantOptionQualifiers[0].value : variant.variantOptionQualifiers[1].value, variantSize === size && (sizeCode = variant.code);
+        return sizeCode ? sizeCode : !1
+    },
     getCurrentVariantCode: function() {
         var getCode = function(variant) {
                 return variant ? variant.replace(/Variant_|Article_/g, "") : null
@@ -8226,10 +8128,12 @@ Product.prototype = {
                 code: _item.code,
                 url: this.getShopBaseUrl() + _item.url,
                 active: this.getVariantColorCode() === _item.code ? this.__SELECTED__ : "",
+                iconCheck: this.getVariantColorCode() === _item.code ? " icon icon-size-mini icon-check" : "",
                 image: void 0 !== _item.variantOptionQualifiers[0].image ? " url('" + _item.variantOptionQualifiers[0].image.url + "')" : "",
                 availability: _itemAvailable ? this.__AVAILABLE__ : this.__SOLDOUT__,
+                disabled: _itemAvailable ? "" : "disabled",
                 soldoutText: _itemAvailable ? "" : " - " + _item.sizeVariantOptions[0].availabilityStatus.displayText,
-                awesomeCross: _itemAvailable ? "" : "fa fa-times"
+                iconCross: _itemAvailable ? "" : "icon icon-size-mini icon-close"
             }, _return.push(_tmp))
         }
         return _return
@@ -8266,81 +8170,111 @@ Product.prototype = {
         return this.getVariantCode() == code
     },
     isStandardSizeVariant: function(sizeVariantOption) {
-        sizeVariantOption = sizeVariantOption ? sizeVariantOption : this.getVariant().sizeVariantOptions[0];
-        for (var variantOptionQualifiers = sizeVariantOption.variantOptionQualifiers, variantOptionQualifiersLength = variantOptionQualifiers.length, isStandard = !1, i = 0; variantOptionQualifiersLength > i; i++) "size" === variantOptionQualifiers[i].qualifier && "Standard" === variantOptionQualifiers[i].value && (isStandard = !0);
+        var variantOptionQualifiers, variantOptionQualifiersLength, isStandard, sizeVariantOptions = this.getVariant().sizeVariantOptions || [];
+        sizeVariantOption = sizeVariantOption ? sizeVariantOption : sizeVariantOptions[0], variantOptionQualifiers = sizeVariantOption ? sizeVariantOption.variantOptionQualifiers : {}, variantOptionQualifiersLength = variantOptionQualifiers.length, isStandard = !1;
+        for (var i = 0; variantOptionQualifiersLength > i; i++) "size" === variantOptionQualifiers[i].qualifier && "Standard" === variantOptionQualifiers[i].value && (isStandard = !0);
         return isStandard
     },
     isStandardColorVariant: function() {
-        return "Standard" === this.getVariant().variantOptionQualifiers[0].value
+        return this.getVariant().variantOptionQualifiers ? "Standard" === this.getVariant().variantOptionQualifiers[0].value : ""
     }
-}, $(function() {
-    function initTooltip() {
-        var $t = $(this);
-        if (null === $t.data("tooltip")) {
-            $t.data("tooltip", $t.attr("title")), $t.removeAttr("title");
-            var ttq = $t.data("tooltip-query");
-            if (ttq ? $t.data("tooltip", $t.find(ttq).html()) : (ttq = $t.data("tooltip-query-global"), ttq && $t.data("tooltip", $(ttq).html())), $t.is(".hover")) {
-                var src = $t.attr("src"),
-                    idx = src.lastIndexOf(".");
-                $t.data("n", src), $t.data("h", src.substr(0, idx) + "_hover" + src.substr(idx))
+};
+var QuickShopper = function() {
+    this.$window = $(window), this.$document = $(document), this.$footer = $("#page-footer"), this.$quickShopper = $("#quick-shopper");
+    var $addToCart = $(".js-add-to-cart");
+    this.$scrollToElement = $addToCart.length > 0 ? $addToCart : $(".js-waCalculatorOpen"), this.$header = $("#page-header"), this.$quickShopper.addClass("withoutStickyFooter"), this.scrollToElementTop = 0, this.bindEvents()
+};
+QuickShopper.prototype = {
+    _checkStickyQuickShopper: function() {
+        var $footerRow = $(".footer-row"),
+            footerHeight = $footerRow.outerHeight(),
+            quickShopperHeight = this.$quickShopper.outerHeight(),
+            realDocumentHeight = this.$document.height() - (footerHeight - quickShopperHeight),
+            windowScrollTop = this.$window.scrollTop(),
+            scrollToElementDistanceToTop = this.$scrollToElement.offset().top - windowScrollTop,
+            addToCartButtonNotVisiblePosition = this.$header.hasClass("sticky") ? this.$header.outerHeight() : 0,
+            quickShopperVisible = addToCartButtonNotVisiblePosition > scrollToElementDistanceToTop;
+        return this.scrollToElementTop = this.$scrollToElement.offset().top, $footerRow.height(footerHeight), $(".quick-shopper-column").height(quickShopperHeight), windowScrollTop + this.$window.height() >= realDocumentHeight ? this.$quickShopper.removeClass("sticky") : quickShopperVisible ? this.$quickShopper.addClass("sticky") : this.$quickShopper.removeClass("sticky"), this
+    },
+    bindEvents: function() {
+        var self = this,
+            $waButton = $(".wa-quickshopper-button"),
+            $addToCartButton = $("#quick-shopper .add-to-cart-button");
+        $waButton.length > 0 && $waButton.on("click", function() {
+            $("html,body").animate({
+                scrollTop: self.scrollToElementTop - 100
+            }, 1e3)
+        //}), $addToCartButton.length > 0 && $addToCartButton.on("click", function() {
+        //    $("form#command.add-to-cart-form").submit()
+        }), this.$window.scroll(function() {
+            self._checkStickyQuickShopper()
+        }).resize(function() {
+            self._checkStickyQuickShopper()
+        }).ready(function() {
+            self._checkStickyQuickShopper()
+        })
+    }
+};
+var StickyFooter = function(footer, footerHeadline, hasQuickShopper) {
+    if (this.$window = $(window), this.$document = $(document), this._footer = footer, this.$footer = $(footer), this.$footerHeadline = $(footerHeadline), this.footerClose = "#page-footer, .js-footer-close", this.$header = $("#page-header"), this.hasQuickShopper = hasQuickShopper, this.hasQuickShopper) {
+        this.$quickShopper = $("#quick-shopper");
+        var $addToCart = $(".js-add-to-cart");
+        this.$scrollToElement = $addToCart.length > 0 ? $addToCart : $(".js-waCalculatorOpen")
+    }
+    this.scrollToElementTop = 0, this.bindEvents()
+};
+StickyFooter.prototype = {
+    _checkStickyFooter: function() {
+        var footerHeight = $(".footer-row").outerHeight(),
+            quickShopperHeight = void 0 != this.$quickShopper ? this.$quickShopper.outerHeight() : 0,
+            footerBreakpoint = footerHeight - this.$footerHeadline.outerHeight() - quickShopperHeight - 18,
+            realDocumentHeight = this.$document.height() - footerBreakpoint,
+            windowScrollTop = this.$window.scrollTop(),
+            isFooterSticky = this.$footer.hasClass("sticky");
+        if ($(".footer-row").height(footerHeight), this.$quickShopper) {
+            var scrollToElementDistanceToTop = this.$scrollToElement.offset().top - windowScrollTop,
+                addToCartButtonNotVisiblePosition = this.$header.hasClass("sticky") ? this.$header.outerHeight() : 0,
+                quickShopperVisible = addToCartButtonNotVisiblePosition > scrollToElementDistanceToTop,
+                isQuickShopperSticky = this.$quickShopper.hasClass("sticky");
+            this.scrollToElementTop = this.$scrollToElement.offset().top
+        }
+        return windowScrollTop + this.$window.height() >= realDocumentHeight ? (this.hasQuickShopper && isQuickShopperSticky && this.$quickShopper.removeClass("sticky"), isFooterSticky && (this.$footer.removeClass("sticky"), this._handleStickyFooter("reset"))) : (isFooterSticky || this.$footer.addClass("sticky"), this._handleStickyFooter("close"), this.hasQuickShopper && (quickShopperVisible ? this.$quickShopper.addClass("sticky") : this.$quickShopper.removeClass("sticky"))), this
+    },
+    _handleStickyFooter: function(behaviour) {
+        var footerStickyBottom = -1 * (this.$footer.height() - this.$footerHeadline.outerHeight() - 10),
+            footerClose = $(".js-footer-close"),
+            backToTop = $(".js-footer-top-link");
+        return "open" === behaviour ? (this.$footer.css("bottom", 0).addClass("open"), console.log("footer not sticky anymore"), footerClose.insertBefore($(".footer-bottom")), backToTop.insertAfter($("#footer-after"))) : "close" === behaviour ? (this.$footer.css("bottom", footerStickyBottom + "px").removeClass("open"), backToTop.insertBefore($(".footer-bottom")), footerClose.insertAfter($("#footer-after"))) : "reset" === behaviour && this.$footer.css("bottom", "").removeClass("open"), this
+    },
+    bindEvents: function() {
+        var self = this,
+            $waButton = $(".wa-quickshopper-button"),
+            $addToCartButton = $("#quick-shopper .add-to-cart-button");
+        return $waButton.length > 0 && $waButton.on("click", function() {
+            $("html,body").animate({
+                scrollTop: self.scrollToElementTop - 100
+            }, 1e3)
+        //}), $addToCartButton.length > 0 && $addToCartButton.on("click", function() {
+        //    $("form#command.add-to-cart-form").submit()
+        }), $("body").on("mousedown", function(e) {
+            var $target = $(e.target);
+            if (self.$footer.hasClass("sticky")) {
+                if ($target.parents(self._footer).length || $target.is(self._footer)) return;
+                self._handleStickyFooter("close")
             }
-        }
+        }), this.$footer.on("mousedown", function(e) {
+            $(this).hasClass("open") || $(e.target).attr("href") || !$(this).hasClass("sticky") ? $(e.target).is("a") || 0 !== $(e.target).parents("a").length || self._handleStickyFooter("close") : self._handleStickyFooter("open")
+        }), this.$footer.on("mousedown", ".js-footer-close", function() {
+            self.$footer.addClass("sticky"), $(window).scrollTop($(window).scrollTop() - 1)
+        }), this.$window.scroll(function() {
+            self._checkStickyFooter()
+        }).resize(function() {
+            self._checkStickyFooter()
+        }).ready(function() {
+            self._checkStickyFooter()
+        }), this
     }
-    var $tt = $('<div class="tooltip-enlarged tooltip-bottom-left"><div class="tooltip-wrapper"></div>').hide().appendTo("body"),
-        $currentElement = null,
-        mobileDeviceEvent = "mouseup";
-    $(function() {
-        $(".tooltip").each(initTooltip)
-    }), shop.device.hasTouch ? $(document).on(mobileDeviceEvent, ".tooltip", function() {
-        var $t = $(this),
-            pos = $t.offset(),
-            spaceTop = parseInt($(document).scrollTop(), 10),
-            dw = parseInt($("body").width(), 10),
-            sides = "x" == $t.attr("data-tooltip-align") ? !0 : !1,
-            force = $t.attr("data-tooltip-force"),
-            forceBottom = "true" === $t.attr("data-tooltip-force-bottom") ? !0 : !1,
-            href = $t.attr("data-href") ? $t.attr("data-href") : null;
-        $currentElement = null === $currentElement ? $(this) : $currentElement, $tt.is(":visible") && $(this).hasClass("tt-visible") ? href ? location.href = href : href && "#" !== href || ($tt.stop(!0, !1).hide(), $(this).removeClass("tt-visible")) : ($(this).addClass("tt-visible"), $tt.stop().show(), !$currentElement.is($(this)) && $currentElement.hasClass("tt-visible") && $currentElement.removeClass("tt-visible")), $t.data("tooltip-query") ? ($ttq = $currentElement.find($t.data("tooltip-query")), $tt.find(".tooltip-wrapper").children().each(function() {
-            $(this).appendTo($ttq)
-        })) : $currentElement.data("tooltip-query-global") ? ($ttq = $($currentElement.data("tooltip-query-global")), $tt.find(".tooltip-wrapper").children().each(function() {
-            $(this).appendTo($ttq)
-        })) : $tt.find(".tooltip-wrapper").html(""), $currentElement = $(this), $tt.removeClass("tooltip-bottom-left").removeClass("tooltip-bottom-right").removeClass("tooltip-left-bottom").removeClass("tooltip-left-top").removeClass("tooltip-top-left").removeClass("tooltip-top-right").removeClass("tooltip-right-top").removeClass("tooltip-right-bottom"), $t.data("tooltip-query") ? ($ttq = $t.find($t.data("tooltip-query")), $ttq.children().each(function() {
-            $(this).appendTo($tt.find(".tooltip-wrapper"))
-        })) : $t.data("tooltip-query-global") ? ($ttq = $($t.data("tooltip-query-global")), $ttq.children().each(function() {
-            $(this).appendTo($tt.find(".tooltip-wrapper"))
-        })) : $tt.find(".tooltip-wrapper").html($t.data("tooltip")), sides ? ((parseInt(pos.left + $tt.width() + $t.width(), 10) >= dw && "bottom" !== forceBottom || "top" == forceBottom) && ($tt.css("left", parseInt(pos.left - $tt.width() - 20, 10)), parseInt(pos.top - spaceTop, 10) < $tt.height() || forceBottom ? $tt.addClass("tooltip-right-top").css("top", parseInt(pos.top - 30, 10)) : $tt.addClass("tooltip-right-bottom").css("top", parseInt(pos.top - $tt.height() + 30, 10))), (parseInt(pos.left + $tt.width() + $t.width(), 10) < dw && "top" !== forceBottom || "bottom" == forceBottom) && ($tt.css("left", parseInt(pos.left + $t.width(), 10)), parseInt(pos.top - spaceTop, 10) < $tt.height() || forceBottom ? $tt.addClass("tooltip-left-top").css("top", parseInt(pos.top - 30, 10)) : $tt.addClass("tooltip-left-bottom").css("top", parseInt(pos.top - $tt.height() + 30, 10)))) : (parseInt(pos.top - spaceTop, 10) < $tt.height() && "top" != force && ($tt.css("top", parseInt(pos.top + 20, 10)), parseInt(pos.left + $tt.width() + 40, 10) >= dw ? $tt.addClass("tooltip-top-right").css("left", pos.left + $t.width() - $tt.width() - 10) : $tt.addClass("tooltip-top-left").css("left", pos.left - 10)), parseInt(pos.top - spaceTop, 10) > $tt.height() && "bottom" != force && ($tt.css("top", parseInt(pos.top - $tt.height() - 16, 10)), parseInt(pos.left + $tt.width() + 40, 10) >= dw ? $tt.addClass("tooltip-bottom-right").css("left", parseInt(pos.left + $t.width() - $tt.width() - 10, 10)) : $tt.addClass("tooltip-bottom-left").css("left", parseInt(pos.left - 10, 10)))), $t.is(".hover") && $t.attr("src", $t.data("h"))
-    }) : $(document).on({
-        mouseup: function() {
-            var $t = $(this),
-                href = $t.attr("data-href") ? $t.attr("data-href") : null;
-            $currentElement.hasClass("tt-visible") && null !== href && ($currentElement.removeClass("tt-visible"), $tt.stop(!0, !1).hide(), location.href = href)
-        },
-        mouseenter: function() {
-            var $t = $(this),
-                pos = $t.offset(),
-                spaceTop = parseInt($(document).scrollTop(), 10),
-                dw = window.innerWidth,
-                sides = "x" == $t.attr("data-tooltip-align") ? !0 : !1,
-                force = $t.attr("data-tooltip-force") ? $t.attr("data-tooltip-force") : "left",
-                forceBottom = "true" === $t.attr("data-tooltip-force-bottom") ? "top" : "bottom";
-            $currentElement = $(this), $tt.removeClass("tooltip-bottom-left").removeClass("tooltip-bottom-right").removeClass("tooltip-left-bottom").removeClass("tooltip-left-top").removeClass("tooltip-top-left").removeClass("tooltip-top-right").removeClass("tooltip-right-top").removeClass("tooltip-right-bottom"), $t.data("tooltip-query") ? ($ttq = $t.find($t.data("tooltip-query")), $ttq.children().each(function() {
-                $(this).appendTo($tt.find(".tooltip-wrapper"))
-            })) : $t.data("tooltip-query-global") ? ($ttq = $($t.data("tooltip-query-global")), $ttq.children().each(function() {
-                $(this).appendTo($tt.find(".tooltip-wrapper"))
-            })) : $tt.find(".tooltip-wrapper").html($t.data("tooltip")), sides ? ((parseInt(pos.left + $tt.width() + $t.width(), 10) >= dw && "left" != force || "right" == force) && ($tt.css("left", parseInt(pos.left - $tt.width() - 20, 10)), parseInt(pos.top - spaceTop, 10) < $tt.height() || forceBottom ? $tt.addClass("tooltip-right-top").css("top", parseInt(pos.top - 30, 10)) : $tt.addClass("tooltip-right-bottom").css("top", parseInt(pos.top - $tt.height() + 30, 10))), (parseInt(pos.left + $tt.width() + $t.width(), 10) < dw && "right" != force || "left" == force) && ($tt.css("left", parseInt(pos.left + $t.width(), 10)), parseInt(pos.top - spaceTop, 10) < $tt.height() || forceBottom ? $tt.addClass("tooltip-left-top").css("top", parseInt(pos.top - 30, 10)) : $tt.addClass("tooltip-left-bottom").css("top", parseInt(pos.top - $tt.height() + 30, 10)))) : ((parseInt(pos.top - spaceTop, 10) < $tt.height() && "bottom" !== forceBottom || "top" == forceBottom) && ($tt.css("top", parseInt(pos.top + 20, 10)), parseInt(pos.left + $tt.width() + 40, 10) >= dw ? $tt.addClass("tooltip-top-right").css("left", pos.left + $t.width() - $tt.width() - 10) : $tt.addClass("tooltip-top-left").css("left", pos.left - 10)), (parseInt(pos.top - spaceTop, 10) > $tt.height() && "top" !== forceBottom || "bottom" == forceBottom) && ($tt.css("top", parseInt(pos.top - $tt.height() - 16, 10)), parseInt(pos.left + $tt.width() + 40, 10) >= dw ? $tt.addClass("tooltip-bottom-right").css("left", parseInt(pos.left + $t.width() - $tt.width() - 10, 10)) : $tt.addClass("tooltip-bottom-left").css("left", parseInt(pos.left - 10, 10)))), $tt.stop().show(), $(this).addClass("tt-visible"), $t.is(".hover") && $t.attr("src", $t.data("h"))
-        },
-        mouseleave: function(ev) {
-            var $t = $(this);
-            return $(ev.toElement || ev.relatedTarget || ev.delegateTarget).closest(".tooltip-enlarged").size() > 0 ? ($tt.unbind("mouseleave"), void $tt.bind("mouseleave", function() {
-                $t.trigger("mouseleave")
-            })) : ($t.data("tooltip-query") ? ($ttq = $t.find($t.data("tooltip-query")), $tt.find(".tooltip-wrapper").children().each(function() {
-                $(this).appendTo($ttq)
-            })) : $t.data("tooltip-query-global") ? ($ttq = $($t.data("tooltip-query-global")), $tt.find(".tooltip-wrapper").children().each(function() {
-                $(this).appendTo($ttq)
-            })) : $tt.find(".tooltip-wrapper").html(""), $tt.stop(!0, !1).hide(), $(this).removeClass("tt-visible"), void($t.is(".hover") && $t.attr("src", $t.data("n"))))
-        }
-    }, ".tooltip")
-});
+};
 var GlobalMessage = function() {
     "use strict";
     var $globalMessageID = $("#global-messages");
@@ -8351,7 +8285,9 @@ GlobalMessage.prototype = {
         "use strict";
         null != this.globalMessageSelector && (message || (message = this.defaultErrorMessage), $(this.globalMessageSelector).each(function() {
             $(this).html('<div class="information_message negative"><span class="single"></span><p>' + message + "</p></div>")
-        }))
+        }), $("html, body").stop().animate({
+            scrollTop: parseInt($(document).find("#global-messages").first().offset().top - 100, 10)
+        }, 500))
     },
     success: function(message) {
         "use strict";
@@ -8369,7 +8305,32 @@ GlobalMessage.prototype = {
 }, $(function() {
     "use strict";
     shop.add("globalMessage", {}), shop.globalMessage = new GlobalMessage
-}), "function" != typeof Object.create && (Object.create = function(obj) {
+}),
+    function() {
+        "use strict";
+        var jThread = window.jThread = function(workerFunction, doneFunction) {
+            if (this instanceof jThread) return jThread(workerFunction, doneFunction);
+            if ("function" != typeof workerFunction || "function" != typeof doneFunction) throw new Error("Incorrect arguments for jThread");
+            if (!(window.Worker && window.URL && window.URL.createObjectURL && window.Blob)) return function() {
+                var args = Array.prototype.slice.call(arguments);
+                setTimeout(function() {
+                    doneFunction(workerFunction.apply(workerFunction, args), "timer")
+                }, 1)
+            };
+            var worker = new Worker(window.URL.createObjectURL(new Blob(["self.onmessage = function(wrk) {var f = " + Function.toString.call(workerFunction) + ';self.postMessage({status: "worker", result: f.apply(f, wrk.data.args)});};'], {
+                type: "text/javascript"
+            })));
+            return worker.onmessage = function(wrk) {
+                doneFunction(wrk.data.result, wrk.data.status)
+            },
+                function() {
+                    var obj = {
+                        args: Array.prototype.slice.call(arguments)
+                    };
+                    worker.postMessage(obj)
+                }
+        }
+    }(), "function" != typeof Object.create && (Object.create = function(obj) {
     function F() {}
     return F.prototype = obj, new F
 }),
@@ -8764,6 +8725,30 @@ GlobalMessage.prototype = {
             onImageSwapComplete: $.noop
         }
     }(jQuery, window, document),
+    function($) {
+        $.fn.ensureLoad = function(handlerObj) {
+            var isHandlerObjFN = $.isFunction(handlerObj);
+            return this.each(function() {
+                this.complete ? isHandlerObjFN ? handlerObj.call(this) : handlerObj.handler.call(this) : isHandlerObjFN ? $(this).load(handlerObj).error(handlerObj) : $.isPlainObject(handlerObj) && (handlerObj.done && $(this).load(handlerObj.done), handlerObj.error && $(this).error(handlerObj.error))
+            })
+        }
+    }(jQuery),
+    function($) {
+        $.fn.loadMovingImageVideo = function($currentElem, _url, img, video, self, $slickWrapper) {
+            var videoId = (_url.match(/video_([0-9]+)/) || [])[1] || "",
+                hasVideoParams = _url.indexOf("?") > 0,
+                _url = _url.indexOf("&resp=1") > 0 ? _url : _url + "&resp=1",
+                videoParams = (hasVideoParams ? "&" : "?") + "resp=1&jsdiv=jsvideodiv" + videoId;
+            shop.device.isMobile ? (_url = _url.replace(/video_/g, "videojs_"), $currentElem.replaceWith('<div id="jsvideodiv' + videoId + '" style="width:100%"></div><div class="video-script"></div>'), $.ajax({
+                url: _url + videoParams
+            }).done(function(data) {
+                var movingImageScript = '<script type="text/javascript">' + data + "</script>";
+                self.$element.find(".video-script").append(movingImageScript), $slickWrapper.slick("refresh", "true")
+            }), $slickWrapper.off("orientationchange.video").on("orientationchange.video", function() {
+                $slickWrapper.slick("refresh", "true")
+            })) : (img.hide(), video.show().html("<iframe width='490' height='400' src='" + _url + "' ></iframe>"))
+        }
+    }(jQuery),
     function($) {
         "use strict";
         if ($.zepto && !$.fn.removeData) throw new ReferenceError("Zepto is loaded without the data module.");
@@ -9235,40 +9220,10 @@ GlobalMessage.prototype = {
                 return this.hasClass(clsList[6]) ? arguments.length ? setValue.apply(this, arguments) : getValue.apply(this) : $VAL.apply(this, arguments)
             }, (rebuild ? build : create).call(this, options)
         }
-    }(window.jQuery || window.Zepto), JSON.stringify = JSON.stringify || function(obj) {
-        var t = typeof obj;
-        if ("object" != t || null === obj) return "string" == t && (obj = '"' + obj + '"'), String(obj);
-        var n, v, json = [],
-            arr = obj && obj.constructor == Array;
-        for (n in obj) v = obj[n], t = typeof v, "string" == t ? v = '"' + v + '"' : "object" == t && null !== v && (v = JSON.stringify(v)), json.push((arr ? "" : '"' + n + '":') + String(v));
-        return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}")
-    };
-var RootNavigationElement = function($element) {
-    "use strict";
-    this.navigationElement = $element, this.hoverBackground = void 0 != $element.attr("data-background-hover") ? $element.attr("data-background-hover") : null, this.hoverColor = void 0 != $element.attr("data-color-hover") ? $element.attr("data-color-hover") : null, this.normalBackground = void 0 != $element.attr("data-background-normal") ? $element.attr("data-background-normal") : $element.css("background"), this.normalColor = void 0 != $element.attr("data-color-normal") ? $element.attr("data-color-normal") : $element.find(".deco").first().css("color"), this.activeBackground = void 0 != $element.attr("data-background-active") ? $element.attr("data-background-active") : null, this.activeColor = void 0 != $element.attr("data-color-active") ? $element.attr("data-color-active") : null, this.configureNavigationElement()
-};
-RootNavigationElement.prototype = {
-    _setNormalAndActiveColors: function() {
-        "use strict";
-        return this.navigationElement.hasClass("active") && this.activeColor ? this.navigationElement.find(".deco").first().css("color", this.activeColor) : void 0 != this.navigationElement.attr("data-color-normal") && this.navigationElement.find(".deco").first().css("color", this.normalColor), this.navigationElement.hasClass("active") && this.activeBackground && this.navigationElement.css("background", this.activeBackground), this
-    },
-    _setHoverColors: function() {
-        "use strict";
-        var self = this;
-        return (this.hoverBackground || this.hoverColor) && this.navigationElement.hover(function() {
-            self.hoverBackground && $(this).css("background", self.hoverBackground), self.hoverColor && $(this).find(".deco").first().css("color", self.hoverColor)
-        }, function() {
-            $(this).hasClass("active") ? (self.activeBackground ? $(this).css("background", self.activeBackground) : $(this).css("background", self.normalBackground), self.activeColor ? $(this).find(".deco").first().css("color", self.activeColor) : $(this).find(".deco").first().css("color", self.normalColor)) : ($(this).css("background", self.normalBackground), $(this).find(".deco").first().css("color", self.normalColor))
-        }), this
-    },
-    configureNavigationElement: function() {
-        "use strict";
-        return this._setNormalAndActiveColors(), this._setHoverColors(), this
-    }
-};
+    }(window.jQuery || window.Zepto);
 var ValidateForm = function() {
     "use strict";
-    this.formElement = ".js-form-common", this.requiredElementSelector = ".js-required-element", this.emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/, this.postalcodeRegex = /.*[0-9].*/, this.containsANumberRegex = /[0-9]+/, this.containsThreeDifferentLettersRegex = /([a-zA-Z][^a-zA-Z]*){3,}/, this.acceptOnlyNumbersRegex = /^\d*$/, this.acceptOnlyNumbersAndWhitespacesRegex = /^[\d\s]*$/, this.bindValidationEvents()
+    this.formElement = ".js-form-common", this.requiredElementSelector = ".js-required-element:not(#klarnaConfirm)", this.emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/, this.postalcodeRegex = /.*[0-9].*/, this.containsANumberRegex = /[0-9]+/, this.containsThreeDifferentLettersRegex = /([a-zA-Z][^a-zA-Z]*){3,}/, this.acceptOnlyNumbersRegex = /^\d*$/, this.acceptOnlyNumbersAndWhitespacesRegex = /^[\d\s]*$/, this.bindValidationEvents()
 };
 ValidateForm.prototype = {
     _validate: function($element) {
@@ -9343,21 +9298,29 @@ ValidateForm.prototype = {
                 for (var titles = $(this.formElement).find(".js-title-validation"), titlesLength = titles.length, isTitleChecked = !1, i = 0; titlesLength > i; i++) $(titles[i]).is(":checked") && (isTitleChecked = !0);
                 isTitleChecked ? this._hideError($element, !0) : this._showError($element)
             }
-        } else "feedback" === elementName ? this._validateInput($element, 1, 400) : "subject" === elementName && (null === elementValue ? this._showError($element) : this._hideError($element, !0));
-        return this
+        } else "feedback" === elementName ? this._validateInput($element, 1, 400) : "subject" === elementName && (null === elementValue ? this._showError($element) : this._hideError($element, !0))
     },
     _showError: function(element) {
         "use strict";
-        return element.removeClass("validate-success").addClass("validate-error"), element.parents(".form_field-input").next().hasClass("form_field_error-message") || element.parents(".form_field-input").after('<div class="form_field_error-message"><span>' + element.attr("data-error-message") + "</span></div>"), this
+        if (element.removeClass("validate-success").addClass("validate-error"), element.parents("ul, div").hasClass("one-error-message")) element.parents(".one-error-message").hasClass("validate-wrapper") || element.parents(".one-error-message").addClass("validate-wrapper error"), element.parents(".one-error-message").next().hasClass("error-message") || element.parents(".one-error-message").after('<p class="error-message spacing-bottom-5">' + element.attr("data-error-message") + "</p>"), element.is(":radio") ? element.siblings("label").addClass("radiobutton error") : element.parent().hasClass("validate-wrapper") ? element.parent().removeClass("success icon-check").addClass("error icon-warning") : element.wrap('<span class="validate-wrapper error icon icon-warning"></span>');
+        else if ("subject" === element.attr("name")) {
+            var $sodSelect = element.parents(".sod_select");
+            $sodSelect.hasClass("error") || $sodSelect.addClass("validate-wrapper error icon icon-warning").after('<p class="error-message spacing-bottom-5">' + element.attr("data-error-message") + "</p>")
+        } else element.parent().hasClass("validate-wrapper") ? element.parent().removeClass("success icon-check").addClass("error icon-warning") : (element.next(".error-message").remove(), element.wrap('<span class="validate-wrapper error icon icon-warning"></span>')), element.next().hasClass("error-message") || element.after('<p class="error-message spacing-bottom-5">' + element.attr("data-error-message") + "</p>"), element.is(":checkbox") && element.parent().siblings("label").addClass("checkbox error")
     },
     _hideError: function(element, noSuccessImage) {
         "use strict";
-        return element.removeClass("validate-error"), noSuccessImage ? element.removeClass("validate-success") : element.addClass("validate-success"), element.parents(".form_field-input").next().hasClass("form_field_error-message") && element.parents(".form_field-input").next().remove(), this
+        if (element.removeClass("validate-error"), element.next().hasClass("error-message") && element.next().remove(), noSuccessImage ? (element.removeClass("validate-success"), element.parent().hasClass("validate-wrapper") && element.parent().removeClass("error icon-warning")) : (element.addClass("validate-success"), element.parent().hasClass("validate-wrapper") ? element.parent().removeClass("error icon-warning").addClass("success icon-check") : element.wrap('<span class="validate-wrapper success icon icon-check"></span>')), element.parents("div").hasClass("one-error-message", "validate-wrapper") && 0 === element.parents("div.one-error-message").find("input.validate-error").length && (element.parents("div.one-error-message").removeClass("validate-wrapper"), element.parents("div.one-error-message").siblings("p").hasClass("error-message") && element.parents("div.one-error-message").siblings("p.error-message").remove()), element.is(":radio") && element.parents("ul").hasClass("validate-wrapper")) element.parents("ul").find("label").removeClass("error"), element.parents("ul").removeClass("validate-wrapper"), element.parents("ul").siblings("p").hasClass("error-message") && element.parents("ul").siblings("p").remove();
+        else if (element.is(":checkbox") && element.parent().hasClass("validate-wrapper")) element.parent().siblings("label").removeClass("error"), element.unwrap();
+        else if ("subject" === element.attr("name")) {
+            var $sodSelect = element.parents(".sod_select");
+            $sodSelect.hasClass("error") || $sodSelect.removeClass("validate-wrapper error icon icon-warning").next(".error-message").remove()
+        }
     },
     _validateEmail: function(emailElement) {
         "use strict";
         var email = emailElement.val();
-        return email.match(this.emailRegex) ? this._hideError(emailElement) : this._showError(emailElement), this
+        email.match(this.emailRegex) ? this._hideError(emailElement) : this._showError(emailElement)
     },
     _validatePassword: function(element) {
         "use strict";
@@ -9365,33 +9328,34 @@ ValidateForm.prototype = {
             $checkPassword = $(this.formElement).find(".js-check-password-validation:visible"),
             passwordValue = void 0 != $password ? $password.val() : "",
             checkPasswordValue = void 0 != $checkPassword ? $checkPassword.val() : "";
-        return element.hasClass("js-check-password-validation") ? passwordValue === checkPasswordValue && 0 !== passwordValue.length && 0 !== checkPasswordValue.length ? this._hideError(element) : this._showError(element) : element.hasClass("js-password-validation") ? passwordValue.length > 4 && this.containsANumberRegex.test(passwordValue) && this.containsThreeDifferentLettersRegex.test(passwordValue) ? this._hideError(element) : this._showError(element) : this._validateInput(element, 1, 255, !0), this
+        element.hasClass("js-check-password-validation") ? passwordValue === checkPasswordValue && 0 !== passwordValue.length && 0 !== checkPasswordValue.length ? this._hideError(element) : this._showError(element) : element.hasClass("js-password-validation") ? passwordValue.length > 4 && this.containsANumberRegex.test(passwordValue) && this.containsThreeDifferentLettersRegex.test(passwordValue) ? this._hideError(element) : this._showError(element) : this._validateInput(element, 1, 255, !0)
     },
     _validateNumeric: function(element, minLength, maxLength, allowWhitespaces) {
         "use strict";
         var elementValue = element.val(),
             elementValueLength = element.val().length,
             regexpOnlyNumbers = this.acceptOnlyNumbersRegex;
-        return allowWhitespaces && (regexpOnlyNumbers = this.acceptOnlyNumbersAndWhitespacesRegex), void 0 == minLength && (minLength = 1), void 0 == maxLength && (maxLength = 255), minLength > elementValueLength || elementValueLength > maxLength || !regexpOnlyNumbers.test(elementValue) ? this._showError(element) : 0 === minLength && 0 === elementValueLength ? this._hideError(element, !0) : this._hideError(element), this
+        allowWhitespaces && (regexpOnlyNumbers = this.acceptOnlyNumbersAndWhitespacesRegex), void 0 == minLength && (minLength = 1), void 0 == maxLength && (maxLength = 255), minLength > elementValueLength || elementValueLength > maxLength || !regexpOnlyNumbers.test(elementValue) ? this._showError(element) : 0 === minLength && 0 === elementValueLength ? this._hideError(element, !0) : this._hideError(element)
     },
     _validateInput: function(element, minLength, maxLength, noSuccessImage) {
         "use strict";
         var elementValueLength = element.val().length;
-        return void 0 == minLength && (minLength = 1), void 0 == maxLength && (maxLength = 255), minLength > elementValueLength || elementValueLength > maxLength ? this._showError(element) : 0 === minLength && 0 === elementValueLength || noSuccessImage ? this._hideError(element, !0) : this._hideError(element), this
+        void 0 == minLength && (minLength = 1), void 0 == maxLength && (maxLength = 255), minLength > elementValueLength || elementValueLength > maxLength ? this._showError(element) : 0 === minLength && 0 === elementValueLength || noSuccessImage ? this._hideError(element, !0) : this._hideError(element)
     },
     _validatePostalcode: function(element, minLength, maxLength) {
         "use strict";
         var elementValue = element.val(),
             elementValueLength = element.val().length;
-        return void 0 == minLength && (minLength = 1), void 0 == maxLength && (maxLength = 255), minLength > elementValueLength || elementValueLength > maxLength ? this._showError(element) : elementValue.match(this.postalcodeRegex) ? 0 === minLength && 0 === elementValueLength ? this._hideError(element, !0) : this._hideError(element) : this._showError(element), this
+        void 0 == minLength && (minLength = 1), void 0 == maxLength && (maxLength = 255), minLength > elementValueLength || elementValueLength > maxLength ? this._showError(element) : elementValue.match(this.postalcodeRegex) ? 0 === minLength && 0 === elementValueLength ? this._hideError(element, !0) : this._hideError(element) : this._showError(element)
     },
     bindRequiredElement: function() {
         "use strict";
-        $(this.formElement).off("blur", this.requiredElementSelector), $(this.formElement).on("blur", this.requiredElementSelector, function(self) {
-            return function() {
-                self._validate($(this))
-            }
-        }(this))
+        var self = this;
+        $(self.formElement).off("blur foucusout", this.requiredElementSelector), $(self.formElement).on("blur foucusout", self.requiredElementSelector, function() {
+            self._validate($(this))
+        }), $("#klarnaConfirm").change(function() {
+            self._validate($(this))
+        })
     },
     bindSubmitForm: function(callbackOnSubmitError) {
         "use strict";
@@ -9399,9 +9363,9 @@ ValidateForm.prototype = {
             return function(event) {
                 var hasErrors, requiredElements = $(this).find(self.requiredElementSelector);
                 requiredElements.each(function() {
-                    $(this).is(":visible") && self._validate($(this))
+                    ($(this).is(":visible") || "subject" === $(this).attr("name")) && self._validate($(this))
                 }), requiredElements.each(function() {
-                    $(this).is(":visible") && $(this).hasClass("validate-error") && (hasErrors = !0)
+                    ($(this).is(":visible") || "subject" === $(this).attr("name")) && $(this).hasClass("validate-error") && (hasErrors = !0)
                 }), hasErrors ? (event.preventDefault(), event.stopPropagation(), shop.globalMessage.error(), function() {
                     callbackOnSubmitError && "function" == typeof callbackOnSubmitError && callbackOnSubmitError()
                 }()) : shop.globalMessage.hide()
@@ -9422,14 +9386,7 @@ ValidateForm.prototype = {
 },
     function($) {
         "use strict";
-
-        function advancedDeviceDetection() {
-            var hasTouch;
-            return "ie" === Modernizr.Detectizr.device.browser && Modernizr.Detectizr.device.browserVersion >= "10" && "tablet" === Modernizr.Detectizr.device.type ? (hasTouch = !0, $("html").removeClass("no-touch").addClass("touch")) : hasTouch = Modernizr.touch, hasTouch
-        }
-        Modernizr.Detectizr.detect(), window.shop.add("device", Modernizr.Detectizr.device), window.shop.add("device", {
-            hasTouch: advancedDeviceDetection()
-        }), $(window).on("load", function() {
+        $(window).on("load", function() {
             "complete" != document.readyState && $(document).trigger("ready")
         })
     }(jQuery),
@@ -9454,13 +9411,14 @@ ValidateForm.prototype = {
                         $("li", $suggest.find(currentColumn)).hasClass("active") ? ($nextActive = isNext ? $currentItem.next() : $currentItem.prev(), $currentItem.removeClass("active"), $nextActive.addClass("active")) : isNext ? $("li:first-child", $suggest.find(currentColumn)).addClass("active") : $("li:last-child", $suggest.find(currentColumn)).addClass("active")
                     },
                     checkSuggestElements = function() {
-                        var cssHalfWidth = "full-width";
-                        2 === $suggest.children("div").length ? $suggest.addClass(cssHalfWidth) : $suggest.removeClass(cssHalfWidth)
+                        var cssHalfWidth = "full-width",
+                            cssOneElementWidth = "half-width";
+                        2 === $suggest.children("div").length ? ($suggest.removeClass(cssOneElementWidth), $suggest.addClass(cssHalfWidth)) : 1 === $suggest.children("div").length ? ($suggest.removeClass(cssHalfWidth), $suggest.addClass(cssOneElementWidth)) : ($suggest.removeClass(cssHalfWidth), $suggest.removeClass(cssOneElementWidth))
                     };
                 $suggest.css({
                     top: _searchWrapperHeight + "px"
-                }), $(document).mouseup(function(e) {
-                    0 === $(e.target).closest(".search").length && $suggest.hide()
+                }), $(document).on("mouseup", function(e) {
+                    0 === $(e.target).closest($searchWrapper).length && $suggest.hide()
                 }), $searchField.on("keyup", function(e) {
                     if (e.preventDefault(), e.stopPropagation(), $searchField.val().length > 2 || $searchField.val().length >= 1 && $suggest.is(":visible")) {
                         var $currentActive = $("li.active", $suggest.find(currentColumn)),
@@ -9493,9 +9451,11 @@ ValidateForm.prototype = {
         }
 
         function createProductsSuggestColumn($suggestSelector, suggestsData, $searchFieldSelector, suggestProductsHTML) {
-            var imageUrl, itemUrl, prodDescription, initProdDescription, brandName, prodTerm, i, $suggestProductsUl = $(".suggest-products").find("ul"),
+            var imageUrl, itemUrl, prodDescription, prodDescriptionLegth, initProdDescription, brandName, prodTerm, i, $suggestProductsUl = $suggestSelector.find(".suggest-products").find("ul"),
+                $body = $("body"),
                 adjustedImageUrl = "";
-            for (i in suggestsData.products) imageUrl = suggestsData.products[i].imageUrl, itemUrl = suggestsData.products[i].url, prodDescription = suggestsData.products[i].description, initProdDescription = suggestsData.products[i].description, brandName = suggestsData.products[i].brandName, prodTerm = suggestsData.products[i].term, void 0 != imageUrl && (adjustedImageUrl = imageUrl.replace("w_1200,f_auto", "h_78")), prodDescription.length > 92 && (prodDescription = prodDescription.slice(0, 90) + " ... "), brandName = brandName ? brandName.replace(new RegExp($searchFieldSelector.val(), "i"), function(a) {
+            $body.hasClass("breakpoint-1280") ? prodDescriptionLegth = 66 : $body.hasClass("breakpoint-1024") ? prodDescriptionLegth = 52 : $body.hasClass("breakpoint-768") && (prodDescriptionLegth = 32);
+            for (i in suggestsData.products) imageUrl = suggestsData.products[i].imageUrl, itemUrl = suggestsData.products[i].url, prodDescription = suggestsData.products[i].description, initProdDescription = suggestsData.products[i].description, brandName = suggestsData.products[i].brandName, prodTerm = suggestsData.products[i].term, void 0 != imageUrl && (adjustedImageUrl = imageUrl.replace("w_1200,f_auto", "h_78")), prodDescription.length > 68 && (prodDescription = prodDescription.slice(0, prodDescriptionLegth) + "... "), brandName = brandName ? brandName.replace(new RegExp($searchFieldSelector.val(), "i"), function(a) {
                 return "<b>" + a + "</b>"
             }) : "", suggestProductsHTML += '<li><a href="' + itemUrl + '"><span class="suggest-img"><img src="' + adjustedImageUrl + '"/></span><span class="suggest-product-text"><strong class="suggest-headline">' + brandName + '</strong><span class="suggest-term">' + suggestsData.products[i].term.replace(new RegExp($searchFieldSelector.val(), "i"), function(a) {
                     return "<b>" + a + "</b>"
@@ -9503,31 +9463,337 @@ ValidateForm.prototype = {
             $suggestProductsUl.length > 0 ? $suggestProductsUl.html(suggestProductsHTML) : $suggestSelector.append('<div class="suggest-products"><span class="suggests-headline">' + suggestsData.productsHeader + "</span><ul>" + suggestProductsHTML + "</ul></div>")
         }
         $(function() {
-            var $suggestHeader = $("#suggest");
-            createSuggestBox($suggestHeader)
+            var $suggestHeader = $("#suggest"),
+                $suggestFooter = $("#suggest-nohitsearchformcomponent");
+            createSuggestBox($suggestHeader), createSuggestBox($suggestFooter)
         })
     }(jQuery),
     function($) {
         "use strict";
-        var fixWatermarksInInputFields = function() {
-            $("body").find("label[for]").removeAttr("for")
+        $(document).ready(function() {
+            var $accordion = $(".accordion"),
+                $sectionHead = $accordion.find(".section-head"),
+                classAccordionHidden = "accordion-hidden";
+            $sectionHead.click(function(e) {
+                $(this).parents().siblings("section").addClass(classAccordionHidden), $(this).parents("section").removeClass(classAccordionHidden), e.preventDefault()
+            })
+        })
+    }(jQuery),
+    function($) {
+        "use strict";
+        var showOverlay = function(popup) {
+            var overlayContent = "<div>" + popup.content + "</div>",
+                $addToCartSlot = (new Overlay("", {
+                    title: popup.headline,
+                    type: "div",
+                    width: "600",
+                    height: "550",
+                    contentScroll: shop.device.isMobile ? !0 : !1,
+                    content: overlayContent
+                }).wrap(), $(".js-add-to-cart-slot")),
+                newSlider = function($elem, optionObj) {
+                    return new Slider($elem, optionObj)
+                },
+                loadSlider = function($elem, callback) {
+                    var prudsysItemIdList = shop.prudsysItemIdList || null;
+                    return new SimpleComponentLoader($elem, {
+                        parameters: {
+                            prudsysItemIdList: prudsysItemIdList
+                        }
+                    }, callback)
+                };
+            $addToCartSlot.length > 0 && ($addToCartSlot.addClass("active"), loadSlider($addToCartSlot.find(".js-async-carousel"), function() {
+                newSlider($addToCartSlot.find(".pcarousel-smallArticle, .pcarousel-bigArticle"), {
+                    orientation: "horizontal",
+                    pagerSteps: shop.device.isMobile ? 2 : 4,
+                    auto: !1,
+                    wrapper: ".pcarousel-wrapper",
+                    width: shop.device.isMobile ? $addToCartSlot.find(".pcarousel-smallArticle").width() : "520",
+                    productcarousel: !0,
+                    initPrudsysEvent: !1
+                }), $(".js-add-to-cart-slot .pcarousel .star-rating").makeStars(), setTimeout(function() {
+                    $(window).trigger("updateOverlayPosition")
+                }, 500)
+            })), $(".add-to-cart-content .review-bar-rating ").makeStars(), $("#minicart-link").layer()
         };
-        "android" === shop.device.os && "safari" === shop.device.browser && $(function() {
-            fixWatermarksInInputFields()
+        $(function() {
+            shop.addToCartOverlay = showOverlay
+        })
+    }(jQuery),
+    function($) {
+        "use strict";
+        var animateAddToCart = function(callbackAfterAnimation, flyingElement, target) {
+            var _$zoomElement = void 0 !== flyingElement ? flyingElement : $(".js-display-variant-primary-image", this.areaSelector),
+                _$animatedElement = _$zoomElement.clone().css({
+                    position: "absolute",
+                    "z-index": "3001"
+                }),
+                _$target = void 0 !== target ? target : $("#minicart-link .icon-bag"),
+                _zoomElementOffset = _$zoomElement.offset(),
+                _targetOffset = _$target.offset(),
+                _methodForAnimation = Modernizr.csstransitions ? "transit" : "animate",
+                _animation = {
+                    step1: {
+                        speed: 800
+                    },
+                    step2: {
+                        speed: 600
+                    },
+                    step3: {
+                        speed: 140
+                    }
+                };
+            _$zoomElement.length > 0 && !shop.device.isMobile ? (_targetOffset = _$target.offset(), _$animatedElement.hasClass("icon") && _$animatedElement.html("").addClass("scale-up-and-down"), _$animatedElement.css({
+                top: _zoomElementOffset.top,
+                left: _zoomElementOffset.left,
+                width: _$zoomElement.width()
+            }).prependTo("body")[_methodForAnimation]({
+                top: _targetOffset.top - 3 * _$target.height(),
+                left: _targetOffset.left + 11,
+                width: 30
+            }, _animation.step1.speed, function() {
+                _$animatedElement[_methodForAnimation]({
+                    top: _targetOffset.top - _$target.height(),
+                    opacity: .25
+                }, _animation.step2.speed, function() {
+                    _$animatedElement[_methodForAnimation]({
+                        opacity: 0
+                    }, _animation.step3.speed, function() {
+                        _$animatedElement.remove(), callbackAfterAnimation && "function" == typeof callbackAfterAnimation && (callbackAfterAnimation(), callbackAfterAnimation = null)
+                    })
+                })
+            })) : callbackAfterAnimation && "function" == typeof callbackAfterAnimation && callbackAfterAnimation()
+        };
+        $(function() {
+            shop.addToCartAnimation = animateAddToCart
+        })
+    }(jQuery),
+    function($) {
+        "use strict";
+        $(document).ready(function() {
+            $(document).on("click", ".js-show-hide-trigger-click", function(e) {
+                e.preventDefault();
+                var target = $(this).data("show-hide-target"),
+                    duration = $(target).data("animation-duration") || "300";
+                $(target).hasClass("js-animation-fade") ? $(target).hasClass("helper-hide") ? $(target).hide().removeClass("helper-hide").fadeIn(duration) : $(target).fadeOut(duration, function() {
+                    $(target).addClass("helper-hide")
+                }) : $(target).toggleClass("helper-hide")
+            }), $(document).on("mouseenter mouseleave", ".js-show-hide-trigger-hover", function() {
+                $($(this).data("show-hide-target")).toggleClass("helper-hide")
+            }), $(document).on("click.jumpTo", "a.js-smooth-scrolling[href*=#]:not([href=#])", function() {
+                var $target = $(this.hash || null);
+                $target = $target.length ? $target : $("[name=" + this.hash.slice(1) + "]"), $target.length && $("html, body").animate({
+                    scrollTop: $target.offset().top
+                }, 500, function() {
+                    $(this).animate({
+                        scrollTop: $target.offset().top
+                    })
+                })
+            })
         })
     }(jQuery),
     function($) {
         "use strict";
         $(function() {
-            var keyNameInStorage = "acceptCookie",
-                restoredValue = store.get(keyNameInStorage) || null,
-                cssClassHide = "hide",
-                $elem = null;
-            null === restoredValue && ($elem = $("#cookie-hint"), $elem.removeClass(cssClassHide).on("click", ".js-accept-cookie", function() {
-                store.set(keyNameInStorage, "true"), $elem.addClass(cssClassHide)
-            }))
+            var cssClassHide = "helper-hide",
+                $elem = null,
+                templateData = null,
+                templateId = "cookie-hint-template",
+                template = new Template,
+                expires = new Date(2025, 11, 31, 23, 59, 59),
+                expiresUTC = expires.toUTCString();
+            "true" !== document.cookie.replace(/(?:(?:^|.*;\s*)acceptCookies\s*\=\s*([^;]*).*$)|^.*$/, "$1") && (templateData = $("#" + templateId).data(), templateData && "object" == typeof templateData && (template = template.setTemplate(templateId).setPlaceholder({
+                cookieHintText: templateData.text || "",
+                cookieHintBtnText: templateData.btnText || ""
+            }).render(), $("body").append(template), $elem = $("#cookie-hint"), $("body").css("padding-top", $elem.height()), $elem.removeClass(cssClassHide).on("click", ".js-accept-cookie", function() {
+                document.cookie = "acceptCookies=true;expires=" + expiresUTC + ";path=" + shop.config.contextPath, $("body").css("padding-top", 0), $elem.addClass(cssClassHide)
+            })))
         })
     }(jQuery),
+    function($, shop, document) {
+        "use strict";
+        var quantityCountHandler = function(callbackEvents) {
+            var quantitySection = ".js-quantity-section",
+                directions = {
+                    up: ".js-quantity-up",
+                    down: ".js-quantity-down"
+                };
+            $.each(directions, function(count, buttonClass) {
+                $(quantitySection).off("click", buttonClass).on("click", buttonClass, function() {
+                    var $quantity = $(".js-quantity", $(this).parent(quantitySection)),
+                        quantity = parseInt($quantity.val(), 10);
+                    "up" === count && 9999 > quantity ? ($quantity.val(quantity + 1), void 0 !== callbackEvents && $quantity.trigger(callbackEvents)) : "down" === count && quantity > 0 && ($quantity.val(quantity - 1), void 0 !== callbackEvents && $quantity.trigger(callbackEvents))
+                })
+            })
+        };
+        shop && shop.device.isMobile && (shop.quantityCountHandler = quantityCountHandler), $(document).ready(function() {
+            var initSelectBoxes = function() {
+                var $elem = $("select").not(".js-no-chosen");
+                $elem.selectOrDie({})
+            };
+            initSelectBoxes(), $(document).on("updateCart", function() {
+                initSelectBoxes()
+            }), shop.device.isMobile && ("Account Watch List Page" === shop.page.name || "Cart Page" === shop.page.name || "Checkout Summary Page" === shop.page.name ? shop.quantityCountHandler("updatecart") : shop.quantityCountHandler()), shop.add("formValidation", {}), shop.formValidation = new ValidateForm
+        })
+    }(jQuery, window.shop, document),
+    function($) {
+        "use strict";
+        var myLayer = function(element, options) {
+            var sheet, settings, addClickCollector, removeClickCollector, closeBeforeOpen, checkForTimeout, setListeners, setClose, insertCSS, addCSSRule, setCSS, init, $context = $(element),
+                isRootNavigation = $context.closest("#root-nav").length > 0,
+                obj = this,
+                $layer = $(".js-layer", $context),
+                parentWrap = $layer.parents(".tooltip-container"),
+                parentWrapRight = $layer.parents(".tooltip-right-side"),
+                stylesheet = document.createElement("style"),
+                defaults = {
+                    close: function(hasTouch) {
+                        return $layer.hasClass("js-close-left") ? "close-left" : $layer.hasClass("js-close-right") || hasTouch ? "close-right" : !1
+                    },
+                    width: function() {
+                        var layerWidth;
+                        return layerWidth = shop.device.isMobile && 0 !== parentWrap.length ? parseInt(parentWrap.width(), 10) + "px" : $layer.attr("data-width") ? $layer.attr("data-width") + "px" : "auto"
+                    },
+                    layerX: function() {
+                        var layerX;
+                        return layerX = shop.device.isMobile && 0 !== parentWrapRight.length ? $layer.attr("data-x-pos-layer") - (parseInt(parentWrapRight.width(), 10) - $layer.attr("data-width")) : $layer.attr("data-x-pos-layer") ? $layer.attr("data-x-pos-layer") + "px" : "auto"
+                    },
+                    layerY: function() {
+                        return $layer.attr("data-y-pos-layer") ? $layer.attr("data-y-pos-layer") + "px" : "100%"
+                    },
+                    arrowTop: function() {
+                        return $layer.attr("data-arrow-pos-top") ? $layer.attr("data-arrow-pos-top") : !1
+                    },
+                    arrowLeft: function() {
+                        return $layer.attr("data-arrow-pos-left") ? $layer.attr("data-arrow-pos-left") : !1
+                    },
+                    arrowRight: function() {
+                        return $layer.attr("data-arrow-pos-right") ? $layer.attr("data-arrow-pos-right") : !1
+                    },
+                    arrowBottom: function() {
+                        return $layer.attr("data-arrow-pos-bottom") ? $layer.attr("data-arrow-pos-bottom") : !1
+                    },
+                    delayLayer: function() {
+                        return $layer.attr("data-delay") ? $layer.attr("data-delay") : !1
+                    }
+                },
+                hasTouch = shop.device.hasTouch;
+            this.destroy = function() {
+                $context.off("click mouseenter mouseleave touchend"), $layer.off("mouseenter mouseleave touchend click touchend"), removeClickCollector(), $context.data("layer-css") && $("#" + $context.data("layer-css")).remove(), $context.data("added-classes") && $.each($context.data("added-classes"), function(i, val) {
+                    $layer.removeClass(val)
+                }), $context.removeData("layer-css added-classes layer timeout context-on layer-on")
+            }, this.close = function(time) {
+                if (time = "undefined" != typeof time ? time : !1, "now" === time) $layer.addClass("helper-hide");
+                else {
+                    var t_id = setTimeout(function() {
+                        $layer.addClass("helper-hide")
+                    }, 300);
+                    $context.data("t_id", t_id)
+                }
+            }, this.layerwidth = function(futurewidth) {
+                return futurewidth ? void $layer.css("width", futurewidth) : $layer.css("width")
+            }, addClickCollector = function() {
+                $(document).on("touchstart.layer click.layer", function(e) {
+                    var $target = $(e.target);
+                    1 !== $target.closest($layer).length && 1 !== $target.closest($context).length && (e.preventDefault(), closeBeforeOpen())
+                })
+            }, removeClickCollector = function() {
+                $(document).trigger("layerclose"), $(document).off("touchstart.layer click.layer")
+            }, closeBeforeOpen = function() {
+                if ($layer.hasClass("helper-hide")) {
+                    var instance = $("body").data("layer-open");
+                    instance && instance.close("now"), $("body").data("layer-open", $context.data("layer")), $layer.removeClass("helper-hide"), removeClickCollector(), addClickCollector()
+                } else $layer.hasClass("helper-hide") || ($layer.addClass("helper-hide"), removeClickCollector())
+            }, checkForTimeout = function($context) {
+                if ($context.data("t_id")) {
+                    var t_id = $context.data("t_id");
+                    clearTimeout(t_id)
+                }
+            }, setListeners = function() {
+                var contextEventType;
+                settings.close() !== !1 && $layer.on("click", "." + settings.close(), function(e) {
+                    e.stopPropagation(), $layer.addClass("helper-hide")
+                }), ($("html").hasClass("inputmethod-touch") || $context.hasClass("js-click")) && $layer.on("click touchend", function(e) {
+                    e.stopPropagation()
+                }), hasTouch ? (contextEventType = "ie" === shop.device.browser ? "click" : "touchend", $context.hammer().on(contextEventType, function(e) {
+                    $layer.hasClass("helper-hide") && (e.preventDefault(), e.stopPropagation(), closeBeforeOpen(), $(document).trigger("layeropen"))
+                })) : ($context.on("mouseenter", function() {
+                    $context.data("context-on", "1"), $context.data("layer-on", "0"), settings.delayLayer() ? $layer.hide().delay(settings.delayLayer()).show(0) : $layer.removeClass("helper-hide"), $(document).trigger("layeropen"), checkForTimeout($context)
+                }), $context.on("mouseleave", function() {
+                    settings.delayLayer() && $layer.hide(0), $context.data("context-on", "0"), $(document).trigger("layerclose"), $context.trigger("layerclose")
+                }), $layer.on("mouseenter", function() {
+                    $context.data("layer-on", "1"), $layer.removeClass("helper-hide"), checkForTimeout($context)
+                }), $layer.on("mouseleave", function() {
+                    $context.data("layer-on", "0"), $(document).trigger("layerclose"), $context.trigger("layerclose")
+                })), $context.on("layerclose", function() {
+                    "0" === $context.data("context-on") && "0" === $context.data("layer-on") && obj.close()
+                }), $layer.find(".js-layer-close").on("mousedown", function() {
+                    $context.data({
+                        "layer-on": "0",
+                        "context-on": "0"
+                    }), $context.trigger("layerclose"), removeClickCollector(), $(document).trigger("layerclose")
+                }), $context.hasClass("js-click") && $context.on("click", function(e) {
+                    e.preventDefault(), closeBeforeOpen()
+                })
+            }, setClose = function() {
+                (settings.close() !== !1 || shop.device.hasTouch) && $layer.prepend('<div class="js-layer-close ' + settings.close(shop.device.hasTouch) + '"></div>')
+            }, insertCSS = function() {
+                var id = "layer-" + $.now();
+                document.head.appendChild(stylesheet), sheet = stylesheet.sheet, $(stylesheet).attr("id", id), $context.data("layer-css", id)
+            }, addCSSRule = function(rule) {
+                sheet.insertRule(rule, 0)
+            }, setCSS = function() {
+                function generateCSS(arrowElem, arrowPos1, arrowPos2) {
+                    var random = $.now();
+                    className = arrowPos1 + "-" + arrowElem + "-pos-arrow-" + random, classList.push(className), rule = "." + className + "::after, ." + className + "::before { " + arrowPos1 + ": " + arrowElem + "%; " + arrowPos2 + ": auto; }", addCSSRule(rule)
+                }
+                var className, classList = [],
+                    rule = "",
+                    $cookieHint = $("#cookie-hint"),
+                    $emergencyMsg = $("#emergency"),
+                    extraTopOffset = 0;
+                isRootNavigation && ($cookieHint.is(":visible") && (extraTopOffset = $cookieHint.height()), $emergencyMsg.is(":visible") && (extraTopOffset += $emergencyMsg.outerHeight(), extraTopOffset += parseInt($emergencyMsg.css("margin-top")) + parseInt($emergencyMsg.css("margin-bottom")))), $layer.first().css({
+                    width: settings.width(),
+                    left: settings.layerX(),
+                    top: isRootNavigation ? $context.offset().top + $context.outerHeight() - extraTopOffset : settings.layerY()
+                }), $layer.hasClass("arrow") && (insertCSS(), settings.arrowTop() && generateCSS(settings.arrowTop(), "top", "bottom"), settings.arrowLeft() && generateCSS(settings.arrowLeft(), "left", "right"), settings.arrowRight() && generateCSS(settings.arrowRight(), "right", "left"), settings.arrowBottom() && generateCSS(settings.arrowBottom(), "bottom", "top"), $.each(classList, function(i, val) {
+                    $layer.addClass(val)
+                }), $context.data("added-classes", classList))
+            }, (init = function() {
+                settings = $.extend(!0, defaults, options), setCSS(), setClose(), setListeners()
+            })()
+        };
+        $.fn.layer = function(options) {
+            return this.each(function() {
+                var $context = $(this),
+                    $layer = $(".js-layer", $context);
+                if ($layer.addClass("helper-hide js-init"), !$context.data("layer") && void 0 != $layer) {
+                    options = options || {};
+                    var layer = new myLayer(this, options);
+                    $context.data("layer", layer)
+                }
+            })
+        }
+    }(jQuery), $(function($) {
+    $(".js-layer-init, .js-layer-init-desktop-only").each(function() {
+        var $elem = $(this),
+            elemLength = $elem.find(".js-layer").length;
+        elemLength >= 1 && (shop.device.hasTouch ? !$elem.hasClass("js-layer-init-desktop-only") : !0) ? $elem.removeClass("js-layer-init-desktop-only").addClass("js-layer-init").layer() : $elem.removeClass("js-layer-init js-layer-init-desktop-only").find(".js-layer").remove()
+    }), $(document).on("willbereplaced", function(e) {
+        var t = e.target;
+        if ($(t).find(".js-layer-init")) {
+            var instance = $(t).find(".js-layer-init").data("layer");
+            instance && instance.destroy()
+        }
+    }), $(document).on("hasreplaced", function(e) {
+        $(e.target).find(".js-layer-init").layer()
+    }), $(document).on("input-touch", function() {
+        $(".js-layer-init").each(function() {
+            var $this = $(this);
+            $this.data("layer") && ($this.data("layer").destroy(), $this.layer())
+        })
+    })
+}),
     function($, s) {
         "use strict";
         var showErrorOverlay = function(errorMessage) {
@@ -9543,34 +9809,7 @@ ValidateForm.prototype = {
                         }).wrap()
             },
             showOverlay = function(popup) {
-                var overlayContent = "<div>" + popup.content + "</div>",
-                    overlay = overlay || new Overlay("", {
-                            title: popup.headline,
-                            type: "div",
-                            width: "600",
-                            height: "550",
-                            content: overlayContent
-                        }).wrap();
-                window.setTimeout(function() {
-                    var $addToCartSlot = $addToCartSlot || $(".js-add-to-cart-slot"),
-                        newSlider = function($elem, optionObj) {
-                            return new Slider($elem, optionObj)
-                        },
-                        loadSlider = function($elem, callback) {
-                            return new SimpleComponentLoader($elem, callback)
-                        };
-                    $addToCartSlot.show(), $addToCartSlot.length > 0 && !shop.device.isMobile ? ($addToCartSlot.addClass("active"), loadSlider($addToCartSlot.find(".js-async-carousel"), function() {
-                        newSlider($addToCartSlot.find(".pcarousel-smallArticle"), {
-                            orientation: "horizontal",
-                            pagerSteps: 3,
-                            auto: !1,
-                            wrapper: ".pcarousel-wrapper",
-                            width: "405",
-                            productcarousel: !0,
-                            initPrudsysEvent: !1
-                        }), $(".js-add-to-cart-slot .pcarousel .star-rating").makeStars()
-                    }), $(".js-add-to-cart-slot .pcarousel .star-rating").makeStars()) : $addToCartSlot.addClass("hide")
-                }, 500), $(".add-to-cart-content .review-bar-rating ").makeStars()
+                shop.addToCartOverlay(popup)
             },
             evaluateRequest = function(requestData) {
                 var loaderOverlay = loaderOverlay || new LoaderOverlay;
@@ -9590,7 +9829,7 @@ ValidateForm.prototype = {
                 dataType: "json",
                 type: "GET",
                 async: !0
-            }), evaluateRequest(requestData)) : showErrorOverlay("Keine gÃ¼ltige Bestellnummer.")
+            }), evaluateRequest(requestData)) : showErrorOverlay("Keine gültige Bestellnummer.")
         }, shop.addWaProductToCart = function(jsonData) {
             var requestData, requestURL = s.url.base + "cart/add-wa-to-cart";
             null !== jsonData ? (requestData = $.ajax({
@@ -9604,48 +9843,107 @@ ValidateForm.prototype = {
                 async: !0
             }), shop.waConfigurator.closeConfigurator(), shop.addToCartPDS ? shop.addToCartPDS.animateAddToCart(function() {
                 evaluateRequest(requestData)
-            }) : evaluateRequest(requestData)) : showErrorOverlay("Fehler bei Ãœbernahme der Werbeanbringungs-Informationen.")
+            }) : evaluateRequest(requestData)) : showErrorOverlay("Fehler bei Übernahme der Werbeanbringungs-Informationen.")
         }
     }(jQuery, shop);
 var addProductToCart = shop.addProductToCart;
-! function() {
+! function($, shop) {
     "use strict";
-    var disableMaxymiser = function() {
-        if (Log({
-                level: 1,
-                message: "MAXYMISER : DISABLED",
-                type: "info"
-            }), "undefined" != typeof mmcore) mmcore.SetCookie("gm", "2", 256), alert("Deakivierung erfolgreich"), location.reload();
-        else {
-            var lp = window.location.protocol;
-            "http" != lp.substr(0, 4) && (lp = "http:"), window.open(lp + "//www.maxymiser.com/cookie_optout.htm", "optout", "width=620,height=350,menubar=no,resizable=no,scrollbars=no,toolbar=no")
-        }
-        return !1
+    var showNewBadge = function(hasTopOfferBadge, hasSaleBadge) {
+        return !hasTopOfferBadge && !hasSaleBadge
     };
     $(function() {
-        $('.js-disable-mmc, a[href="#js-disable-mmc"]').on("click", function(e) {
-            e.preventDefault(), disableMaxymiser()
-        })
+        shop.code.showNewBadge = showNewBadge
     })
-}(),
-    function($) {
+}(jQuery, window.shop),
+    function($, shop) {
         "use strict";
-        var calcFooterHeight = function() {
-            var spaceToBottom = 10,
-                $footerMain = $("#footer-main-wrapper"),
-                $allFooterCells = $footerMain.find(".slot");
-            shop.device.isMobile ? $allFooterCells.each(function(i) {
-                var $thisCell = $(this),
-                    $nextCell = $thisCell.parent().next(".footer-cell").find(".slot"),
-                    thisCellHeight = $thisCell.outerHeight(!0, !0),
-                    nextCellHeight = $nextCell.outerHeight(!0, !0);
-                (i + 1) % 2 !== 0 && $thisCell.add($nextCell).height(thisCellHeight > nextCellHeight ? thisCellHeight + spaceToBottom : nextCellHeight + spaceToBottom)
-            }) : $allFooterCells.css("height", $footerMain.height() + spaceToBottom + "px")
-        };
         $(function() {
-            calcFooterHeight()
+            if (!shop.device.isMobile)
+                if (-1 === shop.page.name.indexOf("Checkout") && "true" === $("#page-footer").attr("data-sticky-active")) {
+                    var hasQuickShopper = !("ProductDetailsPage" !== shop.page.name || "true" !== $("#quick-shopper").attr("data-sticky-active"));
+                    shop.add("stickyFooter", {}), shop.stickyFooter = new StickyFooter("#page-footer", ".footer-headline", hasQuickShopper), "undefined" != typeof shop && "undefined" != typeof shop.stickyFooter && ($(window).load(function() {
+                        shop.stickyFooter._checkStickyFooter()
+                    }), $(".js-async-carousel").on("init", function() {
+                        window.setTimeout(function() {
+                            shop.stickyFooter._checkStickyFooter()
+                        }, 2e3)
+                    }))
+                } else "ProductDetailsPage" === shop.page.name && "true" === $("#quick-shopper").attr("data-sticky-active") && (shop.add("quickShopper", {}), shop.quickShopper = new QuickShopper)
         })
-    }(jQuery),
+    }(jQuery, window.shop),
+    function($, shop) {
+        "use strict";
+        $(function($) {
+            var scrollPos, target, clickCollector, $header = $("#page-header"),
+                $headerRow = $(".header-row"),
+                $searchButton = $(".js-search-button"),
+                initHeaderMargin = parseInt($header.css("margin-bottom"), 10),
+                initheaderHeight = $header.height() + initHeaderMargin,
+                layerDataName = "layer";
+            "true" !== $header.attr("data-sticky-active") || shop.device.isMobile || $(window).scroll(function() {
+                scrollPos = $(window).scrollTop(), scrollPos > $header.height() ? ($header.addClass("sticky"), $searchButton.text(""), $headerRow.height(initheaderHeight), $("#root-nav .js-layer-init").each(function() {
+                    var instance = null,
+                        $this = $(this);
+                    $this.data(layerDataName) && (instance = $this.data(layerDataName), instance.destroy())
+                })) : ($header.removeClass("sticky"), $searchButton.text(" " + $searchButton.attr("data-search-text")), $headerRow.height("auto"), $("#root-nav .js-layer-init").each(function() {
+                    var $this = $(this);
+                    $this.data(layerDataName) || $this.layer({
+                        width: function() {
+                            return parseInt($(".header-row").width())
+                        }
+                    })
+                }))
+            }), $(document).on("click", "#menu", function(e) {
+                var $target, $this = $(this),
+                    showClass = "helper-show";
+                e.preventDefault(), e.stopPropagation(), target = $this.data("target"), $target = $(target), shop.device.isMobile && ($this.toggleClass("is-active"), $("#content").toggleClass("opacity")), $(target).hasClass(showClass) ? ($target.removeClass(showClass), shop.device.isMobile || $this.removeClass("icon-arrow-up-bold").addClass("icon-arrow-down-bold"), $(document).off("touchstart.stickylayer click.stickylayer")) : ($target.addClass("helper-show"), shop.device.isMobile || $this.removeClass("icon-arrow-down-bold").addClass("icon-arrow-up-bold"), $(document).on("touchstart.stickylayer click.stickylayer", function(e) {
+                    clickCollector = $(e.target), 1 !== clickCollector.closest("#navs").length && clickCollector !== $("#menu") && (e.preventDefault(), $("#menu").trigger("click"))
+                }))
+            }), shop.device.isMobile || $("#root-nav .js-layer-init").each(function() {
+                var $this = $(this),
+                    instance = $this.data("layer"),
+                    calcArrowLeft = Math.round(100 / ($header.width() + 2 * parseInt($header.parent(".column").css("padding-left"))) * ($this.position().left + $this.outerWidth() / 2));
+                $(this).addClass("no-close-btn"), instance.destroy(), $this.find(".js-layer").attr("data-arrow-pos-left", calcArrowLeft), $this.layer(), instance = $this.data("layer"), instance && instance.layerwidth($(".header-row").width())
+            }), $(window).on("breakpointshift", function() {
+                $("#root-nav .js-layer-init").each(function() {
+                    var $this = $(this),
+                        instance = $this.data("layer"),
+                        calcArrowLeft = Math.round(100 / ($header.width() + 2 * parseInt($header.parent(".column").css("padding-left"))) * ($this.position().left + $this.outerWidth(!0) / 2));
+                    $this.data("layer") && (instance.destroy(), $this.find(".js-layer").attr("data-arrow-pos-left", calcArrowLeft), $this.layer(), instance = $this.data("layer"), instance && instance.layerwidth($(".header-row").width()))
+                })
+            }), shop.device.isMobile && ($(".nav-submenu a").addClass("icon icon-arrow-down-bold icon-arrow-right-bold icon-size-mini icon-right"), $("#meta-nav .label a").addClass("icon icon-arrow-down-bold icon-arrow-right-bold icon-size-mini icon-right"), $(".nav-submenu a").on("click", function(e) {
+                $(this).parents("li").hasClass("yCmsComponent") || e.preventDefault(), $(this).toggleClass("icon-arrow-right-bold"), $(this).parents(".nav-submenu").find(".level-2").toggleClass("helper-hide")
+            }), $(".nav-submenu-title").on("click", function() {
+                $(this).toggleClass("icon-arrow-right-bold"), $(this).parent().find(".level-3").toggleClass("helper-hide")
+            }), $("#meta-nav a").on("click", function(e) {
+                -1 !== $(this).attr("href").indexOf("/faq") && e.preventDefault(), $(this).toggleClass("icon-arrow-right-bold"), $(this).parents("#meta-nav").find("ul").toggleClass("helper-hide")
+            }), $(".icon-search, .mobileLogin").on("click", function(e) {
+                var $this = $(this),
+                    $mobileSearch = $(".mobileSearch"),
+                    $mobileSearchHeight = $(".mobileSearch").height(),
+                    $mobileLogin = $(".mobileLoginContainer"),
+                    $mobileLoginHeight = $(".mobileLoginContainer").height();
+                $headerRow.height(initheaderHeight), $this.hasClass("icon-search") ? $mobileSearch.hasClass("helper-hide") ? ("ios" === shop.device.os && shop.device.isMobile && $(".mobileSearch").trigger("click"), $mobileLogin.addClass("helper-hide"), $headerRow.height($headerRow.height() + 5 + $mobileSearchHeight), $mobileSearch.removeClass("helper-hide")) : ($mobileSearch.addClass("helper-hide"), $headerRow.height(initheaderHeight)) : (e.preventDefault(), $mobileLogin.hasClass("helper-hide") ? ($mobileSearch.addClass("helper-hide"), $headerRow.height($headerRow.height() + $mobileLoginHeight), $mobileLogin.removeClass("helper-hide")) : ($mobileLogin.addClass("helper-hide"), $headerRow.height(initheaderHeight)))
+            }))
+        })
+    }(jQuery, window.shop), $.fn.makeStars = function() {
+    $(this).each(function() {
+        var rating = $(this).data("rating"),
+            starNumber = $(this).children().length,
+            fullStars = Math.floor(rating),
+            halfStarPerc = 100 * (rating - fullStars);
+        if (rating > 0 && $(this).children().each(function(index) {
+                return $(this).addClass("icon-star"), fullStars > index + 1
+            }), 0 !== halfStarPerc && starNumber > fullStars) {
+            var halfStar = $(this).children(":nth-child(" + parseInt(fullStars + 1, 10) + ")");
+            $('<span class="icon icon-star icon-star-percentage"></span>').width(halfStarPerc + "%").appendTo(halfStar)
+        }
+        "false" === $(this).attr("data-review-rendered") && $(this).attr("data-review-rendered", "true")
+    })
+}, $(function() {
+    $(".star-rating, .js-review-bar-rating").makeStars()
+}),
     function($) {
         "use strict";
         var eventNamespace = "etracker",
@@ -9661,7 +9959,17 @@ var addProductToCart = shop.addProductToCart;
                     encodedData = etracker.getProductJSON(articleIdentifier);
                 return etracker.insertToBasket(encodedData, quantity), callback && $.isFunction(callback) ? callback() : void 0
             };
-        shop.etracker.beforeUpdateCard = function() {
+        shop.etracker.etrackerGeneralTracker = function($elem) {
+            var eTrackerData, dataArray, i, l;
+            if ($elem && (eTrackerData = $elem.attr("data-etracker-general-event"), dataArray = eTrackerData ? eTrackerData.split(",") : null, dataArray && 4 === dataArray.length)) {
+                for (i = 0, l = dataArray.length; l > i; i++) dataArray[i] = shop.encodeRfc3986($.trim(dataArray[i]));
+                new Log({
+                    type: "info",
+                    message: "Call: ET_Event.eventStart(" + dataArray[0] + ", " + dataArray[1] + ", " + dataArray[2] + ", " + dataArray[3] + ")",
+                    level: 1
+                }), ET_Event.eventStart(dataArray[0], dataArray[1], dataArray[2], dataArray[3])
+            }
+        }, shop.etracker.beforeUpdateCard = function() {
             var etracker = new eTrackerCommerceAPI,
                 $elem = $(shop.ajaxForms.cart_form.lastElement),
                 $wrapper = $elem.parents(".article-container"),
@@ -9683,40 +9991,37 @@ var addProductToCart = shop.addProductToCart;
                     insertOrRemove = void 0 !== quantityDif && "0" !== quantityDif ? "-" === quantityDif[0] ? "remove" : "insert" : lastProduct && articleIdentifier !== lastProduct.articleIdentifier && lastProduct.entrynumber === entrynumber ? "insertAndRemove" : null;
                 articleIdentifier && ("insert" === insertOrRemove ? eTrackerInsertToBasket(articleIdentifier, quantityDif) : "remove" === insertOrRemove ? etracker.removeFromBasket(etracker.getProductJSON(articleIdentifier), quantityDif.replace("-", "")) : "insertAndRemove" === insertOrRemove && (eTrackerInsertToBasket(articleIdentifier, quantity), etracker.removeFromBasket(etracker.getProductJSON(lastProduct.articleIdentifier), lastProduct.quantity)))
             }
-        }, shop.etracker.afterOrderPrintCatalog = function() {
-            var et, prop, i, l, etrackerVarObj = $(".print-catalog-overlay").data(),
+        }, shop.etracker.updateAfterAjaxRequest = function(obj) {
+            var et, prop, i, l, etrackerVarObj = obj || {},
                 etrackerSecureCode = $("#_etLoader").data("secure-code") || null;
-            for (prop in etrackerVarObj) prop && -1 !== prop.indexOf("et_") && (window[prop] = etrackerVarObj[prop]);
-            for (et = [window.etrackerSecureCode || "", window.et_pagename || "", window.et_areas || "", window.et_ilevel || "", window.et_url || "", window.et_target || "", window.et_tval || "", window.et_ordernr || "", window.et_tsale || "", window.et_cust || "", window.et_basket || "", window.et_lpage || "", window.et_trig || "", window.et_tag || "", window.et_sub || ""], i = 0, l = et.length; l > i; i++) et[i] = shop.encodeRfc3986($.trim(et[i]));
-            et_eC_Wrapper && etrackerSecureCode && et_eC_Wrapper(et[0], et[1], et[2], et[3], et[4], et[5], et[6], et[7], et[8], et[9], et[10], et[11], et[12], et[13], et[14])
+            for (prop in etrackerVarObj) prop && -1 !== prop.indexOf("et_") && (window[prop] = shop.encodeRfc3986(etrackerVarObj[prop]));
+            for (et = [window.et_pagename || "", window.et_areas || "", window.et_ilevel || "", window.et_url || "", window.et_target || "", window.et_tval || "", window.et_ordernr || "", window.et_tsale || "", window.et_cust || "", window.et_basket || "", window.et_lpage || "", window.et_trig || "", window.et_tag || "", window.et_sub || ""], i = 0, l = et.length; l > i; i++) et[i] = $.trim(et[i]);
+            et_eC_Wrapper && etrackerSecureCode && et_eC_Wrapper(etrackerSecureCode, et[0], et[1], et[2], et[3], et[4], et[5], et[6], et[7], et[8], et[9], et[10], et[11], et[12], et[13])
+        }, shop.etracker.afterOrderPrintCatalog = function() {
+            shop.etracker.updateAfterAjaxRequest($(".print-catalog-overlay").data())
         }, $(function() {
-            $(document).on("mousedown." + eventNamespace, "a[data-etracker-campaign], area[data-etracker-campaign]", function(event) {
+            var addCampaignToHref = function(href, campaign) {
+                return href + (href.match(/\?/g) ? "&" : "?") + campaign
+            };
+            $(document).on("mousedown." + eventNamespace, "a[data-etracker-campaign], area[data-etracker-campaign], div[data-etracker-campaign]", function(event) {
                 if ("object" == typeof ET_Event) {
-                    var campaign = $(event.currentTarget).attr("data-etracker-campaign");
-                    this.href += (this.href.match(/\?/g) ? "&" : "?") + campaign, $(this).removeAttr("data-etracker-campaign")
+                    var campaign = $(event.currentTarget).attr("data-etracker-campaign"),
+                        href = this.href;
+                    href ? this.href = addCampaignToHref(href, campaign) : (href = $(this).attr("data-href")) && $(this).attr("data-href", addCampaignToHref(href, campaign)), $(this).removeAttr("data-etracker-campaign")
                 }
             }), $(document).on("mousedown." + eventNamespace, "[data-etracker-event]", function(event) {
                 event.preventDefault();
                 var i, $currentTarget = $(event.currentTarget),
                     dataArray = ($currentTarget.data("etracker-event") + "" || "").split(","),
-                    target = $currentTarget.attr("href") ? shop.encodeRfc3986($currentTarget.attr("href")) : "",
-                    dataArrayLength = dataArray.length || 0;
+                    dataArrayLength = dataArray.length || 0,
+                    href = null,
+                    target = null;
                 if (dataArrayLength >= 3) {
                     for (i = 0; dataArrayLength > i; i++) dataArray[i] = shop.encodeRfc3986($.trim(dataArray[i] || ""));
                     ET_Event.eventStart(dataArray[0], dataArray[1], dataArray[2], dataArray[3] || "")
-                } else 1 === dataArrayLength ? ET_Event.eventStart(shop.brand, dataArray[0], target, "") : console.log("Missing required eTracker parameter")
+                } else 1 === dataArrayLength ? (href = $currentTarget.attr("href") || $currentTarget.attr("data-href"), target = href ? shop.encodeRfc3986(href) : "", ET_Event.eventStart(shop.brand, dataArray[0], target, "")) : console.log("Missing required eTracker parameter")
             }), $(document).on("mousedown." + eventNamespace, "[data-etracker-general-event]", function(e) {
-                e.preventDefault();
-                var i, l, eTrackerData = $(this).attr("data-etracker-general-event"),
-                    dataArray = eTrackerData ? eTrackerData.split(",") : null;
-                if (dataArray && 4 === dataArray.length) {
-                    for (i = 0, l = dataArray.length; l > i; i++) dataArray[i] = shop.encodeRfc3986($.trim(dataArray[i]));
-                    new Log({
-                        type: "info",
-                        message: "Call: ET_Event.eventStart(" + dataArray[0] + ", " + dataArray[1] + ", " + dataArray[2] + ", " + dataArray[3] + ")",
-                        level: 1
-                    }), ET_Event.eventStart(dataArray[0], dataArray[1], dataArray[2], dataArray[3])
-                }
+                e.preventDefault(), shop.etracker.etrackerGeneralTracker($(this))
             }), $(document).on("click." + eventNamespace, "[data-etracker-addcart-event]", function(e) {
                 e.preventDefault();
                 var $this = $(this),
@@ -9742,72 +10047,1914 @@ var addProductToCart = shop.addProductToCart;
     }(jQuery),
     function($) {
         "use strict";
-        var toolifyInputForEditability, changeFormActionOnClick, toggleEditability = function(target, editable) {
-                var $target = $(target);
-                $target.is(":input") || ($target = $target.find(":input")), $target.length > 0 && (editable ? $target.attr("disabled", !1).prop("disabled", !1) : $target.attr("disabled", !0).prop("disabled", !0))
+        $(document).ready(function() {
+            $(document).on("change", "#months", function() {
+                $(this).parents("form").submit()
+            })
+        })
+    }(jQuery),
+    function() {
+        "use strict";
+        "ProductDetailsPage" === shop.page.name && $(function() {
+            var quickShopper = "#quick-shopper",
+                productDetails = "#product-details",
+                $quickShopper = $(quickShopper),
+                isOutOfStock = $("#product-information").hasClass("product-information-outofstock");
+            isOutOfStock || (shop.add("productDetailsPage", {}), shop.productDetailsPage = new Product(productDetails), shop.productDetailsPage.displayVariant(), null !== shop.productDetailsPage.getVariantSizeCode() && shop.productDetailsPage.displayVariantSize(), shop.add("addToCartPDS", {}), shop.addToCartPDS = new AddToCart("cart", productDetails, shop.productDetailsPage), shop.add("addToWatchlistPDS", {}), shop.addToWatchlistPDS = new AddToCart("watchlist", productDetails, shop.productDetailsPage), $quickShopper.length > 0 && (shop.add("quickShopperProduct", {}), shop.quickShopperProduct = new Product(quickShopper), shop.quickShopperProduct.displayVariantForQuickShopper(), null !== shop.quickShopperProduct.getVariantSizeCode() && shop.quickShopperProduct.displayVariantSizeForQuickShopper(), shop.add("addToCartQuickShopper", {}), shop.addToCartPDS = new AddToCart("cart", quickShopper, shop.quickShopperProduct)))
+        })
+    }(), jQuery(document).ready(function($) {
+    if (shop.device.isMobile) {
+        var $subNavNodes = $(".touch #sub-navi li a:has(+ ul)");
+        $subNavNodes.addClass("icon icon-right icon-size-mini icon-arrow-right-bold"), $(document).on("click", ".touch #sub-navi li a:has(+ ul)", function(e) {
+            e.preventDefault(), $(this).closest("li").toggleClass("active"), $(this).toggleClass("icon-arrow-right-bold icon-arrow-down-bold")
+        })
+    } else $(document).on("click", ".touch #sub-navi .branch-selected > a", function(e) {
+        e.preventDefault(), $(this).parents(".branch-selected").toggleClass("active")
+    })
+}),
+    function(shop, $) {
+        "use strict";
+        var Watchlist = function() {
+            this.init()
+        };
+        Watchlist.prototype = {
+            init: function() {
+                this.bindEventListner()
             },
-            toogleRequiredState = function($invoker, $target) {
-                var requiredClass = "js-required-element";
-                $invoker.is(':input[type="checkbox"]') && $invoker.on("change", function() {
-                    $target.toggleClass(requiredClass), shop.formValidation._hideError($target, !0), shop.formValidation.bindValidationEvents()
+            removeWatchlistHeartIcon: function($element) {
+                $element.length > 0 && $element.hasClass("icon-heart") && $element.removeClass("icon-heart").addClass("icon-heart-border")
+            },
+            addWatchlistHeartIcon: function($element) {
+                $element.length > 0 && $element.hasClass("icon-heart-border") && $element.removeClass("icon-heart-border").addClass("icon-heart")
+            },
+            updateLikeCounterNumber: function(enclosingElement, likeCounterNumber) {
+                return enclosingElement.length > 0 && $(".like-counter-number", enclosingElement).text(0 === likeCounterNumber ? "" : likeCounterNumber), this
+            },
+            updateDataAttr: function($elem, action) {
+                return $elem.attr("data-product-on-wishlist", "success" === action), this
+            },
+            updateWatchListTextInHeader: function(wishlistArticleSize) {
+                return $("#wishlist_article_size").text(wishlistArticleSize), this
+            },
+            updateWatchlistIndicatorProductCode: function(code) {
+                var $watchlistIndicatorLink = $(".js-watchlist-indicator", "#product-image-detail");
+                $watchlistIndicatorLink.attr("data-product-code", code), $watchlistIndicatorLink.attr("data-product-on-wishlist", !1), this.removeWatchlistHeartIcon($($watchlistIndicatorLink).children(".icon"))
+            },
+            updateAddToWatchlistLinkPDS: function($addToWishlistLink, modificationDataResult, dataProductCode) {
+                var $pdsInputFieldProductCode = $(".js-variant-code", ".add-to-cart-form"),
+                    pdsProductCode = $pdsInputFieldProductCode.length > 0 ? $pdsInputFieldProductCode.val() : "";
+                if (pdsProductCode === dataProductCode && $addToWishlistLink.length > 0) {
+                    var dataWatchlistAddText = $addToWishlistLink.data("watchlist-add-text"),
+                        dataWatchlistDeleteText = $addToWishlistLink.data("watchlist-delete-text");
+                    "deleted" === modificationDataResult ? ($("#watchlist-manipulation-text", $addToWishlistLink).text(dataWatchlistAddText), $addToWishlistLink.attr("data-product-on-wishlist", !1), this.removeWatchlistHeartIcon($addToWishlistLink)) : ($("#watchlist-manipulation-text", $addToWishlistLink).text(dataWatchlistDeleteText), $addToWishlistLink.attr("data-product-on-wishlist", !0), this.addWatchlistHeartIcon($addToWishlistLink))
+                }
+                return this
+            },
+            updateWatchlistIndicatorHeart: function(modificationDataResult, likeCounterNumber, usedProductCode) {
+                var $watchlistIndicatorLinks = $(".js-watchlist-indicator", ".watchlist-indicator-heart"),
+                    $self = this;
+                return $watchlistIndicatorLinks.parents(".overlay-content").length < 1 && $.each($watchlistIndicatorLinks, function() {
+                    var $watchlistIndicator = $(this);
+                    $watchlistIndicator.attr("data-product-code") === usedProductCode && ("success" === modificationDataResult ? $self.addWatchlistHeartIcon($($watchlistIndicator).children(".icon")) : $self.removeWatchlistHeartIcon($($watchlistIndicator).children(".icon")), $self.updateLikeCounterNumber($watchlistIndicator, likeCounterNumber))
+                }), this
+            },
+            storeChanges: function(selectedVariantCode, data) {
+                return "success" === data.modificationDataResult ? -1 !== shop.pageInformation.wishlistArticleCodes.indexOf(selectedVariantCode) && (shop.pageInformation.wishlistArticleCodes += selectedVariantCode + ";") : shop.pageInformation.wishlistArticleCodes = shop.pageInformation.wishlistArticleCodes.replace(selectedVariantCode + ";", ""), shop.pageInformation.wishlistArticleChanges[selectedVariantCode] = {
+                    modification: data.modificationDataResult,
+                    counter: data.likeCounterNumber
+                }, shop.searchResultCache && shop.searchResultCache.saveWishlistArticleChanges && shop.searchResultCache.saveWishlistArticleChanges(), this
+            },
+            updateHearts: function() {
+                var $heart, isOnWishlist, entry, wishlistArticleObject = shop.pageInformation.wishlistArticleChanges || {};
+                for (entry in wishlistArticleObject) $heart = $('[data-product-code="' + entry + '"]'), $heart.length > 0 && (isOnWishlist = "success" === wishlistArticleObject[entry].modification, $heart.attr("data-product-on-wishlist", isOnWishlist), isOnWishlist ? this.addWatchlistHeartIcon($heart.children(".icon")) : this.removeWatchlistHeartIcon($heart.children(".icon")), this.updateLikeCounterNumber($heart, wishlistArticleObject[entry].counter), this.updateDataAttr($heart, wishlistArticleObject[entry].modification))
+            },
+            bindEventListner: function() {
+                var self = this;
+                shop.device.hasTouch && $(document).on("click", ".watchlist-indicator-heart .js-watchlist-overlay", function() {
+                    var $elementSelected = $(this);
+                    $elementSelected.parent().toggleClass("max-width-none"), $(".js-layer", $elementSelected).toggleClass("layer-hide layer-visible")
+                }), $(document).on("click", ".js-watchlist-indicator", function(e) {
+                    var $elementSelected = $(this),
+                        dataProductCode = $elementSelected.attr("data-product-code"),
+                        likeCounter = parseInt($elementSelected.find(".like-counter-number").text() || 0, 10),
+                        isOnWishlist = "true" === $elementSelected.attr("data-product-on-wishlist"),
+                        actionUrl = $elementSelected.attr("href") + dataProductCode,
+                        isCarousel = $elementSelected.closest(".slick-slider").length > 0,
+                        isOverlay = $elementSelected.closest(".overlay-container").length > 0,
+                        isPagePDS = "ProductDetailsPage" === shop.page.name;
+                    e.preventDefault(), isOnWishlist || $elementSelected.hasClass("animate") || shop.addToCartAnimation("", $elementSelected.find(".icon-heart:first-child"), $(".icon-heart ", "#wishlist-link")), self.storeChanges(dataProductCode, {
+                        modification: isOnWishlist ? "deleted" : "success",
+                        counter: isOnWishlist ? likeCounter > 0 ? likeCounter -= 1 : 0 : likeCounter += 1
+                    }), $elementSelected.hasClass("animate") || $.ajaxQueue({
+                        url: actionUrl,
+                        cache: !1,
+                        beforeSend: function() {
+                            $elementSelected.addClass("animate")
+                        },
+                        success: function(data) {
+                            $.isPlainObject(data) && ($elementSelected.removeClass("animate"), self.updateWatchListTextInHeader(data.wishlistArticleSize).updateLikeCounterNumber($elementSelected, data.likeCounterNumber).storeChanges(dataProductCode, data).updateHearts(), data.modificationDataResult && "deleted" === data.modificationDataResult ? shop.pageInformation.wishlistArticleCodes = shop.pageInformation.wishlistArticleCodes.replace(dataProductCode + ";", "") : (shop.pageInformation.wishlistArticleCodes += dataProductCode + ";", !isPagePDS || isCarousel || isOverlay || shop.addToCartPDS.showOverlay(data.addToPopup)), self.updateAddToWatchlistLinkPDS($("#add-to-watchlist-button"), data.modificationDataResult, dataProductCode).updateWatchlistIndicatorHeart(data.modificationDataResult, data.likeCounterNumber, dataProductCode), shop.searchResultCache && shop.searchResultCache.saveWishlistArticleChanges && shop.searchResultCache.saveWishlistArticleChanges(), "Account Watch List Page" === shop.page.name && location.reload())
+                        },
+                        error: function(data) {
+                            $elementSelected.removeClass("animate"), isPagePDS && shop.addToCartPDS.showErrorOverlay(data)
+                        }
+                    })
+                })
+            }
+        }, $(function() {
+            shop.pageInformation.wishlist = new Watchlist
+        })
+    }(shop, jQuery),
+    function($) {
+        "use strict";
+        var brandSlider = function(elem) {
+            var touchConfObj, elemOuterWidth, leftWidthIndicator, restWidthIndicator, rightIndicatorFlag, ANIMATION_SPEED_NORMAL = 1,
+                ANIMATION_SPEED_FAST = 11,
+                $container = elem.target,
+                $innerContainer = $container.children(".brand-mask"),
+                $arrowPrev = $container.parent().find(".js-scroller-prev"),
+                $arrowNext = $container.parent().find(".js-scroller-next"),
+                $arrows = $arrowPrev.add($arrowNext),
+                containerWidth = elem.width,
+                containerContent = $container.find("li"),
+                clickLeftOrRight = function(e) {
+                    $(e.target).hasClass("scroller-next") ? rightClick() : $(e.target).hasClass("scroller-prev") && leftClick()
+                },
+                maxElementWidth = 0,
+                elemWidthSum = 0,
+                containerMarginLeft = 0,
+                frameOffset = ANIMATION_SPEED_NORMAL,
+                targetItems = 0,
+                hovering = !1,
+                movingLeft = !1,
+                movingRight = !1,
+                mouseenter = function() {
+                    hovering = !0
+                },
+                mouseleave = function() {
+                    hovering = !1
+                },
+                leftClick = function() {
+                    movingLeft = !0
+                },
+                rightClick = function() {
+                    movingRight = !0
+                };
+            $container.data("has-slider", !0);
+            for (var i = 0; i < containerContent.length; i++) elemOuterWidth = $(containerContent[i]).outerWidth(), elemOuterWidth > maxElementWidth && (maxElementWidth = elemOuterWidth), elemWidthSum += elemOuterWidth;
+            if (containerWidth > elemWidthSum) return void $innerContainer.width(elem.width);
+            $container.width(elem.width), $container.height(elem.height), $innerContainer.width(2 * elem.width), $arrows.css("display", "block"), shop.device.hasTouch ? $arrows.on("click", function(e) {
+                e.preventDefault(), clickLeftOrRight(e)
+            }) : $arrows.hammer().on("touch tap", function(e) {
+                e.gesture.stopPropagation(), e.gesture.preventDefault(), clickLeftOrRight(e)
+            }), $innerContainer.append(containerContent.clone()), shop.device.hasTouch ? (touchConfObj = {
+                swipe_velocity: .2
+            }, $container.hammer().on("touch", mouseenter), $container.hammer().on("release", mouseleave), $container.hammer(touchConfObj).on("dragleft dragright dragend", function(e) {
+                e.gesture.stopPropagation(), e.gesture.preventDefault(), "dragend" === e.type && (e.gesture.deltaX >= 20 ? leftClick() : e.gesture.deltaX <= -20 && rightClick())
+            })) : ($innerContainer.on("mouseenter", mouseenter), $innerContainer.on("mouseleave", mouseleave)), elemOuterWidth = $innerContainer.children(":first").outerWidth();
+            var tick = function() {
+                if (!hovering) {
+                    if ((-containerMarginLeft > 4 * elemWidthSum || containerMarginLeft > 0) && (containerMarginLeft = 0), elemOuterWidth -= frameOffset, 0 === elemOuterWidth) {
+                        if (restWidthIndicator) {
+                            for (var i = 0; targetItems > i; i++) elemOuterWidth = $innerContainer.children(":first"), containerMarginLeft += elemOuterWidth.outerWidth(), $innerContainer.append(elemOuterWidth.remove());
+                            restWidthIndicator = !1, targetItems = 0, elemOuterWidth = $innerContainer.children(":first").outerWidth()
+                        } else if (leftWidthIndicator) {
+                            if (targetItems = 0, elemOuterWidth = -leftWidthIndicator, -200 > containerMarginLeft - leftWidthIndicator) return elemOuterWidth = containerMarginLeft - leftWidthIndicator, void(elemOuterWidth -= elemOuterWidth % ANIMATION_SPEED_FAST);
+                            leftWidthIndicator = !1
+                        } else elemOuterWidth = $innerContainer.children(":first"), containerMarginLeft += elemOuterWidth.outerWidth(), $innerContainer.append(elemOuterWidth.remove()), elemOuterWidth = $innerContainer.children(":first").outerWidth();
+                        frameOffset = ANIMATION_SPEED_NORMAL
+                    }
+                    if (movingLeft) {
+                        for (elemOuterWidth = $innerContainer.children(":first").outerWidth() - elemOuterWidth, frameOffset = -ANIMATION_SPEED_FAST, restWidthIndicator = elem.width - $innerContainer.children(":first").outerWidth(), elemOuterWidth += restWidthIndicator; restWidthIndicator > 0;) leftWidthIndicator = $($innerContainer.children("li")[$innerContainer.children("li").length - 1]), restWidthIndicator -= $(leftWidthIndicator).outerWidth(), containerMarginLeft -= $(leftWidthIndicator).outerWidth(), $innerContainer.prepend($(leftWidthIndicator).remove());
+                        return elemOuterWidth -= elemOuterWidth % ANIMATION_SPEED_FAST, elemOuterWidth = -elemOuterWidth, leftWidthIndicator = restWidthIndicator, restWidthIndicator = !1, movingLeft = !1, void(rightIndicatorFlag = -1)
+                    }
+                    if (movingRight) {
+                        frameOffset = ANIMATION_SPEED_FAST, restWidthIndicator = elemOuterWidth, targetItems++;
+                        for (var i = 1; i < $innerContainer.children("li").length && (elemOuterWidth = $innerContainer.children("li")[i], restWidthIndicator + $(elemOuterWidth).outerWidth() < containerWidth); i++) targetItems++, restWidthIndicator += $(elemOuterWidth).outerWidth();
+                        elemOuterWidth = restWidthIndicator, elemOuterWidth -= elemOuterWidth % ANIMATION_SPEED_FAST, movingRight = !1, rightIndicatorFlag = 1
+                    }
+                    containerMarginLeft -= frameOffset, $innerContainer.css("margin-left", containerMarginLeft + "px")
+                }
+            };
+            setInterval(tick, 20)
+        };
+        $(function() {
+            $(".brand-container").each(function(index, item) {
+                var loadingImagesCounter, $images, interval, retryCount = 10,
+                    checkSliderStart = function() {
+                        return loadingImagesCounter && retryCount ? void retryCount-- : (brandSlider({
+                            target: $(item),
+                            width: 900,
+                            height: 90
+                        }), void clearInterval(interval))
+                    };
+                $(item).data("has-slider") || ($images = $(item).children(".brand-mask").children().children().children(), loadingImagesCounter = $images.length, $images.on("load", function() {
+                    loadingImagesCounter--
+                }), interval = setInterval(checkSliderStart, 300))
+            })
+        })
+    }(jQuery),
+    function($) {
+        "use strict";
+        $(function() {
+            shop.filterPriceSlider = function() {
+                if ($(".noUiSlider").length > 0) {
+                    var url, $sliderElement = $(".noUiSlider"),
+                        $displayLeftValue = $("#s-value-left"),
+                        $displayRightValue = $("#s-value-right"),
+                        $submitPrice = $("#price-filter-button"),
+                        sliderSelectedMin = parseFloat(Math.floor($sliderElement.data("slider-selected-min"))),
+                        sliderSelectedMax = parseFloat(Math.round($sliderElement.data("slider-selected-max"))),
+                        sliderAbsMin = parseFloat(Math.floor($sliderElement.data("slider-abs-min"))),
+                        sliderAbsMax = parseFloat(Math.round($sliderElement.data("slider-abs-max"))),
+                        priceSliderApply = function() {
+                            for (var search = window.location.search, items = search.split("&"), PS = "filterPreisSlider", PSA = "filterPreisSliderAbsolute", hasPS = !1, hasPSA = !1, lasSliderPos = 0, i = 0; i < items.length; i++) - 1 !== items[i].indexOf(PS) && (-1 !== items[i].indexOf(PSA) ? (hasPSA = !0, items[i] = PSA + "=" + sliderAbsMin + "+-+" + sliderAbsMax) : (hasPS = !0, items[i] = PS + "=" + $displayLeftValue.text() + "+-+" + $displayRightValue.text()));
+                            hasPS || items.push(PS + "=" + $displayLeftValue.text() + "+-+" + $displayRightValue.text()), hasPSA || items.push(PSA + "=" + sliderAbsMin + "+-+" + sliderAbsMax), search = items.join("&"), "?" !== search[0] && (search = "?" + search), url = window.location.protocol + "//" + window.location.host + window.location.pathname + search, shop.device.isMobile ? (lasSliderPos = shop.getViewportOffset($(".noUiSlider")), shop.filterMenu.loadNewPageJSON(url, function() {
+                                $("html, body").animate({
+                                    scrollTop: $(".noUiSlider").offset().top - lasSliderPos.top
+                                }, 0)
+                            })) : window.location = url
+                        };
+                    sliderAbsMin === sliderAbsMax && (sliderAbsMax += 1), sliderSelectedMin === sliderSelectedMax && (sliderSelectedMax += 1), void 0 !== sliderSelectedMin && void 0 !== sliderSelectedMax && void 0 !== sliderAbsMin && void 0 !== sliderAbsMax && ($sliderElement.noUiSlider({
+                        range: [sliderAbsMin, sliderAbsMax],
+                        start: [sliderSelectedMin, sliderSelectedMax],
+                        handles: 2,
+                        set: function() {
+                            $submitPrice.attr("data-etracker-general-event", "Produktfilter, Preisbereich, " + $(this).val()[0] + "-" + $(this).val()[1] + ", ''")
+                        },
+                        serialization: {
+                            resolution: 1,
+                            to: [
+                                [$displayLeftValue, "html"],
+                                [$displayRightValue, "html"]
+                            ]
+                        }
+                    }), shop.device.isMobile ? $sliderElement.on("change", function() {
+                        priceSliderApply()
+                    }) : $submitPrice.on("click.filterSlider", priceSliderApply))
+                }
+            }
+        })
+    }(jQuery),
+    function($, store, shop) {
+        "use strict";
+        var FilterMenu = function() {
+            this.$menu = $(".js-asn-menu"), this.filterLoaderOverlay = new LoaderOverlay(this.$menu), this._currentJSONData = {}, this.currentURL = location.href, this.lastURL = this.currentURL, this.init()
+        };
+        FilterMenu.prototype = {
+            initCollapseStates: function() {
+                var state, $currentBox, collapse = this.getCollapseState(),
+                    fn = {
+                        hideCategory: function($currentBox) {
+                            $(".category", $currentBox).removeClass("category-arrow-down").addClass("icon-arrow-right-bold"), $(".facet-block", $currentBox).hide()
+                        },
+                        showCategory: function($currentBox) {
+                            $(".category", $currentBox).removeClass("icon-arrow-right-bold").addClass("category-arrow-down"), $(".facet-block", $currentBox).show()
+                        }
+                    };
+                collapse.forQuery != shop.searchresult.freeTextSearch && (this.clearCollapseStates(), collapse = this.getCollapseState());
+                for (var item in collapse.states) state = collapse.states[item], $currentBox = $(".filter-nav-content .filter-item").eq(item), 0 === state ? fn.hideCategory($currentBox) : 1 === state && fn.showCategory($currentBox)
+            },
+            init: function(initWithoutMobileEvents) {
+                this.initCollapseStates(), $(".filter-nav-content").show(), this.setSelectedFilterPositions(), this.filterHeadBehavior(), this.filterColorBoxGenerator(), this.addStarClasses(), this.addCSSClasses(), shop.filterPriceSlider && shop.filterPriceSlider(), shop.device.isMobile && !initWithoutMobileEvents && this.registerMobileEventListeners()
+            },
+            setSelectedFilterPositions: function() {
+                $(".facet-block", "#search-left-column").each(function() {
+                    var $this = $(this),
+                        $lastSelectedElem = $this.find("li.selected").not('[class*="indent-2"]').last();
+                    $lastSelectedElem.length > 0 && $this.scrollTop($lastSelectedElem.offset().top - $this.offset().top)
+                })
+            },
+            getCollapseState: function() {
+                var val = shop.device.isMobile ? 0 : 1,
+                    collapse = store.get("collapse");
+                return collapse || (collapse = {
+                    states: []
+                }, $(".filter-nav-content .filter-item").each(function(i) {
+                    collapse.states[i] = val
+                })), collapse
+            },
+            clearCollapseStates: function() {
+                store.remove("collapse"), store.set("collapse", {
+                    forQuery: shop.searchresult.freeTextSearch,
+                    states: {}
+                })
+            },
+            setCollapseState: function(index, open) {
+                var collapse = this.getCollapseState();
+                collapse.states[index] = open, store.remove("collapse"), store.set("collapse", collapse)
+            },
+            filterHeadBehavior: function() {
+                var self = this,
+                    $separateCategory = $(".category"),
+                    arrowCloseClassName = "icon-arrow-right-bold",
+                    arrowOpenClassName = "icon-arrow-down-bold";
+                $(".filter-item", ".filter-nav-content").on("mousedown.collapse", ".category", function(e) {
+                    e.preventDefault(), e.stopPropagation();
+                    var $this = $(this);
+                    $this.hasClass(arrowCloseClassName) ? ($this.removeClass(arrowCloseClassName).addClass(arrowOpenClassName), $this.parent().find(".facet-block").show(), self.setCollapseState($(e.delegateTarget).index(), 1)) : ($this.addClass(arrowCloseClassName).removeClass(arrowOpenClassName), $this.parent().find(".facet-block").hide(), self.setCollapseState($(e.delegateTarget).index(), 0)), shop.searchResultPage.view.updateFilterMenuOffset()
+                }), $separateCategory.last().on("click", function(e) {
+                    e.preventDefault(), e.stopPropagation(), shop.searchResultPage.view.updateFilterMenuOffset()
+                })
+            },
+            filterColorBoxGenerator: function() {
+                var i, $hexSpan = $(".facet-hex"),
+                    $hexImg = $(".facet-img"),
+                    hexColorClass = "facet-hex-css",
+                    indent0Class = "color-indent-0";
+                for (i = 0; i < $hexSpan.length; i++) "" !== $hexSpan.eq(i).text() && ($hexSpan.eq(i).closest("a").closest("li").removeClass(indent0Class), $hexSpan.eq(i).prev(".facet-name").remove(), $hexSpan.eq(i).addClass(hexColorClass), $hexSpan.eq(i).closest("a").find(".remove-item-link").remove(), $hexSpan.eq(i).css("background", $hexSpan.eq(i).text()), $hexSpan.eq(i).text(""));
+                for (i = 0; i < $hexImg.length; i++) "" !== $hexImg.eq(i).attr("src") && ($hexImg.eq(i).closest("a").closest("li").removeClass(indent0Class), $hexImg.eq(i).next(".facet-name").remove(), $hexImg.eq(i).addClass(hexColorClass), $hexImg.eq(i).closest("a").find(".remove-item-link").remove()), "" === $hexImg.eq(i).attr("src") && $hexImg.eq(i).remove()
+            },
+            addStarClasses: function() {
+                var $searchFilterItem = $(".filter-item"),
+                    $starContainerLine = ($searchFilterItem.find(".search-star-rating"), $(".star-rating")),
+                    activeStarClass = "fa-star-active";
+                $starContainerLine.each(function() {
+                    for (var c = $(this).parent().prop("class").split("-"), i = 0; i < c[c.length - 1]; i++) $(this).children().eq(i).addClass(activeStarClass)
+                })
+            },
+            addCSSClasses: function() {
+                for (var lastLiItemClass = "li-last-item", initCSSClass = "linklist-indent-", finalCSSClass = "", categoryLiLevelAmount = 5, i = 0; categoryLiLevelAmount > i; i++) finalCSSClass = initCSSClass + i, $("li").hasClass(finalCSSClass) && $("li." + finalCSSClass).last().addClass(lastLiItemClass)
+            },
+            updateAppliedfilters: function(htmlData) {
+                this.$menu.find(".applied-filters").html(htmlData)
+            },
+            updateFilterMenuData: function(htmlData) {
+                htmlData && (this.$menu.find(".filter-nav-content").replaceWith(htmlData), this.init(!0))
+            },
+            updateTracking: function(trackingObj) {
+                var $trackingPixelAdDegree = $(trackingObj.adDegree || ""),
+                    eTrackerObj = trackingObj.eTrackerObj || {};
+                shop.etracker.updateAfterAjaxRequest(eTrackerObj), $("body").append($trackingPixelAdDegree)
+            },
+            handleNewData: function(data) {
+                if (data && $.isPlainObject(data)) {
+                    if ($.isEmptyObject(data.searchResultJSON)) return void console.log("Search-query doesn't contain any results");
+                    this.updateAppliedfilters(data.appliedfilters), this.updateTracking(data.tracking), this.updateFilterMenuData(data.facetRefinements), this.$menu.find(".js-review-bar-rating").makeStars(), this._currentJSONData = data
+                }
+            },
+            gotoURL: function(url) {
+                "safari" === shop.device.browser ? window.location = url : window.location.href = url
+            },
+            loadNewPageJSON: function(requestURL, callback) {
+                var paramObj = {},
+                    self = this;
+                requestURL.indexOf("asJSON=true") < 0 && (paramObj.asJSON = !0);
+                var request = $.ajax({
+                    url: requestURL,
+                    data: paramObj,
+                    dataType: "json",
+                    type: "GET",
+                    async: !0,
+                    beforeSend: function() {
+                        self.filterLoaderOverlay.show()
+                    },
+                    error: function(xhr, status) {
+                        console.log("broken data", xhr, status)
+                    }
+                });
+                request.done(function(data) {
+                    if ($.isPlainObject(data)) {
+                        if (self.filterLoaderOverlay.hide(), data.redirectURL && "" !== data.redirectURL ? self.gotoURL(data.redirectURL) : self.handleNewData(data), callback && $.isFunction(callback)) return callback()
+                    } else self.gotoURL(requestURL)
+                })
+            },
+            getNewURL: function() {
+                var url = $.isEmptyObject(this._currentJSONData) ? null : this._currentJSONData.searchResultJSON.pagination.sort;
+                return url ? shop.searchResultPage.prependBaseURLTo(url) : null
+            },
+            registerMobileEventListeners: function() {
+                var $resultContainer = $("#search-right-column"),
+                    $footer = $("#page-footer"),
+                    $footerBefore = $("#footer-before"),
+                    self = this,
+                    fn = {
+                        toogleASNDisplay: function() {
+                            self.$menu.toggleClass("open"), $resultContainer.toggleClass("closed"), $footerBefore.toggleClass("helper-hide"), $footer.toggleClass("helper-hide"), self.$menu.hasClass("open") ? shop.searchResultPage.clear() : shop.searchResultPage.initNavigationModeController()
+                        }
+                    };
+                $(document).on("mousedown", ".js-asn-display-btn", function(e) {
+                    e.preventDefault(), e.stopPropagation(), setTimeout(fn.toogleASNDisplay, 100), shop.searchResultPage.view.scrollToElement()
+                }), $(this.$menu).on("mousedown", ".js-filter-link", function(e) {
+                    var $this = $(this),
+                        hasColorBox = $this.parent().hasClass("box"),
+                        href = $this.attr("href"),
+                        lastPos = 0;
+                    e.preventDefault(), e.stopPropagation(), href && (self.lastURL = location.href, self.currentURL = href, history.replaceState({
+                        Search: document.title
+                    }, href, href), hasColorBox ? (lastPos = shop.getViewportOffset($(".color-boxes")), self.loadNewPageJSON(href, function() {
+                        var $filterBtn = $(".js-success-btn");
+                        $("html, body").animate({
+                            scrollTop: $(".color-boxes").offset().top - lastPos.top
+                        }, 0), $filterBtn.text($filterBtn.data("filter-text"))
+                    })) : self.loadNewPageJSON(href, function() {
+                        var $filterBtn = $(".js-success-btn");
+                        $filterBtn.text($filterBtn.data("filter-text"))
+                    }))
+                }), $(this.$menu).on("mousedown", ".js-close, .js-success-btn", function(e) {
+                    var url = self.getNewURL(),
+                        $this = $(this);
+                    e.preventDefault(), e.stopPropagation(), url && (history.replaceState({
+                        Search: document.title
+                    }, url, url), shop.searchResultPage.updateSearchClassWithASNData(self._currentJSONData)), $this.text($this.data("init-text")), fn.toogleASNDisplay()
+                })
+            }
+        }, "Search result Page" === shop.page.name && $(function() {
+            shop.filterMenu = new FilterMenu
+        })
+    }(jQuery, window.store, window.shop),
+    function($) {
+        "use strict";
+        var SearchResultView = {
+                init: function(parentClass) {
+                    return this._parentClass = parentClass, this.$body = $("body"), this.$searchResultPage = $("#search-result-page"), this.$resultContainer = $("#product-result-container"), this.$navigationWrapper = this.$searchResultPage.find(".paging-nav-wrapper"), this.$navigationWrapper.append('<div id="result-page-navigation"></div>'), $('<div id="result-page-loader"></div>').insertAfter(this.$resultContainer), this.$navigation = this.$searchResultPage.find("#result-page-navigation"), this.$filterMenu = $("#search-left-column"), this.$stickySortBox = $("#sort_form1"), this.$navigationModeDropdown = $("#paging"), this.$navigationModeDropdownBottom = $("#paging-bottom"), this.text_fromPrice = this.$resultContainer.attr("data-text_fromprice"), this.text_basePrice = this.$resultContainer.attr("data-text_baseprice"), this._eventhandlerNameSpace = this.$searchResultPage.attr("id"), this.viewportHeight = this.getViewportHeight(), this.lastScrollPosition = this.getScrollPosition(), this.updateResultContainerOffset = !0, this.resultContainerOffset = this.getResultContainerOffsetBottom(), this.filterMenuOffsetBottom = this.getFilterMenuOffsetBottom(), this.isStickySortBoxVisible = !1, this.factFinderErrorCounter = 0, this._reloadPageWhenErrorCounterIs = 3, this._initNavModeDropdown(), this._bindEventHandler(), this.resultLoader = new LoaderOverlay("#result-page-loader", !0), this.resultLoader.hide(), this.calcStickySortBoxPos(), this
+                },
+                getNavigationModeValueFromDropdown: function() {
+                    var navMode = this.$navigationModeDropdown.find("option:selected").val();
+                    return void 0 === navMode || navMode.indexOf("lazy") >= 0 ? 0 : parseInt(navMode, 10)
+                },
+                buildPagingNavigation: function(currentPage, lastPage, showExtraPager) {
+                    var pagerHTML = '<ul class="paging-navigation">',
+                        showExtraPager = showExtraPager || !0,
+                        pagerElemsHTML = "",
+                        cssClasses = {
+                            prevArrow: "paging-prev-arrow hierarchy icon icon-arrow-left-bold icon-size-mini",
+                            nextArrow: "paging-next-arrow hierarchy icon icon-arrow-right-bold icon-size-mini",
+                            twoStepsForward: "paging-two-steps-forward",
+                            twoStepsBackward: "paging-two-steps-backward",
+                            page: "paging-page",
+                            currentPage: "paging-current-page"
+                        },
+                        fn = {
+                            _getElemByNumber: function(number, cssClass, displayNubmer) {
+                                return '<li class="js-paging paging-tile ' + cssClass + '" data-page-number="' + number + '">' + (displayNubmer !== !1 ? number : "") + "</li>"
+                            },
+                            getPagerElems: function() {
+                                if (1 !== lastPage) {
+                                    1 !== currentPage && (pagerElemsHTML += fn._getElemByNumber(currentPage - 1, cssClasses.prevArrow, !1));
+                                    for (var i = 1; lastPage >= i; i++) i === currentPage ? pagerElemsHTML += fn._getElemByNumber(currentPage, cssClasses.currentPage, !0) : i > 1 && currentPage - 1 > i ? (currentPage === lastPage && showExtraPager ? (pagerElemsHTML += fn._getElemByNumber(currentPage - 3, cssClasses.twoStepsBackward, !1), pagerElemsHTML += fn._getElemByNumber(currentPage - 2, cssClasses.page, !0)) : pagerElemsHTML += 4 === currentPage ? fn._getElemByNumber(currentPage - 2, cssClasses.page, !0) : fn._getElemByNumber(currentPage - 2, cssClasses.twoStepsBackward, !1), i = currentPage - 2) : lastPage > i && i > currentPage + 1 ? (1 === currentPage && showExtraPager && showExtraPager ? (pagerElemsHTML += fn._getElemByNumber(currentPage + 2, cssClasses.page, !0), pagerElemsHTML += fn._getElemByNumber(currentPage + 3, cssClasses.twoStepsForward, !1)) : pagerElemsHTML += currentPage === lastPage - 3 ? fn._getElemByNumber(currentPage + 2, cssClasses.page, !0) : fn._getElemByNumber(currentPage + 2, cssClasses.twoStepsForward, !1), i = lastPage - 1) : pagerElemsHTML += fn._getElemByNumber(i, cssClasses.page, !0);
+                                    return lastPage !== currentPage && (pagerElemsHTML += fn._getElemByNumber(currentPage + 1, cssClasses.nextArrow, !1)), pagerElemsHTML
+                                }
+                            }
+                        };
+                    pagerElemsHTML = fn.getPagerElems(), this.removePagingNavigation(), pagerElemsHTML && (pagerHTML += pagerElemsHTML, pagerHTML += "</ul>", this.$navigation.append(pagerHTML))
+                },
+                removePagingNavigation: function() {
+                    this.$navigationWrapper.find(".paging-navigation").remove()
+                },
+                _initNavModeDropdown: function() {
+                    var activeMode, productsPerPage;
+                    null === this._parentClass.navigationMode.activeMode && this._parentClass.setNavigationMode(this.getNavigationModeValueFromDropdown()), activeMode = this._parentClass.navigationMode.activeMode, productsPerPage = this._parentClass.navigationMode.modes[activeMode].productsPerPage, 0 === activeMode ? this.$navigationModeDropdown.find('option[value="lazy"]').attr("selected", !0).end().trigger("change") : this.$navigationModeDropdown.find('option[value="' + productsPerPage + '"]').attr("selected", !0).end().trigger("change")
+                },
+                _bindEventHandler: function() {
+                    var self = this,
+                        hasTouch = shop.device.hasTouch,
+                        $lastTooltip = [];
+                    $(window).on("resize", function() {
+                        self.viewportHeight = self.getViewportHeight(), self.calcStickySortBoxPos()
+                    }), this.$navigationModeDropdown.on("change." + this._eventhandlerNameSpace, function() {
+                        var $this = $(this),
+                            $selectedOption = $this.find("option:selected"),
+                            val = $selectedOption.val(),
+                            selectedOptionText = $this.find("option:selected").text(),
+                            device = shop.device;
+                        self.$navigationModeDropdownBottom.find("option:contains(" + selectedOptionText + ")").attr("selected", !0).end().val(val).selectOrDie("update"), ("ios" === device.os && "7" === device.osVersion || "ios" === device.os && "8" === device.osVersion) && self.$navigationModeDropdownBottom.val(val).parent().find(".sod_label").text(selectedOptionText), shop.etracker.etrackerGeneralTracker($selectedOption), self._parentClass.setNavigationMode(val), self._parentClass.cache.saveNavMode(), self._parentClass.initNavigationModeController(!0, !1)
+                    }), this.$navigationModeDropdownBottom.on("change." + this._eventhandlerNameSpace, function() {
+                        var $this = $(this),
+                            $selectedOption = $this.find("option:selected"),
+                            val = $selectedOption.val(),
+                            selectedOptionText = $this.find("option:selected").text(),
+                            device = shop.device;
+                        self.$navigationModeDropdown.val(val).find("option:contains(" + selectedOptionText + ")").attr("selected", !0).trigger("change"), ("ios" === device.os && "7" === device.osVersion || "ios" === device.os && "8" === device.osVersion) && self.$navigationModeDropdown.val(val).parent().find(".sod_label").text(selectedOptionText)
+                    }), this.$navigation.on("click." + this._eventhandlerNameSpace, "[data-page-number]", function(e) {
+                        var $this = $(this),
+                            hasCurrentClass = $this.hasClass("paging-current-page"),
+                            pagerNumber = parseInt($this.data("page-number"), 10),
+                            fn = {
+                                scrollToTop: function(speed) {
+                                    $("html, body").animate({
+                                        scrollTop: shop.device.isMobile ? $(".js-asn-display-btn").offset().top : $("#product-result-heading").offset().top - 80
+                                    }, speed)
+                                }
+                            };
+                        e.preventDefault(), e.stopPropagation(), pagerNumber && !hasCurrentClass && (fn.scrollToTop(250), self.clearResultView(), self._parentClass._loadNewSearchResultsJSONForPageNumber(pagerNumber, function() {
+                            self.buildPagingNavigation(self._parentClass.currentPageNumber, self._parentClass._paginationObject.numberOfPages, !shop.device.isMobile), fn.scrollToTop(0)
+                        }))
+                    }), this.$resultContainer.on("mousedown." + this._eventhandlerNameSpace, ".result-thumb", function(e) {
+                        var $this = $(this),
+                            $parent = $this.parent(),
+                            $tooltip = $this.closest(".productMainLink").siblings(".search-tooltip-content"),
+                            isTooltipVisible = $tooltip.is(":visible"),
+                            hasTooltip = $parent.hasClass("tooltip"),
+                            goToHref = function() {
+                                location.href = $this.closest(".productMainLink ").attr("data-href") || $this.closest(".productMainLink ").attr("href")
+                            };
+                        if (!hasTooltip || hasTooltip && isTooltipVisible || shop.device.isMobile) {
+                            var closestProductID = $this.closest("[id$=-tooltip], .search-result-item").attr("id").replace("-tooltip", "");
+                            self._parentClass.cache.save(closestProductID), !hasTooltip && 3 !== e.which && 2 !== e.which || shop.device.isMobile ? goToHref() : $tooltip.hasClass("helper-hide") || 3 === e.which || 2 === e.which || goToHref()
+                        }
+                        hasTouch && hasTooltip && !isTooltipVisible && !shop.device.isMobile && ($lastTooltip = $tooltip, $tooltip.removeClass("helper-hide"))
+                    }), this.$resultContainer.on("mousedown." + this._eventhandlerNameSpace, ".go-to-product", function() {
+                        var $this = $(this),
+                            closestProductID = $this.closest("[id$=-tooltip], .search-result-item").attr("id").replace("-tooltip", "");
+                        self._parentClass.cache.save(closestProductID)
+                    }), this.$body.on("click." + this._eventhandlerNameSpace, ".search-tooltip-content a", function(e) {
+                        e.preventDefault();
+                        var $this = $(this),
+                            closestProductID = $this.closest("[id$=-tooltip], .search-result-item").attr("id").replace("-tooltip", "");
+                        self._parentClass.cache.save(closestProductID), location.href = $this.attr("href") + "?fromSearch=true"
+                    }), hasTouch && $(document).on("mouseup." + this._eventhandlerNameSpace, function(e) {
+                        var $visibleTooltips = self.$resultContainer.find(".search-tooltip-content").not(".helper-hide");
+                        $visibleTooltips.length > 0 && ($(e.target).closest(".search-result-item").length > 0 ? $visibleTooltips.not($lastTooltip).addClass("helper-hide") : $visibleTooltips.addClass("helper-hide"))
+                    })
+                },
+                getViewportHeight: function() {
+                    return window.innerHeight || document.documentElement.clientHeight
+                },
+                getResultContainerHeight: function() {
+                    return this.$resultContainer.height()
+                },
+                getResultContainerOffsetBottom: function() {
+                    if (this.updateResultContainerOffset || this._parentClass.options.responsiveLayout) {
+                        var resultContainerOffset = (this.$resultContainer.offset() ? this.$resultContainer.offset().top : 0) + this.$resultContainer.height();
+                        return this.updateResultContainerOffset = !1, this.resultContainerOffset = resultContainerOffset, resultContainerOffset
+                    }
+                    return this.resultContainerOffset
+                },
+                getFilterMenuOffsetBottom: function() {
+                    return this.updateFilterMenuOffset()
+                },
+                updateFilterMenuOffset: function() {
+                    return this.filterMenuOffsetBottom = this.$filterMenu.offset().top + this.$filterMenu.height(), this.filterMenuOffsetBottom
+                },
+                getScrollPosition: function() {
+                    return $(window).scrollTop()
+                },
+                setLastScrollPosition: function() {
+                    this.lastScrollPosition = this.getScrollPosition()
+                },
+                getScrollPositionFromBottomOfView: function() {
+                    return this.getScrollPosition() + this.viewportHeight
+                },
+                scrollToElement: function(elementID) {
+                    var offset = elementID && $("#" + elementID).offset() ? $("#" + elementID).offset().top : 0,
+                        e = elementID ? document.getElementById(elementID) : null;
+                    null !== e && e.scrollIntoView ? $(window).load(function() {
+                        e.scrollIntoView(!1)
+                    }) : window.scroll(0, offset)
+                },
+                clearResultView: function() {
+                    this._parentClass.cache.clearInternalViewCache(), this.$resultContainer.find(".search-result-item, .campaign-img-small").remove()
+                },
+                _initLazyLoaderForNewImages: function() {
+                    var deviceEffectObj = "ie" === shop.device.browser && "8" === shop.device.browserVersion || "tablet" === shop.device.type || shop.device.isMobile ? null : {
+                        effect: "fadeIn"
+                    };
+                    this.$resultContainer.find("img.lazy").lazyload(deviceEffectObj).removeClass("lazy")
+                },
+                _appendToInternalCache: function(html) {
+                    html && (html = html.replace(/\s{2}/g, ""), 0 !== this._parentClass.navigationMode.activeMode ? this._parentClass.cache.internalViewCache = html : this._parentClass.cache.internalViewCache += html)
+                },
+                append: function(html, restoreFromCache) {
+                    this.$resultContainer.append(html), restoreFromCache === !0 || 0 !== this._parentClass.navigationMode.activeMode ? this.$resultContainer.find("img.lazy").each(function() {
+                        $(this).attr({
+                            src: $(this).attr("data-original")
+                        }).removeClass("lazy").removeAttr("data-original")
+                    }) : this._initLazyLoaderForNewImages(), this.$resultContainer.find('.js-review-bar-rating[data-review-rendered="false"]').makeStars(), this._appendToInternalCache(html), this.updateResultContainerOffset = !0
+                },
+                getDistanceToTopOfFilterMenu: function(getPercentValue) {
+                    var distanceInPercent, distanceInPixel;
+                    return getPercentValue ? (distanceInPercent = 100 - Math.floor(100 / this.getFilterMenuOffsetBottom() * this.getScrollPositionFromBottomOfView()), 0 >= distanceInPercent ? 0 : distanceInPercent) : (distanceInPixel = this.getScrollPositionFromBottomOfView() - this.getFilterMenuOffsetBottom(), 0 >= distanceInPixel ? 0 : distanceInPixel)
+                },
+                getDistanceToBottomOfResults: function(getPercentValue) {
+                    var distanceInPercent, distanceInPixel;
+                    return getPercentValue ? (distanceInPercent = 100 - Math.floor(100 / this.getResultContainerOffsetBottom() * this.getScrollPositionFromBottomOfView()), 0 >= distanceInPercent ? 0 : distanceInPercent) : (distanceInPixel = this.getResultContainerOffsetBottom() - this.getScrollPositionFromBottomOfView(), 0 >= distanceInPixel ? 0 : distanceInPixel)
+                },
+                showStickySortBox: function() {
+                    this.$body.addClass("state-sticky-sort-form"), this.isStickySortBoxVisible = !0
+                },
+                hideStickySortBox: function() {
+                    this.$body.removeClass("state-sticky-sort-form"), this.isStickySortBoxVisible = !1
+                },
+                calcStickySortBoxPos: function() {
+                    this.$stickySortBox.css({
+                        left: this.$searchResultPage.offset().left
+                    })
+                },
+                reloadOnError: function() {
+                    var $resultItems, lastProductID;
+                    this._parentClass.log({
+                        level: 1,
+                        message: "FACTFINDER IS NOT REACHABLE! FactFinder throws an error during the loading-process of new searchResult-items",
+                        type: "error"
+                    }), this.factFinderErrorCounter += 1, this.factFinderErrorCounter === this._reloadPageWhenErrorCounterIs && ($resultItems = this.$resultContainer.find(".search-result-item"), lastProductID = $resultItems.eq($resultItems.length - 1).attr("id"), this._parentClass.cache.save(lastProductID), location.reload(!0))
+                }
+            },
+            SearchResultCache = {
+                init: function(parentClass) {
+                    return parentClass && (this._parentClass = parentClass, this.currentCacheURL = location.href, this.currentDate = (new Date).getTime(), this.internalViewCache = ""), this.keyNameInStorage = "searchResultCache", this.keyNameForNavInStorage = "searchResultNavCache", this.keyNameForWishlistArticleChangesInStorage = "searchResultWishlistArticleChangesCache", this.isLocalStorageEnable = !!store.enabled, this.lastCachedObj = void 0 !== (this.isLocalStorageEnable ? store.get(this.keyNameInStorage) : null) ? store.get(this.keyNameInStorage) : null, this.lastCachedNavObj = void 0 !== (this.isLocalStorageEnable ? store.get(this.keyNameForNavInStorage) : null) ? store.get(this.keyNameForNavInStorage) : null, this.lastCachedWishlistArticleChangesObj = void 0 !== (this.isLocalStorageEnable ? store.get(this.keyNameForWishlistArticleChangesInStorage) : null) ? store.get(this.keyNameForWishlistArticleChangesInStorage) : null, this
+                },
+                isNavModeCacheAvailable: function() {
+                    if (this.isLocalStorageEnable && null !== this.lastCachedNavObj) {
+                        var cacheObj = this.lastCachedNavObj;
+                        return null !== cacheObj.activeMode ? !0 : !1
+                    }
+                },
+                isCacheAvailable: function() {
+                    if (this.isLocalStorageEnable && null !== this.lastCachedObj) {
+                        var cacheObj = this.lastCachedObj,
+                            jumpBackURL = null === cacheObj ? null : cacheObj.jumpBackURL,
+                            hoursBetweenCaching = this._getDaysBetweenTwoDates(this.currentDate, cacheObj.cachingDate),
+                            cachingLiveTime = this._parentClass.options.cachingLiveTime;
+                        return cachingLiveTime > hoursBetweenCaching && jumpBackURL === this.currentCacheURL ? !0 : (this.clearCache(), this._parentClass.view.scrollToElement(), !1)
+                    }
+                    return this._parentClass.view.scrollToElement(), !1
+                },
+                _getDaysBetweenTwoDates: function(date1_ms, date2_ms) {
+                    var ONE_HOUR = 36e5,
+                        difference_ms = Math.abs(date1_ms - date2_ms);
+                    return Math.round(difference_ms / ONE_HOUR)
+                },
+                _getJumpBackURL: function() {
+                    return this.currentCacheURL
+                },
+                save: function(elementID) {
+                    var cacheObj = {
+                        _createdItems: this._parentClass._createdItems,
+                        loadNextPageNumber: this._parentClass.loadNextPageNumber,
+                        currentSearchObject: this._parentClass.currentSearchObject,
+                        cachedHtml: this.internalViewCache,
+                        cachingDate: this.currentDate,
+                        jumpBackURL: this._getJumpBackURL(),
+                        scrollToID: elementID
+                    };
+                    store.set(this.keyNameInStorage, cacheObj), this.saveWishlistArticleChanges()
+                },
+                saveWishlistArticleChanges: function() {
+                    var cacheObj = {
+                        wishlistArticleChanges: shop.pageInformation.wishlistArticleChanges
+                    };
+                    store.set(this.keyNameForWishlistArticleChangesInStorage, cacheObj)
+                },
+                saveNavMode: function() {
+                    var cacheObj = {
+                        activeMode: this._parentClass.navigationMode.activeMode
+                    };
+                    store.set(this.keyNameForNavInStorage, cacheObj)
+                },
+                clearInternalViewCache: function() {
+                    this.internalViewCache = ""
+                },
+                clearCache: function() {
+                    this.clearWishlistArticleChanges(), store.remove(this.keyNameInStorage)
+                },
+                clearWishlistArticleChanges: function() {
+                    store.remove(this.keyNameForWishlistArticleChangesInStorage)
+                },
+                restoreNavModeCache: function() {
+                    this.lastCachedNavObj && (this._parentClass.navigationMode.activeMode = this.lastCachedNavObj.activeMode)
+                },
+                restoreArticleChanges: function(onlyArticleChangesObj) {
+                    shop.pageInformation.wishlist && this.lastCachedWishlistArticleChangesObj && (shop.pageInformation.wishlistArticleChanges = this.lastCachedWishlistArticleChangesObj.wishlistArticleChanges, onlyArticleChangesObj || shop.pageInformation.wishlist.updateHearts())
+                },
+                restoreCache: function() {
+                    if (this.isCacheAvailable()) {
+                        var cacheObj = this.lastCachedObj,
+                            currentCacheURL = this.currentCacheURL,
+                            jumpBackURL = null === cacheObj ? null : cacheObj.jumpBackURL,
+                            self = this;
+                        jumpBackURL === currentCacheURL && (this._parentClass._createdItems = cacheObj._createdItems, this._parentClass.loadNextPageNumber = cacheObj.loadNextPageNumber, this._parentClass.currentSearchObject = cacheObj.currentSearchObject, this._parentClass.view.append(cacheObj.cachedHtml, !0), this.restoreArticleChanges(), self._parentClass.view.scrollToElement(cacheObj.scrollToID), this.clearCache())
+                    }
+                }
+            },
+            SearchResultClass = function() {
+                this.currentSearchObject = shop.searchresult || null, this._paginationObject = "", this._currentQueryObject = shop.searchresult.currentQuery, this._productResultObjects = "", this.currentQueryULR = "", this.currentPageNumber = null, this.loadNextPageNumber = 0, this.isLazyScrollLoaderActive = !1, this.currentProductsOnPage = null, this.$currentRequestObj = null, this._createdItems = 0, this.numberOfPages = null, this.totalNumberOfResults = null, this.currentJSONQueryURL = null, this.navigationMode = {
+                    activeMode: null,
+                    modes: [{
+                        name: "lazy",
+                        productsPerPage: 9
+                    }, {
+                        name: "paging1",
+                        productsPerPage: 30
+                    }, {
+                        name: "paging2",
+                        productsPerPage: 60
+                    }]
+                }, this.isNextSearchResultLoading = !1, this.cache = SearchResultCache.init(this), this.view = SearchResultView.init(this), this._checkScrollPositionIntervall = 100, this.options = {
+                    preloadNextItemsAtDistance: this.view.viewportHeight / 2,
+                    checkScrollPositionMaxIntervall: 2e3,
+                    checkScrollPositionMinIntervall: 100,
+                    showFilterBoxAtDistance: 400,
+                    cachingLiveTime: 6,
+                    responsiveLayout: !0
+                }, null !== this.currentSearchObject && this.initNavigationModeController(!1, this.cache.isCacheAvailable())
+            };
+        SearchResultClass.prototype = {
+            log: function(optionObj) {
+                return $.isPlainObject() ? new Log(optionObj) : void 0
+            },
+            updateCurrentQueryURL: function(url) {
+                this._currentQueryObject.url && (this._currentQueryObject.url = url)
+            },
+            updatePageHTML: function($html) {
+                this.view.$searchResultPage.find("#search-breadcrumb").replaceWith($html.find("#search-breadcrumb")), this.view.$searchResultPage.find("#search-result-message").replaceWith($html.find("#search-result-message")), this.view.$searchResultPage.find("#floating-teaser").replaceWith($html.find("#floating-teaser")), this.view.$searchResultPage.find("#search-campaign-teaser").replaceWith($html.find("#search-campaign-teaser")), this.view.$searchResultPage.find("#pushed-products-carousel").replaceWith($html.find("#pushed-products-carousel")), this.view.$searchResultPage.find("#sortOptions1").find("option").remove(), this.view.$searchResultPage.find("#sortOptions1").append($html.find("#sortOptions1").find("option"))
+            },
+            updateSearchClassWithASNData: function(data) {
+                var $newSearchRsultHTML = "";
+                $.isPlainObject(data) && data.searchResultJSON && ($newSearchRsultHTML = $(data.searchResultPage), this.cache.currentCacheURL = location.href, this.updatePageHTML($newSearchRsultHTML), $(document).trigger("createNewCarousels"), this._updateSearchClassData(data.searchResultJSON, !0), this.initNavigationModeController(!0, !1))
+            },
+            _updateSearchClassData: function(newJSONData, reset) {
+                (newJSONData || {}).pagination && this.updateCurrentQueryURL(newJSONData.pagination.sort), this.currentSearchObject = $.isEmptyObject(newJSONData) ? this.currentSearchObject : newJSONData, this._paginationObject = this.currentSearchObject.pagination, this._productResultObjects = this.currentSearchObject.results, this.currentQueryULR = this.getCurrentQueryULR(this._currentQueryObject), this.currentPageNumber = reset ? 1 : this.getCurrentPageNumber(this._paginationObject), this.currentProductsOnPage = this.getCurrentProductsOnPage(this._paginationObject), this.numberOfPages = this.getNumberOfPages(this._paginationObject), this.totalNumberOfResults = this.getTotalNumberOfResults(this._paginationObject), this.loadNextPageNumber = reset ? 1 : this.getCurrentPageNumber() + 1, this.currentJSONQueryURL = this.getCurrentJSONQueryURL()
+            },
+            resetClassData: function(newJSONData) {
+                this._updateSearchClassData(newJSONData ? newJSONData : {}, !0)
+            },
+            _getCreatedItems: function() {
+                return this._createdItems
+            },
+            _setCreatedItems: function(number) {
+                this._createdItems = number
+            },
+            getCurrentQueryULR: function(currentQueryObject) {
+                return currentQueryObject ? currentQueryObject.url : location.pathname
+            },
+            getProductResultObjects: function() {
+                return this._productResultObjects && $.isArray(this._productResultObjects) ? this._productResultObjects : void 0
+            },
+            getCurrentPageNumber: function(currentPaginationObject) {
+                return currentPaginationObject ? currentPaginationObject.currentPage : this.currentPageNumber
+            },
+            getNumberOfPages: function(currentPaginationObject) {
+                return null !== currentPaginationObject ? currentPaginationObject.numberOfPages : this.numberOfPages
+            },
+            getCurrentProductsOnPage: function(currentPaginationObject) {
+                return null !== currentPaginationObject ? currentPaginationObject.pageSize : this.currentProductsOnPage
+            },
+            getTotalNumberOfResults: function(currentPaginationObject) {
+                return null !== currentPaginationObject ? currentPaginationObject.totalNumberOfResults : this.totalNumberOfResults
+            },
+            getCurrentJSONQueryURL: function(page) {
+                var jsonURL = this.currentQueryULR.replace("/s", "s/results"),
+                    jsonURLHasParameters = jsonURL.indexOf("?") > 0 ? !0 : !1,
+                    attributeForPageNumber = jsonURLHasParameters ? "&page=" : "?page=",
+                    loadPageNumber = null != page ? page : 0 === this.loadNextPageNumber ? this.currentPageNumber : this.loadNextPageNumber,
+                    attributeForProductsPerPage = 0 !== this.navigationMode.activeMode ? "&productsPerPage=" + this.navigationMode.modes[this.navigationMode.activeMode].productsPerPage : "",
+                    jsonURL = this.prependBaseURLTo(jsonURL + attributeForPageNumber + loadPageNumber + attributeForProductsPerPage);
+                return jsonURL
+            },
+            getAltBaseURL: function() {
+                var pathArray = $.grep((location.pathname || "").split("/"), function(val) {
+                    return val
+                }).slice(0, 2);
+                return "/" + pathArray[0] + "/" + pathArray[1] + "/"
+            },
+            prependBaseURLTo: function(targetURL) {
+                var baseURL = shop.url.base || this.getAltBaseURL();
+                return baseURL.lastIndexOf("/") === baseURL.length - 1 && 0 === targetURL.indexOf("/") && (targetURL = targetURL.substr(1, targetURL.length + 1)), baseURL + targetURL
+            },
+            _handleNewDataController: function(newJSONData) {
+                if ($.isPlainObject(newJSONData))
+                    if (newJSONData.results) {
+                        var newProductResultItemsHTML, $cloudinaryComponentImages;
+                        this._updateSearchClassData(newJSONData), newProductResultItemsHTML = this._getNextProductItemsHTML(this.getProductResultObjects()), this.view.append(newProductResultItemsHTML), $cloudinaryComponentImages = $(".js-cloudinary .js-component-image-cloudinary"), $cloudinaryComponentImages && (window.shop.cloudinaryImageHandler($cloudinaryComponentImages), $(window).on("enterBreakpoint768.cloudinary enterBreakpoint1024.cloudinary enterBreakpoint1280.cloudinary", function() {
+                            window.shop.cloudinaryImageHandler($cloudinaryComponentImages)
+                        }))
+                    } else this.view.reloadOnError()
+            },
+            _loadNewSearchResultsJSON: function(url, callback) {
+                if (this.isNextSearchResultLoading) return !1;
+                var self = this;
+                this.$currentRequestObj = $.ajax({
+                    url: url || self.currentJSONQueryURL,
+                    dataType: "json",
+                    type: "GET",
+                    async: !0,
+                    beforeSend: function() {
+                        self.view.resultLoader.show(), self.isNextSearchResultLoading = !0
+                    }
+                }), this.$currentRequestObj.done(function(data) {
+                    return self.view.resultLoader.hide(), self._handleNewDataController(data), self.isNextSearchResultLoading = !1, callback && $.isFunction(callback) ? callback() : void 0
+                }), this.$currentRequestObj.fail(function() {
+                    self.isNextSearchResultLoading = !1, self.log({
+                        level: 4,
+                        message: "Response error from SearchResultClass._loadNewSearchResultsJSON",
+                        type: "error"
+                    })
+                })
+            },
+            _loadNewSearchResultsJSONForPageNumber: function(pageNumber, callback) {
+                this.cache.clearInternalViewCache(), this._loadNewSearchResultsJSON(this.getCurrentJSONQueryURL(pageNumber), callback)
+            },
+            _getColorTileForTooltipHTML: function(object) {
+                var i, tileURL = object.url ? this.prependBaseURLTo(object.url) : null,
+                    outOfStockClass = object.outOfStockBoolean ? "out-of-stock fa fa-times" : "",
+                    divOrAnchor = null !== tileURL ? "a" : "div",
+                    tileHTML = "<" + divOrAnchor + ' class="p-color ' + outOfStockClass + '" title="' + (object.name || "Color") + '"' + (null !== tileURL ? ' href="' + tileURL + '"' : "") + ">",
+                    colorArray = null !== object.hexCode ? object.hexCode.split("/") : [object.name || "Color"],
+                    colorArrayLength = colorArray.length,
+                    colorIcon = null !== object.colorIconUrl ? object.colorIconUrl : null,
+                    colorTilePartWidth = Math.floor(100 / colorArrayLength),
+                    currentHexColor = "";
+                for (i = 0; colorArrayLength > i; i++) currentHexColor = colorArray[i], currentHexColor.indexOf("#") >= 0 ? tileHTML += '<span class="tile-hex-part" style="background-color:' + currentHexColor + "; width:" + colorTilePartWidth + '%"></span>' : colorIcon ? tileHTML += '<span class="tile-text-part ' + currentHexColor + '" style="width:' + colorTilePartWidth + "%; background-image: url('" + colorIcon + "')\"></span>" : colorIcon || (tileHTML += '<span class="tile-text-part ' + currentHexColor + '" style="width:' + colorTilePartWidth + '%"></span>');
+                return tileHTML += "</" + divOrAnchor + ">"
+            },
+            _getSizeTileForTooltipHTML: function(object) {
+                var tileURL = object.url ? this.prependBaseURLTo(object.url) : null,
+                    tileHTML = '<a class="size-tile underline-alternative" title="' + (object.value || "Size") + '"' + (null !== tileURL ? ' href="' + tileURL + '"' : "") + ">" + object.value + "</a>";
+                return tileHTML
+            },
+            _productHasTooltip: function(typeOfTooltip) {
+                return null !== typeOfTooltip && "singlevariant" !== typeOfTooltip ? !0 : !1
+            },
+            _getNewTooltipHTML: function(objectArray) {
+                var variantsSizeObjectArray, tooltipTemplate = new Template,
+                    tooltipTemplateObject = {
+                        title: objectArray.title || "",
+                        tooltipType: objectArray.typeOfTooltip,
+                        csp_orderNumber: objectArray.csp_orderNumber
+                    },
+                    typeOfTooltip = objectArray.typeOfTooltip || null,
+                    variantsColorObjectArray = objectArray.styleVariants || null,
+                    variantColumnHTML = "",
+                    wrapLI = function(html, cssClass) {
+                        return "<li " + (cssClass ? 'class="' + cssClass + '"' : "") + ">" + html + "</li>"
+                    },
+                    getStockCssClass = function(currentSizeObject) {
+                        var outOfStockBoolean = shop.strictAvailability ? currentSizeObject.outOfStockStrict : currentSizeObject.outOfStock;
+                        return outOfStockBoolean ? "out-of-stock" : ""
+                    };
+                if (this._productHasTooltip(typeOfTooltip)) {
+                    for (var i = 0, variantsColorObjectArrayLength = variantsColorObjectArray.length; variantsColorObjectArrayLength > i; i++) {
+                        var variantsSizeObjectArrayLength, currentSizeObject, j, currentColorObject = {
+                            code: variantsColorObjectArray[i].code || null,
+                            hexCode: variantsColorObjectArray[i].hexCode || null,
+                            name: variantsColorObjectArray[i].name || null,
+                            colorIconUrl: variantsColorObjectArray[i].colorIconUrl || null,
+                            outOfStockBoolean: variantsColorObjectArray[i].outOfStock || !1,
+                            url: null
+                        };
+                        switch (variantsSizeObjectArray = variantsColorObjectArray[i].sizeVariants, variantsSizeObjectArrayLength = variantsSizeObjectArray.length, typeOfTooltip) {
+                            case "colorOnly":
+                                for (j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], currentColorObject.url = this.prependBaseURLTo(currentSizeObject.url), variantColumnHTML += this._getColorTileForTooltipHTML(currentColorObject);
+                                break;
+                            case "colorAndSizes":
+                                for (variantColumnHTML += "<li>", variantColumnHTML += this._getColorTileForTooltipHTML(currentColorObject), variantColumnHTML += '<ul class="sizes">', j = 0, variantsSizeObjectArrayLength = variantsSizeObjectArray.length; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
+                                variantColumnHTML += "</ul>", variantColumnHTML += "</li>";
+                                break;
+                            case "sizesOnly":
+                                for (variantColumnHTML += '<ul class="sizes">', j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
+                                variantColumnHTML += "</ul>";
+                                break;
+                            case "termAndSizes":
+                                for (variantColumnHTML += "<li>", variantColumnHTML += '<p class="tooltip-column-headline">' + currentColorObject.name + "</p>", variantColumnHTML += '<ul class="sizes">', j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
+                                variantColumnHTML += "</ul>", variantColumnHTML += "</li>";
+                                break;
+                            case "termOnly":
+                                for (j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], currentSizeObject.value = currentColorObject.name, variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
+                                break;
+                            default:
+                                self.log({
+                                    level: 4,
+                                    message: "Wrong type of tooltip: " + typeOfTooltip,
+                                    type: "error"
+                                })
+                        }
+                    }
+                    return this._productHasTooltip(typeOfTooltip) ? (("colorOnly" === typeOfTooltip || "sizesOnly" === typeOfTooltip) && (variantColumnHTML = wrapLI(variantColumnHTML)), tooltipTemplate.setTemplate("template-search-result-item-tooltip").setPlaceholder(tooltipTemplateObject).setExceptions({
+                        getTootipItemsHTML: function() {
+                            return variantColumnHTML
+                        }
+                    }), tooltipTemplate.render()) : ""
+                }
+                return ""
+            },
+            _getSimpleTemplateHTML: function(object, useTemplate) {
+                if ($.isPlainObject(object) && null !== object) {
+                    var template = new Template;
+                    return template.setTemplate(useTemplate).setPlaceholder(object), template.render()
+                }
+                return ""
+            },
+            _getSpecialOfferDiscountHTML: function(object) {
+                return this._getSimpleTemplateHTML(object, "template-search-result-special-offer-discount")
+            },
+            _getNewProductActionImgHTML: function(object) {
+                return this._getSimpleTemplateHTML(object, "template-search-result-item-action-img")
+            },
+            _getNewHoverImgHTML: function(object) {
+                return this._getSimpleTemplateHTML(object, "template-search-result-item-hover-img")
+            },
+            _getNewPriceHTML: function(object) {
+                return object.csp_showTopOfferHint ? this._getSimpleTemplateHTML(object, "template-search-result-item-price-top-product") : this._getSimpleTemplateHTML(object, null !== object.csp_oldPrice ? "template-search-result-item-price-old-best" : "template-search-result-item-price-single")
+            },
+            _getNewBasePriceHTML: function(object) {
+                return this._getSimpleTemplateHTML(object, "template-search-result-base-price")
+            },
+            _getNewStarRatingHTML: function(object) {
+                var ratingAmount = object.csp_averageRating || 0;
+                return object.starScalerWidth = ratingAmount, object.starsVisibility = ratingAmount > 0 ? "rating-visible" : "", this._getSimpleTemplateHTML(object, "template-search-result-item-product-rating")
+            },
+            _getNextProductItemsHTML: function(objectArray) {
+                var i, l, productItemTemplate = new Template,
+                    productItemsHTML = "",
+                    imgHeight = shop.searchresult.imgSize.HEIGHT,
+                    imgWidth = shop.searchresult.imgSize.WIDTH,
+                    self = this;
+                if (productItemTemplate.setTemplate("template-search-result-item"), objectArray) {
+                    for (i = 0, l = objectArray.length; l > i; i++) {
+                        var currentProductObject = objectArray[i],
+                            currentItemHTML = "",
+                            currentFloatingTeaserHTML = "",
+                            currentProductTooltipObject = currentProductObject.csp_variantsJSON ? $.parseJSON(currentProductObject.csp_variantsJSON) : null,
+                            isFloatingTeaser = currentProductObject.csp_floatingTeaser ? !0 : !1,
+                            getBadgeStateCssClasses = function(cpo) {
+                                return cpo.csp_newFlag !== !1 && shop.code.showNewBadge(cpo.csp_showTopOfferHint, cpo.csp_saleFlag) && (cpo.badgeStateClasses += "state-badge-new "), cpo.csp_specialOfferDiscount && (cpo.badgeStateClasses += "state-badge-discount "), cpo.csp_saleFlag !== !1 && (cpo.badgeStateClasses += "state-badge-sale "), cpo.csp_showTopOfferHint !== !1 && (cpo.badgeStateClasses += "state-badge-topoffer "), null !== cpo.csp_flagUrl && (cpo.badgeStateClasses += "state-action-img "), cpo.badgeStateClasses
+                            };
+                        this._setCreatedItems(this._getCreatedItems() + 1), isFloatingTeaser ? (currentFloatingTeaserHTML = document.getElementById("template-floating-teaser-" + currentProductObject.csp_floatingTeaserId), currentItemHTML = currentFloatingTeaserHTML ? currentFloatingTeaserHTML.innerHTML : "") : (currentProductObject.csp_URL = currentProductObject.csp_URL ? this.prependBaseURLTo(currentProductObject.csp_URL) : null, currentProductObject.csp_brand = null !== currentProductObject.csp_brand ? currentProductObject.csp_brand : "", currentProductObject.csp_name = null != currentProductObject.csp_name ? currentProductObject.csp_name : "", currentProductObject.csp_name = currentProductObject.csp_name.length > 70 ? currentProductObject.csp_name.slice(0, 64) + "..." : currentProductObject.csp_name, currentProductObject.hasTooltip = null === currentProductTooltipObject ? "" : this._productHasTooltip(currentProductTooltipObject.typeOfTooltip) === !0 ? "tooltip" : "", currentProductObject.badgeStateClasses = "", currentProductObject.csp_imgWidth = imgWidth, currentProductObject.csp_imgHeight = imgHeight, currentProductObject.csp_imgURL = (currentProductObject.csp_imgURL || "").replace(/h_.[0-9]*/, "h_" + imgHeight).replace(/w_.[0-9]*/, "w_" + imgWidth), currentProductObject.csp_likeCounter = null === currentProductObject.csp_likeCounter || 0 === currentProductObject.csp_likeCounter ? "" : currentProductObject.csp_likeCounter, currentProductObject.csp_URL ? (null !== currentProductTooltipObject && (delete currentProductObject.csp_variantsJSON, currentProductTooltipObject.csp_orderNumber = currentProductObject.csp_orderNumber), productItemTemplate.setPlaceholder(currentProductObject).setExceptions({
+                            getTagForDevice: function() {
+                                return "tablet" === shop.device.type ? "div" : "a"
+                            },
+                            getBadgeStateClasses: function() {
+                                return getBadgeStateCssClasses(currentProductObject) || ""
+                            },
+                            getTagAttrForDevice: function() {
+                                return "tablet" === shop.device.type ? "data-href" : "href"
+                            },
+                            getProductID: function() {
+                                return currentProductObject.csp_orderNumber
+                            },
+                            getNewFlagCssClass: function() {
+                                return currentProductObject.csp_newFlag !== !1 && shop.code.showNewBadge(currentProductObject.csp_showTopOfferHint, currentProductObject.csp_saleFlag) ? "" : "helper-hide"
+                            },
+                            getSpecialOfferDiscount: function() {
+                                var discount = currentProductObject.csp_specialOfferDiscount;
+                                return discount ? self._getSpecialOfferDiscountHTML({
+                                    csp_specialOfferDiscount: discount,
+                                    discountBadgeSizeClass: discount.indexOf(".") >= 0 ? "small" : ""
+                                }) : ""
+                            },
+                            getSaleFlagCssClass: function() {
+                                return currentProductObject.csp_saleFlag !== !1 ? "" : "helper-hide"
+                            },
+                            getTopFlagCssClass: function() {
+                                return currentProductObject.csp_showTopOfferHint !== !1 ? "" : "helper-hide"
+                            },
+                            getProductActionFlagImg: function() {
+                                if (null !== currentProductObject.csp_flagUrl) {
+                                    var imgURL = self._getNewProductActionImgHTML({
+                                        csp_flagUrl: currentProductObject.csp_flagUrl
+                                    });
+                                    return imgURL
+                                }
+                                return ""
+                            },
+                            getProductHoverImgHTML: function() {
+                                if (null === currentProductObject.csp_hoverImgURL || "" === currentProductObject.csp_hoverImgURL || shop.device.isMobile) return "";
+                                var hoverImgHTML = self._getNewHoverImgHTML({
+                                    csp_hoverImgURL: currentProductObject.csp_hoverImgURL,
+                                    csp_orderNumber: currentProductObject.csp_orderNumber,
+                                    csp_imgWidth: imgWidth,
+                                    csp_imgHeight: imgHeight
+                                });
+                                return hoverImgHTML
+                            },
+                            getProductTooltipHTML: function() {
+                                return currentProductTooltipObject ? self._getNewTooltipHTML(currentProductTooltipObject) : ""
+                            },
+                            getProductPriceHTML: function() {
+                                var priceHTML = self._getNewPriceHTML({
+                                    csp_price: currentProductObject.csp_price,
+                                    csp_oldPrice: currentProductObject.csp_oldPrice || null,
+                                    csp_priceType: currentProductObject.csp_priceType && "from" === currentProductObject.csp_priceType.toLowerCase() ? self.view.text_fromPrice + " " : "",
+                                    csp_currency: currentProductObject.csp_currency,
+                                    csp_showTopOfferHint: currentProductObject.csp_showTopOfferHint
+                                });
+                                return priceHTML
+                            },
+                            getBasePriceHTML: function() {
+                                var basePriceHTML = self._getNewBasePriceHTML({
+                                    csp_basePrice: currentProductObject.csp_basePrice ? self.view.text_basePrice + " " + currentProductObject.csp_basePrice : ""
+                                });
+                                return basePriceHTML
+                            },
+                            getProductRating: function() {
+                                return self._getNewStarRatingHTML({
+                                    csp_averageRating: currentProductObject.csp_averageRating
+                                })
+                            },
+                            endGrid: function() {
+                                return i == l - 1 ? " end" : ""
+                            },
+                            getWishlistIndicatorHeart: function() {
+                                return currentProductObject.csp_isProductOnWishlist ? "icon-heart" : "icon-heart-border"
+                            }
+                        }), currentItemHTML = productItemTemplate.render()) : self._setCreatedItems(self._getCreatedItems() - 1)), productItemsHTML += currentItemHTML
+                    }
+                    return productItemsHTML
+                }
+            },
+            _calcIntervallSpeed: function(distanceToTop, distanceToBottom, intervallMinSpeed, intervallMaxSpeed, deathZone, isElementVisible) {
+                if (isElementVisible) {
+                    var distanceToElement = Math.min(distanceToTop, distanceToBottom);
+                    if (deathZone > distanceToElement) {
+                        var percentageDistance = 100 / deathZone * distanceToElement,
+                            speed = intervallMaxSpeed / 100 * percentageDistance;
+                        return intervallMinSpeed > speed ? intervallMinSpeed : speed > intervallMaxSpeed ? intervallMaxSpeed : parseInt(speed, 10)
+                    }
+                    return intervallMaxSpeed
+                }
+                return intervallMaxSpeed
+            },
+            setNavigationMode: function(amount) {
+                for (var navMode = this.navigationMode, newNavMode = 0, amount = parseInt(amount || 0, 10), i = 0, l = navMode.modes.length; l > i; i++) amount >= navMode.modes[i].productsPerPage && (newNavMode = i);
+                navMode.activeMode = newNavMode
+            },
+            initNavigationModeController: function(withClear, isRestoredFromCache) {
+                var self = this,
+                    navMode = this.navigationMode,
+                    firstInit = null === this.numberOfPages && !this.cache.isCacheAvailable();
+                this.cache.isCacheAvailable() && (this.cache.restoreCache(), this._updateSearchClassData(this.currentSearchObject)), firstInit && (0 !== this.navigationMode.activeMode && this.cache.isCacheAvailable() || this._handleNewDataController(this.currentSearchObject)), withClear && self.clear(), 1 === navMode.activeMode || 2 === navMode.activeMode ? (this._initLazyScrollController(!0), this._initPagination(isRestoredFromCache, firstInit)) : 0 === navMode.activeMode && (this.view.removePagingNavigation(), this._initLazyScrollController())
+            },
+            disableLazyScrollLoader: function() {
+                this.isLazyScrollLoaderActive = !1
+            },
+            enableLazyScrollLaoder: function() {
+                this.isLazyScrollLoaderActive = !0
+            },
+            clear: function(withNewJSONData) {
+                this.disableLazyScrollLoader(), this.$currentRequestObj && (this.$currentRequestObj.abort(), this.isNextSearchResultLoading = !1), this.view.clearResultView(), this.cache.clearCache(), this.cache.clearInternalViewCache(), this._checkScrollPositionIntervall = 100, this.resetClassData(withNewJSONData)
+            },
+            _initPagination: function(restoredFromCache, firstInit, initWithASN) {
+                var self = this;
+                restoredFromCache || firstInit || initWithASN ? this.view.buildPagingNavigation(this.currentPageNumber, this._paginationObject.numberOfPages) : this._loadNewSearchResultsJSON(null, function() {
+                    self.view.buildPagingNavigation(self.currentPageNumber, self._paginationObject.numberOfPages)
+                })
+            },
+            _initLazyScrollController: function(withoutLazyLoader) {
+                var self = this,
+                    viewPortHeight = this.view.viewportHeight,
+                    showStickySortBoxAtDistance = this.options.showFilterBoxAtDistance,
+                    preloadNextItemsAtDistance = 0,
+                    calcPreloadNextItemsAtDistance = function() {
+                        return Math.ceil(self.view.viewportHeight / 100 * self.options.preloadNextItemsAtDistance)
+                    },
+                    _checkScrollPosition = function() {
+                        var loadNextPageNumber, distanceToTopOfFilterMenu = self.view.getDistanceToTopOfFilterMenu(),
+                            distanceToBottomOfResults = self.view.getDistanceToBottomOfResults(),
+                            isStickySortBoxVisible = self.view.isStickySortBoxVisible,
+                            totalPagesToLoad = self.numberOfPages;
+                        if (self._checkScrollPositionIntervall = self._calcIntervallSpeed(distanceToTopOfFilterMenu, distanceToBottomOfResults, self.options.checkScrollPositionMinIntervall, self.options.checkScrollPositionMaxIntervall, 2 * viewPortHeight, isStickySortBoxVisible), shop.device.isMobile || (distanceToTopOfFilterMenu > showStickySortBoxAtDistance && !isStickySortBoxVisible && 0 !== distanceToBottomOfResults ? self.view.showStickySortBox() : showStickySortBoxAtDistance > distanceToTopOfFilterMenu && isStickySortBoxVisible ? self.view.hideStickySortBox() : 0 === distanceToBottomOfResults && self.view.hideStickySortBox()), !self.isNextSearchResultLoading && self.isLazyScrollLoaderActive && (loadNextPageNumber = self.loadNextPageNumber, totalPagesToLoad >= loadNextPageNumber)) {
+                            var currentScrollPos = self.view.getScrollPosition(),
+                                lastScrollPos = self.view.lastScrollPosition;
+                            preloadNextItemsAtDistance >= distanceToBottomOfResults && currentScrollPos >= lastScrollPos ? (self._loadNewSearchResultsJSON(), self.view.setLastScrollPosition()) : lastScrollPos > currentScrollPos && self.view.setLastScrollPosition()
+                        }
+                    };
+                this.isLazyScrollLoaderActive === !1 && (withoutLazyLoader ? this.disableLazyScrollLoader() : this.enableLazyScrollLaoder(), this.pageIntervallFn || (this.pageIntervallFn = setInterval(_checkScrollPosition, this._checkScrollPositionIntervall))), preloadNextItemsAtDistance = calcPreloadNextItemsAtDistance(), $(window).on("resize", function() {
+                    preloadNextItemsAtDistance = calcPreloadNextItemsAtDistance()
+                })
+            }
+        }, $(function() {
+            if ("Search result Page" === shop.page.name && shop.searchresult) shop.add("searchResultPage", {}), shop.searchResultPage = new SearchResultClass;
+            else if ("ProductDetailsPage" === shop.page.name || $("#pds_product_details_pager").length > 0 || "Product Review Aggregation Page" === shop.page.name) shop.add("searchResultCache", {}), shop.searchResultCache.init = SearchResultCache.init, shop.searchResultCache.saveWishlistArticleChanges = SearchResultCache.saveWishlistArticleChanges, shop.searchResultCache.restoreArticleChanges = SearchResultCache.restoreArticleChanges, shop.searchResultCache.init(), shop.searchResultCache.restoreArticleChanges(!0);
+            else {
+                if ("Product Review Aggregation Page" === shop.page.name) return;
+                shop.add("searchResultCache", {}), shop.searchResultCache.init = SearchResultCache.init, shop.searchResultCache.clearCache = SearchResultCache.clearCache, shop.searchResultCache.clearWishlistArticleChanges = SearchResultCache.clearWishlistArticleChanges, shop.searchResultCache.init(), shop.searchResultCache.clearWishlistArticleChanges(), null !== shop.searchResultCache.lastCachedObj && shop.searchResultCache.clearCache()
+            }
+        })
+    }(jQuery),
+    function($) {
+        "use strict";
+        var MiniCart = function(elementID) {
+            this.$miniCartContainer = $(elementID), this.$miniCartAmountBubble = this.$miniCartContainer.find(".minicart-amount"), this.$miniCartData = this.$miniCartContainer.find("#minicart-data"), this.amount = this._getAmount()
+        };
+        MiniCart.prototype = {
+            add: function(html, $replaceElement) {
+                var html = $.parseHTML(html),
+                    $targetElem = $replaceElement || this.$miniCartData;
+                $targetElem.replaceWith(html), this._refreshMiniCartController()
+            },
+            _refreshMiniCartController: function() {
+                this._refreshAmount()
+            },
+            _getAmount: function() {
+                return this.$miniCartContainer.find(".items").length > 0 ? parseInt(this.$miniCartContainer.find(".items").attr("data-cart-amount"), 10) : 0
+            },
+            _refreshAmount: function() {
+                this.amount = this._getAmount(), this.$miniCartAmountBubble.text(this.amount)
+            }
+        }, $(function() {
+            $("#minicart").length > 0 && (shop.miniCart = new MiniCart("#minicart"))
+        })
+    }(jQuery),
+    function($, shop) {
+        "use strict";
+        var ProductTileList = function($elem, conf) {
+                this.$elem = $elem, this.$nextBtn = $elem.find(".js-more-tiles"), this.$allBtn = $elem.find(".js-all-tiles"), this.$customBtn = $elem.find(".js-tile-custom-btn"), this.itemSelector = ".slider-item", this.currentDirection = this.$elem.data("init-pos"), this.namespace = "productTileList", this.globalOffsetTop = null, this.visibleItemCounter = 0, this.pageCounter = 0, this.isNextResultLoading = !1, this.conf = {
+                    res768: {
+                        nthImgAsBig: 3,
+                        imageSizeSmall: 208,
+                        imageSizeBig: 476
+                    },
+                    res1024: {
+                        nthImgAsBig: 5,
+                        imageSizeSmall: 205,
+                        imageSizeBig: 460
+                    },
+                    res1280: {
+                        nthImgAsBig: 5,
+                        imageSizeSmall: 270,
+                        imageSizeBig: 570
+                    }
+                }, this.getCurrentBreakpointResolution = function() {
+                    var screenWidth = window.innerWidth,
+                        res = [1280, 1024, 768];
+                    return screenWidth >= res[0] ? res[0] : screenWidth >= res[1] ? res[1] : res[2]
+                }, this._getHeaderHeight = function() {
+                    return this.globalOffsetTop || (this.globalOffsetTop = $("#page-header").height()), this.globalOffsetTop
+                }, this._setNewImageUrlAndSize = function($img, newImageSize, sizeString) {
+                    var newImgURL = $img.data("small" === sizeString ? "small-tile-url" : "big-tile-url").replace(/w_.[0-9]*/, "w_" + newImageSize).replace(/h_.[0-9]*/, "h_" + newImageSize);
+                    $img.attr($img.hasClass("js-data-img") ? {
+                        "data-img-src": newImgURL,
+                        "data-img-width": newImageSize,
+                        "data-img-height": newImageSize
+                    } : {
+                        src: newImgURL,
+                        width: newImageSize,
+                        height: newImageSize
+                    })
+                }, this._buildDataImages = function($elem) {
+                    var $dataImg = $elem.find(".js-data-img"),
+                        data = $dataImg.data();
+                    $dataImg.replaceWith($("<img>", {
+                        src: data.imgSrc || "",
+                        "data-big-tile-url": data.bigTileUrl || "",
+                        "data-small-tile-url": data.smallTileUrl || "",
+                        "class": data.imgClass || "",
+                        alt: data.imgAlt || "",
+                        title: data.imgTitle || ""
+                    }).attr({
+                        width: data.imgWidth || "",
+                        height: data.imgHeight || ""
+                    }))
+                }, this._disableBtns = function() {
+                    this.$nextBtn.attr("disabled", !0), this.$nextBtn.parent(".columns").remove(), this.$customBtn.parent(".columns").removeClass("small-6 medium-6 large-6").addClass("small-12 medium-12 large-12")
+                }, this._scrollToElem = function($elem) {
+                    $("html, body").animate({
+                        scrollTop: $elem.offset().top - this._getHeaderHeight()
+                    }, "slow")
+                }, this._bindSingleBreakpointEvent = function(eventType, conf) {
+                    var self = this;
+                    $(window).on(eventType, function() {
+                        self._setNewItemParameter(conf, self.type)
+                    })
+                }, this._bindEventListener = function($elem) {
+                    return this._bindSingleBreakpointEvent("enterBreakpoint768.productTile", this.conf.res768), this._bindSingleBreakpointEvent("enterBreakpoint1024.productTile", this.conf.res1024), this._bindSingleBreakpointEvent("enterBreakpoint1280.productTile", this.conf.res1280), this._bindNextBtn($elem), this
+                }, this._setInitialImgResolution = function() {
+                    return this._setNewItemParameter(this.conf["res" + this.getCurrentBreakpointResolution()], this.type), this
+                }, this._getAmountOfNextItems = function() {
+                    var amountOfNextItems = this.conf["res" + this.getCurrentBreakpointResolution()].nthImgAsBig,
+                        fillUpAmount = amountOfNextItems - this.visibleItemCounter % amountOfNextItems;
+                    return amountOfNextItems > fillUpAmount ? fillUpAmount + amountOfNextItems : amountOfNextItems
+                }, this._incrementPageCounter = function() {
+                    this.pageCounter += 1
+                }, this._incrementVisibleItems = function() {
+                    this.visibleItemCounter += 1
+                }, this.showNextItems = function(showAllItems, scrollToNextVisibleElements) {
+                    var self = this,
+                        showAllItems = !!showAllItems,
+                        $getCurrentHiddenItemsFn = function() {
+                            return $(self.itemSelector, self.$elem).filter(".helper-hide")
+                        },
+                        $hiddenItems = $getCurrentHiddenItemsFn(),
+                        amountOfNextItems = showAllItems ? $hiddenItems.length : self._getAmountOfNextItems();
+                    return self._incrementPageCounter(), $hiddenItems.each(function(i) {
+                        var $this = $(this);
+                        amountOfNextItems > i && (self._incrementVisibleItems(), self._buildDataImages($this), $this.removeClass("helper-hide"), 0 === i && scrollToNextVisibleElements && self._scrollToElem($this))
+                    }), 0 === $getCurrentHiddenItemsFn().length && "productTileList" === this.type && self._disableBtns(), this
+                }, this._setNewItemParameter = function(resObj, type) {
+                    var self = this,
+                        imageSmallSize = resObj.imageSizeSmall,
+                        imageBigSize = resObj.imageSizeBig,
+                        nthImgAsBig = resObj.nthImgAsBig,
+                        currentDirection = this.currentDirection,
+                        sizeClass = {
+                            small: "small",
+                            big: "big"
+                        },
+                        directionClass = {
+                            left: "helper-left",
+                            right: "helper-right"
+                        };
+                    $(self.$elem).find(".item-break").remove().end().find(self.itemSelector).each(function(i) {
+                        var $item = $(this),
+                            $img = $item.find("img, .js-data-img"),
+                            size = i % nthImgAsBig ? sizeClass.small : sizeClass.big,
+                            switchDirection = i % nthImgAsBig === 0;
+                        $item.removeClass(sizeClass.small + " " + sizeClass.big + " " + directionClass.left + " " + directionClass.right), 0 !== i && switchDirection && ("productTileList" === type && $item.before('<li class="item-break clearfix"></li>'), currentDirection = "left" === currentDirection ? "right" : "left"), size === sizeClass.small ? ($item.addClass(directionClass["right" === currentDirection ? "left" : currentDirection]), self._setNewImageUrlAndSize($img, imageSmallSize, sizeClass.small), $item.addClass(size)) : ($item.parent(".product-case-wrapper").addClass("product-case-wrapper-" + currentDirection), $item.addClass(directionClass[currentDirection]), self._setNewImageUrlAndSize($img, imageBigSize, sizeClass.big), $item.addClass(size))
+                    })
+                }, "Homepage" !== shop.page.name && this.$elem.addClass("row"), this.init(conf)
+            },
+            getNewProductTileList = function($elem, conf, type) {
+                return ProductTileList.prototype.type = type, "productTileList" === type ? (ProductTileList.prototype.init = function(conf) {
+                    this.conf = helper.mergeObj(this.conf, conf), this._setInitialImgResolution()._bindEventListener(this.$elem).showNextItems()
+                }, ProductTileList.prototype._bindNextBtn = function() {
+                    var self = this,
+                        $nextBtn = this.$nextBtn;
+                    $nextBtn.length > 0 && $nextBtn.on("click." + this.namespace, function() {
+                        self.showNextItems(!1, !0)
+                    })
+                }) : "productCaseComponent" === type && (ProductTileList.prototype.loader = null, ProductTileList.prototype.init = function(conf) {
+                    var self = this;
+                    this.loader = new LoaderOverlay(this.$elem.find(".tile-loader"), !0), this.loader.hide(), this.conf = helper.mergeObj(this.conf, conf), this.loadNextItems(function() {
+                        self._setInitialImgResolution()._bindEventListener().showNextItems()
+                    })
+                }, ProductTileList.prototype._bindNextBtn = function() {
+                    var self = this,
+                        $nextBtn = this.$nextBtn;
+                    $nextBtn.length > 0 && $nextBtn.on("click." + this.namespace, function() {
+                        self.loadNextItems(function() {
+                            self._setInitialImgResolution().showNextItems(!1, !0)
+                        })
+                    })
+                }, ProductTileList.prototype._extendProductTileObj = function(obj) {
+                    var fnCheckVisState = function(value) {
+                            return value ? "" : "helper-hide"
+                        },
+                        fnCheckNull = function(value) {
+                            return value ? value : ""
+                        };
+                    return obj.productUrl = shop.url.base + obj.csp_URL, obj.productNameAndBrand = (obj.csp_brand ? obj.csp_brand + " - " : "") + (obj.csp_name ? obj.csp_name.length > 70 ? obj.csp_name.slice(0, 64) + "..." : obj.csp_name : ""), obj.productQuickViewUrl = obj.csp_imgURL, obj.csp_brand_visibility = fnCheckVisState(obj.csp_brand), obj.csp_name_visibility = fnCheckVisState(obj.csp_name), obj.csp_averageRating_visibility = fnCheckVisState(obj.csp_averageRating), obj.csp_price_visibility = fnCheckVisState(obj.csp_price), obj.csp_price_old_visibility = fnCheckVisState(obj.csp_price_old), obj.csp_price_new_visibility = fnCheckVisState(obj.csp_price_new), obj.csp_basePrice_visibility = fnCheckVisState(obj.csp_basePrice), obj.csp_brand = fnCheckNull(obj.csp_brand), obj.csp_name = fnCheckNull(obj.csp_name), obj.csp_averageRating = fnCheckNull(obj.csp_averageRating), obj.csp_price = fnCheckNull(obj.csp_price), obj.csp_price_old = fnCheckNull(obj.csp_price_old), obj.csp_price_new = fnCheckNull(obj.csp_price_new), obj.csp_basePrice = fnCheckNull(obj.csp_basePrice), obj.csp_likeCounter = null === obj.csp_likeCounter || 0 === obj.csp_likeCounter ? "" : obj.csp_likeCounter, obj
+                }, ProductTileList.prototype._getNewProductTileHTML = function(productObj) {
+                    var template = new Template;
+                    return productObj = this._extendProductTileObj(productObj), template.setTemplate("product-teaser-template-" + this.$elem.data("uid")).setPlaceholder(productObj).setExceptions({
+                        getWishlistIndicatorHeart: function() {
+                            return productObj.csp_isProductOnWishlist ? "icon-heart" : "icon-heart-border"
+                        }
+                    }).render()
+                }, ProductTileList.prototype.getNewProductCaseHTML = function(productsArray) {
+                    for (var caseHtml = '<ul class="product-case-wrapper pannel clearfix">', i = 0, l = productsArray.length; l > i; i++) productsArray[i] && ($.isEmptyObject(productsArray[i]) || (caseHtml += this._getNewProductTileHTML(productsArray[i])));
+                    return caseHtml += "</ul>", $(caseHtml)
+                }, ProductTileList.prototype._handleNewDataController = function(data) {
+                    data && data.products.length > 0 ? (this.$elem.find(".tile-list").append(this.getNewProductCaseHTML(data.products)).end().find(".star-rating").makeStars(), data.end && this._disableBtns()) : this._disableBtns()
+                }, ProductTileList.prototype._setNewComponentParameter = function(currentParameters) {
+                    return currentParameters && this.$elem.attr({
+                        "data-param-page": currentParameters.page + 1,
+                        "data-end": currentParameters.end
+                    }), this
+                }, ProductTileList.prototype.loadNextItems = function(callback) {
+                    if (!this.isNextResultLoading) {
+                        var request, self = this,
+                            requestParam = {
+                                componentUid: self.$elem.attr("data-uid"),
+                                page: parseInt(self.$elem.attr("data-param-page"), 10),
+                                size: parseInt(self.$elem.attr("data-param-size"), 10),
+                                end: !!self.$elem.attr("data-param-end") || !1
+                            };
+                        requestParam.end || (request = $.ajax({
+                            url: self.$elem.data("url"),
+                            data: requestParam,
+                            dataType: "json",
+                            type: "GET",
+                            async: !0,
+                            beforeSend: function() {
+                                self.loader.show(), self.isNextResultLoading = !0
+                            }
+                        }), request.done(function(data) {
+                            return self.loader.hide(), self._setNewComponentParameter(requestParam), self._handleNewDataController(data), self.isNextResultLoading = !1, callback && $.isFunction(callback) ? callback() : void 0
+                        }), request.fail(function() {
+                            self.isNextResultLoading = !1
+                        }))
+                    }
+                    return this
+                }), new ProductTileList($elem, conf)
+            };
+        $(function() {
+            shop.productTileLists = {
+                counter: 0
+            }, shop.productCaseComponents = {
+                counter: 0
+            }, $(".js-async-producttile").each(function() {
+                var $self = $(this);
+                return new SimpleComponentLoader($self, {}, function() {
+                    var $productTile = $self.find(".js-product-tile-list");
+                    $self.children().length > 0 && (shop.productTileLists.counter++, shop.productTileLists["productTile" + shop.productTileLists.counter] = getNewProductTileList($productTile, {}, "productTileList"), $productTile.find(".star-rating").makeStars())
+                })
+            }), $(".js-async-productcase").each(function() {
+                shop.productCaseComponents.counter++, shop.productCaseComponents["productCase" + shop.productCaseComponents.counter] = getNewProductTileList($(this), {
+                    res768: {
+                        nthImgAsBig: 5,
+                        imageSizeSmall: 208,
+                        imageSizeBig: 476
+                    }
+                }, "productCaseComponent")
+            })
+        })
+    }(jQuery, window.shop),
+    function($, w) {
+        var newSlider = function($elem, optionObj) {
+                return new w.Slider($elem, optionObj)
+            },
+            loadSlider = function($elem, options, callback, failCallback) {
+                return new SimpleComponentLoader($elem, options, callback, failCallback)
+            },
+            buildCarousel = function($rootElem) {
+                var $pCarouselOverlay = $rootElem.find(".pcarousel-overlay"),
+                    $carouselBigArticle = $rootElem.find(".pcarousel-bigArticle"),
+                    $carouselSmallArticle = $rootElem.find(".pcarousel-smallArticle"),
+                    $carouselPushedProducts = $rootElem,
+                    $searchRightCarouselSmallArticle = $("#search-right-column").find($rootElem).find(".pcarousel-smallArticle"),
+                    $searchRightCarouselBigArticle = $("#search-right-column").find($rootElem).find(".pcarousel-bigArticle"),
+                    $searchLeftCarouselBigArticle = $("#search-left-column").find($rootElem).find(".pcarousel-bigArticle"),
+                    $searchLeftCarouselSmallArticle = $("#search-left-column").find($rootElem).find(".pcarousel-smallArticle"),
+                    searchLeftRightSelector = "#search-left-column, #search-right-column",
+                    isMobile = shop.device.isMobile,
+                    mobilePageStep = 2;
+                if ($carouselBigArticle.length > 0 && $carouselBigArticle.closest(searchLeftRightSelector).length < 1 && newSlider($carouselBigArticle, {
+                        orientation: "horizontal",
+                        pagerSteps: isMobile ? mobilePageStep : 5,
+                        auto: !1,
+                        width: isMobile ? $carouselBigArticle.width() : "905",
+                        wrapper: ".pcarousel-wrapper",
+                        productcarousel: !0
+                    }), $carouselSmallArticle.length > 0 && $carouselSmallArticle.closest(searchLeftRightSelector).length < 1 && newSlider($carouselSmallArticle, {
+                        orientation: "horizontal",
+                        pagerSteps: isMobile ? mobilePageStep : 7,
+                        auto: !1,
+                        width: isMobile ? $carouselSmallArticle.width() : "905",
+                        wrapper: ".pcarousel-wrapper",
+                        productcarousel: !0
+                    }), $carouselPushedProducts.length > 0 && newSlider($carouselPushedProducts, {
+                        orientation: "horizontal",
+                        pagerSteps: shop.device.isMobile ? 2 : 3,
+                        auto: !1,
+                        width: isMobile ? $carouselPushedProducts.width() : "760",
+                        wrapper: ".pushed-product--wrapper",
+                        productcarousel: !0
+                    }), $searchRightCarouselSmallArticle.length > 0 && newSlider($searchRightCarouselSmallArticle, {
+                        orientation: "horizontal",
+                        pagerSteps: isMobile ? 2 : 4,
+                        auto: !1,
+                        width: isMobile ? $searchRightCarouselSmallArticle.width() : "608",
+                        wrapper: ".pcarousel-wrapper",
+                        productcarousel: !0
+                    }), $searchRightCarouselBigArticle.length > 0 && newSlider($searchRightCarouselBigArticle, {
+                        orientation: "horizontal",
+                        pagerSteps: isMobile ? mobilePageStep : 4,
+                        auto: !1,
+                        width: isMobile ? $searchRightCarouselBigArticle.width() : "612",
+                        wrapper: ".pcarousel-wrapper",
+                        productcarousel: !0
+                    }), $searchLeftCarouselBigArticle.length > 0 && newSlider($searchLeftCarouselBigArticle, {
+                        orientation: "vertical",
+                        pagerSteps: isMobile ? mobilePageStep : 4,
+                        auto: !1,
+                        wrapper: ".pcarousel-wrapper",
+                        productcarousel: !0
+                    }), $searchLeftCarouselSmallArticle.length > 0 && newSlider($searchLeftCarouselSmallArticle, {
+                        orientation: "vertical",
+                        pagerSteps: isMobile ? mobilePageStep : 4,
+                        auto: !1,
+                        wrapper: ".pcarousel-wrapper",
+                        productcarousel: !0
+                    }), $(".pcarousel .star-rating", $rootElem).makeStars(), $pCarouselOverlay.length > 0) {
+                    var overlayText = $pCarouselOverlay.parents(".js-async-carousel").find("#pcarousel-overlay-text");
+                    return new Overlay($pCarouselOverlay, {
+                        width: "400",
+                        height: "300",
+                        styleClass: "pcarousel-overlay",
+                        closeAlways: !1
+                    }, function() {
+                        $pCarouselOverlay.parents(".js-async-carousel").find(".overlay-hidden-text").append(overlayText), $(".js-remove-last-items").on("click", function(e) {
+                            e.preventDefault();
+                            var url = $(this).attr("href");
+                            $.ajax({
+                                url: url,
+                                type: "GET",
+                                success: function(data) {
+                                    var result = $.parseJSON(data);
+                                    result.LastSeenProductsDeleted && window.location.reload(!1)
+                                }
+                            })
+                        })
+                    })
+                }
+            };
+        $(function() {
+            $(document).on("createNewCarousels", function() {
+                var $carousels = $(".js-async-carousel").not(".js-carousel-init"),
+                    amountOfAllCarousels = $carousels.length || 0;
+                $(".pcarousel--pushed-product").length > 0 && buildCarousel($(".pcarousel--pushed-product")), shop.prudsysTracking || (shop.prudsysTracking = new PrudsysApi(amountOfAllCarousels)), $carousels.each(function() {
+                    var $self = $(this),
+                        prudsysItemIdList = shop.prudsysItemIdList || null;
+                    $self.addClass("js-carousel-init"), loadSlider($self, {
+                        parameters: {
+                            prudsysItemIdList: prudsysItemIdList
+                        }
+                    }, function() {
+                        $self.children().length > 0 && buildCarousel($self), shop.prudsysTracking.count()
+                    })
+                })
+            }), $(document).trigger("createNewCarousels")
+        })
+    }(jQuery, window),
+    function($) {
+        "use strict";
+        $(function() {
+            if ("ProductDetailsPage" === shop.page.name) {
+                var $pds = $("#product-details"),
+                    isEnabled = !!$pds.data("vivocha-enabled");
+                isEnabled && ! function() {
+                    var t = document.createElement("script");
+                    t.type = "text/javascript", t.async = !0, t.src = "//www.vivocha.com/a/schneider/api/vivocha.js";
+                    var n = document.getElementsByTagName("script")[0];
+                    n.parentNode.insertBefore(t, n)
+                }()
+            }
+        })
+    }(jQuery),
+    function() {
+        "use strict";
+        ("ProductDetailsPage" === shop.page.name || "OutOfStockProductDetailsPage" === shop.page.name || "Product Review Aggregation Page" === shop.page.name) && $(function() {
+            var $pdsPager = $("#pds_product_details_pager");
+            if ($pdsPager.length > 0) {
+                var $backToResults = $pdsPager.find(".back-to-results"),
+                    $pdsBack = $pdsPager.find(".js-pds-back"),
+                    $backToResultsAnchor = $backToResults ? $backToResults.find("a").length > 0 ? $backToResults.find("a") : $backToResults : null;
+                $backToResultsAnchor.length > 0 && 0 === $pdsBack.length && (shop.searchResultCache ? !!shop.searchResultCache.lastCachedObj : !1) ? $backToResultsAnchor.attr("href", shop.searchResultCache.lastCachedObj.jumpBackURL) : ($backToResultsAnchor.length > 0 || $pdsBack.length > 0) && ($backToResultsAnchor.attr("href", "javascript:history.back()"), $pdsBack.attr("href", "javascript:history.back()"))
+            }
+        })
+    }(),
+    function() {
+        "use strict";
+        $(function() {
+            var $iframeElement = $(".js-call-iframe");
+            $iframeElement.click(function() {
+                var self = $(this),
+                    data = self.data(),
+                    iframeUrl = data.src,
+                    iframeHeight = data.height;
+                delete data.src, delete data.height, $.each(data, function(key, value) {
+                    data["data-" + key] = value, delete data[key]
+                }), $("<iframe />", {
+                    "class": "small-12 spacing-bottom-1 helper-hide",
+                    border: 0,
+                    src: iframeUrl,
+                    height: iframeHeight + "px",
+                    scrolling: "no"
+                }).attr(data).appendTo(self).load(function() {
+                    self.find("iframe").removeClass("helper-hide"), self.find("img").remove()
+                })
+            })
+        })
+    }(), $(function() {
+    "use strict";
+    var loadNewPageJSON = function(requestURL, parameters) {
+            var request = $.ajax({
+                url: requestURL,
+                data: parameters,
+                dataType: "json",
+                type: "POST",
+                async: !0,
+                context: this
+            });
+            return request
+        },
+        $paymentForm = $("#paymentDetailsForm");
+    if (null !== $paymentForm) {
+        var $paymentFormButton = $("#paymentFormButton"),
+            movePaymentModeButton = function($newParent) {
+                null !== $newParent && ($paymentFormButton.remove(), $paymentFormButton.show().prop("disabled", !1), $newParent.append($paymentFormButton).end())
+            };
+        window.shop && (window.shop.movePaymentModeButton = movePaymentModeButton);
+        var paymentModeToolify = function() {
+            var $lastPaymentMode, paymentModeCallBack = function() {
+                    var requestData, $naviCartTotals = $(".js-checkout-cart-totals"),
+                        formURL = $(this).closest("form").data("ajax-action"),
+                        formParameters = $(this).closest("form").serializeArray(),
+                        $self = $(this);
+                    "true" === $self.attr("data-disabled") ? $lastPaymentMode.attr("checked", !0).trigger("click") : $lastPaymentMode = $paymentForm.find("input[type=radio][name=paymentModeCode]").filter(":checked"), shop.device.isMobile ? $("#voucher_box .voucher-code").length && $lastPaymentMode.hasClass("js-klarnaaccount-hide") || window.shop.movePaymentModeButton($self.parents(".js-paymentmode")) : (requestData = loadNewPageJSON(formURL, formParameters), requestData.done(function(data) {
+                        "" !== data.tags.naviCartTotals && (window.shop.movePaymentModeButton($self.parents(".js-paymentmode")), $naviCartTotals.replaceWith(data.tags.naviCartTotals))
+                    }))
+                },
+                $radios = $paymentForm.find("input[type=radio][name=paymentModeCode]");
+            $radios.on("click.paymentmode-movebutton", paymentModeCallBack), $radios.is(":checked") || $paymentFormButton.hide().prop("disabled", !0), $lastPaymentMode = $radios.filter(":checked"), $lastPaymentMode.trigger("click")
+        };
+        paymentModeToolify()
+    }
+    if ($("#voucher_box .voucher-code").length) {
+        $('#paymentDetailsForm input:radio[value="klarnaaccount"]').attr({
+            "data-overlay-content": "#klarnaaccount-overlay",
+            "data-overlay-title": " ",
+            "data-overlay-confirm": !0
+        }); {
+            new Overlay('#paymentDetailsForm input:radio[value="klarnaaccount"]', {
+                width: "400",
+                styleClass: "klarnaaccount-overlay",
+                closeAlways: !1
+            }, function() {
+                $("#voucher_box_wrapper").show(), $("#voucherForm button, #voucherForm input").removeAttr("disabled"), $('#paymentDetailsForm input:radio[value="klarnaaccount"]').attr("disabled", "disabled"), $("#klarnaActionLayer").hide()
+            })
+        }
+        $(".js-klarnaaccount-hide").attr("data-disabled", "true")
+    }
+    if ($("#payment-klarnaActionCode option").each(function() {
+            var optionVal = $(this).val();
+            $(this).addClass("js-klarna-" + optionVal)
+        }), $("#payment-klarnaActionCode").selectOrDie("enable"), "Checkout Guest Page" === shop.page.name) {
+        var $deliveryAddressForm = $(".js-delivery-address-form");
+        $deliveryAddressForm.length && "true" === $deliveryAddressForm.attr("data-show-delivery-address") && ($("#differentDeliveryAddress").click(), window.setTimeout(function() {
+            document.getElementById("delivery-address-form").scrollIntoView()
+        }, 500))
+    }
+}),
+    function($, shop) {
+        "use strict";
+        $(function() {
+            var $directOrder = $("#direct-order-field"),
+                events = "mousedown.directOrderFocus touchstart.directOrderFocus";
+            $directOrder.length > 0 && shop.device.hasTouch && $(document).on(events, function(e) {
+                0 === $(e.target).closest($directOrder).length && ($directOrder.attr("autofocus", !1).blur(), $(this).off(events))
+            })
+        })
+    }(jQuery, shop),
+    function($) {
+        $(document).ready(function() {
+            $(".expandable-banner-head").on("click.expandable-banner", function() {
+                $(this).next(".expandable-banner-body").slideToggle(), $(this).find(".expandable-banner-open, .expandable-banner-close").toggle()
+            })
+        })
+    }(jQuery);
+var MTIProjectId = "5da6702a-66c1-4c7a-b8e4-f425ae30dcff";
+! function() {
+    var mtiTracking = document.createElement("script");
+    mtiTracking.type = "text/javascript", mtiTracking.async = "true", mtiTracking.src = ("https:" == document.location.protocol ? "https:" : "http:") + "//fast.fonts.net/t/trackingCode.js", (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(mtiTracking)
+}(),
+    function($) {
+        "use strict";
+
+        function stickyHeaderOffsetScroll(target) {
+            var $target = $(target),
+                plusOffset = 10,
+                getHeaderHeight = function() {
+                    return $("#page-header").height() + plusOffset
+                },
+                scrollToTarget = function($target, speed, callback) {
+                    $("html, body").stop().animate({
+                        scrollTop: $target.offset().top - getHeaderHeight()
+                    }, speed, "swing", callback)
+                };
+            $target.length > 0 && scrollToTarget($target, 900, function() {
+                scrollToTarget($target, 250)
+            })
+        }
+        $(function() {
+            $(".js-backbutton").click(function(e) {
+                e = e || window.event, e.preventDefault(), window.history.back()
+            }), $('a[href*="#"]').on("click", function(e) {
+                $(this.hash).length > 0 && (e.preventDefault(), stickyHeaderOffsetScroll(this.hash))
+            })
+        }), window.onload = $(function() {
+            var target = window.location.hash;
+            target && stickyHeaderOffsetScroll(target)
+        });
+        var toggleVisibility = function(target, visible) {
+                var $target = $(target);
+                visible ? $target.show() : $target.hide()
+            },
+            replaceRelativeImageMapsURLs = function($imageMap) {
+                $imageMap.each(function() {
+                    var $map = $('map[name="' + ($(this).attr("usemap").replace("#", "") + '"]')),
+                        checkedDataAttr = "data-checked-url";
+                    $map.find("area[href]:not([" + checkedDataAttr + "])").each(function() {
+                        var $this = $(this),
+                            baseURL = shop.url.base || "",
+                            href = $this.attr("href") || "";
+                        0 === href.indexOf("/") && ("/" === baseURL[baseURL.length - 1] && (baseURL = baseURL.slice(0, baseURL.length - 1)), $this.attr("href", baseURL + href)), $this.attr(checkedDataAttr, "true")
+                    })
                 })
             };
-        window.shop && (window.shop.toggleEditability = toggleEditability), toolifyInputForEditability = function($invoker, $target, uneditable) {
-            if (uneditable = uneditable || !1, null !== $invoker || null !== $target) {
+        window.shop && (window.shop.toggleVisibility = toggleVisibility);
+        var toolifyInputForVisibility = function($invoker, $target, invisible) {
+            if (invisible = invisible || !1, null !== $invoker || null !== $target) {
                 if (null === $target) {
-                    var targetSelector = $invoker.data("editability-toggle-for");
+                    var targetSelector = $invoker.data("visibility-toggle-for");
                     $target = $(targetSelector)
                 } else if (null === $invoker) {
-                    var invokerSelector = $target.data("editability-toggle-by");
+                    var invokerSelector = $target.data("visibility-toggle-by");
                     $invoker = $(invokerSelector)
                 }
                 if ($invoker.is(":radio")) {
                     var $others = $("input[name='" + $invoker.attr("name") + "']");
                     $others.each(function(ix, element) {
                         var $element = $(element);
-                        $element.val() != $invoker.val() && $element.on("change.editablity-toggle", function() {
-                            uneditable ? window.shop.toggleEditability($target, !$invoker.is(":checked")) : window.shop.toggleEditability($target, $invoker.is(":checked"))
+                        $element.val() != $invoker.val() && $element.on("change.visibility-toggle", function() {
+                            invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
                         })
                     })
+                } else if ($invoker.is("option")) {
+                    var $others = $invoker.siblings();
+                    $others.each(function(ix, element) {
+                        var $element = $(element).parent("select");
+                        $element.val() != $invoker.val() && $element.on("change.visibility-toggle", function() {
+                            invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
+                        })
+                    }), $invoker.parent("select").on("change.visibility-toggle", function() {
+                        invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
+                    })
                 }
-                $invoker.on("change.editablity-toggle", function() {
-                    uneditable ? window.shop.toggleEditability($target, !$invoker.is(":checked")) : window.shop.toggleEditability($target, $invoker.is(":checked"))
+                $invoker.on("change.visibility-toggle", function() {
+                    invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
                 })
             }
-        }, changeFormActionOnClick = function($elem) {
-            $elem.on("click.changeForm", function() {
-                var data = $elem.data("change-form-action") || null;
-                data && $elem.prop("disable", !0).closest("form").attr("action", data).submit()
-            })
-        }, $(function() {
-            $("[data-editability-toggle-for]").each(function(ix, element) {
+        };
+        $(function() {
+            $("[data-visibility-toggle-for]").each(function(ix, element) {
                 var $invoker = $(element);
-                toolifyInputForEditability($invoker), $invoker.trigger("change")
-            }), $("[data-editability-toggle-by]").each(function(ix, element) {
+                toolifyInputForVisibility($invoker), $invoker.trigger("change")
+            }), $("[data-visibility-toggle-by]").each(function(ix, element) {
                 var $target = $(element),
-                    $invoker = $($target.data("editability-toggle-by"));
-                toolifyInputForEditability($invoker, $target), $invoker.trigger("change")
-            }), $("[data-uneditability-toggle-by]").each(function(ix, element) {
+                    $invoker = $($target.data("visibility-toggle-by"));
+                toolifyInputForVisibility($invoker, $target), $invoker.trigger("change")
+            }), $("[data-invisibility-toggle-by]").each(function(ix, element) {
                 var $target = $(element),
-                    $invoker = $($target.data("uneditability-toggle-by"));
-                toolifyInputForEditability($invoker, $target, !0), $invoker.trigger("change")
-            }), $("[data-change-form-action]").each(function() {
-                changeFormActionOnClick($(this))
-            }), $("[data-change-required-state-for]").each(function(ix, element) {
-                var $invoker = $(element),
-                    target = $(this).data("change-required-state-for") || 0;
-                target.length > 0 && toogleRequiredState($invoker, $('[id="' + target + '"]'))
-            });
-            var commonFormSelector = $(".js-form-common"),
-                commonFormErrorSelector = ".form_field_error input, .form_field_error select";
-            commonFormSelector.on("blur.form", commonFormErrorSelector, function() {
-                if ("" !== $(this).val()) {
-                    var formFieldErrorSelector = $(this).parents(".form_field_error");
-                    formFieldErrorSelector.find(".form_field_error-message").hide(), formFieldErrorSelector.removeClass("form_field_error")
+                    $invoker = $($target.data("invisibility-toggle-by"));
+                toolifyInputForVisibility($invoker, $target, !0), $invoker.trigger("change")
+            })
+        });
+        var getTallestElem = function(element) {
+            var maxHeight, elementHeights = $(element).map(function() {
+                return $(this).height()
+            }).get();
+            return maxHeight = Math.max.apply(null, elementHeights)
+        };
+        $.fn.equalHeights = function(inner, compare, additionalHeightClass) {
+            var additionalHeight = "undefined" != typeof additionalHeightClass ? getTallestElem(additionalHeightClass) : 0;
+            return $(this).each(function() {
+                var currentTallest = 130;
+                if (compare === !1) inner ? ($(this).children().each(function() {
+                    $(this).children().height() > currentTallest && (currentTallest = $(this).children().height())
+                }), $(this).children().children("div").css({
+                    "min-height": currentTallest
+                })) : ($(this).children("div").css({
+                    "min-height": 0
+                }), $(this).children().each(function() {
+                    $(this).height() > currentTallest && (currentTallest = $(this).height())
+                }), $(this).children("div").css({
+                    "min-height": currentTallest + additionalHeight
+                }));
+                else {
+                    {
+                        var $compareClass = $($(this).attr("data-equal-with"));
+                        $(this)
+                    }
+                    $(this).height() > currentTallest && (currentTallest = $(this).height()), $compareClass.each(function() {
+                        $(this).height() > currentTallest && (currentTallest = $(this).height())
+                    }), $(this).css("min-height", currentTallest), $compareClass.css("min-height", currentTallest)
                 }
-            }), shop.add("formValidation", {}), shop.formValidation = new ValidateForm
+            }), this
+        }, $(function() {
+            $(".js-equal-heights").not("[data-equal-with], .threetileteaser-container").equalHeights(!0, !1), $(".js-equal-heights[data-equal-with]").equalHeights(!1, !0), replaceRelativeImageMapsURLs($("img[usemap]"))
+        });
+        var clearElementOrphans = function() {
+            $("[data-connected-with-elements]").each(function(ix, elem) {
+                var $elem = $(elem),
+                    elementsSelector = $elem.attr("data-connected-with-elements");
+                "" !== elementsSelector && 0 === $(elementsSelector).length && $elem.remove()
+            })
+        };
+        window.shop && (window.shop.clearElementOrphans = clearElementOrphans);
+        var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+                "/": "&#x2F;"
+            },
+            escapeHTML = function(string) {
+                return String(string).replace(/[&<>"'\/]/g, function(s) {
+                    return entityMap[s]
+                })
+            },
+            getViewportOffset = function($e) {
+                var $window = $(window),
+                    scrollLeft = $window.scrollLeft(),
+                    scrollTop = $window.scrollTop(),
+                    offset = $e.offset(),
+                    rect1 = {
+                        x1: scrollLeft,
+                        y1: scrollTop,
+                        x2: scrollLeft + $window.width(),
+                        y2: scrollTop + $window.height()
+                    },
+                    rect2 = {
+                        x1: offset.left,
+                        y1: offset.top,
+                        x2: offset.left + $e.width(),
+                        y2: offset.top + $e.height()
+                    };
+                return {
+                    left: offset.left - scrollLeft,
+                    top: offset.top - scrollTop,
+                    insideViewport: rect1.x1 < rect2.x2 && rect1.x2 > rect2.x1 && rect1.y1 < rect2.y2 && rect1.y2 > rect2.y1
+                }
+            };
+        window.shop && (window.shop.getViewportOffset = getViewportOffset, window.shop.escapeHTML = escapeHTML)
+    }(jQuery),
+    function($, shop) {
+        "use strict";
+        var fixBreadcrumbWidth = function() {
+            var linkWidth, breadcrumbWidth = $(".js-breadcrumb-component").width(),
+                linkListWidth = 0,
+                lastElementYet = !1;
+            $(".js-breadcrumb-component li").each(function() {
+                $(this).show().width("").removeClass("final-text").find(".icon").show(), linkWidth = $(this).outerWidth() + 15, lastElementYet && $(this).hide(), 11 >= breadcrumbWidth - linkListWidth - linkWidth && !lastElementYet ? ($(this).width(breadcrumbWidth - linkListWidth - 30), $(this).addClass("final-text").find(".icon").hide(), lastElementYet = !0) : linkListWidth += linkWidth
+            })
+        };
+        shop && (shop.fixBreadcrumbWidth = fixBreadcrumbWidth), $(function() {
+            shop.fixBreadcrumbWidth(), $(window).on("breakpointshift", function() {
+                shop.fixBreadcrumbWidth()
+            })
+        })
+    }(jQuery, window.shop),
+    function() {
+        "use strict";
+        $(function() {
+            $.fn.hotSpotLocator = function() {
+                return $(this).each(function() {
+                    var $this = $(this),
+                        $child = $this.children(),
+                        fullWidth = window.shop.componentImageSizes.FULL.xl,
+                        smallWidth = window.shop.componentImageSizes.FULL.m,
+                        $mainImage = $this.siblings("img"),
+                        cloudinaryURL = $mainImage.attr("data-cloudinary-url") ? $mainImage.attr("data-cloudinary-url").replace("upload/", "upload/c_lfill,g_west,w_" + fullWidth + "/") : $mainImage.attr("src"),
+                        xPosAbs = $child.data("pos-x"),
+                        yPosAbs = $child.data("pos-y"),
+                        $hasHotspot = $this.find(".hotspot-button").length > 0;
+                    null != xPosAbs && null != yPosAbs && $('<img src="' + cloudinaryURL + '"/>').load(function() {
+                        var imgWidth, imgHeight, calHotspotLeft, calHotspotTop, yPosAbsHotspotInSmallestHeight, yPosAbsLayerInSmallestHeightToTop, yPosAbsLayerInSmallestHeightToBottom, ratio_orig, smallHeight, layerHeight, layerPosTop, layerLeft, $layer, hasClose, topAdjustment;
+                        shop.device.isMobile ? ($this.css({
+                            top: yPosAbs + "%",
+                            left: xPosAbs + "%"
+                        }), xPosAbs > 50 && $this.addClass("left-move-container")) : (imgWidth = $(this)[0].width, imgHeight = $(this)[0].height, calHotspotLeft = 100 / imgWidth * xPosAbs, calHotspotTop = 100 / imgHeight * yPosAbs, $this.css({
+                            top: calHotspotTop + "%",
+                            left: calHotspotLeft + "%"
+                        }), $hasHotspot && $(window).load(function() {
+                            $layer = $this.find(".js-layer").first(), hasClose = 1 === $layer.find(".js-layer-close").first().length ? !0 : !1, ratio_orig = imgWidth / imgHeight, smallHeight = Math.round(smallWidth / ratio_orig), layerHeight = $layer.outerHeight(), layerPosTop = parseFloat($layer.css("top")), yPosAbsHotspotInSmallestHeight = Math.floor(smallHeight * calHotspotTop / 100), yPosAbsLayerInSmallestHeightToTop = yPosAbsHotspotInSmallestHeight + layerPosTop, yPosAbsLayerInSmallestHeightToBottom = smallHeight - (yPosAbsLayerInSmallestHeightToTop + layerHeight), xPosAbs > smallWidth && (layerLeft = $layer.css("left"), $layer.css("left", "").css("right", layerLeft)), 0 > yPosAbsLayerInSmallestHeightToTop ? topAdjustment = layerPosTop - yPosAbsLayerInSmallestHeightToTop : 0 > yPosAbsLayerInSmallestHeightToBottom && (topAdjustment = layerPosTop + yPosAbsLayerInSmallestHeightToBottom), (0 > yPosAbsLayerInSmallestHeightToTop || 0 > yPosAbsLayerInSmallestHeightToBottom) && (hasClose && (topAdjustment += parseInt($layer.find(".js-layer-close").first().outerHeight())), $layer.css("top", topAdjustment))
+                        }))
+                    }), $this.find(".js-hotspot-button-mobil").find(".js-layer").remove()
+                }), this
+            }, $(".js-hotspot").hotSpotLocator(), $(document).data("has-hotspot-click-listener", !1), shop.device.isMobile ? $(".js-hotspot-button-mobil").on("click", function() {
+                var $this = $(this),
+                    openClass = "open";
+                $this.addClass(openClass), $(document).data("has-hotspot-click-listener") || ($(document).data("has-hotspot-click-listener", !0), $(document).on("click.hotspot", function(e) {
+                    if (!$(e.target).hasClass("hotspot-button-command-container") && !$(e.target).parents(".hotspot-button-command-container").length > 0) {
+                        var o = $(document).find(".open");
+                        $(o).each(function() {
+                            $(this).removeClass("open"), $(this).find(".hotspot-login-show").removeClass("hotspot-login-show")
+                        }), $(e.target).hasClass("js-hotspot-button-mobil") ? $(e.target).addClass("open") : ($(document).off("click.hotspot"), $(document).data("has-hotspot-click-listener", !1))
+                    }
+                }))
+            }) : $(".hotspot-button").on("click", function(event) {
+                if (event.target === event.currentTarget) {
+                    var $productButton = $(this).find(".go-to-product");
+                    1 === $productButton.length && ($productButton.trigger("mousedown.etracker"), $productButton[0].click())
+                }
+            }), $(".js-hotspot-button-command").on("click", function() {
+                1 === $(this).find(".hotspot-login").length && $(this).addClass("hotspot-login-show")
+            })
+        })
+    }(),
+    function($, shop) {
+        "use strict";
+        var KingCampaingBanner = function(elem) {
+            elem.length > 0 && (this.namespace = "KingCampaingBanner", this.$elem = $(elem), this.requestParameters = {
+                componentCode: this.$elem.data("uid")
+            }, this.requestURL = location.protocol + "//" + location.host + shop.url.base + "componentweight", this.bindEventHandler(this.$elem))
+        };
+        KingCampaingBanner.prototype = {
+            bindEventHandler: function($elem) {
+                var self = this,
+                    hitCounter = 0;
+                $elem.on("click." + this.namespace + " contextmenu." + this.namespace, function(e) {
+                    var $self = $(this),
+                        gotoTarget = function() {
+                            location.href = $self.attr("href")
+                        };
+                    "contextmenu" !== e.type && e.preventDefault(), 0 === hitCounter ? (hitCounter++, self.sendCampaign(function() {
+                        "click" === e.type && gotoTarget()
+                    })) : hitCounter > 0 && "click" === e.type && gotoTarget()
+                })
+            },
+            sendCampaign: function(successCallback) {
+                $.ajax({
+                    type: "get",
+                    url: this.requestURL,
+                    data: this.requestParameters,
+                    success: function() {
+                        return successCallback && $.isFunction(successCallback) ? successCallback() : void 0
+                    }
+                })
+            }
+        }, $(function() {
+            $(".king-campaign-banner").each(function(i) {
+                shop.add("banner"), shop.banner["kingCampaingBanner" + i] = new KingCampaingBanner($(this))
+            })
+        })
+    }(jQuery, window.shop),
+    function($) {
+        "use strict";
+        $(document).ready(function() {
+            var $passwordInput = $(".js-strength");
+            $passwordInput.pstrength(), "" !== $passwordInput.val() && $(".pstrength").show(), $passwordInput.on("keyup", function() {
+                "" !== $passwordInput.val() ? $(".pstrength").show() : $(".pstrength").hide()
+            })
         })
     }(jQuery),
+    function($, shop) {
+        "use strict";
+        var device = shop.device;
+        $(function() {
+            jQuery.fn.fixMultipleSelect = function() {
+                var firstOption, $select = $(this).on({
+                    focusout: function() {
+                        var values = select.val() || [];
+                        setTimeout(function() {
+                            $select.val(values.length ? values : [""]).change()
+                        }, 1e3)
+                    }
+                });
+                return firstOption = '<option value="" disabled="disabled"', firstOption += ($select.val() || []).length > 0 ? "" : ' selected="selected"', firstOption += ">&laquo; Select " + ($select.attr("title") || "Options") + " &raquo;", firstOption += "</option>", $select.prepend(firstOption), this
+            }, ("ios" === device.os && "7" === device.osVersion || "ios" === device.os && "8" === device.osVersion) && $("select[multiple]").each(function() {
+                $(this).fixMultipleSelect()
+            })
+        })
+    }(jQuery, shop), $(function() {
+    function splitTable($original) {
+        $original.wrap("<div class='table-wrapper' />");
+        var copy = $original.clone();
+        copy.find("td:not(:first-child), th:not(:first-child)").remove(), copy.removeClass("table-responsive"), $original.closest(".table-wrapper").append(copy), copy.wrap("<div class='pinned' />"), $original.wrap("<div class='scrollable' />")
+    }
+
+    function needResponsive($elem) {
+        return $elem.find("tr").size() > 1
+    }
+    if (shop.device.isMobile) {
+        var switched = !1,
+            updateTables = function() {
+                return switched ? void 0 : (switched = !0, $("table.table-responsive").each(function(i, elem) {
+                    var $elem = $(elem);
+                    needResponsive($elem) && splitTable($elem)
+                }), !0)
+            };
+        $(window).load(updateTables)
+    }
+}),
+    function($) {
+        "use strict";
+        $(function() {
+            $("#sort_form1");
+            $("#sortOptions1").on("change", function() {
+                location.href = $(this).val()
+            })
+        })
+    }(jQuery),
+    function() {
+        "use strict";
+        $(function() {
+            var $themesWorldVideo = $(".js-themes-world-video"),
+                showImageAndHotspot = function(videoContainer) {
+                    videoContainer.empty().siblings(".video-controller-hide").hide().siblings(".themes-world-image").show()
+                };
+            $themesWorldVideo.each(function() {
+                var self = $(this),
+                    videoID = self.data("videoid"),
+                    _url = "http://www.edge-cdn.net/videojs_" + videoID,
+                    videoParams = "?jsdiv=mijsvdiv" + videoID + "&resp=1&playertype=&player=46&volume=0",
+                    themeImage = self.siblings(".themes-world-image"),
+                    videoLength = 1e3 * parseInt(self.data("videolength"), 10) + 5e3,
+                    timer = null;
+                0 !== themeImage.length && (themeImage.hide(), timer = window.setTimeout(function() {
+                    showImageAndHotspot(self)
+                }, videoLength)), $.ajax({
+                    url: _url + videoParams
+                }).done(function(data) {
+                    self.append('<div id="mijsvdiv' + videoID + '" style="width:100%"></div><div class="video-script"></div>');
+                    var movingImageScript = '<script type="text/javascript">' + data + "</script>";
+                    $(".video-script").append(movingImageScript), window["flashPlayerStatusEvent_" + videoID] = function(status) {
+                        "loadedmetadata" == status && window["mi24player_" + videoID].play(), "fullended" == status && 0 !== self.siblings(".themes-world-image").length && (clearTimeout(timer), showImageAndHotspot(self))
+                    }
+                })
+            })
+        })
+    }(),
+    function() {
+        "use strict";
+        $(function() {
+            $(".js-threeteaser-newsletter").on("click", ".js-newsletter-image", function() {
+                $(this).parent().next("#newsletterRegisterForm").submit()
+            })
+        })
+    }(),
     function($) {
         "use strict";
         var _eventNamespace = "comments",
@@ -9821,7 +11968,7 @@ var addProductToCart = shop.addProductToCart;
                     reviewHtmlTemplate = null != kindOfTemplate ? typeOfTemplate + "-" + kindOfTemplate : typeOfTemplate;
                 reviewTemplate.setTemplate(reviewHtmlTemplate).setPlaceholder(reviewItem).setExceptions({
                     rating: function(rating) {
-                        for (var _html = "", i = 0; 5 > i; i++) _html += rating > i ? '<li><span><i class="fa fa-star fa-star-active"></i></span></li>' : '<li><span><i class="fa fa-star"></i></span></li>';
+                        for (var _html = "", i = 0; 5 > i; i++) _html += rating > i ? '<li><span class="icon icon-star"></span></li>' : '<li><span class="icon icon-star-border"></span></li>';
                         return _html
                     },
                     getPrivateReviewReportedHeadline: function() {
@@ -9863,20 +12010,20 @@ var addProductToCart = shop.addProductToCart;
                     for (var j = 0; j < customerReview.product.images.length; j++) "cartIcon" === customerReview.product.images[j].format && (customerReview.productImage = customerReview.product.images[j].httpsUrl);
                     var reviewDate = new Date(customerReview.date);
                     customerReview.numericRating = customerReview.rating, customerReview.dateISO8601 = reviewDate.getDate() + "-" + (reviewDate.getMonth() + 1) + "-" + reviewDate.getFullYear(), customerReview.productBrandName = null != customerReview.product.manufacturer ? customerReview.product.manufacturer : "", customerReview.productName = null != customerReview.product.name ? customerReview.product.name : "", customerReview.productAverageRating = null != customerReview.product.averageRating ? customerReview.product.averageRating : "", customerReview.productFormattedPrice = null != customerReview.product.price ? customerReview.product.price.formattedValue : "", customerReview.productUrl = null != customerReview.product.url ? shop.url.base.substring(0, parseInt(shop.url.base.length - 1, 10)) + customerReview.product.url : "", customerReview.numberOfReviews = null != customerReview.product.numberOfReviews ? customerReview.product.numberOfReviews : "", customerReview.numberOfReviewsText = "1" == customerReview.product.numberOfReviews ? "" : customerReview.product.numberOfReviews, customerReview.hideProduct = ""
-                } else customerReview.hideProduct = "hide"
+                } else customerReview.hideProduct = "helper-hide"
             },
             setVoteHelpfulPanel = function($reviewElement) {
                 var reviewFromCurrentUser = $reviewElement.attr("data-review-from-current-user"),
                     wasHelpfulVoteDelivered = $reviewElement.attr("data-was-helpful-vote-delivered");
-                "false" === reviewFromCurrentUser && "false" === wasHelpfulVoteDelivered && $reviewElement.find(".js-customer-review-helpful").removeClass("hide").on("click." + _eventNamespace, ".js-helpful-review-button", function() {
+                "false" === reviewFromCurrentUser && "false" === wasHelpfulVoteDelivered && $reviewElement.find(".js-customer-review-helpful").removeClass("helper-hide").on("click." + _eventNamespace, ".js-helpful-review-button", function() {
                     var isLoggedIn = $(".prodreview").attr("data-login-status");
-                    "true" === isLoggedIn ? sendHelpful($(this)) : ($(".helpful-missing-login-error").addClass("hide"), $(this).nextAll(".helpful-missing-login-error").removeClass("hide"))
+                    "true" === isLoggedIn ? sendHelpful($(this)) : ($(".helpful-missing-login-error").addClass("helper-hide"), $(this).nextAll(".helpful-missing-login-error").removeClass("helper-hide"))
                 })
             },
             bindCreateReviewButton = function() {
                 var commentsReviewBar = ".review-bar",
                     commentsReviewBarErrorMessage = "> .review-error-messages",
-                    commentsWriteReviewButtonSelector = "#js-comments-write_button_review";
+                    commentsWriteReviewButtonSelector = "button#js-comments-write_button_review";
                 $(commentsWriteReviewButtonSelector).on("click", function(event) {
                     return event.preventDefault(), $(commentsWriteReviewButtonSelector).hasClass("disabled") ? ($(commentsReviewBar + commentsReviewBarErrorMessage).html('<i class="fa fa-exclamation-circle"></i>&nbsp;' + $(commentsWriteReviewButtonSelector).attr("data-status-login")), $(commentsReviewBar + commentsReviewBarErrorMessage).show(), !0) : void(location.href = $(commentsWriteReviewButtonSelector).attr("data-create-review-url"))
                 })
@@ -9895,8 +12042,8 @@ var addProductToCart = shop.addProductToCart;
                 });
                 var starClicked = parseInt($elem.attr("data-input"), 10);
                 if (starsArray.length > 0 && starClicked <= starsArray.length) {
-                    starsArray.removeClass("fa-star-active").next("input").removeAttr("checked");
-                    for (var i = -1; starClicked > i; i++) starsArray[i] && ($(starsArray[i]).addClass("fa-star-active"), i === starClicked - 1 && $(starsArray[i]).next("input").attr("checked", "checked"))
+                    starsArray.removeClass("icon-star").next("input").removeAttr("checked");
+                    for (var i = -1; starClicked > i; i++) starsArray[i] && ($(starsArray[i]).addClass("icon-star"), i === starClicked - 1 && $(starsArray[i]).next("input").attr("checked", "checked"))
                 }
             },
             loadServiceReviews = function() {
@@ -9942,8 +12089,7 @@ var addProductToCart = shop.addProductToCart;
             },
             loadReviews = function() {
                 var $reviewElement = $(".prodreview"),
-                    $moreReviewsSpinner = $(".js-more-reviews-bar")
-                        .find(".js-review-show-loading"),
+                    $moreReviewsSpinner = $(".js-more-reviews-bar").find(".js-review-show-loading"),
                     url = $reviewElement.attr("data-review-url"),
                     reviewOffset = $reviewElement.attr("data-review-offset"),
                     reviewPager = $reviewElement.attr("data-review-pager"),
@@ -9960,23 +12106,18 @@ var addProductToCart = shop.addProductToCart;
                         orderBy: sort
                     },
                     beforeSend: function() {
-                        $(".js-get-reviews")
-                            .hide(), $moreReviewsSpinner.show()
+                        $(".js-get-reviews").hide(), $moreReviewsSpinner.show()
                     },
                     success: function(data) {
                         data = jQuery.parseJSON(data);
-                        if ("undefined" == typeof data.customerReviews) {
-                            return new Log({
-                                level: 4,
-                                message: "loadReviews: Response Error",
-                                type: "error"
-                            }), $(".more-reviews-bar").remove(), !1;
-                        }
+                        if ("undefined" == typeof data.customerReviews) return new Log({
+                            level: 4,
+                            message: "loadReviews: Response Error",
+                            type: "error"
+                        }), $(".more-reviews-bar").remove(), !1;
                         for (var i = 0, l = data.customerReviews ? data.customerReviews.length : 0; l > i; i++) {
                             var _customerReview = data.customerReviews[i];
-                            extendCustomerReview(_customerReview), generateReviewItem(_customerReview, $reviewElement), $reviewElement.attr("data-review-pager", 10), $reviewElement.attr("data-review-offset", data.currentOffset), $moreReviewsSpinner.hide(), $(".js-get-reviews")
-                                .show(), data.end && $(".more-reviews-bar")
-                                .remove()
+                            extendCustomerReview(_customerReview), generateReviewItem(_customerReview, $reviewElement), $reviewElement.attr("data-review-pager", 10), $reviewElement.attr("data-review-offset", data.currentOffset), $moreReviewsSpinner.hide(), $(".js-get-reviews").show(), data.end && $(".more-reviews-bar").remove()
                         }
                     },
                     complete: function() {
@@ -10055,16 +12196,18 @@ var addProductToCart = shop.addProductToCart;
             };
         $(function() {
             var $reviewErrorMessages = $(".review-error-messages");
-            if ($reviewErrorMessages.text().search(/\w/) >= 0 && $reviewErrorMessages.show(), "Service Reviews Page" == shop.page.name && (loadServiceReviews(), $(".js-get-reviews").on("click." + _eventNamespace, function(event) {
+            if ($reviewErrorMessages.text().search(/\w/) >= 0 && $reviewErrorMessages.show(), "AccountReviewsPage" == shop.page.name && $("#sortOptions1,#sortOptions2").on("change", function() {
+                    location.href = $(this).val()
+                }), "Service Reviews Page" == shop.page.name && (loadServiceReviews(), $(".js-get-reviews").on("click." + _eventNamespace, function(event) {
                     event.preventDefault(), loadServiceReviews()
                 })), ("ProductDetailsPage" == shop.page.name || "AccountReviewsPage" == shop.page.name || "AccountReviewDetailPage" == shop.page.name || "Product Review Aggregation Page" === shop.page.name) && (bindCreateReviewButton(), loadReviews(), $(".js-get-reviews").on("click." + _eventNamespace, function(event) {
                     event.preventDefault(), loadReviews()
                 }), $(".prodreview").on("mousedown", ".js-report-review", function() {
                     var $this = $(this);
-                    $this.data("allow-review-report") === !0 ? $("#review-report-code").val($this.data("review-code")) : ($(".review-missing-login-error").addClass("hide"), $this.siblings(".review-missing-login-error").removeClass("hide"))
+                    $this.data("allow-review-report") === !0 ? $("#review-report-code").val($this.data("review-code")) : ($(".review-missing-login-error").addClass("helper-hide").parents(".review-report-link").removeClass("helper-expand"), $this.siblings(".review-missing-login-error").removeClass("helper-hide").parents(".review-report-link").addClass("helper-expand"))
                 }), $(document).on("submit click", '#reportReviewForm button.btn[type="submit"]', function(e) {
                     e.preventDefault(), submitReviewReportedFn($("#reportReviewForm"))
-                })), "Product Review Aggregation Page" === shop.page.name) $("#product-review-helpful-reviews").length > 0 && loadHelpfulReviews();
+                })), "Product Review Aggregation Page" === shop.page.name) $("#product-review-helpful-reviews").length > 0 && loadHelpfulReviews(), shop.add("productDetailsPageMini", {}), shop.productDetailsPageMini = new Product("#product-details-mini"), shop.productDetailsPageMini.displayVariantForMiniProductDetails(), null !== shop.productDetailsPageMini.getVariantSizeCode() && shop.productDetailsPageMini.displayVariantSizeForMiniProductDetails(), shop.add("addToCartPDSMini", {}), shop.addToCartPDSMini = new AddToCart("cart", "#product-details-mini", shop.productDetailsPageMini), shop.add("addToWatchlistPDSMini", {}), shop.addToWatchlistPDSMini = new AddToCart("watchlist", "#product-details-mini", shop.productDetailsPageMini);
             else if ("Product Review Create Page" === shop.page.name) {
                 var $starRatingBar = $(".js-comments-stars-wrapper"),
                     $checkedRatingStar = $starRatingBar.find('input[checked="checked"]'),
@@ -10089,1350 +12232,13 @@ var addProductToCart = shop.addProductToCart;
                 }), $usernameSelection.on("click." + _eventNamespace, "input:first", function() {
                     $usernameTextInput.prop("disabled", !0).val("")
                 }), $serviceOwnCheckbox.is(":checked") && ($serviceTextInput.prop("disabled", !1), $serviceStarsContainer.removeClass("disabled")), $serviceOwnArea.on("click." + _eventNamespace, "input:first", function() {
-                    $serviceTextInput.prop("disabled") ? ($serviceTextInput.prop("disabled", !1), $serviceStarsContainer.removeClass("disabled")) : ($serviceTextInput.prop("disabled", !0).val(""), $serviceStarsContainer.addClass("disabled").find(".rating-star-text").hide(), $serviceStarsContainer.find("label").removeClass("fa-star-active"), $serviceStarsContainer.find("input").removeAttr("checked"))
+                    $serviceTextInput.prop("disabled") ? ($serviceTextInput.prop("disabled", !1), $serviceStarsContainer.removeClass("disabled")) : ($serviceTextInput.prop("disabled", !0).val(""), $serviceStarsContainer.addClass("disabled").find(".rating-star-text").hide(), $serviceStarsContainer.find("label").removeClass("icon-star"), $serviceStarsContainer.find("input").removeAttr("checked"))
                 })
             }
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-
-        function Up() {
-            $(".brand-to-top").on("click", "i", function() {
-                $("html,body").animate({
-                    scrollTop: 0
-                }, 300)
-            })
-        }
-        $(function() {
-            Up()
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-        var brandSlider = function(elem) {
-                var touchConfObj, elemOuterWidth, leftWidthIndicator, restWidthIndicator, rightIndicatorFlag, ANIMATION_SPEED_NORMAL = 1,
-                    ANIMATION_SPEED_FAST = 11,
-                    $container = elem.target,
-                    $innerContainer = $container.children(".brand-mask"),
-                    $arrowPrev = $container.parent().find(".js-scroller-prev"),
-                    $arrowNext = $container.parent().find(".js-scroller-next"),
-                    $arrows = $arrowPrev.add($arrowNext),
-                    containerWidth = elem.width,
-                    containerContent = $container.find("li"),
-                    clickLeftOrRight = function(e) {
-                        $(e.target).hasClass("scroller-next") ? rightClick() : $(e.target).hasClass("scroller-prev") && leftClick()
-                    },
-                    maxElementWidth = 0,
-                    elemWidthSum = 0,
-                    containerMarginLeft = 0,
-                    frameOffset = ANIMATION_SPEED_NORMAL,
-                    targetItems = 0,
-                    hovering = !1,
-                    movingLeft = !1,
-                    movingRight = !1,
-                    mouseenter = function() {
-                        hovering = !0
-                    },
-                    mouseleave = function() {
-                        hovering = !1
-                    },
-                    leftClick = function() {
-                        movingLeft = !0
-                    },
-                    rightClick = function() {
-                        movingRight = !0
-                    };
-                $container.data("has-slider", !0);
-                for (var i = 0; i < containerContent.length; i++) elemOuterWidth = $(containerContent[i]).outerWidth(), elemOuterWidth > maxElementWidth && (maxElementWidth = elemOuterWidth), elemWidthSum += elemOuterWidth;
-                if (containerWidth > elemWidthSum) return void $innerContainer.width(elem.width);
-                $container.width(elem.width), $container.height(elem.height), $innerContainer.width(2 * elem.width), $arrows.css("display", "block"), shop.device.hasTouch ? $arrows.on("click", function(e) {
-                    e.preventDefault(), clickLeftOrRight(e)
-                }) : $arrows.hammer().on("touch tap", function(e) {
-                    e.gesture.stopPropagation(), e.gesture.preventDefault(), clickLeftOrRight(e)
-                }), $innerContainer.append(containerContent.clone()), shop.device.hasTouch ? (touchConfObj = {
-                    swipe_velocity: .2
-                }, $container.hammer().on("touch", mouseenter), $container.hammer().on("release", mouseleave), $container.hammer(touchConfObj).on("dragleft dragright dragend", function(e) {
-                    e.gesture.stopPropagation(), e.gesture.preventDefault(), "dragend" === e.type && (e.gesture.deltaX >= 20 ? leftClick() : e.gesture.deltaX <= -20 && rightClick())
-                })) : ($innerContainer.on("mouseenter", mouseenter), $innerContainer.on("mouseleave", mouseleave)), elemOuterWidth = $innerContainer.children(":first").outerWidth();
-                var tick = function() {
-                    if (!hovering) {
-                        if ((-containerMarginLeft > 4 * elemWidthSum || containerMarginLeft > 0) && (containerMarginLeft = 0), elemOuterWidth -= frameOffset, 0 === elemOuterWidth) {
-                            if (restWidthIndicator) {
-                                for (var i = 0; targetItems > i; i++) elemOuterWidth = $innerContainer.children(":first"), containerMarginLeft += elemOuterWidth.outerWidth(), $innerContainer.append(elemOuterWidth.remove());
-                                restWidthIndicator = !1, targetItems = 0, elemOuterWidth = $innerContainer.children(":first").outerWidth()
-                            } else if (leftWidthIndicator) {
-                                if (targetItems = 0, elemOuterWidth = -leftWidthIndicator, -200 > containerMarginLeft - leftWidthIndicator) return elemOuterWidth = containerMarginLeft - leftWidthIndicator, void(elemOuterWidth -= elemOuterWidth % ANIMATION_SPEED_FAST);
-                                leftWidthIndicator = !1
-                            } else elemOuterWidth = $innerContainer.children(":first"), containerMarginLeft += elemOuterWidth.outerWidth(), $innerContainer.append(elemOuterWidth.remove()), elemOuterWidth = $innerContainer.children(":first").outerWidth();
-                            frameOffset = ANIMATION_SPEED_NORMAL
-                        }
-                        if (movingLeft) {
-                            for (elemOuterWidth = $innerContainer.children(":first").outerWidth() - elemOuterWidth, frameOffset = -ANIMATION_SPEED_FAST, restWidthIndicator = elem.width - $innerContainer.children(":first").outerWidth(), elemOuterWidth += restWidthIndicator; restWidthIndicator > 0;) leftWidthIndicator = $($innerContainer.children("li")[$innerContainer.children("li").length - 1]), restWidthIndicator -= $(leftWidthIndicator).outerWidth(), containerMarginLeft -= $(leftWidthIndicator).outerWidth(), $innerContainer.prepend($(leftWidthIndicator).remove());
-                            return elemOuterWidth -= elemOuterWidth % ANIMATION_SPEED_FAST, elemOuterWidth = -elemOuterWidth, leftWidthIndicator = restWidthIndicator, restWidthIndicator = !1, movingLeft = !1, void(rightIndicatorFlag = -1)
-                        }
-                        if (movingRight) {
-                            frameOffset = ANIMATION_SPEED_FAST, restWidthIndicator = elemOuterWidth, targetItems++;
-                            for (var i = 1; i < $innerContainer.children("li").length && (elemOuterWidth = $innerContainer.children("li")[i], restWidthIndicator + $(elemOuterWidth).outerWidth() < containerWidth); i++) targetItems++, restWidthIndicator += $(elemOuterWidth).outerWidth();
-                            elemOuterWidth = restWidthIndicator, elemOuterWidth -= elemOuterWidth % ANIMATION_SPEED_FAST, movingRight = !1, rightIndicatorFlag = 1
-                        }
-                        containerMarginLeft -= frameOffset, $innerContainer.css("margin-left", containerMarginLeft + "px")
-                    }
-                };
-                setInterval(tick, 20)
-            },
-            initBrandCountainer = function() {
-                $(".brand-container").each(function(index, item) {
-                    var loadingImagesCounter, $images, interval, retryCount = 10,
-                        $item = $(item),
-                        mobileContainerWidth = $item.parent().width() - $item.siblings(".js-scroller-prev").width() - $item.siblings(".js-scroller-next").width() - parseInt($item.css("margin-left"), 10) - parseInt($item.css("margin-right"), 10),
-                        desktopContainerWidth = 900,
-                        checkSliderStart = function() {
-                            return loadingImagesCounter && retryCount ? void retryCount-- : (brandSlider({
-                                target: $item,
-                                width: shop.device.isMobile ? mobileContainerWidth : desktopContainerWidth,
-                                height: 90
-                            }), void clearInterval(interval))
-                        };
-                    $(item).data("has-slider") || ($images = $(item).children(".brand-mask").children().children().children(), loadingImagesCounter = $images.length, $images.on("load", function() {
-                        loadingImagesCounter--
-                    }), interval = setInterval(checkSliderStart, 300))
-                })
-            };
-        $(function() {
-            initBrandCountainer(), shop.device.isMobile && $(window).on("orientationchange resize", function() {
-                $(".brand-container").each(function() {
-                    var $item = $(this),
-                        mobileContainerWidth = $item.parent().width() - $item.siblings(".js-scroller-prev").width() - $item.siblings(".js-scroller-next").width() - parseInt($item.css("margin-left"), 10) - parseInt($item.css("margin-right"), 10);
-                    $(this).width(mobileContainerWidth)
-                })
-            })
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-        $(function() {
-            cookieWarningMsg()
-        });
-        var cookieWarningMsg = function() {
-            var $pageWrapperSelector = $("#page-wrapper"),
-                $messageSelector = $(".js-disabled-cookie-msg"),
-                $linkSelector = $(".js-site-reload"),
-                messageId = "disabled-cookie-warning",
-                errorMessageHTML = "",
-                propertyMessage = "";
-            navigator.cookieEnabled || (propertyMessage = $messageSelector.data("disabled-cookie-msg"), errorMessageHTML = '<div id="' + messageId + '" class="slot"><div class="property-content"><p>' + propertyMessage + "</p></div></div>", $pageWrapperSelector.before(errorMessageHTML), $linkSelector.on("click", "a", function() {
-                location.reload()
-            }))
-        }
-    }(jQuery),
-    function($) {
-        "use strict";
-        $(function() {
-            if ($(".noUiSlider").length > 0) {
-                var $sliderElement = $(".noUiSlider"),
-                    $displayLeftValue = $("#s-value-left"),
-                    $displayRightValue = $("#s-value-right"),
-                    $submitPrice = $("#price-filter-button"),
-                    sliderSelectedMin = parseFloat(Math.floor($sliderElement.data("slider-selected-min"))),
-                    sliderSelectedMax = parseFloat(Math.round($sliderElement.data("slider-selected-max"))),
-                    sliderAbsMin = parseFloat(Math.floor($sliderElement.data("slider-abs-min"))),
-                    sliderAbsMax = parseFloat(Math.round($sliderElement.data("slider-abs-max")));
-                sliderAbsMin === sliderAbsMax && (sliderAbsMax += 1), sliderSelectedMin === sliderSelectedMax && (sliderSelectedMax += 1), void 0 !== sliderSelectedMin && void 0 !== sliderSelectedMax && void 0 !== sliderAbsMin && void 0 !== sliderAbsMax && ($sliderElement.noUiSlider({
-                    range: [sliderAbsMin, sliderAbsMax],
-                    start: [sliderSelectedMin, sliderSelectedMax],
-                    handles: 2,
-                    set: function() {
-                        $submitPrice.attr("data-etracker-general-event", "Produktfilter, Preisbereich, " + $(this).val()[0] + "-" + $(this).val()[1] + ", ''")
-                    },
-                    serialization: {
-                        resolution: 1,
-                        to: [
-                            [$displayLeftValue, "html"],
-                            [$displayRightValue, "html"]
-                        ]
-                    }
-                }), $submitPrice.on("click.filterSlider", function() {
-                    for (var search = window.location.search, items = search.split("&"), PS = "filterPreisSlider", PSA = "filterPreisSliderAbsolute", hasPS = !1, hasPSA = !1, i = 0; i < items.length; i++) - 1 !== items[i].indexOf(PS) && (-1 !== items[i].indexOf(PSA) ? (hasPSA = !0, items[i] = PSA + "=" + sliderAbsMin + "+-+" + sliderAbsMax) : (hasPS = !0, items[i] = PS + "=" + $displayLeftValue.text() + "+-+" + $displayRightValue.text()));
-                    hasPS || items.push(PS + "=" + $displayLeftValue.text() + "+-+" + $displayRightValue.text()), hasPSA || items.push(PSA + "=" + sliderAbsMin + "+-+" + sliderAbsMax), search = items.join("&"), "?" !== search[0] && (search = "?" + search), window.location = window.location.protocol + "//" + window.location.host + window.location.pathname + search
-                }))
-            }
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-        $(function() {})
-    }(jQuery),
-    function($, store, shop) {
-        "use strict";
-        if ("Search result Page" === shop.page.name) {
-            var setSelectedFilterPositions = function() {
-                    $(".facet-block", "#search-left-column").each(function() {
-                        var $this = $(this),
-                            $lastSelectedElem = $this.find("li.selected").not('[class*="indent-2"]').last();
-                        $lastSelectedElem.length > 0 && $this.scrollTop($lastSelectedElem.offset().top - $this.offset().top)
-                    })
-                },
-                getCollapseState = function() {
-                    return store.get("collapse") ? store.get("collapse") : {}
-                },
-                clearCollapseStates = function() {
-                    store.remove("collapse"), store.set("collapse", {
-                        forQuery: shop.searchresult.freeTextSearch,
-                        states: {}
-                    })
-                },
-                setCollapseState = function(index) {
-                    var collapse = getCollapseState();
-                    collapse.states[index] = collapse.states.hasOwnProperty(index) && 1 == collapse.states[index] ? 0 : 1, store.remove("collapse"), store.set("collapse", collapse)
-                },
-                filterHeadBehavior = function() {
-                    var $separateCategory = $(".category"),
-                        arrowClassName = "category-arrow-down",
-                        borderClassName = "last-category";
-                    $separateCategory.on("click", function(e) {
-                        e.preventDefault(), $(this).parent().find("ul").toggle(), $(this).toggleClass(arrowClassName), shop.searchResultPage.view.updateFilterMenuOffset()
-                    }), $separateCategory.last().on("click", function(e) {
-                        e.preventDefault(), $(this).toggleClass(borderClassName), shop.searchResultPage.view.updateFilterMenuOffset()
-                    })
-                },
-                filterColorBoxGenerator = function() {
-                    var i, $hexSpan = $(".facet-hex"),
-                        $hexImg = $(".facet-img"),
-                        hexColorClass = "facet-hex-css",
-                        indent0Class = "color-indent-0";
-                    for (i = 0; i < $hexSpan.length; i++) "" !== $hexSpan.eq(i).text() && ($hexSpan.eq(i).closest("a").closest("li").removeClass(indent0Class), $hexSpan.eq(i).prev(".facet-name").remove(), $hexSpan.eq(i).addClass(hexColorClass), $hexSpan.eq(i).closest("a").find(".remove-item-link").remove(), $hexSpan.eq(i).css("background", $hexSpan.eq(i).text()), $hexSpan.eq(i).text(""));
-                    for (i = 0; i < $hexImg.length; i++) "" !== $hexImg.eq(i).attr("src") && ($hexImg.eq(i).closest("a").closest("li").removeClass(indent0Class), $hexImg.eq(i).next(".facet-name").remove(), $hexImg.eq(i).addClass(hexColorClass), $hexImg.eq(i).closest("a").find(".remove-item-link").remove()), "" === $hexImg.eq(i).attr("src") && $hexImg.eq(i).remove()
-                },
-                addStarClasses = function() {
-                    var $searchFilterItem = $(".filter-item"),
-                        $starContainerLine = ($searchFilterItem.find(".search-star-rating"), $(".star-rating")),
-                        activeStarClass = "fa-star-active";
-                    $starContainerLine.each(function() {
-                        for (var c = $(this).parent().prop("class").split("-"), i = 0; i < c[c.length - 1]; i++) $(this).children().eq(i).addClass(activeStarClass)
-                    })
-                },
-                addCSSClasses = function() {
-                    for (var lastLiItemClass = "li-last-item", initCSSClass = "linklist-indent-", finalCSSClass = "", categoryLiLevelAmount = 5, i = 0; categoryLiLevelAmount > i; i++) finalCSSClass = initCSSClass + i, $("li").hasClass(finalCSSClass) && $("li." + finalCSSClass).last().addClass(lastLiItemClass)
-                };
-            $(function() {
-                filterHeadBehavior(), filterColorBoxGenerator(), addStarClasses(), addCSSClasses(), $(".filter-nav-content .filter-item").on("click.collapse", ".category", function(event) {
-                    setCollapseState($(event.delegateTarget).index())
-                })
-            }), $.elementReady("search-right-column", function() {
-                var collapse = getCollapseState();
-                collapse.forQuery != shop.searchresult.freeTextSearch && (clearCollapseStates(), collapse = getCollapseState());
-                for (var item in collapse.states) {
-                    var $currentBox, currentIndex = collapse.states[item];
-                    1 === currentIndex && ($currentBox = $(".filter-nav-content .filter-item").eq(item), $(".category", $currentBox).addClass("category-arrow-down"), $(".facet-block", $currentBox).hide())
-                }
-                $(".filter-nav-content").show(), setSelectedFilterPositions()
-            })
-        }
-    }(jQuery, window.store, window.shop),
-    function($) {
-        "use strict";
-        var log = function(optionObj) {
-                return $.isPlainObject() ? new Log(optionObj) : void 0
-            },
-            SearchResultView = {
-                init: function(parentClass) {
-                    return this._parentClass = parentClass, this.$body = $("body"), this.$searchResultPage = $("#search-result-page"), this.$resultContainer = $("#product-result-container"), this.$filterMenu = $("#search-left-column"), this.$stickySortBox = $("#sort_form1"), this.text_fromPrice = this.$resultContainer.attr("data-text_fromprice"), this.text_basePrice = this.$resultContainer.attr("data-text_baseprice"), this._eventhandlerNameSpace = this.$searchResultPage.attr("id"), this.viewportHeight = this.getViewportHeight(), this.lastScrollPosition = this.getScrollPosition(), this.updateResultContainerOffset = !0, this.resultContainerOffset = this.getResultContainerOffsetBottom(), this.filterMenuOffsetBottom = this.getFilterMenuOffsetBottom(), this.isStickySortBoxVisible = !1, this.isFooterVisible = !0, this.factFinderErrorCounter = 0, this._reloadPageWhenErrorCounterIs = 3, this._bindEventHandler(), $('<div id="result-page-loader"></div>').insertAfter(this.$resultContainer), this.resultLoader = new LoaderOverlay("#result-page-loader", !0), this.resultLoader.hide(), this.calcStickySortBoxPos(), delete this.init, this
-                },
-                _bindEventHandler: function() {
-                    var self = this;
-                    $(window).on("resize", function() {
-                        self.viewportHeight = self.getViewportHeight(), self.calcStickySortBoxPos()
-                    }), this.$resultContainer.on("mousedown." + this._eventhandlerNameSpace, ".result-thumb", function(e) {
-                        var $this = $(this);
-                        if (!$this.parent().hasClass("tooltip") || $this.parent().hasClass("tooltip") && $this.parent().hasClass("tt-visible")) {
-                            var closestProductID = $this.closest("[id$=-tooltip], .search-result-item").attr("id").replace("-tooltip", "");
-                            self._parentClass.cache.save(closestProductID), $this.parent().hasClass("tooltip") || 3 === e.which || 2 === e.which || (location.href = $this.closest(".productMainLink ").attr("data-href") || $this.closest(".productMainLink ").attr("href"))
-                        }
-                    }), this.$resultContainer.on("mousedown." + this._eventhandlerNameSpace, ".go-to-product", function(e) {
-                        e.preventDefault();
-                        var $this = $(this),
-                            closestProductID = $this.closest("[id$=-tooltip], .search-result-item").attr("id").replace("-tooltip", "");
-                        self._parentClass.cache.save(closestProductID), 3 !== e.which && 2 !== e.which && (location.href = $this.attr("href"))
-                    }), this.$body.on("click." + this._eventhandlerNameSpace, ".tooltip-wrapper .available-colors-and-sizes a", function(e) {
-                        e.preventDefault();
-                        var $this = $(this),
-                            closestProductID = $this.closest("[id$=-tooltip], .search-result-item").attr("id").replace("-tooltip", "");
-                        self._parentClass.cache.save(closestProductID), location.href = $this.attr("href") + "?fromSearch=true"
-                    })
-                },
-                getViewportHeight: function() {
-                    return window.innerHeight || document.documentElement.clientHeight
-                },
-                getResultContainerHeight: function() {
-                    return this.$resultContainer.height()
-                },
-                getResultContainerOffsetBottom: function() {
-                    var resultContainerOffset;
-                    return this.updateResultContainerOffset ? (resultContainerOffset = this.$resultContainer.offset().top + this.$resultContainer.height(), this.updateResultContainerOffset = !1, this.resultContainerOffset = resultContainerOffset) : resultContainerOffset = this.resultContainerOffset, resultContainerOffset
-                },
-                getFilterMenuOffsetBottom: function() {
-                    return this.updateFilterMenuOffset()
-                },
-                updateFilterMenuOffset: function() {
-                    return this.filterMenuOffsetBottom = this.$filterMenu.offset().top + this.$filterMenu.height(), this.filterMenuOffsetBottom
-                },
-                getScrollPosition: function() {
-                    return $(window).scrollTop()
-                },
-                setLastScrollPosition: function() {
-                    this.lastScrollPosition = this.getScrollPosition()
-                },
-                getScrollPositionFromBottomOfView: function() {
-                    return this.getScrollPosition() + this.viewportHeight
-                },
-                scrollToElement: function(elementID) {
-                    var offset = elementID ? $("#" + elementID).offset().top : 0,
-                        e = elementID ? document.getElementById(elementID) : null;
-                    null !== e && e.scrollIntoView ? window.setTimeout(function() {
-                        e.scrollIntoView()
-                    }, 500) : window.scroll(0, offset)
-                },
-                _initLazyLoaderForNewImages: function() {
-                    var deviceEffectObj = "ie" === shop.device.browser && "8" === shop.device.browserVersion || "tablet" === shop.device.type ? null : {
-                        effect: "fadeIn"
-                    };
-                    this.$resultContainer.find("img.lazy").lazyload(deviceEffectObj).removeClass("lazy")
-                },
-                _appendToInternalCache: function(html) {
-                    html && (html = html.replace(/\s{2}/g, ""), this._parentClass.cache.internalViewCache += html)
-                },
-                append: function(html, restoreFromCache) {
-                    this.$resultContainer.append(html), restoreFromCache === !0 ? this.$resultContainer.find("img.lazy").each(function() {
-                        $(this).attr({
-                            src: $(this).attr("data-original")
-                        }).removeClass("lazy").removeAttr("data-original")
-                    }) : this._initLazyLoaderForNewImages(), this._appendToInternalCache(html), this.updateResultContainerOffset = !0
-                },
-                getDistanceToTopOfFilterMenu: function(getPercentValue) {
-                    var distanceInPercent, distanceInPixel;
-                    return getPercentValue ? (distanceInPercent = 100 - Math.floor(100 / this.getFilterMenuOffsetBottom() * this.getScrollPositionFromBottomOfView()), 0 >= distanceInPercent ? 0 : distanceInPercent) : (distanceInPixel = this.getScrollPositionFromBottomOfView() - this.getFilterMenuOffsetBottom(), 0 >= distanceInPixel ? 0 : distanceInPixel)
-                },
-                getDistanceToBottomOfResults: function(getPercentValue) {
-                    var distanceInPercent, distanceInPixel;
-                    return getPercentValue ? (distanceInPercent = 100 - Math.floor(100 / this.getResultContainerOffsetBottom() * this.getScrollPositionFromBottomOfView()), 0 >= distanceInPercent ? 0 : distanceInPercent) : (distanceInPixel = this.getResultContainerOffsetBottom() - this.getScrollPositionFromBottomOfView(), 0 >= distanceInPixel ? 0 : distanceInPixel)
-                },
-                showFooter: function() {
-                    this.$body.removeClass("state-hide-footer"), this.isFooterVisible = !0
-                },
-                hideFooter: function() {
-                    this.$body.addClass("state-hide-footer"), this.isFooterVisible = !1
-                },
-                showStickySortBox: function() {
-                    this.$body.addClass("state-sticky-sort-form"), this.isStickySortBoxVisible = !0
-                },
-                hideStickySortBox: function() {
-                    this.$body.removeClass("state-sticky-sort-form"), this.isStickySortBoxVisible = !1
-                },
-                calcStickySortBoxPos: function() {
-                    this.$stickySortBox.css({
-                        left: this.$searchResultPage.offset().left
-                    })
-                },
-                reloadOnError: function() {
-                    var $resultItems, lastProductID;
-                    log({
-                        level: 1,
-                        message: "FACTFINDER IS NOT REACHABLE! FactFinder throws an error during the loading-process of new searchResult-items",
-                        type: "error"
-                    }), this.factFinderErrorCounter += 1, this.factFinderErrorCounter === this._reloadPageWhenErrorCounterIs && ($resultItems = this.$resultContainer.find(".search-result-item"), lastProductID = $resultItems.eq($resultItems.length - 1).attr("id"), this._parentClass.cache.save(lastProductID), location.reload(!0))
-                }
-            },
-            SearchResultCache = {
-                init: function(parentClass) {
-                    return parentClass && (this._parentClass = parentClass, this.currentCacheURL = location.href, this.currentDate = (new Date).getTime(), this.internalViewCache = ""), this.keyNameInStorage = "searchResultCache", this.isLocalStorageEnable = !!store.enabled, this.lastCachedObj = void 0 !== (this.isLocalStorageEnable ? store.get(this.keyNameInStorage) : null) ? store.get(this.keyNameInStorage) : null, delete this.init, this
-                },
-                isCacheAvailable: function() {
-                    if (this.isLocalStorageEnable && null !== this.lastCachedObj) {
-                        var cacheObj = this.lastCachedObj,
-                            jumpBackURL = null === cacheObj ? null : cacheObj.jumpBackURL,
-                            hoursBetweenCaching = this._getDaysBetweenTwoDates(this.currentDate, cacheObj.cachingDate),
-                            cachingLiveTime = this._parentClass.options.cachingLiveTime;
-                        return cachingLiveTime > hoursBetweenCaching && jumpBackURL === this.currentCacheURL ? !0 : (this.clearCache(), this._parentClass.view.scrollToElement(), !1)
-                    }
-                    return this._parentClass.view.scrollToElement(), !1
-                },
-                _getDaysBetweenTwoDates: function(date1_ms, date2_ms) {
-                    var ONE_HOUR = 36e5,
-                        difference_ms = Math.abs(date1_ms - date2_ms);
-                    return Math.round(difference_ms / ONE_HOUR)
-                },
-                save: function(elementID) {
-                    var cacheObj = {
-                        _createdItems: this._parentClass._createdItems,
-                        loadNextPageNumber: this._parentClass.loadNextPageNumber,
-                        currentSearchObject: this._parentClass.currentSearchObject,
-                        cachedHtml: this.internalViewCache,
-                        cachingDate: this.currentDate,
-                        jumpBackURL: this.currentCacheURL,
-                        scrollToID: elementID
-                    };
-                    store.set(this.keyNameInStorage, cacheObj)
-                },
-                clearCache: function() {
-                    store.remove(this.keyNameInStorage)
-                },
-                restoreCache: function() {
-                    if (this.isCacheAvailable()) {
-                        var cacheObj = this.lastCachedObj,
-                            currentCacheURL = this.currentCacheURL,
-                            jumpBackURL = null === cacheObj ? null : cacheObj.jumpBackURL,
-                            self = this;
-                        jumpBackURL === currentCacheURL && (this._parentClass._createdItems = cacheObj._createdItems, this._parentClass.loadNextPageNumber = cacheObj.loadNextPageNumber, this._parentClass.currentSearchObject = cacheObj.currentSearchObject, this._parentClass.view.append(cacheObj.cachedHtml, !0), self._parentClass.view.scrollToElement(cacheObj.scrollToID), this.clearCache())
-                    }
-                }
-            },
-            SearchResultClass = function() {
-                this.currentSearchObject = shop.searchresult || null, this._paginationObject = "", this._CURRENTQUERYOBJECT = shop.searchresult.currentQuery, this._productResultObjects = "", this.currentQueryULR = "", this.currentPageNumber = null, this.loadNextPageNumber = 0, this.currentProductsOnPage = null, this._createdItems = 0, this.numberOfPages = null, this.totalNumberOfResults = null, this.currentJSONQueryURL = null, this.isNextSearchResultLoading = !1, this.view = SearchResultView.init(this), this.cache = SearchResultCache.init(this), this._checkScrollPositionIntervall = 100, this.options = {
-                    preloadNextItemsAtDistance: this.view.viewportHeight / 2,
-                    checkScrollPositionMaxIntervall: 1e3,
-                    checkScrollPositionMinIntervall: 100,
-                    showFilterBoxAtDistance: 400,
-                    cachingLiveTime: 6
-                }, null !== this.currentSearchObject && (this.cache.isCacheAvailable() && (this.cache.restoreCache(), this._updateSearchClassData(this.currentSearchObject)), null === this.numberOfPages && this._handleNewDataController(this.currentSearchObject)), this.view.hideFooter(), this._checkScrollPositionController()
-            };
-        SearchResultClass.prototype = {
-            _updateSearchClassData: function(newJSONData) {
-                this.currentSearchObject = newJSONData || this.currentSearchObject, this._paginationObject = this.currentSearchObject.pagination, this._productResultObjects = this.currentSearchObject.results, this.currentQueryULR = this.getCurrentQueryULR(this._CURRENTQUERYOBJECT), this.currentPageNumber = this.getCurrentPageNumber(this._paginationObject), this.currentProductsOnPage = this.getCurrentProductsOnPage(this._paginationObject), this.numberOfPages = this.getNumberOfPages(this._paginationObject), this.totalNumberOfResults = this.getTotalNumberOfResults(this._paginationObject), this.loadNextPageNumber = this.getCurrentPageNumber() + 1, this.currentJSONQueryURL = this.getCurrentJSONQueryURL()
-            },
-            _getCreatedItems: function() {
-                return this._createdItems
-            },
-            _setCreatedItems: function(number) {
-                this._createdItems = number
-            },
-            getCurrentQueryULR: function(currentQueryObject) {
-                return currentQueryObject.url || location.pathname
-            },
-            getProductResultObjects: function() {
-                return this._productResultObjects && $.isArray(this._productResultObjects) ? this._productResultObjects : void 0
-            },
-            getCurrentPageNumber: function(currentPaginationObject) {
-                return currentPaginationObject ? currentPaginationObject.currentPage : this.currentPageNumber
-            },
-            getNumberOfPages: function(currentPaginationObject) {
-                return null !== currentPaginationObject ? currentPaginationObject.numberOfPages : this.numberOfPages
-            },
-            getCurrentProductsOnPage: function(currentPaginationObject) {
-                return null !== currentPaginationObject ? currentPaginationObject.pageSize : this.currentProductsOnPage
-            },
-            getTotalNumberOfResults: function(currentPaginationObject) {
-                return null !== currentPaginationObject ? currentPaginationObject.totalNumberOfResults : this.totalNumberOfResults
-            },
-            getCurrentJSONQueryURL: function() {
-                var jsonURL = this.currentQueryULR.replace("/s", "s/results"),
-                    jsonURLHasParameters = jsonURL.indexOf("?") > 0 ? !0 : !1,
-                    attributeForPageNumber = jsonURLHasParameters ? "&page=" : "?page=",
-                    loadPageNumber = 0 === this.loadNextPageNumber ? this.currentPageNumber : this.loadNextPageNumber;
-                return jsonURL = this.prependBaseURLTo(jsonURL + attributeForPageNumber + loadPageNumber)
-            },
-            getAltBaseURL: function() {
-                var pathArray = $.grep((location.pathname || "").split("/"), function(val) {
-                    return val
-                }).slice(0, 2);
-                return "/" + pathArray[0] + "/" + pathArray[1] + "/"
-            },
-            prependBaseURLTo: function(targetURL) {
-                var baseURL = shop.url.base || this.getAltBaseURL();
-                return baseURL.lastIndexOf("/") === baseURL.length - 1 && 0 === targetURL.indexOf("/") && (targetURL = targetURL.substr(1, targetURL.length + 1)), baseURL + targetURL
-            },
-            _handleNewDataController: function(newJSONData) {
-                if ($.isPlainObject(newJSONData))
-                    if (newJSONData.results) {
-                        var newProductResultItemsHTML;
-                        this._updateSearchClassData(newJSONData), newProductResultItemsHTML = this._getNextProductItemsHTML(this.getProductResultObjects()), this.view.append(newProductResultItemsHTML)
-                    } else this.view.reloadOnError()
-            },
-            _loadNewSearchResultsJSON: function() {
-                if (this.isNextSearchResultLoading) return !1;
-                var self = this,
-                    request = $.ajax({
-                        url: self.currentJSONQueryURL,
-                        dataType: "json",
-                        type: "GET",
-                        async: !0,
-                        beforeSend: function() {
-                            self.view.resultLoader.show(), self.isNextSearchResultLoading = !0
-                        }
-                    });
-                request.done(function(data) {
-                    self.view.resultLoader.hide(), self._handleNewDataController(data), self.isNextSearchResultLoading = !1
-                }), request.fail(function() {
-                    self.isNextSearchResultLoading = !1, log({
-                        level: 4,
-                        message: "Response error from SearchResultClass._loadNewSearchResultsJSON",
-                        type: "error"
-                    })
-                })
-            },
-            _getColorTileForTooltipHTML: function(object) {
-                for (var tileURL = object.url ? this.prependBaseURLTo(object.url) : null, outOfStockClass = object.outOfStockBoolean ? "out-of-stock fa fa-times" : "", divOrAnchor = null !== tileURL ? "a" : "div", tileHTML = "<" + divOrAnchor + ' class="p-color ' + outOfStockClass + '" title="' + (object.name || "Color") + '"' + (null !== tileURL ? ' href="' + tileURL + '"' : "") + ">", colorArray = null !== object.hexCode ? object.hexCode.split("/") : [object.name || "Color"], colorArrayLength = colorArray.length, colorIcon = null !== object.colorIconUrl ? object.colorIconUrl : null, colorTilePartWidth = Math.floor(100 / colorArrayLength), currentHexColor = "", i = 0; colorArrayLength > i; i++) currentHexColor = colorArray[i], currentHexColor.indexOf("#") >= 0 ? tileHTML += '<span class="tile-hex-part" style="background-color:' + currentHexColor + "; width:" + colorTilePartWidth + '%"></span>' : colorIcon ? tileHTML += '<span class="tile-text-part ' + currentHexColor + '" style="width:' + colorTilePartWidth + "%; background-image: url('" + colorIcon + "')\"></span>" : colorIcon || (tileHTML += '<span class="tile-text-part ' + currentHexColor + '" style="width:' + colorTilePartWidth + '%"></span>');
-                return tileHTML += "</" + divOrAnchor + ">"
-            },
-            _getSizeTileForTooltipHTML: function(object) {
-                var tileURL = object.url ? this.prependBaseURLTo(object.url) : null,
-                    tileHTML = '<a class="size-tile" title="' + (object.value || "Size") + '"' + (null !== tileURL ? ' href="' + tileURL + '"' : "") + ">" + object.value + "</a>";
-                return tileHTML
-            },
-            _getTooltipAlignmentClass: function() {
-                var itemCount = this._getCreatedItems(),
-                    alignmentClass = "";
-                return alignmentClass = 0 === itemCount || itemCount % 3 === 1 ? "left" : 0 !== itemCount && itemCount % 3 === 0 ? "right" : "middle"
-            },
-            _productHasTooltip: function(typeOfTooltip) {
-                return null !== typeOfTooltip && "singlevariant" !== typeOfTooltip ? !0 : !1
-            },
-            _getNewTooltipHTML: function(objectArray) {
-                var variantsSizeObjectArray, tooltipTemplate = new Template,
-                    tooltipTemplateObject = {
-                        title: objectArray.title || "",
-                        tooltipType: objectArray.typeOfTooltip,
-                        csp_orderNumber: objectArray.csp_orderNumber
-                    },
-                    typeOfTooltip = objectArray.typeOfTooltip || null,
-                    variantsColorObjectArray = objectArray.styleVariants || null,
-                    variantColumnHTML = "",
-                    wrapLI = function(html, cssClass) {
-                        return "<li " + (cssClass ? 'class="' + cssClass + '"' : "") + ">" + html + "</li>"
-                    },
-                    getStockCssClass = function(currentSizeObject) {
-                        var outOfStockBoolean;
-                        return currentSizeObject && (outOfStockBoolean = shop.strictAvailability ? currentSizeObject.outOfStockStrict : currentSizeObject.outOfStock), outOfStockBoolean ? "out-of-stock" : ""
-                    };
-                if (this._productHasTooltip(typeOfTooltip)) {
-                    for (var i = 0, variantsColorObjectArrayLength = variantsColorObjectArray.length; variantsColorObjectArrayLength > i; i++) {
-                        var variantsSizeObjectArrayLength, currentSizeObject, j, currentColorObject = {
-                            code: variantsColorObjectArray[i].code || null,
-                            hexCode: variantsColorObjectArray[i].hexCode || null,
-                            name: variantsColorObjectArray[i].name || null,
-                            colorIconUrl: variantsColorObjectArray[i].colorIconUrl || null,
-                            outOfStockBoolean: variantsColorObjectArray[i].outOfStock || !1,
-                            url: null
-                        };
-                        switch (variantsSizeObjectArray = variantsColorObjectArray[i].sizeVariants, variantsSizeObjectArrayLength = variantsSizeObjectArray.length, typeOfTooltip) {
-                            case "colorOnly":
-                                for (j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], currentColorObject.url = this.prependBaseURLTo(currentSizeObject.url), variantColumnHTML += this._getColorTileForTooltipHTML(currentColorObject);
-                                break;
-                            case "colorAndSizes":
-                                for (variantColumnHTML += "<li>", variantColumnHTML += this._getColorTileForTooltipHTML(currentColorObject), variantColumnHTML += '<ul class="sizes">', j = 0, variantsSizeObjectArrayLength = variantsSizeObjectArray.length; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
-                                variantColumnHTML += "</ul>", variantColumnHTML += "</li>";
-                                break;
-                            case "sizesOnly":
-                                for (variantColumnHTML += '<ul class="sizes">', j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
-                                variantColumnHTML += "</ul>";
-                                break;
-                            case "termAndSizes":
-                                for (variantColumnHTML += "<li>", variantColumnHTML += '<p class="tooltip-column-headline">' + currentColorObject.name + "</p>", variantColumnHTML += '<ul class="sizes">', j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
-                                variantColumnHTML += "</ul>", variantColumnHTML += "</li>";
-                                break;
-                            case "termOnly":
-                                for (j = 0; variantsSizeObjectArrayLength > j; j++) currentSizeObject = variantsSizeObjectArray[j], currentSizeObject.value = currentColorObject.name, variantColumnHTML += wrapLI(this._getSizeTileForTooltipHTML(currentSizeObject), getStockCssClass(currentSizeObject));
-                                break;
-                            default:
-                                log({
-                                    level: 4,
-                                    message: "Wrong type of tooltip: " + typeOfTooltip,
-                                    type: "error"
-                                })
-                        }
-                    }
-                    return this._productHasTooltip(typeOfTooltip) ? (("colorOnly" === typeOfTooltip || "sizesOnly" === typeOfTooltip) && (variantColumnHTML = wrapLI(variantColumnHTML)), tooltipTemplate.setTemplate("template-search-result-item-tooltip").setPlaceholder(tooltipTemplateObject).setExceptions({
-                        getTootipItemsHTML: function() {
-                            return variantColumnHTML
-                        }
-                    }), tooltipTemplate.render()) : ""
-                }
-                return ""
-            },
-            _getSimpleTemplateHTML: function(object, useTemplate) {
-                if ($.isPlainObject(object) && null !== object) {
-                    var template = new Template;
-                    return template.setTemplate(useTemplate).setPlaceholder(object), template.render()
-                }
-                return ""
-            },
-            _getSpecialOfferDiscountHTML: function(object) {
-                return this._getSimpleTemplateHTML(object, "template-search-result-special-offer-discount")
-            },
-            _getNewProductActionImgHTML: function(object) {
-                return this._getSimpleTemplateHTML(object, "template-search-result-item-action-img")
-            },
-            _getNewHoverImgHTML: function(object) {
-                return this._getSimpleTemplateHTML(object, "template-search-result-item-hover-img")
-            },
-            _getNewPriceHTML: function(object) {
-                return object.csp_showTopOfferHint ? this._getSimpleTemplateHTML(object, "template-search-result-item-price-top-product") : this._getSimpleTemplateHTML(object, null !== object.csp_oldPrice ? "template-search-result-item-price-old-best" : "template-search-result-item-price-single")
-            },
-            _getNewBasePriceHTML: function(object) {
-                return this._getSimpleTemplateHTML(object, "template-search-result-base-price")
-            },
-            _getNewStarRatingHTML: function(object) {
-                var ratingAmount = object.csp_averageRating || 0,
-                    MAXSTARS = 5;
-                return object.starScalerWidth = 100 / MAXSTARS * ratingAmount, object.starsVisibility = ratingAmount > 0 ? "rating-visible" : "", this._getSimpleTemplateHTML(object, "template-search-result-item-product-rating")
-            },
-            _getNextProductItemsHTML: function(objectArray) {
-                var i, l, productItemTemplate = new Template,
-                    productItemsHTML = "",
-                    imgHeight = shop.searchresult.imgSize.HEIGHT,
-                    imgWidth = shop.searchresult.imgSize.WIDTH,
-                    self = this;
-                if (productItemTemplate.setTemplate("template-search-result-item"), objectArray) {
-                    for (i = 0, l = objectArray.length; l > i; i++) {
-                        var currentProductObject = objectArray[i],
-                            currentItemHTML = "",
-                            currentFloatingTeaserHTML = "",
-                            currentProductTooltipObject = currentProductObject.csp_variantsJSON ? $.parseJSON(currentProductObject.csp_variantsJSON) : null,
-                            isFloatingTeaser = currentProductObject.csp_floatingTeaser ? !0 : !1;
-                        this._setCreatedItems(this._getCreatedItems() + 1), isFloatingTeaser ? (currentFloatingTeaserHTML = document.getElementById("template-floating-teaser-" + currentProductObject.csp_floatingTeaserId), currentItemHTML = currentFloatingTeaserHTML ? currentFloatingTeaserHTML.innerHTML : "") : (currentProductObject.csp_URL = currentProductObject.csp_URL ? this.prependBaseURLTo(currentProductObject.csp_URL) : null, currentProductObject.csp_imgWidth = imgWidth, currentProductObject.csp_imgHeight = imgHeight, currentProductObject.csp_brand = null !== currentProductObject.csp_brand ? currentProductObject.csp_brand + " - " : "", currentProductObject.csp_brandAndName = currentProductObject.csp_brand + (null != currentProductObject.csp_name ? currentProductObject.csp_name : ""), currentProductObject.csp_brandAndName = currentProductObject.csp_brandAndName.length > 70 ? currentProductObject.csp_brandAndName.slice(0, 64) + "..." : currentProductObject.csp_brandAndName, currentProductObject.hasTooltip = null === currentProductTooltipObject ? "" : this._productHasTooltip(currentProductTooltipObject.typeOfTooltip) !== !0 || shop.device.isMobile ? "" : "tooltip", currentProductObject.csp_URL ? (null !== currentProductTooltipObject && (delete currentProductObject.csp_variantsJSON, currentProductTooltipObject.csp_orderNumber = currentProductObject.csp_orderNumber), productItemTemplate.setPlaceholder(currentProductObject).setExceptions({
-                            getTagForDevice: function() {
-                                return "tablet" === shop.device.type ? "div" : "a"
-                            },
-                            getTagAttrForDevice: function() {
-                                return "tablet" === shop.device.type ? "data-href" : "href"
-                            },
-                            getProductID: function() {
-                                return currentProductObject.csp_orderNumber
-                            },
-                            getNewFlagCssClass: function() {
-                                return currentProductObject.csp_newFlag !== !1 ? "visible" : "hidden"
-                            },
-                            getSpecialOfferDiscount: function() {
-                                var discount = currentProductObject.csp_specialOfferDiscount;
-                                return discount ? self._getSpecialOfferDiscountHTML({
-                                    csp_specialOfferDiscount: discount,
-                                    discountBadgeSizeClass: discount.indexOf(".") >= 0 ? "small" : ""
-                                }) : ""
-                            },
-                            getSaleFlagCssClass: function() {
-                                return currentProductObject.csp_saleFlag !== !1 ? "visible" : "hidden"
-                            },
-                            getTopFlagCssClass: function() {
-                                return currentProductObject.csp_showTopOfferHint !== !1 ? "visible" : "hidden"
-                            },
-                            getProductActionFlagImg: function() {
-                                if (null !== currentProductObject.csp_flagUrl) {
-                                    var imgURL = self._getNewProductActionImgHTML({
-                                        csp_flagUrl: currentProductObject.csp_flagUrl
-                                    });
-                                    return imgURL
-                                }
-                                return ""
-                            },
-                            getProductHoverImgHTML: function() {
-                                if (null !== currentProductObject.csp_hoverImgURL && "" !== currentProductObject.csp_hoverImgURL) {
-                                    var hoverImgHTML = self._getNewHoverImgHTML({
-                                        csp_hoverImgURL: currentProductObject.csp_hoverImgURL,
-                                        csp_orderNumber: currentProductObject.csp_orderNumber,
-                                        csp_imgWidth: imgWidth,
-                                        csp_imgHeight: imgHeight
-                                    });
-                                    return hoverImgHTML
-                                }
-                                return ""
-                            },
-                            getTooltipAlignment: function() {
-                                return self._getTooltipAlignmentClass()
-                            },
-                            getProductTooltipHTML: function() {
-                                return currentProductTooltipObject ? self._getNewTooltipHTML(currentProductTooltipObject) : void 0
-                            },
-                            getProductPriceHTML: function() {
-                                var priceHTML = self._getNewPriceHTML({
-                                    csp_price: currentProductObject.csp_price,
-                                    csp_oldPrice: currentProductObject.csp_oldPrice || null,
-                                    csp_priceType: currentProductObject.csp_priceType && "from" === currentProductObject.csp_priceType.toLowerCase() ? self.view.text_fromPrice + " " : "",
-                                    csp_currency: currentProductObject.csp_currency,
-                                    csp_showTopOfferHint: currentProductObject.csp_showTopOfferHint
-                                });
-                                return priceHTML
-                            },
-                            getBasePriceHTML: function() {
-                                var basePriceHTML = self._getNewBasePriceHTML({
-                                    csp_basePrice: currentProductObject.csp_basePrice ? self.view.text_basePrice + " " + currentProductObject.csp_basePrice : ""
-                                });
-                                return basePriceHTML
-                            },
-                            getProductRating: function() {
-                                return self._getNewStarRatingHTML({
-                                    csp_averageRating: currentProductObject.csp_averageRating
-                                })
-                            }
-                        }), currentItemHTML = productItemTemplate.render()) : self._setCreatedItems(self._getCreatedItems() - 1)), productItemsHTML += currentItemHTML
-                    }
-                    return productItemsHTML
-                }
-            },
-            _calcIntervallSpeed: function(distanceToTop, distanceToBottom, intervallMinSpeed, intervallMaxSpeed, deathZone, isElementVisible) {
-                if (isElementVisible) {
-                    var distanceToElement = Math.min(distanceToTop, distanceToBottom);
-                    if (deathZone > distanceToElement) {
-                        var percentageDistance = 100 / deathZone * distanceToElement,
-                            speed = intervallMaxSpeed / 100 * percentageDistance;
-                        return intervallMinSpeed > speed ? intervallMinSpeed : speed > intervallMaxSpeed ? intervallMaxSpeed : parseInt(speed, 10)
-                    }
-                    return intervallMaxSpeed
-                }
-                return intervallMaxSpeed
-            },
-            _checkScrollPositionController: function() {
-                var self = this,
-                    viewPortHeight = this.view.viewportHeight,
-                    showStickySortBoxAtDistance = this.options.showFilterBoxAtDistance,
-                    preloadNextItemsAtDistance = 0,
-                    calcPreloadNextItemsAtDistance = function() {
-                        return Math.ceil(self.view.viewportHeight / 100 * self.options.preloadNextItemsAtDistance)
-                    };
-                setInterval(function() {
-                    var loadNextPageNumber, distanceToTopOfFilterMenu = self.view.getDistanceToTopOfFilterMenu(),
-                        distanceToBottomOfResults = self.view.getDistanceToBottomOfResults(),
-                        isStickySortBoxVisible = self.view.isStickySortBoxVisible,
-                        isFooterVisible = self.view.isFooterVisible,
-                        totalPagesToLoad = self.numberOfPages;
-                    if (self._checkScrollPositionIntervall = self._calcIntervallSpeed(distanceToTopOfFilterMenu, isFooterVisible ? distanceToBottomOfResults : distanceToTopOfFilterMenu, self.options.checkScrollPositionMinIntervall, self.options.checkScrollPositionMaxIntervall, 2 * viewPortHeight, isStickySortBoxVisible), distanceToTopOfFilterMenu > showStickySortBoxAtDistance && !isStickySortBoxVisible && 0 !== distanceToBottomOfResults ? self.view.showStickySortBox() : showStickySortBoxAtDistance > distanceToTopOfFilterMenu && isStickySortBoxVisible ? self.view.hideStickySortBox() : isFooterVisible && 0 === distanceToBottomOfResults && self.view.hideStickySortBox(), !self.isNextSearchResultLoading)
-                        if (loadNextPageNumber = self.loadNextPageNumber, totalPagesToLoad >= loadNextPageNumber) {
-                            var currentScrollPos = self.view.getScrollPosition(),
-                                lastScrollPos = self.view.lastScrollPosition;
-                            preloadNextItemsAtDistance >= distanceToBottomOfResults && currentScrollPos >= lastScrollPos ? (self._loadNewSearchResultsJSON(), self.view.setLastScrollPosition()) : lastScrollPos > currentScrollPos && self.view.setLastScrollPosition()
-                        } else self.view.showFooter()
-                }, self._checkScrollPositionIntervall), preloadNextItemsAtDistance = calcPreloadNextItemsAtDistance(), $(window).on("resize", function() {
-                    preloadNextItemsAtDistance = calcPreloadNextItemsAtDistance()
-                })
-            }
-        }, $(function() {
-            if ("Search result Page" === shop.page.name && shop.searchresult) shop.add("searchResultPage", {}), shop.searchResultPage = new SearchResultClass;
-            else if ("ProductDetailsPage" === shop.page.name || $("#pds_product_details_pager").length > 0 || "Product Review Aggregation Page" === shop.page.name) shop.add("searchResultCache", {}), shop.searchResultCache.init = SearchResultCache.init, shop.searchResultCache.init();
-            else {
-                if ("Product Review Aggregation Page" === shop.page.name) return;
-                shop.add("searchResultCache", {}), shop.searchResultCache.init = SearchResultCache.init, shop.searchResultCache.clearCache = SearchResultCache.clearCache, shop.searchResultCache.init(), null !== shop.searchResultCache.lastCachedObj && shop.searchResultCache.clearCache()
-            }
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-        $(function() {
-            function resetFlyout() {
-                rootNavigationElement.removeClass("touch"), $(rootNavigationLayer).each(function() {
-                    $(this).removeClass("activeLayer")
-                })
-            }
-            var rootNavigationSelector = $("#root-nav"),
-                rootNavigationElement = rootNavigationSelector.find("li.La"),
-                customRootNavigationElements = rootNavigationSelector.find("li.La.custom"),
-                rootNavigationAnchor = rootNavigationElement.find(" > a"),
-                rootNavigationLayer = rootNavigationSelector.find("ul.Lb"),
-                flyOutdelayTime = 300;
-            customRootNavigationElements.each(function(index) {
-                var navigationElement = "navigationElement" + index;
-                shop.add(navigationElement, new RootNavigationElement($(this)))
-            }), shop.device.hasTouch ? (resetFlyout(), "ie" === shop.device.browser && $(rootNavigationAnchor).on("click", function(e) {
-                e.preventDefault()
-            }), $(rootNavigationAnchor).hammer().on("touch tab", function(e) {
-                e.gesture.preventDefault();
-                var $this = $(this),
-                    $naviLayer = $this.next(rootNavigationLayer);
-                $naviLayer.hasClass("activeLayer") || 0 === $naviLayer.length ? location.href = $this.attr("href") : (resetFlyout(), $naviLayer.addClass("activeLayer"), $this.parent().addClass("touch")), $(document).hammer().on("touch", function(e) {
-                    0 === $(e.target).closest(rootNavigationSelector).length && resetFlyout()
-                })
-            })) : "msie" !== $.ua.browser.name || $.ua.browser.version > 9 ? $(rootNavigationLayer, rootNavigationSelector).addClass("css3only") : (rootNavigationSelector.on("mouseenter.rootNavigation", rootNavigationAnchor, function() {
-                var $this = $(this);
-                $this.parent().hasClass("no-hover") || $this.parent().find(rootNavigationLayer).delay(flyOutdelayTime).show(0)
-            }), rootNavigationSelector.on("mouseleave.rootNavigation", rootNavigationAnchor, function() {
-                var $this = $(this);
-                $this.parent().hasClass("no-hover") || $this.parent().find(rootNavigationLayer).hide(0)
-            }))
-        })
-    }(jQuery),
-    function($, w) {
-        var newSlider = function($elem, optionObj) {
-                return new w.Slider($elem, optionObj)
-            },
-            loadSlider = function($elem, options, callback, failCallback) {
-                return new SimpleComponentLoader($elem, options, callback, failCallback)
-            },
-            buildCarousel = function($rootElem) {
-                var $pCarouselOverlay = $rootElem.find(".pcarousel-overlay"),
-                    $carouselBigArticle = $rootElem.find(".pcarousel-bigArticle"),
-                    $carouselSmallArticle = $rootElem.find(".pcarousel-smallArticle"),
-                    $carouselPushedProducts = $rootElem.hasClass("pcarousel--pushed-product") ? $rootElem : $rootElem.find(".pcarousel--pushed-product"),
-                    $searchRightCarouselSmallArticle = $("#search-right-column").find($rootElem).find(".pcarousel-smallArticle"),
-                    $searchRightCarouselBigArticle = $("#search-right-column").find($rootElem).find(".pcarousel-bigArticle"),
-                    $searchLeftCarouselBigArticle = $("#search-left-column").find($rootElem).find(".pcarousel-bigArticle"),
-                    $searchLeftCarouselSmallArticle = $("#search-left-column").find($rootElem).find(".pcarousel-smallArticle"),
-                    searchLeftRightSelector = "#search-left-column, #search-right-column",
-                    viewPortWidth = parseInt($(window).width() + (window.mobile ? mobile.scrollbarWidth() : 0), 10),
-                    mobileSize1 = 651,
-                    mobileSize2 = 401,
-                    isMobileSize1 = mobileSize1 > viewPortWidth && shop.device.isMobile,
-                    isMobileSize2 = mobileSize2 > viewPortWidth && shop.device.isMobile;
-                return $carouselBigArticle.length > 0 && $carouselBigArticle.closest(searchLeftRightSelector).length < 1 && newSlider($carouselBigArticle, {
-                    orientation: "horizontal",
-                    pagerSteps: isMobileSize1 ? 3 : isMobileSize2 ? 2 : 5,
-                    auto: !1,
-                    width: isMobileSize1 || isMobileSize2 ? $carouselBigArticle.width() : "905",
-                    wrapper: ".pcarousel-wrapper",
-                    productcarousel: !0
-                }), $carouselSmallArticle.length > 0 && $carouselSmallArticle.closest(searchLeftRightSelector).length < 1 && newSlider($carouselSmallArticle, {
-                    orientation: "horizontal",
-                    pagerSteps: isMobileSize1 ? 3 : isMobileSize2 ? 2 : 7,
-                    auto: !1,
-                    width: isMobileSize1 || isMobileSize2 ? $carouselSmallArticle.width() : "905",
-                    wrapper: ".pcarousel-wrapper",
-                    productcarousel: !0
-                }), $carouselPushedProducts.length > 0 && newSlider($carouselPushedProducts, {
-                    orientation: "horizontal",
-                    pagerSteps: isMobileSize2 ? 2 : 3,
-                    auto: !1,
-                    width: isMobileSize1 || isMobileSize2 ? $carouselPushedProducts.width() : "760",
-                    wrapper: ".pushed-product--wrapper",
-                    productcarousel: !0
-                }), $searchRightCarouselSmallArticle.length > 0 && newSlider($searchRightCarouselSmallArticle, {
-                    orientation: "horizontal",
-                    pagerSteps: isMobileSize1 ? 3 : isMobileSize2 ? 2 : 4,
-                    auto: !1,
-                    width: isMobileSize1 || isMobileSize2 ? $searchRightCarouselSmallArticle.width() : "608",
-                    wrapper: ".pcarousel-wrapper",
-                    productcarousel: !0
-                }), $searchRightCarouselBigArticle.length > 0 && newSlider($searchRightCarouselBigArticle, {
-                    orientation: "horizontal",
-                    pagerSteps: isMobileSize1 ? 3 : isMobileSize2 ? 2 : 4,
-                    auto: !1,
-                    width: isMobileSize1 || isMobileSize2 ? $searchRightCarouselBigArticle.width() : "612",
-                    wrapper: ".pcarousel-wrapper",
-                    productcarousel: !0
-                }), $searchLeftCarouselBigArticle.length > 0 && newSlider($searchLeftCarouselBigArticle, {
-                    orientation: "vertical",
-                    pagerSteps: 4,
-                    auto: !1,
-                    wrapper: ".pcarousel-wrapper",
-                    productcarousel: !0
-                }), $searchLeftCarouselSmallArticle.length > 0 && newSlider($searchLeftCarouselSmallArticle, {
-                    orientation: "vertical",
-                    pagerSteps: 4,
-                    auto: !1,
-                    wrapper: ".pcarousel-wrapper",
-                    productcarousel: !0
-                }), $("#search-right-column").css("min-height", $("#search-left-column").height()), $(".pcarousel .star-rating", $rootElem).makeStars(), $pCarouselOverlay.length > 0 ? new Overlay($pCarouselOverlay, {
-                    width: "400",
-                    height: "300",
-                    styleClass: "pcarousel-overlay",
-                    closeAlways: !1
-                }, function() {
-                    $(".js-remove-last-items").on("click", function(e) {
-                        e.preventDefault();
-                        var url = $(this).attr("href");
-                        $.ajax({
-                            url: url,
-                            type: "GET",
-                            success: function(data) {
-                                var result = $.parseJSON(data);
-                                result.LastSeenProductsDeleted && window.location.reload(!1)
-                            }
-                        })
-                    })
-                }) : void 0
-            };
-        $(function() {
-            var $carousels = $(".js-async-carousel"),
-                amountOfAllCarousels = $carousels.length || 0;
-            $(".pcarousel--pushed-product").length > 0 && buildCarousel($(".pcarousel--pushed-product")), shop.prudsysTracking || (shop.prudsysTracking = new PrudsysApi(amountOfAllCarousels)), $carousels.each(function() {
-                var $self = $(this),
-                    prudsysItemIdList = shop.prudsysItemIdList || null;
-                loadSlider($self, {
-                    parameters: {
-                        prudsysItemIdList: prudsysItemIdList
-                    }
-                }, function() {
-                    $self.children().length > 0 && buildCarousel($self), shop.prudsysTracking.count()
-                })
-            })
-        })
-    }(jQuery, window),
-    function($) {
-        "use strict";
-        $(function() {
-            if ("ProductDetailsPage" === shop.page.name) {
-                var $pds = $("#product-details"),
-                    isEnabled = !!$pds.data("vivocha-enabled");
-                isEnabled && ! function() {
-                    var t = document.createElement("script");
-                    t.type = "text/javascript", t.async = !0, t.src = "//www.vivocha.com/a/schneider/api/vivocha.js";
-                    var n = document.getElementsByTagName("script")[0];
-                    n.parentNode.insertBefore(t, n)
-                }()
-            }
-        })
-    }(jQuery),
-    function() {
-        "use strict";
-        ("ProductDetailsPage" === shop.page.name || "OutOfStockProductDetailsPage" === shop.page.name || "Product Review Aggregation Page" === shop.page.name) && $(function() {
-            var $pdsPager = $("#pds_product_details_pager");
-            if ($pdsPager.length > 0) {
-                var $backToResults = $pdsPager.find(".back-to-results"),
-                    $pdsBack = $pdsPager.find(".js-pds-back"),
-                    $backToResultsAnchor = $backToResults ? $backToResults.find("a").length > 0 ? $backToResults.find("a") : $backToResults : null;
-                $backToResultsAnchor.length > 0 && 0 === $pdsBack.length && (shop.searchResultCache ? !!shop.searchResultCache.lastCachedObj : !1) ? $backToResultsAnchor.attr("href", shop.searchResultCache.lastCachedObj.jumpBackURL) : ($backToResultsAnchor.length > 0 || $pdsBack.length > 0) && ($backToResultsAnchor.attr("href", "javascript:history.back()"), $pdsBack.attr("href", "javascript:history.back()"))
-            }
-        })
-    }(),
-    function($) {
-        "use strict";
-        var registerAccountNavEvents = function() {
-            var $accountNav = $("#account-nav"),
-                $accountFlyoutBtn = $accountNav.find(".my-account-flyout-btn");
-            $accountFlyoutBtn.length > 0 && shop.device.hasTouch && $accountFlyoutBtn.hammer().on("click touch tab", function(e) {
-                e.preventDefault(), e.stopPropagation(), e.gesture.preventDefault(), e.gesture.stopPropagation(), $accountFlyoutBtn.toggleClass("touch"), $(document).hammer().on("touch", function(e) {
-                    0 === $(e.target).closest($accountNav).length && $accountFlyoutBtn.removeClass("touch")
-                })
-            })
-        };
-        $(function() {
-            registerAccountNavEvents()
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-        "Checkout Summary Page" === shop.page.name && $(window).on("load", function() {
-            try {
-                $("#adDegree-hash").val(atrk_get_uid())
-            } catch (e) {
-                new Log({
-                    level: 4,
-                    type: "error",
-                    message: "Could not create AdDegree Hash. AdDegree not loaded!"
-                })
-            }
-        })
-    }(jQuery),
-    function($) {
-        $(function() {
-            !($.ua.browser.opera && $.ua.browser.opera < shop.browserUpdate.version.opera || $.ua.browser.firefox && $.ua.browser.firefox < shop.browserUpdate.version.firefox || $.ua.browser.safari && $.ua.browser.safari < shop.browserUpdate.version.safari || $.ua.browser.chrome && $.ua.browser.chrome < shop.browserUpdate.version.chrome || $.ua.browser.ie && $.ua.browser.ie < shop.browserUpdate.version.ie) || document.getElementById("emergency") && "ios" != shop.device.os && "andriod" != shop.device.os || $(".message", "#browser-update").attr("href", shop.browserUpdate.href).html(shop.browserUpdate.message).parent().show()
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-        var loadNewPageJSON = function(requestURL, parameters) {
-            var request = $.ajax({
-                url: requestURL,
-                data: parameters,
-                dataType: "json",
-                type: "POST",
-                async: !0,
-                context: this
-            });
-            return request
-        };
-        $.fn.equalHeights = function(inner) {
-            return $(this).each(function() {
-                var currentTallest = 130;
-                inner ? ($(this).children().each(function() {
-                    $(this).children().height() > currentTallest && (currentTallest = $(this).children().height())
-                }), $(this).children().children("div").css({
-                    "min-height": currentTallest
-                })) : ($(this).children().each(function() {
-                    $(this).height() > currentTallest && (currentTallest = $(this).height())
-                }), $(this).children("div").css({
-                    "min-height": currentTallest
-                }))
-            }), this
-        }, $(function() {
-            var $paymentForm = $("#paymentDetailsForm");
-            if (null !== $paymentForm) {
-                var $paymentFormButton = $("#paymentFormButton"),
-                    movePaymentModeButton = function($newParent) {
-                        null !== $newParent && ($paymentFormButton.remove(), $paymentFormButton.show().prop("disabled", !1), $newParent.append($paymentFormButton))
-                    };
-                window.shop && (window.shop.movePaymentModeButton = movePaymentModeButton);
-                var paymentModeToolify = function() {
-                    var paymentModeCallBack = function() {
-                            var requestData, formURL = $(this).closest("form").data("ajax-action"),
-                                formParameters = $(this).closest("form").serializeArray(),
-                                $self = $(this);
-                            requestData = loadNewPageJSON(formURL, formParameters), requestData.done(function(data) {
-                                "" !== data.tags.naviCart && (window.shop.movePaymentModeButton($self.parent(".paymentmode")), $("#naviCart").replaceWith(data.tags.naviCart))
-                            })
-                        },
-                        $radios = $paymentForm.find("input[type=radio][name=paymentModeCode]");
-                    $radios.on("click.paymentmode-movebutton", paymentModeCallBack), $radios.is(":checked") || $paymentFormButton.hide().prop("disabled", !0), $radios.filter(":checked").click()
-                };
-                paymentModeToolify(), $(".checkout-step--address .address-box--same-height").equalHeights(!0), $(".checkout-step--payment .address-box--same-height").equalHeights(), $(".checkout-step--summary .address-box--same-height").equalHeights(), $(".address-content .address-box--same-height").equalHeights(!0)
-            }
-            if ($(".checkout-step--payment .paymentmode:last-of-type").addClass("last-element"), $("#voucher_box .voucher-code").length) {
-                $('#paymentDetailsForm input:radio[value="klarnaaccount"]').attr({
-                    "data-overlay-content": "#klarnaaccount-overlay",
-                    "data-overlay-title": " ",
-                    "data-overlay-confirm": !0
-                }); {
-                    new Overlay('#paymentDetailsForm input:radio[value="klarnaaccount"]', {
-                        width: "400",
-                        styleClass: "klarnaaccount-overlay"
-                    }, function() {
-                        $("#voucher_box_wrapper").show()
-                    })
-                }
-            }
-            $("#payment-klarnaActionCode option").each(function() {
-                var optionVal = $(this).val();
-                $(this).addClass("js-klarna-" + optionVal)
-            })
-        })
-    }(jQuery),
-    function() {}(jQuery),
-    function($) {
-        $(document).ready(function() {
-            $(".expandable-banner-head").on("click.expandable-banner", function() {
-                $(this).next(".expandable-banner-body").slideToggle(), $(this).find(".expandable-banner-open, .expandable-banner-close").toggle()
-            })
-        })
-    }(jQuery),
-    function($) {
-        "use strict";
-        var toggleVisibility = function(target, visible) {
-                var $target = $(target);
-                visible ? $target.show() : $target.hide()
-            },
-            disableScrolling = function(target, disableScroll) {
-                var $target = $(target);
-                disableScroll ? $target.css({
-                    overflow: "hidden",
-                    height: window.innerHeight
-                }).hammer().on("touch tap gesture", function(e) {
-                    e.gesture.preventDefault()
-                }) : $target.css({
-                    overflow: "visible",
-                    height: "auto",
-                    "touch-action": "initial"
-                }).hammer().off("touch tap gesture")
-            };
-        window.shop && (window.shop.toggleVisibility = toggleVisibility, window.shop.disableScrolling = disableScrolling);
-        var toolifyInputForVisibility = function($invoker, $target, invisible) {
-            if (invisible = invisible || !1, null !== $invoker || null !== $target) {
-                if (null === $target) {
-                    var targetSelector = $invoker.data("visibility-toggle-for");
-                    $target = $(targetSelector)
-                } else if (null === $invoker) {
-                    var invokerSelector = $target.data("visibility-toggle-by");
-                    $invoker = $(invokerSelector)
-                }
-                if ($invoker.is(":radio")) {
-                    var $others = $("input[name='" + $invoker.attr("name") + "']");
-                    $others.each(function(ix, element) {
-                        var $element = $(element);
-                        $element.val() != $invoker.val() && $element.on("change.visibility-toggle", function() {
-                            invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
-                        })
-                    })
-                } else if ($invoker.is("option")) {
-                    var $others = $invoker.siblings();
-                    $others.each(function(ix, element) {
-                        var $element = $(element).parent("select");
-                        $element.val() != $invoker.val() && $element.on("change.visibility-toggle", function() {
-                            invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
-                        })
-                    }), $invoker.parent("select").on("change.visibility-toggle", function() {
-                        invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
-                    })
-                }
-                $invoker.on("change.visibility-toggle", function() {
-                    invisible ? window.shop.toggleVisibility($target, !$invoker.is(":checked")) : window.shop.toggleVisibility($target, $invoker.is(":checked"))
-                })
-            }
-        };
-        $.fn.makeStars = function() {
-            var $this = $(this);
-            $(function() {
-                $this.each(function() {
-                    var rating = $(this).data("rating"),
-                        starNumber = $(this).children().length,
-                        fullStars = Math.floor(rating),
-                        halfStarPerc = 100 * (rating - fullStars);
-                    if (rating > 0 && $(this).children().each(function(index) {
-                            return $(this).addClass("fa-star-active"), fullStars > index + 1
-                        }), 0 !== halfStarPerc && starNumber > fullStars) {
-                        var halfStar = $(this).children(":nth-child(" + parseInt(fullStars + 1, 10) + ")");
-                        $('<i class="fa fa-star fa-star-active fa-star-percentage"></i>').width(halfStarPerc + "%").appendTo(halfStar)
-                    }
-                    if ("ie" === shop.device.browser && shop.device.browserVersion < 10) {
-                        var $style, $this = $(this);
-                        return $style = $('<style type="text/css">:before,:after{content:none !important}</style>'), $("head").append($style), setTimeout(function() {
-                            return $this.hide(function() {
-                                $this.show("50ms")
-                            }), $style.remove()
-                        }, 0)
-                    }
-                })
-            })
-        }, $(function() {
-            $(".js-backbutton").click(function(e) {
-                e = e || window.event, e.preventDefault(), window.history.back()
-            })
-        }), $(function() {
-            $("[data-visibility-toggle-for]").each(function(ix, element) {
-                var $invoker = $(element);
-                toolifyInputForVisibility($invoker), $invoker.trigger("change")
-            }), $("[data-visibility-toggle-by]").each(function(ix, element) {
-                var $target = $(element),
-                    $invoker = $($target.data("visibility-toggle-by"));
-                toolifyInputForVisibility($invoker, $target), $invoker.trigger("change")
-            }), $("[data-invisibility-toggle-by]").each(function(ix, element) {
-                var $target = $(element),
-                    $invoker = $($target.data("invisibility-toggle-by"));
-                toolifyInputForVisibility($invoker, $target, !0), $invoker.trigger("change")
-            }), $('input[type="number"]').on("input", function() {
-                $(this).focus()
-            })
-        });
-        var entityMap = {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;",
-                "/": "&#x2F;"
-            },
-            escapeHtml = function(string) {
-                return String(string).replace(/[&<>"'\/]/g, function(s) {
-                    return entityMap[s]
-                })
-            };
-        window.shop && (window.shop.escapeHTML = escapeHtml);
-        var clearElementOrphans = function() {
-            $("[data-connected-with-elements]").each(function(ix, elem) {
-                var $elem = $(elem),
-                    elementsSelector = $elem.attr("data-connected-with-elements");
-                "" !== elementsSelector && 0 === $(elementsSelector).length && $elem.remove()
-            })
-        };
-        window.shop && (window.shop.clearElementOrphans = clearElementOrphans)
-    }(jQuery),
-    function($, shop) {
-        "use strict";
-        var KingCampaingBanner = function(elem) {
-            elem.length > 0 && (this.namespace = "KingCampaingBanner", this.$elem = $(elem), this.requestParameters = {
-                componentCode: this.$elem.data("uid")
-            }, this.requestURL = location.protocol + "//" + location.host + shop.url.base + "componentweight", this.bindEventHandler(this.$elem))
-        };
-        KingCampaingBanner.prototype = {
-            bindEventHandler: function($elem) {
-                var self = this,
-                    hitCounter = 0;
-                $elem.on("click." + this.namespace + " contextmenu." + this.namespace, function(e) {
-                    var $self = $(this),
-                        gotoTarget = function() {
-                            location.href = $self.attr("href")
-                        };
-                    "contextmenu" !== e.type && e.preventDefault(), 0 === hitCounter ? (hitCounter++, self.sendCampaign(function() {
-                        "click" === e.type && gotoTarget()
-                    })) : hitCounter > 0 && "click" === e.type && gotoTarget()
-                })
-            },
-            sendCampaign: function(successCallback) {
-                $.ajax({
-                    type: "get",
-                    url: this.requestURL,
-                    data: this.requestParameters,
-                    success: function() {
-                        return successCallback && $.isFunction(successCallback) ? successCallback() : void 0
-                    }
-                })
-            }
-        }, $(function() {
-            $(".king-campaign-banner").each(function(i) {
-                shop.add("banner"), shop.banner["kingCampaingBanner" + i] = new KingCampaingBanner($(this))
-            })
-        })
-    }(jQuery, window.shop),
-    function() {
-        "use strict";
-        var mailtoToolify = function() {
-                var mailtoCallback = function(e) {
-                    e.preventDefault();
-                    var decodedMail = window.shop.mailtoDecode($(this).data("mail"));
-                    window.top.location = decodedMail
-                };
-                $(function() {
-                    $("[data-mail]").on("click.mailto-decode", mailtoCallback)
-                })
-            },
-            mailtoDecode = function(base64mail) {
-                return "mailto:" + $.base64.decode(base64mail)
-            };
-        window.shop && (window.shop.mailtoDecode = mailtoDecode), mailtoToolify()
-    }(),
-    function($) {
-        "use strict";
-        var MiniCart = function(elementID) {
-            this.$miniCartContainer = $(elementID), this.$miniCartAnchor = this.$miniCartContainer.find("a.minicart-icon"), this.$miniCartAmountBubble = this.$miniCartContainer.find(".minicart-amount"), this.$miniCartData = this.$miniCartContainer.find("#minicart-data"), this.miniCartAnimationSpeed = "1000", this.miniCartAnimationDelay = "1000", this.isTouchDeviceBoolean = shop.device.hasTouch, this.isLowerThanIE10Boolean = !!("ie" === shop.device.browser && shop.device.browserVersion < 10), this.eventHandlerArray = this.isTouchDeviceBoolean ? ["click"] : ["mouseover", "mouseout"], this.amount = this._getAmount(), this.amountIsVisible = this.amount > 0, this.isVisible = !1, this._bindEventHandlerController(this.$miniCartAnchor, this.eventHandlerArray, this.isTouchDeviceBoolean, this.isLowerThanIE10Boolean)
-        };
-        MiniCart.prototype = {
-            add: function(html, $replaceElement) {
-                html = $($.parseHTML(html)).find("#minicart_items").html(), ($replaceElement || this.$miniCartData).find("#minicart_items").children().remove().end().append(html), this._refreshMiniCartController()
-            },
-            showOrHide: function(showOrHide) {
-                if ("show" === showOrHide || "hide" === showOrHide) {
-                    switch (showOrHide) {
-                        case "show":
-                            this.isVisible = !0, this.isLowerThanIE10Boolean && this._showLowerThanIE10(this.miniCartAnimationSpeed, this.miniCartAnimationDelay);
-                            break;
-                        case "hide":
-                            this.isVisible = !1, this.isLowerThanIE10Boolean && this._hideLowerThanIE10(this.miniCartAnimationSpeed, this.miniCartAnimationDelay)
-                    }
-                    this.$miniCartContainer.removeClass("show-js hide-js").addClass(showOrHide + "-js")
-                }
-            },
-            _showLowerThanIE10: function(speed, delay) {
-                this.$miniCartData.stop(!0, !0).delay(delay).slideDown(speed)
-            },
-            _hideLowerThanIE10: function(speed, delay) {
-                this.$miniCartData.stop(!0, !0).delay(delay).slideUp(speed)
-            },
-            _showAmount: function() {
-                this.amountIsVisible !== !0 && (this.$miniCartAmountBubble.removeClass("amount-hidden").addClass("amount-visible"), this.amountIsVisible = !1)
-            },
-            _hideAmount: function() {
-                this.amountIsVisible !== !1 && (this.$miniCartAmountBubble.removeClass("amount-visible").addClass("amount-hidden"), this.amountIsVisible = !1)
-            },
-            _updateMiniCartMobile: function() {
-                $("#minicart_items-mobile").children().remove(), $("#minicart_items").clone(!0).appendTo("#minicart_items-mobile"), shop.mobileMiniCart.init()
-            },
-            _refreshMiniCartController: function() {
-                this._refreshAmount(), shop.device.isMobile && this._updateMiniCartMobile()
-            },
-            _getAmount: function() {
-                return parseInt(this.$miniCartContainer.find(".items").attr("data-cart-amount"), 10)
-            },
-            _refreshAmount: function() {
-                this.amount = this._getAmount(), this.$miniCartAmountBubble.text(this.amount), this.amount > 0 ? this._showAmount() : this._hideAmount()
-            },
-            _getEventHandlerForElementAndDevice: function($element, eventHandlerArray) {
-                var i, eventHandlerArrayLength, elementID = $element.attr("class"),
-                    eventHandler = "";
-                for (i = 0, eventHandlerArrayLength = eventHandlerArray.length; eventHandlerArrayLength > i; i++) eventHandler += eventHandlerArray[i] + "." + elementID + " ";
-                return eventHandler
-            },
-            _bindEventHandlerController: function($element, eventHandlerArray, isTouchDeviceBoolean, isLowerThanIE10Boolean) {
-                isTouchDeviceBoolean && !shop.device.isMobile || isLowerThanIE10Boolean && !shop.device.isMobile ? isTouchDeviceBoolean ? this._bindEventHandlerForTouchDevices($element, eventHandlerArray) : isLowerThanIE10Boolean && this._bindHandlerForLowerThanIE10Event($element, eventHandlerArray) : delete this._bindEventHandlerController
-            },
-            _bindEventHandlerForTouchDevices: function($element, eventHandlerArray) {
-                var eventHandler = this._getEventHandlerForElementAndDevice($element, eventHandlerArray),
-                    self = this;
-                $element.on(eventHandler, function(e) {
-                    e.preventDefault(), e.stopPropagation(), self.isVisible ? window.location.href = $(this).attr("href") : (self.showOrHide("show"), $(document).hammer().on("touch", function(e) {
-                        0 === $(e.target).closest(self.$miniCartContainer).length && self.showOrHide("hide")
-                    }))
-                })
-            },
-            _bindHandlerForLowerThanIE10Event: function($element, eventHandlerArray) {
-                var eventHandler = this._getEventHandlerForElementAndDevice($element, eventHandlerArray),
-                    $element = $element.add(this.$miniCartData),
-                    self = this;
-                $element.on(eventHandler, function(e) {
-                    switch (e.type) {
-                        case "mouseover":
-                            self.showOrHide("show");
-                            break;
-                        case "mouseout":
-                            self.showOrHide("hide")
-                    }
-                })
-            }
-        }, $(function() {
-            $("#minicart").length > 0 && (shop.miniCart = new MiniCart("#minicart"))
-        })
-    }(jQuery),
-    function() {}(jQuery),
-    function($) {
-        "use strict";
-        var toggleAddressFields = function(show, $selector, $inputs, $area) {
-            show ? ($area.show(), $inputs.attr("disabled", !1).prop("disabled", !1), $selector.val("true")) : ($area.hide(), $inputs.attr("disabled", !0).prop("disabled", !0), $selector.val("false"))
-        };
-        window.shop && (window.shop.toggleAddressFields = toggleAddressFields), $(document).ready(function() {
-            var $addressForm = $("#addressForm");
-            $addressForm.length > 0 && $(window).load(function() {
-                $("html, body").animate({
-                    scrollTop: $addressForm.offset().top
-                }, 250)
-            })
-        })
-    }(jQuery),
-    function() {
-        "use strict";
-        $(function() {
-            if ("AccountReviewDetailPage" === shop.page.name) {
-                var $reviewBarRating = $("#product-details-mini").find(".review-bar-rating"),
-                    $accountReviewRating = $(".review-details-top").find(".star-rating");
-                $reviewBarRating.length > 0 && $reviewBarRating.makeStars(), $accountReviewRating.length > 0 && $accountReviewRating.makeStars()
-            }
-        })
-    }(),
-    function() {
-        "use strict";
-        $(function() {
-            var $reviewBarRating;
-            "Product Review Aggregation Page" === shop.page.name ? (shop.add("productDetailsPageMini", {}), shop.productDetailsPageMini = new Product("#product-details-mini"), shop.productDetailsPageMini.displayVariantForMiniProductDetails(), null !== shop.productDetailsPageMini.getVariantSizeCode() && shop.productDetailsPageMini.displayVariantSizeForMiniProductDetails(), shop.add("addToCartPDSMini", {}), shop.addToCartPDSMini = new AddToCart("cart", "#product-details-mini", shop.productDetailsPageMini), shop.add("addToWatchlistPDSMini", {}), shop.addToWatchlistPDSMini = new AddToCart("watchlist", "#product-details-mini", shop.productDetailsPageMini), $reviewBarRating = $("#product-review-aggregation").find(".review-bar-rating"), $reviewBarRating.length > 0 && $reviewBarRating.makeStars()) : "Product Review Create Page" === shop.page.name && ($reviewBarRating = $("#product-details-mini").find(".review-bar-rating"), $reviewBarRating.length > 0 && $reviewBarRating.makeStars())
-        })
-    }(),
-    function() {
-        "use strict";
-        "ProductDetailsPage" === shop.page.name && $(function() {
-            shop.add("productDetailsPage", {}), shop.productDetailsPage = new Product("#product-details"), shop.productDetailsPage.displayVariant(), null !== shop.productDetailsPage.getVariantSizeCode() && shop.productDetailsPage.displayVariantSize(), shop.add("addToCartPDS", {}), shop.addToCartPDS = new AddToCart("cart", "#product-details", shop.productDetailsPage), shop.add("addToWatchlistPDS", {}), shop.addToWatchlistPDS = new AddToCart("watchlist", "#product-details", shop.productDetailsPage), "" != $(".pcarousel-wrapper li a .star-rating").text() && $(".pcarousel-wrapper li a .star-rating").makeStars(), $("#product-information .review-bar-rating").length > 0 && $("#product-information .review-bar-rating").makeStars(), $(".review-bar .review-bar-rating").length > 0 && $(".review-bar .review-bar-rating").makeStars(), $(".add-to-cart-content .review-bar-rating").makeStars()
-        })
-    }(),
-    function($) {
-        "use strict";
-        $(function() {
-            var $passwordInput = $(".js-strength");
-            $passwordInput.pstrength(), "" !== $passwordInput.val() && $(".pstrength").show(), $passwordInput.on("keyup", function() {
-                "" !== $passwordInput.val() ? $(".pstrength").show() : $(".pstrength").hide()
-            })
-        })
-    }(jQuery),
-    function() {
-        "use strict";
-        $(function() {
-            var $reviewBarRatingService = $("#service-reviews").find(".js-review-bar-rating");
-            $reviewBarRatingService.length > 0 && $reviewBarRatingService.makeStars()
-        })
-    }(),
-    function($) {
-        "use strict";
-
-        function ScrollToTop() {
-            $("#go-to-top-button").on("click", function(e) {
-                e.preventDefault(), $("html,body").animate({
-                    scrollTop: 0
-                }, 600)
-            })
-        }
-        $(function() {
-            var $sortBox = $("#sort_form1"),
-                $sortBoxWrapper = $sortBox.find(".form-wrapper"),
-                $sortBoxLabel = $sortBox.find("label");
-            shop.device.hasTouch && $sortBox.length > 0 && $sortBoxLabel.hammer().on("touch", function() {
-                $sortBoxWrapper.toggleClass("touch")
-            }), "Search result Page" === shop.page.name && ScrollToTop()
-        })
-    }(jQuery),
-    function($) {
-        $(function() {
-            shop.device.hasTouch && $(".tooltip-icon").each(function() {
-                $(this).hammer().on("release", function(e) {
-                    e.gesture.preventDefault(), e.gesture.stopPropagation(), $(this).toggleClass("js-touch")
-                })
-            }), "ie" === shop.device.browser && "8" === shop.device.browserVersion && $(".review-bar-rating.tooltip").on("mouseover", function() {
-                $(".ratingbox-inner").each(function() {
-                    var $this = $(this);
-                    $this.css("opacity", "0.5"), setTimeout(function() {
-                        $this.css("opacity", "1"), setTimeout(function() {
-                            $this.css("visibility", "hidden"), $this.css("visibility", "visible")
-                        }, 50)
-                    }, 250)
-                })
+            setTimeout(function() {
+                $(".threetileteaser-container.js-equal-heights").equalHeights(!1, !1, ".js-threeteaser-button")
+            }, 1e3), $(window).on("breakpointshift", function() {
+                $(".threetileteaser-container.js-equal-heights").equalHeights(!1, !1, ".js-threeteaser-button")
             })
         })
     }(jQuery),
@@ -11454,24 +12260,25 @@ var addProductToCart = shop.addProductToCart;
                 this.presetConfiguration && (requestURLwQuery += "&configuration=" + this.presetConfiguration, this.presetConfiguration = ""), shop.waConfigurator.lastVariantCode = article, this.currentOverlay = new Overlay(null, {
                     src: requestURLwQuery,
                     type: "iframe",
-                    width: 980,
-                    height: 710,
-                    header: !1
+                    width: 768,
+                    height: $(window).innerHeight() - 80,
+                    header: !1,
+                    fullScreenResponsive: shop.device.isMobile
                 }), this.currentOverlay.wrap()
             },
             openCalculator: function(target) {
                 var $target = $(target),
                     $waCalculatorButton = $("#waCalculator"),
                     waButtonTextCancel = $waCalculatorButton.attr("data-button-text-cancel"),
-                    waButtonTextNormal = loadReviews$waCalculatorButton.attr("data-button-text-normal");
-                if ($target.find("#waCalculatorIFrame").length > 0) $target.find("#waCalculatorIFrame").remove(), $target.addClass("hide"), $waCalculatorButton.html(waButtonTextNormal);
+                    waButtonTextNormal = $waCalculatorButton.attr("data-button-text-normal");
+                if ($target.find("#waCalculatorIFrame").length > 0) $target.find("#waCalculatorIFrame").remove(), $target.addClass("hide"), $waCalculatorButton.html(waButtonTextNormal).removeClass("secondary").addClass("helper-bg-color-1");
                 else {
                     var article = shop.productDetailsPage.getCurrentVariantCode(),
                         channel = this.channel,
                         amount = parseInt($("#qty").val()) > 0 ? parseInt($("#qty").val()) : 1,
                         requestURLwQuery = this.calculatorURL + "?channel=" + channel + "&article=" + article + "&amount=" + amount,
                         $iframe = $('<iframe id="waCalculatorIFrame" src="' + requestURLwQuery + '"/>');
-                    shop.waConfigurator.lastVariantCode = article, $iframe.width("260px"), $iframe.height("400px"), $target.append($iframe), $target.removeClass("hide"), $waCalculatorButton.html(waButtonTextCancel)
+                    shop.waConfigurator.lastVariantCode = article, $iframe.width("100%").height("460px"), $target.append($iframe).removeClass("hide"), $waCalculatorButton.html(waButtonTextCancel).addClass("secondary").removeClass("helper-bg-color-1")
                 }
             },
             updateCalculator: function(state) {
@@ -11493,17 +12300,4 @@ var addProductToCart = shop.addProductToCart;
                 1 === $("#waCalculatorIFrame").length && shop.waConfigurator.updateCalculator("change")
             })
         })
-    }(jQuery),
-    function() {
-        "use strict";
-        $(function() {
-            $("#watchlist .review-bar-rating").makeStars()
-        })
-    }(),
-    function() {
-        "use strict";
-        $(function() {
-            var $reviewBarRatingService = $(".service-rating-component").find(".js-review-bar-rating");
-            $reviewBarRatingService.length > 0 && $reviewBarRatingService.makeStars()
-        })
-    }();
+    }(jQuery);
