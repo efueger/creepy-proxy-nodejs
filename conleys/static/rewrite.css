@@ -1,44 +1,25 @@
 /* Заменяем шрифты */
 @font-face {
-    font-family: 'FontAwesome';
-    src: url('/static/fonts/fontawesome-webfont.eot?v=4.4.0');
-    src: url('/static/fonts/fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'),
-    url('/static/fonts/fontawesome-webfont.woff2?v=4.4.0') format('woff2'),
-    url('/static/fonts/fontawesome-webfont.woff?v=4.4.0') format('woff'),
-    url('/static/fonts/fontawesome-webfont.ttf?v=4.4.0') format('truetype'),
-    url('/static/fonts/fontawesome-webfont.svg?v=4.4.0#fontawesomeregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: "ImpIcons";
-    src: url("/static/fonts/impressionen-iconfont.eot");
-    src: url("/static/fonts/impressionen-iconfont.eot?#iefix") format("embedded-opentype"), url("/static/fonts/impressionen-iconfont.woff") format("woff"), url("/static/fonts/impressionen-iconfont.ttf") format("truetype"), url("/static/fonts/impressionen-iconfont.svg#impressionen-iconfont") format("svg");
+    font-family: "ConIcons";
+    src: url("/static/fonts/conleys-iconfont.eot");
+    src: url("/static/fonts/conleys-iconfont.eot?#iefix") format("embedded-opentype"), url("/static/fonts/conleys-iconfont.woff") format("woff"), url("/static/fonts/conleys-iconfont.ttf") format("truetype"), url("/static/fonts/conleys-iconfont.svg#conleys-iconfont") format("svg");
     font-weight: normal;
     font-style: normal
 }
 @font-face {
     font-family: "Caslon";
-    src: url("/static/fonts/bffd5c7d-d118-4267-9111-ab80ddbc6393.eot?#iefix");
-    src: url("/static/fonts/bffd5c7d-d118-4267-9111-ab80ddbc6393.eot?#iefix") format("eot"), url("/static/fonts/edc4dafe-7361-4b16-aaaa-572b215416c4.woff2") format("woff2"), url("/static/fonts/80ea0cd0-de5a-4e8d-8baf-5ed5eac8aec3.woff") format("woff"), url("/static/fonts/88868532-7f23-4745-8db7-bedc7642da4c.ttf") format("truetype"), url("/static/fonts/1d323bdf-3ef6-4899-baa0-cbb3dae25643.svg#1d323bdf-3ef6-4899-baa0-cbb3dae25643") format("svg");
-    font-weight: 400;
-    font-style: normal
+    src: url("/static/fonts/7e4f61cb-f00d-40f2-8581-97c33ce543d2.eot?#iefix");
+    src: url("/static/fonts/7e4f61cb-f00d-40f2-8581-97c33ce543d2.eot?#iefix") format("eot"), url("/static/fonts/1ad92c04-a319-4176-a83b-ea1c7bbd8321.woff2") format("woff2"), url("/static/fonts/ae721eac-0fd7-4dea-abe9-33b9e5dbd09e.woff") format("woff"), url("/static/fonts/be46afc4-ec9f-4cf7-9af1-49fc83ea4675.ttf") format("truetype"), url("/static/fonts/230e7105-d3d4-4a8e-bc8c-b59bc4aa5621.svg#230e7105-d3d4-4a8e-bc8c-b59bc4aa5621") format("svg");
+    font-weight: 700;
+    font-style: italic
 }
 @font-face {
-    font-family: "Helvetica Neue";
-    src: url("/static/fonts/8fbe1c6a-a910-474d-ac42-8a2bc9249af4.eot?#iefix");
-    src: url("/static/fonts/8fbe1c6a-a910-474d-ac42-8a2bc9249af4.eot?#iefix") format("eot"), url("/static/fonts/6e4905bc-1e85-46a9-b5c5-2305d641f394.woff2") format("woff2"), url("/static/fonts/f3f4b1c8-520e-4141-9f6f-8e21a2857a9c.woff") format("woff"), url("/static/fonts/774feb13-4351-429a-8c47-2bec5277e372.ttf") format("truetype"), url("/static/fonts/929a2d07-7af1-4552-aa8a-ea9a9622f0af.svg#929a2d07-7af1-4552-aa8a-ea9a9622f0af") format("svg");
-    font-weight: 400;
-    font-style: normal
-}
-@font-face {
-    font-family: "Helvetica Neue";
-    src: url("/static/fonts/7d6c3b9e-86b7-44dd-9e46-8ab30da85834.eot?#iefix");
-    src: url("/static/fonts/7d6c3b9e-86b7-44dd-9e46-8ab30da85834.eot?#iefix") format("eot"), url("/static/fonts/58d18624-bc03-415b-b7a0-bdf9b4508a1c.woff2") format("woff2"), url("/static/fonts/a0cf2f5e-c70c-45a8-a420-4143b3afb187.woff") format("woff"), url("/static/fonts/c7acfb18-afc1-4a67-a281-baa1130b7baa.ttf") format("truetype"), url("/static/fonts/3799441c-73d4-4e5f-8a55-456233b45f0e.svg#3799441c-73d4-4e5f-8a55-456233b45f0e") format("svg");
+    font-family: "BrandonGrotW01-Bold";
+    src: url("/static/fonts/c12a6d37-72c1-408b-9ca9-32946956c57f.eot?#iefix");
+    src: url("/static/fonts/c12a6d37-72c1-408b-9ca9-32946956c57f.eot?#iefix") format("eot"), url("/static/fonts/df1cd944-a6a3-4d30-8fd3-391c2e9531f1.woff2") format("woff2"), url("/static/fonts/4f2d0548-c7dc-459b-a2e0-e86656a10ded.woff") format("woff"), url("/static/fonts/dc21d9e5-516f-4e7e-9a84-7be79a44c2dd.ttf") format("truetype"), url("/static/fonts/a9bdb836-ee14-494d-8c69-5617c5720992.svg#a9bdb836-ee14-494d-8c69-5617c5720992") format("svg");
     font-weight: 700;
     font-style: normal
 }
-
 
 /* Активные элементы шапки */
 ._logout{

@@ -24,6 +24,9 @@ catalogi(document).ready(function(){
 });
 
 catalogi.noTranslate = function(){
+    // Шапка
+    catalogi('#meta-nav').addClass('notranslate');
+
     // Меню
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
 
@@ -53,25 +56,30 @@ catalogi.parse = function() {
 
     // Каталоги
     catalogi('#content-main > article:eq(1)').remove();
-    catalogi('a[href*="/de/service/katalogbestellung"]').remove();
+    //catalogi('a[href*="/de/service/katalogbestellung"]').remove();
 
     // Меню
-    catalogi('a[data-etracker-event*="Header, Metanavi, Direkt bestellen"]').attr('href', '#')
+    catalogi('a[data-etracker-event*="Header, ServiceNavi, Direkt bestellen"]').attr('href', '#')
         .attr('class', 'catalogi-shops')
         .removeAttr('data-etracker-event')
         .removeAttr('data-etracker-campaign');
-    catalogi('a[data-etracker-event*="Header, Metanavi, Newsletter "]').attr('href', '#')
+    catalogi('a[data-etracker-event*="Footer, Service, Newsletter"]').attr('href', '#')
         .attr('class', 'catalogi-catalogs')
         .removeAttr('data-etracker-event')
         .removeAttr('data-etracker-campaign');
-    catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul'); // клонируем элементы
-    catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-payment');
-    catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
-    catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-delivery');
-    catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
-    catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-size-table');
-    catalogi('.catalogi-shops').parent().parent().clone().prependTo('#meta-nav > ul');
-    catalogi('.catalogi-shops:eq(0)').attr('class', 'catalogi-main-site');
+    catalogi('a[data-etracker-event*="Footer, Service, Katalog bestellen"]').parent().parent().remove();
+    catalogi('a[data-etracker-event*="Header, ServiceNavi, Online Katalog"]')
+        .attr('class', 'catalogi-online-catalogs')
+        .removeAttr('data-etracker-event')
+        .removeAttr('data-etracker-campaign');
+    //catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul'); // клонируем элементы
+    //catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-payment');
+    //catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
+    //catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-delivery');
+    //catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
+    //catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-size-table');
+    //catalogi('.catalogi-shops').parent().parent().clone().prependTo('#meta-nav > ul');
+    //catalogi('.catalogi-shops:eq(0)').attr('class', 'catalogi-main-site');
 
     // На основной сайт
     catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
@@ -86,18 +94,22 @@ catalogi.parse = function() {
         catalogi.catalogs();
         return false;
     });
-    catalogi('.catalogi-payment > span').text('Оплата').click(function(){
-        catalogi.payment();
+    catalogi('.catalogi-catalogs > span').text('Каталоги').click(function(){
+        catalogi.catalogs();
         return false;
     });
-    catalogi('.catalogi-delivery > span').text('Доставка').click(function(){
-        catalogi.delivery();
-        return false;
-    });
-    catalogi('.catalogi-size-table > span').text('Таблица размеров').click(function(){
-        catalogi.sizeTable();
-        return false;
-    });
+    //catalogi('.catalogi-payment > span').text('Оплата').click(function(){
+    //    catalogi.payment();
+    //    return false;
+    //});
+    //catalogi('.catalogi-delivery > span').text('Доставка').click(function(){
+    //    catalogi.delivery();
+    //    return false;
+    //});
+    //catalogi('.catalogi-size-table > span').text('Таблица размеров').click(function(){
+    //    catalogi.sizeTable();
+    //    return false;
+    //});
 
     // Корзина
     catalogi('#minicart-data').remove();
@@ -124,7 +136,7 @@ catalogi.parse = function() {
             // количество
             var count   	= catalogi("input.quantity").val();
             // цена
-            var price       = catalogi('.price-formatted').text().replace('€','').trim();
+            var price       = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
             // картинка
             var img         = catalogi('.js-display-variant-primary-image').attr('content');
 
