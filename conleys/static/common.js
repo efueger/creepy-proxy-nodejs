@@ -29,6 +29,8 @@ catalogi.noTranslate = function(){
 
     // Меню
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
+    catalogi("span:contains('Von A bis Z')").parent().parent().addClass('notranslate');
+    catalogi("span:contains('Top Brands')").parent().parent().addClass('notranslate');
 
     // Все остальное
     catalogi('.brands-main-title').addClass('notranslate');
@@ -49,6 +51,7 @@ catalogi.parse = function() {
     catalogi('#wishlist-link').remove();
     catalogi('a[href*="/service/faq"]').attr('href', '#').attr('id', 'menu-mob');
     catalogi('#menu-mob > span > span').text('Меню');
+    catalogi('#menu').text('Меню');
 
     // Разное
     catalogi('a[href*="/de/login"]').parent().parent().remove();
@@ -72,19 +75,21 @@ catalogi.parse = function() {
         .attr('class', 'catalogi-online-catalogs')
         .removeAttr('data-etracker-event')
         .removeAttr('data-etracker-campaign');
-    //catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul'); // клонируем элементы
-    //catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-payment');
-    //catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
-    //catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-delivery');
-    //catalogi('.catalogi-catalogs').parent().parent().clone().appendTo('#meta-nav > ul');
-    //catalogi('.catalogi-catalogs:eq(1)').attr('class', 'catalogi-size-table');
-    //catalogi('.catalogi-shops').parent().parent().clone().prependTo('#meta-nav > ul');
-    //catalogi('.catalogi-shops:eq(0)').attr('class', 'catalogi-main-site');
+    catalogi('.catalogi-shops').parent().parent().clone().appendTo('#meta-nav > ul'); // клонируем элементы
+    catalogi('.catalogi-shops:eq(1)').attr('class', 'catalogi-payment');
+    catalogi('.catalogi-shops').parent().parent().clone().appendTo('#meta-nav > ul');
+    catalogi('.catalogi-shops:eq(1)').attr('class', 'catalogi-delivery');
+    catalogi('.catalogi-shops').parent().parent().clone().appendTo('#meta-nav > ul');
+    catalogi('.catalogi-shops:eq(1)').attr('class', 'catalogi-size-table');
+    catalogi('.catalogi-shops').parent().parent().clone().prependTo('#meta-nav > ul');
+    catalogi('.catalogi-shops:eq(0)').attr('class', 'catalogi-main-site');
 
     // На основной сайт
     catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
     catalogi('.catalogi-main-site > span').text('Каталоги.ру');
     catalogi('.catalogi-main-site').attr('href', 'http://catalogi.ru').attr('target', '_blank');
+
+    catalogi('.catalogi-online-catalogs > span').text('online Каталоги');
 
     catalogi('.catalogi-shops > span').text('Интернет-магазины').click(function(){
         catalogi.shops();
@@ -94,22 +99,18 @@ catalogi.parse = function() {
         catalogi.catalogs();
         return false;
     });
-    catalogi('.catalogi-catalogs > span').text('Каталоги').click(function(){
-        catalogi.catalogs();
+    catalogi('.catalogi-payment > span').text('Оплата').click(function(){
+        catalogi.payment();
         return false;
     });
-    //catalogi('.catalogi-payment > span').text('Оплата').click(function(){
-    //    catalogi.payment();
-    //    return false;
-    //});
-    //catalogi('.catalogi-delivery > span').text('Доставка').click(function(){
-    //    catalogi.delivery();
-    //    return false;
-    //});
-    //catalogi('.catalogi-size-table > span').text('Таблица размеров').click(function(){
-    //    catalogi.sizeTable();
-    //    return false;
-    //});
+    catalogi('.catalogi-delivery > span').text('Доставка').click(function(){
+        catalogi.delivery();
+        return false;
+    });
+    catalogi('.catalogi-size-table > span').text('Таблица размеров').click(function(){
+        catalogi.sizeTable();
+        return false;
+    });
 
     // Корзина
     catalogi('#minicart-data').remove();

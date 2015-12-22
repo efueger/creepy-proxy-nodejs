@@ -77,7 +77,7 @@
         position: relative
     }
     #page-header:not(.sticky) #meta-nav {
-        max-width: 60%;
+        max-width: 70%;
     }
 }
 @media screen and (min-width: 80em) {
