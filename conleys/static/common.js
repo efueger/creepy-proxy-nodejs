@@ -28,6 +28,7 @@ catalogi.noTranslate = function(){
     catalogi('#meta-nav').addClass('notranslate');
 
     // Меню
+    catalogi('#navs').addClass('notranslate');
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Von A bis Z')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Top Brands')").parent().parent().addClass('notranslate');
@@ -44,7 +45,7 @@ catalogi.noTranslate = function(){
 };
 
 catalogi.parse = function() {
-    // Шапка
+    //// Шапка
     catalogi('#iframe').hide();
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
@@ -111,6 +112,9 @@ catalogi.parse = function() {
         catalogi.sizeTable();
         return false;
     });
+
+    // Главное меню
+    catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
 
     // Корзина
     catalogi('#minicart-data').remove();
@@ -188,7 +192,7 @@ catalogi.parse = function() {
     catalogi('body')
         .delay(900)
         .queue(function (next) {
-            checkBasket();
+            //checkBasket();
 
             catalogi(this).css('visibility', 'visible');
 

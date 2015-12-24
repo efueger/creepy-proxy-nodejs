@@ -184,12 +184,12 @@ if (cluster.isMaster) {
                 .pipe(replacestream('maxymiser', '127.0.0.1'))
                 .pipe(replacestream('googletagmanager', '127.0.0.1'))
                 .pipe(replacestream('fast.fonts.net', '127.0.0.1'))
-                .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
+                .pipe(replacestream(new RegExp('OnlineKAT_Conleys_950O_DE', 'g'), 'OnlineKAT_Conleys_950O_DE/index.php'))
                 .pipe(res);
         } else {
-            piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/bk_script.js'))
-                .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
-                .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
+            piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://conleys.catalogi.ru/static/bk_script.js'))
+                .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://conleys.catalogi.ru/static/customlib.js'))
+                .pipe(replacestream(new RegExp('OnlineKAT_Conleys_950O_DE', 'g'), 'OnlineKAT_Conleys_950O_DE/index.php'))
                 .pipe(res);
         }
     }).listen(5054);
