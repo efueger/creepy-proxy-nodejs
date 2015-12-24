@@ -185,24 +185,25 @@ catalogi.parse = function() {
 
     // Show body after f@cking hiding >_<
     catalogi('body')
-        .delay(900)
+        .delay(500)
         .queue(function (next) {
-            //checkBasket();
+            checkBasket();
 
-            catalogi(this).css('visibility', 'visible');
-
+            catalogi('#account-nav').append('<img id="_auth_wait" src="http://translates.catalogi.ru/templates/images/loading.gif" border="0" align="middle">');
             catalogi('.account-nav-listelem').hide();
-
             catalogi('.product-size-guide').remove();
             catalogi('.price-save-tag').remove();
             catalogi('.price-save').remove();
             catalogi('a[href*="/de/login"]').parent().parent().remove();
+
+            catalogi(this).css('visibility', 'visible');
         });
 
     catalogi('head')
         .delay(5000)
         .queue(function (next) {
             if(_auth){
+                catalogi('#_auth_wait').remove();
                 catalogi('.account-nav-listelem > a').remove();
                 catalogi('.account-nav-listelem')
                     .html('<a href="http://catalogi.ru/cabinet/" class="my-account-login underline-alternative" target="_blank">Личный кабинет</a>' +
@@ -213,6 +214,7 @@ catalogi.parse = function() {
                     return false;
                 });
             } else {
+                catalogi('#_auth_wait').remove();
                 catalogi('.account-nav-listelem').show();
                 catalogi('.account-nav-listelem > a').click(function(){
                     catalogi.login();
