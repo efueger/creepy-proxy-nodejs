@@ -107,17 +107,27 @@
     top: 21px;
 }
 
+#page-header.sticky #page-header-main-wrapper #header-brand-logo {
+    width: 184px;
+    height: 60px;
+    top: 11px;
+}
+
 /* Заменяем лого */
 #header-brand-logo {
     display: block;
     text-indent: -9999em;
     background: transparent url("/static/images/conleys-logo.svg") no-repeat 0 0 scroll;
     background-image: url("/static/images/conleys-logo.svg");
-    height: 58px;
+    height: 70px;
+    width: 400px;
     position: relative;
-    top: 65px;
-    margin-bottom: 39px;
+    top: 53px;
+    margin-bottom: 34px;
     background-size: contain;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
