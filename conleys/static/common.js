@@ -237,18 +237,18 @@ function checkBasket() {
     console.log('ordersNumber: ' + ordersNumber);
 
     window.timer1 = window.setInterval("checkBasket();", timeout1);
-};
+}
 
 function checkSeach() {
     var seachString = catalogi.cookie('seachString');
     if (seachString)
         catalogi('#search').val(seachString);
-};
+}
 
 // Скидка
 catalogi.service = function(){
     if('_service' in window && catalogi('.js-display-variant-price')){
-        _price = catalogi('.price-formatted').text().replace('€','').trim();
+        _price = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
         _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
         catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
     }
