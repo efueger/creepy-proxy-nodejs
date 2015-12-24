@@ -232,13 +232,13 @@ function checkBasket() {
     console.log('ordersNumber: ' + ordersNumber);
 
     window.timer1 = window.setInterval("checkBasket();", timeout1);
-};
+}
 
 function checkSeach() {
     var seachString = catalogi.cookie('seachString');
     if (seachString)
         catalogi('#search').val(seachString);
-};
+}
 
 // Скидка
 catalogi.service = function(){
