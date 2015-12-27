@@ -183,13 +183,13 @@ catalogi.parse = function() {
     // Подписка
     catalogi.subscribe(false, '22914');
 
-    // Show body after f@cking hiding >_<
+    // Showing body after hiding
     catalogi('body')
         .delay(500)
         .queue(function (next) {
             checkBasket();
 
-            catalogi('#account-nav').append('<img id="_auth_wait" src="http://translates.catalogi.ru/templates/images/loading.gif" border="0" align="middle">');
+            catalogi('#account-nav').append('<img id="_auth_wait" src="http://cdn.catalogi.ru/static/images/loading.gif" border="0" align="middle">');
             catalogi('.account-nav-listelem').hide();
             catalogi('.product-size-guide').remove();
             catalogi('.price-save-tag').remove();
