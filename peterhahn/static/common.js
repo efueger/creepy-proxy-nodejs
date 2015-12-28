@@ -121,7 +121,12 @@ catalogi.service = function() {
         });
 
         // Calculate delivery price
-        var _price = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
+        var _price1 = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
+        var _price2 = catalogi('.pricebox > ul > div').find('.newprice').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
+        var _price3   = (_price1 == "") ? _price2 : _price1;
+        var _price4 = catalogi('.pricebox > ul > div > p').text();
+        var _price   = (_price3 == "") ? _price4 : _price3;
+
         if(_price != '') {
             var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
             if( catalogi('.mwst').text() != 'С учетом доставки '+_delivery.toFixed(2) + ' EUR' ){
