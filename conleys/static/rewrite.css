@@ -48,43 +48,112 @@
 @media screen and (max-width: 63.9em) {
     #page-header.sticky #account-nav {
         top: 22px;
-        right: 235px;
-        width: 110px;
+        right: 250px;
+        width: 120px;
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
         right: 50px;
-        width: 110px
+        width: 120px
     }
     #page-header:not(.sticky) #account-nav .my-account a,
     #page-header:not(.sticky) #account-nav .my-account .link {
         position: relative
+    }
+
+    #page-header.sticky .search {
+        width: 165px;
+        left: 555px;
+    }
+    #page-header:not(.sticky) .search {
+        width: 170px;
+        left: 535px;
+    }
+    #page-header:not(.sticky) .search-button {
+        width: 50px;
+        overflow: hidden;
+    }
+
+    #page-header.sticky #minicart {
+        right: 200px;
     }
 }
 @media screen and (min-width: 64em) {
     #page-header.sticky #account-nav {
         top: 22px;
-        right: 300px;
-        width: 110px;
+        right: 230px;
+        width: 120px;
     }
     #page-header:not(.sticky) #account-nav {
         top: 14px;
         right: 100px;
-        width: 115px
+        width: 120px
     }
     #page-header:not(.sticky) #account-nav .my-account a,
     #page-header:not(.sticky) #account-nav .my-account .link {
         position: relative
     }
+
     #page-header:not(.sticky) #meta-nav {
         max-width: 70%;
+    }
+
+    #page-header.sticky .search {
+        top: 13px;
+        width: 140px;
+        left: 815px;
+    }
+    #page-header.sticky .search .searchfield {
+        width: 100px;
+    }
+    #page-header:not(.sticky) .search-button {
+        width: 50px;
+        overflow: hidden;
+    }
+    .search {
+        width: 280px;
+        left: 655px;
+    }
+
+    #page-header #root-nav {
+        margin-top: 30px;
+    }
+
+    #page-header.sticky #minicart {
+        width: 275px;
+        right: 170px;
     }
 }
 @media screen and (min-width: 80em) {
     #page-header.sticky #account-nav {
         top: 22px;
-        width: 110px;
+        right: 320px;
+        width: 120px;
     }
+
+    #page-header.sticky .search {
+        left: 1010px;
+        width: 170px;
+    }
+    #page-header.sticky .search .searchfield {
+        width: 115px;
+    }
+    .search {
+        left: 885px;
+        width: 280px;
+    }
+
+    #page-header.sticky #minicart {
+        right: 222px;
+    }
+}
+
+.search .searchfield {
+    width: 63%;
+}
+#page-header.sticky .search .search-button {
+    overflow: hidden;
+    width: 37px;
 }
 
 /* Уменьшаем шрифты */
