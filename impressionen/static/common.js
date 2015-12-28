@@ -223,9 +223,10 @@ function checkBasket() {
 };
 
 function checkSeach() {
-    var seachString = catalogi.cookie('seachString');
-    if (seachString)
-        catalogi('#search').val(seachString);
+    catalogi('.minicart-amount').remove();
+    //var seachString = catalogi.cookie('seachString');
+    //if (seachString)
+    //    catalogi('#search').val(seachString);
 };
 
 // Скидка
