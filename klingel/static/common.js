@@ -60,9 +60,10 @@ catalogi.parse = function(){
         var articul2 = catalogi('span[itemprop="identifier"]').text();
         var articul = (articul1 == "") ? articul2 : articul1;
 
-        var price1   = catalogi('[id^="offerPrice_"]').text().replace('€', '').replace(',', '.').replace('jetzt', '').replace('Сейчас', '').trim();
-        var price2   = catalogi('[id^="offerPrice_"] > font > font').text().replace('€', '').replace(',', '.').replace('jetzt', '').replace('Сейчас', '').trim();
+        var price1   = catalogi('[id^="offerPrice_"]').text().replace('€', '').replace(',', '.').replace('jetzt', '').replace('Сейчас', '').replace('Всё', '').trim();
+        var price2   = catalogi('[id^="offerPrice_"] > font > font').text().replace('€', '').replace(',', '.').replace('jetzt', '').replace('Сейчас', '').replace('Всё', '').trim();
         var price = (price1 == "") ? price2 : price1;
+           // price = parseInt(price, );
 
         var name    = catalogi('.productName').attr('origin');
         var color   = catalogi('[name="colorId"]').val();
