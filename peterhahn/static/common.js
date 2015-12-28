@@ -64,23 +64,20 @@ catalogi.parse = function() {
             catalogi(this).css('visibility', 'visible');
     });
 
-    // Subscribe category id
-    catalogi.subscribe(false, '29062');
-
     // Add to basket own function
     $('#rightBox').on('click', '.basketWrap a[href=#addtocartCatalogi]', function(e) {
         if (!$(this).hasClass('fail')) {
             var articul = catalogi('.pinfo > span:eq(1)').text().replace(/[^0-9]/gi, '');
 
-            var name1 = catalogi('span[itemprop="name"]:eq(0)').text();
-            var name2 = catalogi('#producttitel > h1').text();
-            var name   = (name1 == "") ? name2 : name1;
+            var name1 = catalogi('#producttitel > h1').text();
+            var name2 = catalogi('span[itemprop="name"]:eq(0)').text();
+            var name  = (name1 == "") ? name2 : name1;
 
-            var price1 = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
-            var price2 = catalogi('.pricebox > ul > div').find('.newprice').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
-            var price3   = (price1 == "") ? price2 : price1;
-            var price4 = catalogi('.pricebox > ul > div > p').text();
-            var price   = (price3 == "") ? price4 : price3;
+            var price1 = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').replace('Всё', '').trim();
+            var price2 = catalogi('.pricebox > ul > div').find('.newprice').text().replace('от', '').replace('EUR', '').replace(',', '.').replace('Всё', '').trim();
+            var price3 = (price1 == "") ? price2 : price1;
+            var price4 = catalogi('.pricebox > ul > div > p').text().replace('Всё', '');
+            var price  = (price3 == "") ? price4 : price3;
 
             var color = catalogi('.colors > li[class="activeSelection"]').attr('title');
             var size = catalogi('li[class*="selected"] > a > span').text();
@@ -104,6 +101,9 @@ catalogi.parse = function() {
             });
         }
     });
+
+    // Subscribe category id
+    catalogi.subscribe(false, '29062');
 
     // Footer
     catalogi('#footer').remove();
