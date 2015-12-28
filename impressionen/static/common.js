@@ -281,7 +281,7 @@ catalogi(function(){
             },
             success: function(data){
                 console.log('success:' + data);
-                top.postMessage({action: 'search', search: data.sentences[0].trans},'*');
+                top.postMessage({action: 'search', search: data.result.translated},'*');
             },
             error: function(data){
                 console.log('error:' + data);
