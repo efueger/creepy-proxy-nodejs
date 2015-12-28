@@ -2,7 +2,7 @@
 
 header('Access-Control-Allow-Origin: *');
 
-$showErrors = FALSE;
+$showErrors = TRUE;
 //error_reporting(E_ALL ^ E_DEPRECATED ^ E_NOTICE);
 error_reporting(E_ALL^E_NOTICE);
 ini_set('display_errors', $showErrors);
@@ -11,7 +11,9 @@ ini_set('html_errors', $showErrors);
 header('Content-Type: text/json; charset=UTF-8', false);
 // адрес
 //$url = "http://translate.google.com/translate_a/t?client=te&text=".urlencode($_GET['text'])."&hl=".$_GET['tl']."&sl=" .$_GET['sl']."&tl=" .$_GET['tl']."&multires=1&otf=1&ssel=0&tsel=0&uptl=ru&sc=1";
-$url = "http://api.multillect.com/translate/json/1.0/233?method=translate/api/translate&from=rus&to=deu&text=".urlencode($_GET['text'])."&sig=da90beda7bd49d07d1c9f2a2b96c4318";
+//$url = "http://api.multillect.com/translate/json/1.0/233?method=translate/api/translate&from=rus&to=deu&text=".urlencode($_GET['text'])."&sig=da90beda7bd49d07d1c9f2a2b96c4318";
+$url = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20151228T140520Z.6e6fc06b18707d4f.08accdf1a558f7b61d94e96bc50b66824f339438&text=".urlencode($_GET['text'])."&lang=de";
+
 // браузеры
 $browser = array(
     "user_agent" => "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6 (.NET CLR 3.5.30729)",
