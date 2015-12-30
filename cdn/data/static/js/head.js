@@ -172,7 +172,7 @@ catalogi(function(){
       },
       success: function(data){
         console.log('success:' + data)
-        top.postMessage({action: 'search', search: data.result.translated},'*');
+        top.postMessage({action: 'search', search: data.data.text[0]},'*');
       },
       error: function(data){
         console.log('error:' + data)
