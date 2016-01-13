@@ -69,7 +69,7 @@ catalogi.parse = function(){
     // Шапка
     catalogi('.cookieAdvice').remove();
     catalogi('.posWrapper p').each(function(){
-        $(this).removeAttr('title');
+        catalogi(this).removeAttr('title');
     });
     catalogi('.posWrapper p:eq(0)').html('Интернет магазин <a href="/">ZALANDO.DE</a>');
     catalogi('.posWrapper p:eq(1)').html('<a href="http://www.catalogi.ru">Каталоги.ру</a> Заказ и доставка одежды из европейских интернет-магазинов в Россию');
@@ -111,7 +111,7 @@ catalogi.parse = function(){
     ].join('\n'));
 
 
-    $([
+    catalogi([
         '<a href="#" title="" class="msgAccount accountLink js-overlay-link">',
         '  <span class="iconFont notranslate"></span>',
         '  <span class="text"></span>',
@@ -120,20 +120,20 @@ catalogi.parse = function(){
 
     //catalogi('#modalLoginLinkWishList .text').text('Лист желаний');
 
-    if(_auth){
-        catalogi('a.msgAccount > span:last').text('Выход');
-        catalogi('a.msgAccount').attr('href', 'http://catalogi.ru/cabinet/');
-        catalogi('a.msgAccount').click(function(){
-            catalogi.logout();
-            return false;
-        });
-    }else{
-        catalogi('a.msgAccount').click(function(){
-            catalogi.login();
-            return false;
-        });
-        catalogi('a.msgAccount > span:last').text('Вход');
-    }
+    //if(_auth){
+    //    catalogi('a.msgAccount > span:last').text('Выход');
+    //    catalogi('a.msgAccount').attr('href', 'http://catalogi.ru/cabinet/');
+    //    catalogi('a.msgAccount').click(function(){
+    //        catalogi.logout();
+    //        return false;
+    //    });
+    //}else{
+    //    catalogi('a.msgAccount').click(function(){
+    //        catalogi.login();
+    //        return false;
+    //    });
+    //    catalogi('a.msgAccount > span:last').text('Вход');
+    //}
     catalogi('.metaNaviIcons .cart').remove();
 
     catalogi('.metaNaviIcons').prepend(catalogi('#iframe'));
@@ -241,35 +241,35 @@ catalogi.parse = function(){
     });
 
     // Моб. версия
-    ZAL.global.addToCart = function(){
-        var articul = product.identifier;
-        var name    = product.fn;
-        var price   = catalogi('.js-priceWrapper').text().replace(',','.').replace('€','').replace('ab','').replace('от','').trim();
-        var color   = catalogi('.colorList li.active img').attr('origin');
-        var size    = catalogi('select[name="articleSimpleSku"] option:selected').attr('origin');
-        var image   = catalogi('.slider li:first img').attr('src');
-
-        var param   = [];
-
-        if(color && color != ''){
-            param.push(color)
-        }
-
-        if(size && size != ''){
-            param.push(size)
-        }
-
-        catalogi.basket.add({
-            catalog: 'ZL',
-            articul: articul,
-            name: name,
-            price: price,
-            size: param.length > 0 ? param.join(' ') : '0',
-            count: 1,
-            img: image,
-            stock: formatDate(new Date())
-        });
-    }
+    //ZAL.global.addToCart = function(){
+    //    var articul = product.identifier;
+    //    var name    = product.fn;
+    //    var price   = catalogi('.js-priceWrapper').text().replace(',','.').replace('€','').replace('ab','').replace('от','').trim();
+    //    var color   = catalogi('.colorList li.active img').attr('origin');
+    //    var size    = catalogi('select[name="articleSimpleSku"] option:selected').attr('origin');
+    //    var image   = catalogi('.slider li:first img').attr('src');
+    //
+    //    var param   = [];
+    //
+    //    if(color && color != ''){
+    //        param.push(color)
+    //    }
+    //
+    //    if(size && size != ''){
+    //        param.push(size)
+    //    }
+    //
+    //    catalogi.basket.add({
+    //        catalog: 'ZL',
+    //        articul: articul,
+    //        name: name,
+    //        price: price,
+    //        size: param.length > 0 ? param.join(' ') : '0',
+    //        count: 1,
+    //        img: image,
+    //        stock: formatDate(new Date())
+    //    });
+    //}
 
     // Футер
 
