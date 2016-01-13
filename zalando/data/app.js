@@ -56,11 +56,8 @@ if (cluster.isMaster) {
     });
 
     var translates, fsize = 0;
-    var fname1 = "/var/www/translates.json";
-
 
     var server = http.createServer(function (req, res) {
-
         onError = function (err) {
             console.error(err);
 
@@ -68,20 +65,16 @@ if (cluster.isMaster) {
                 var killtimer = setTimeout(function () {
                     process.exit(1);
                 }, 10);
-
                 killtimer.unref();
-
                 server.close();
-
                 cluster.worker.disconnect();
-
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'text/html; charset=UTF-8');
                 res.end('Сервис временно недоступен!');
             } catch (er) {
                 console.error('Error sending HTTP response', er, req.url);
             }
-        }
+        };
         onResponse = function (response) {
             if ('location' in response.headers) response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
 
@@ -103,39 +96,39 @@ if (cluster.isMaster) {
             }
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-        }
+        };
 
-        request.get('http://translates.catalogi.ru/temp/zalando.json', function (error, response, body) {
+        request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
-                console.log("File size: " + response.headers['content-length'] + " bytes");
+                //console.log(response.headers['content-length']);
                 if (IsJsonString(body)) {
-                    console.log("JOSN detected");
+                    //console.log("JOSN detected");
                     if (fsize != tmp) {
                         fsize = tmp;
                         translates = JSON.parse(body, 'utf8');
                     }
                 } else {
-                    console.log("JOSN NOT detected!");
+                    //console.log("JOSN NOT detected!");
                 }
+            } else {
+                //console.log("JOSN NOT 200!");
             }
         });
 
-        console.log('Trying to access: ' + req.headers.host + req.url);
+        //console.log('Trying to access: ' + req.headers.host);
 
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
         if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
-
         _header['Host'] = host;
 
         proxyfull = "http://" + proxy() + ":3129";
-        console.log("Accessing via: " + proxyfull);
+        //console.log("Accessing via: " + proxyfull);
 
-        var start = new Date();
-        console.log("Method: " + req.method);
+        //console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
 
@@ -149,13 +142,13 @@ if (cluster.isMaster) {
         if (req.method === "GET") {
             piper = proxiedReq.get({
                 url: url,
-                proxy: proxyfull,
+                proxy: proxyfull
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
         else if (req.method === "POST") {
             piper = proxiedReq.post({
                 url: "http://" + host + req.url,
-                proxy: proxyfull,
+                proxy: proxyfull
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
 
@@ -175,20 +168,22 @@ if (cluster.isMaster) {
                     piper = piper.pipe(replacestream(item.from, item.to));
                 }
                 else if (item.type === "regex") {
-                    //console.log("[REGEX] from: " + item.from + ", to: " + item.to + ", args: " + item.args);
-                    piper = piper.pipe(replacestream(new RegExp(item.from, item.args), item.to));
+                    var from = "(^|[^ =\\/?$])\\b(" + item.from + ")\\b";
+                    var to = "$1" + item.to;
+                    piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
                 }
             });
         }
 
+
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
-        //.pipe(replacestream('<head data-country="DE" data-language="de">', '<head>' + includes.head))
-            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head))
+            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
+            .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
             .pipe(replacestream('https', 'http'))
-            .pipe(replacestream('zalando.min.js', 'GGWP'))
+            //.pipe(replacestream('zalando.min.js', 'GGWP'))
             .pipe(res);
 
-    }).listen(6053);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {

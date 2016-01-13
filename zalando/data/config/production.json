@@ -2,7 +2,7 @@
   "site": {
     "name"        : "zalando",
     "domain"      : ".de",
-    "port"        : 6052
+    "port"        : 6053
   },
   "header": {
     "catalog"     : "zalando",
@@ -13,16 +13,5 @@
     "height"      : 112,
     "width"       : 984
   },
-  "replaces": [
-    {
-      "type": "usual",
-      "from": "id=\"popupContainer\"",
-      "to": ""
-    },
-    {
-      "type": "usual",
-      "from": "id=\"newsletterPopupContainer\"",
-      "to": ""
-    }
-  ]
+  "replaces": []
 }
