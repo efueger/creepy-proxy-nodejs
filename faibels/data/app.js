@@ -182,7 +182,7 @@ if (cluster.isMaster) {
                 .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktoprebrush/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
-            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE//js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
+            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                  .pipe(res);
         }
 
