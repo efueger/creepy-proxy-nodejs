@@ -167,7 +167,7 @@ catalogi.parse = function() {
 
             // отправка запроса
             catalogi.basket.add({
-                catalog: 'CS',
+                catalog: 'SN',
                 articul: articul,
                 name: name,
                 size: (param.join(' ').trim() == '') ? 0 : param.join(' ').trim(),
