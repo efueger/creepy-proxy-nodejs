@@ -186,6 +186,8 @@ catalogi.parse = function() {
     // Футер
     catalogi('#seo-text').remove();
     catalogi('#page-footer').remove();
+    catalogi('#footer-before').remove();
+    catalogi('.nohitsearchformcomponent').remove();
 
     // Подписка
     catalogi.subscribe(false, '113272');
