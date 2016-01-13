@@ -114,7 +114,7 @@
       catalogi('input[name="email"]').attr('disabled','1');
       catalogi.ajax({
         type: 'POST',
-        url: 'http://cdn.catalogi.ru/static/executable/smartresponder.php',
+        url: 'http://cdn.catalogi.ru/executable/partials/smartresponder.php',
         dataType: 'xml',
         data: {
           name: name,
