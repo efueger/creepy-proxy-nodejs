@@ -13,7 +13,6 @@ var config = require('config'),
 
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
-    SITEPORT = config.get('site.port'),
     SITE = SITENAME + SITEDOMAIN,
     HEADERPARAMS = {
         param: {
@@ -95,11 +94,11 @@ if (cluster.isMaster) {
                 ]);
                 res.setHeader('Set-cookie', _cookie);
             }
-            //res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         };
 
-        request.get('http://translates.catalogi.ru/temp/'+ SITENAME +'.json', function (error, response, body) {
+        request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
                 //console.log(response.headers['content-length']);
@@ -129,7 +128,7 @@ if (cluster.isMaster) {
         proxyfull = "http://" + proxy() + ":3129";
         //console.log("Accessing via: " + proxyfull);
 
-        console.log("Method: " + req.method);
+        //console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
 
@@ -180,16 +179,16 @@ if (cluster.isMaster) {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-                .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktop/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
+                .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktoprebrush/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
                 .pipe(res);
         } else {
             piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                  .pipe(res);
         }
 
-    }).listen(SITEPORT);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {
-    global.gc(); // --expose-gc
+    global.gc(); // --e
 }, 1000);
