@@ -187,6 +187,9 @@
     top: 21px;
 }
 
+#page-header.sticky #header-brand-logo {
+    background-size: 100%;
+}
 #page-header.sticky #page-header-main-wrapper #header-brand-logo {
     width: 184px;
     height: 60px;
