@@ -119,9 +119,9 @@
         left: 655px;
     }
 
-    /*#page-header #root-nav {*/
-        /*margin-top: 30px;*/
-    /*}*/
+    #page-header #root-nav {
+        margin-top: 80px;
+    }
 
     #page-header.sticky #minicart {
         width: 275px;
