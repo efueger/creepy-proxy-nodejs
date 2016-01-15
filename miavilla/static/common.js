@@ -132,6 +132,7 @@ catalogi.parse = function() {
     catalogi('.product-helper-guides').remove();
     catalogi('.product-button-panel').append(catalogi('.add-to-cart-button'));
     catalogi('.product-button-panel > form > div:eq(1)').remove();
+    catalogi('.campaign-img-big:eq(0)').remove();
 
     // Добавление в корзину
     catalogi('.add-to-cart-button').click(function(event){
@@ -191,6 +192,9 @@ catalogi.parse = function() {
 
     // Подписка
     catalogi.subscribe(false, '113272');
+    catalogi('a[href*="/miavilla/de/service/newsletter"]').attr('href', '#').click(function() {
+        catalogi.subscribe(true, '113272');
+    });
 
     // Show body after f@cking hiding >_<
     catalogi('body')
