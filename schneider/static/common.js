@@ -116,7 +116,7 @@ catalogi.parse = function() {
     });
 
     // Главное меню
-    //catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
+    catalogi('#content-before').remove();
 
     // Корзина
     catalogi('#minicart-data').remove();
