@@ -116,7 +116,7 @@ catalogi.parse = function() {
     });
 
     // Главное меню
-    //catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
+    catalogi('#content-before').remove();
 
     // Корзина
     catalogi('#minicart-data').remove();
@@ -232,7 +232,7 @@ catalogi.parse = function() {
         });
 };
 
-function checkBasket() {
+function checkBasket(){
     window.clearInterval(window.timer1);
 
     var ordersNumber = catalogi.cookie('ordersNum');
@@ -243,7 +243,7 @@ function checkBasket() {
     window.timer1 = window.setInterval("checkBasket();", timeout1);
 }
 
-function checkSeach() {
+function checkSeach(){
     catalogi('.minicart-amount').remove();
     //var seachString = catalogi.cookie('seachString');
     //if (seachString)
@@ -253,7 +253,10 @@ function checkSeach() {
 // Скидка
 catalogi.service = function(){
     if('_service' in window && catalogi('.js-display-variant-price')){
-        _price = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
+        _price1 = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
+        _price2 = catalogi('.print-price.visible:eq(0)').text().replace('€','').replace(',','.').trim();
+        _price 	= (_price1 == "") ? _price2 : _price1;
+
         _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
         catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
     }
