@@ -175,13 +175,13 @@ if (cluster.isMaster) {
             });
         }
 
+        piper.pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head.top))
+             .pipe(replacestream(new RegExp('</head>', 'i'), includes.head.bottom + '</head>'))
+             .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.top + includes.body.bottom + '</body>'))
 
-        piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
-            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
-            .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-            .pipe(replacestream('https', 'http'))
-            //.pipe(replacestream('zalando.min.js', 'GGWP'))
-            .pipe(res);
+             .pipe(replacestream('https', 'http'))
+             .pipe(replacestream('zalando.min.js?_=', ''))
+             .pipe(res);
 
     }).listen(config.get('site.port'));
 }
