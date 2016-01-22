@@ -6,6 +6,7 @@ function _googleTranslateElementInit() {
     layout: google.translate.TranslateElement.InlineLayout.SIMPLE
   }, 'google_translate_element');
 }
+
 catalogi(document).ready(function(){
   catalogi('.sizetype').click(function() {
     catalogi.service();
