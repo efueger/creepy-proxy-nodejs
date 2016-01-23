@@ -18,7 +18,8 @@ if($host == 'm.otto.de'){
 
 // Редиректы с ненужных стр.
 if($uri === '/'){
-  header('Location: http://www.avendro.catalogi.ru/damenmode');
+  //header('Location: http://www.avendro.catalogi.ru/damenmode');
+  header('Location: http://catalogi.ru/site_view.php?url=http://www.otto.de/damenmode');
 }
 
 
