@@ -185,6 +185,7 @@ if (cluster.isMaster) {
 
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
             .pipe(replacestream(new RegExp('<head data(.*)>', 'i'), '<head data-country="DE" data-language="de">'+includes.head))
+            .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
             //.pipe(replacestream('eu-sonar.sociomantic.com', '127.0.0.1'))
             //.pipe(replacestream('www.google-analytics.com', '127.0.0.1'))
             //.pipe(replacestream('dev.visualwebsiteoptimizer.com', '127.0.0.1'))

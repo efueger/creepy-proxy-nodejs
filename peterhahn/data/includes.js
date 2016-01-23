@@ -21,6 +21,10 @@ module.exports = function(catalog, param, options){
       '<script type="text/javascript" src="http://www.'+catalog+'.catalogi.ru/static/common.js"></script>'
     ].join("\n"),
 
+      headbottom: [
+          '<link href="http://www.'+catalog+'.catalogi.ru/static/rewrite.css" rel="stylesheet" type="text/css" />',
+      ].join("\n"),
+
     body: {
       top: [
         '<div id="google_translate_element" style="display: none"></div>',
