@@ -1,3 +1,7 @@
 .navigation-main-outer-wrapper {
     padding: 0 0 0 0;
 }
+
+.favoriteWrap {
+    display: none !important;
+}
