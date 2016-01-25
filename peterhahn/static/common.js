@@ -129,9 +129,7 @@ catalogi.service = function() {
 
         if(_price != '') {
             var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
-            if( catalogi('.mwst').text() != 'С учетом доставки '+_delivery.toFixed(2) + ' EUR' ){
-                catalogi('.mwst').text('С учетом доставки '+_delivery.toFixed(2) + ' EUR');
-            }
+            catalogi('.mwst').text('С учетом доставки '+_delivery.toFixed(2) + ' EUR');
         }
     }
 }
@@ -150,4 +148,5 @@ catalogi(function() {
 
     catalogi.noTranslate();
     catalogi.parse();
+    catalogi.service();
 });
