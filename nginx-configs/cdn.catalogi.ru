@@ -4,8 +4,8 @@ server {
 	charset UTF-8;
 	
 	# LOGS
-    access_log /var/www/cdn/data/logs/cdn.catalogi.ru.access.log;
-    error_log /var/www/cdn/data/logs/cdn.catalogi.ru.error.log;
+    #access_log /var/www/cdn/data/logs/cdn.catalogi.ru.access.log;
+    #error_log /var/www/cdn/data/logs/cdn.catalogi.ru.error.log;
 	
     #location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
 	#	root /var/www/cdn/data;
