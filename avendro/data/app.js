@@ -175,12 +175,12 @@ if (cluster.isMaster) {
             });
         }
 
-        //if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
+        if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head xmlns(.*)>', 'i'), '<head>' + includes.head.top))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.head.bottom + '</head>'))
                 .pipe(res);
-        //}
+        }
 
     }).listen(config.get('site.port'));
 }
