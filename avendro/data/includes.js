@@ -1,6 +1,6 @@
 module.exports = function(catalog, param, options){
     return {
-        body: {
+        head: {
             top: [
                 '<meta name="google" value="notranslate" />',
                 '<meta name="robots" content="noindex, nofollow"/>',
