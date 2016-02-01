@@ -116,7 +116,7 @@ if (cluster.isMaster) {
             }
         });
 
-        //console.log('Trying to access: ' + req.headers.host);
+        console.log('Trying to access: ' + req.headers.host);
 
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
@@ -126,9 +126,9 @@ if (cluster.isMaster) {
         _header['Host'] = host;
 
         proxyfull = "http://" + proxy() + ":3129";
-        //console.log("Accessing via: " + proxyfull);
+        console.log("Accessing via: " + proxyfull);
 
-        //console.log("Method: " + req.method);
+        console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
 
@@ -175,12 +175,12 @@ if (cluster.isMaster) {
             });
         }
 
-        if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
+        //if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
-                .pipe(replacestream(new RegExp('<head xmlns(.*)>', 'i'), '<head>' + includes.head.top))
+                .pipe(replacestream(new RegExp('<head(.*)>', 'i'), '<head>' + includes.head.top))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.head.bottom + '</head>'))
                 .pipe(res);
-        }
+        //}
 
     }).listen(config.get('site.port'));
 }
