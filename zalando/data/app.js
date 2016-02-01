@@ -175,7 +175,7 @@ if (cluster.isMaster) {
             });
         }
 
-        piper.pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head.top))
+        piper.pipe(replacestream(new RegExp('<head(.*)>', 'i'), '<head>' + includes.head.top))
              .pipe(replacestream(new RegExp('</head>', 'i'), includes.head.bottom + '</head>'))
              .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.top + includes.body.bottom + '</body>'))
 
