@@ -180,7 +180,7 @@ if (cluster.isMaster) {
              .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.top + includes.body.bottom + '</body>'))
 
              .pipe(replacestream('https', 'http'))
-             .pipe(replacestream('zalando.min.js?_=', ''))
+             .pipe(replacestream('secure-skin.ztat.net/s/slf/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
              .pipe(res);
 
     }).listen(config.get('site.port'));
