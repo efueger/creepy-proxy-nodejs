@@ -21,9 +21,7 @@ module.exports = function(catalog, param, options){
             ].join("\n"),
 
             bottom: [
-                '<link href="http://www.'+catalog+'.catalogi.ru/static/common.css" rel="stylesheet" type="text/css" />',
-                '<link href="http://www.'+catalog+'.catalogi.ru/static/scc-176-default.min.js" rel="stylesheet" type="text/css" />',
-                '<link href="http://www.'+catalog+'.catalogi.ru/static/zalando.min.js" rel="stylesheet" type="text/css" />'
+                '<link href="http://www.'+catalog+'.catalogi.ru/static/common.css" rel="stylesheet" type="text/css" />'
             ].join("\n")
         },
 
