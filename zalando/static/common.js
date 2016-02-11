@@ -62,9 +62,30 @@ catalogi.noTranslate = function(){
 
 catalogi.parse = function(){
     // Шапка
+    catalogi('.headerUsp').show();
     catalogi('#iframe').hide();
+    catalogi('#cartCountv2').remove();
+
+    // Поиск
+    catalogi('#searchContent').attr('class', 'inputText');
+
+    // Корзина
+    catalogi('.cartWrapper > a').remove();
+    catalogi('.cartWrapper > div').remove();
+    catalogi('.cartWrapper').html([
+        '<a href="#"><span class="iconFont"></span>',
+        '<span class="text">Корзина</span>',
+        '</a>'
+    ].join('\n'));
+    catalogi('.cartWrapper').click(function(){
+        catalogi.order();
+        return false;
+    });
 
     // Меню
+    catalogi('#modalLoginLinkWishList').remove();
+    catalogi('#customerAccountBox > a').remove();
+    catalogi('#customerAccountBoxLayer').remove();
     catalogi('.cookieAdvice').remove();
     catalogi('.posWrapper p').each(function(){
         catalogi(this).removeAttr('title');
@@ -77,9 +98,8 @@ catalogi.parse = function(){
         '  <li><a href="#">Каталоги</a></li>',
         '  <li><a href="#">Оплата</a></li>',
         '  <li><a href="#">Доставка</a></li>',
-        '</ul>',
+        '</ul>'
     ].join('\n'));
-
     catalogi('.posWrapper p:eq(2) li:eq(0)').click(function(){
         catalogi.shops();
         return false;
@@ -97,77 +117,104 @@ catalogi.parse = function(){
         return false;
     });
 
-    catalogi('.cart').attr('href', '#').click(function(){
-        catalogi.order();
+    // Стр. товара
+    catalogi('.shopTheLookButton').remove();
+    catalogi('.expressDeliveryAvailable').remove();
+    catalogi('.socialBlock').remove();
+
+    // Добавление в корзину
+    catalogi('#ajaxAddToCartBtn').remove();
+    jQuery('<div/>', {
+        id: 'addToCart',
+        class: 'zalButton',
+        text: 'Добавить в корзину'
+    }).appendTo('.cartButtonBox');
+
+    catalogi("#addToCart").on("click", function(){
+        try{
+            jQuery("#addToCart").unbind('click');
+
+            var articul = catalogi("#articleSimpleSku").val();
+            if (articul == '') {
+                alert('Выберите размер!');
+                return !1
+            }
+
+            var name    = catalogi('span[itemprop="name"]').text();
+            var price   = catalogi('#articlePrice').text().replace(',','.').replace('€','').trim();
+            //var color   = catalogi('.colorList li.active img').attr('alt').split('- ')[1];
+            var color   = '';
+            var size    = catalogi("#listProductSizes").find("li.active").text();
+            var img   = catalogi('.reactCarousel_item-current > img').attr('src');
+
+            var param   = [];
+            if(color && color != ''){
+                param.push(color)
+            }
+            if(size && size != ''){
+                param.push(size)
+            }
+
+            catalogi.basket.add({
+                catalog: 'ZL',
+                articul: articul,
+                name: name,
+                size: (param.join(' ').trim() == '') ? 0 : param.join(' ').trim(),
+                price: price,
+                count: '1',
+                img: img
+            });
+        } catch(e) {
+            console.log(e);
+        }
+
         return false;
     });
 
-    // Стр. товара
-    catalogi('#articlePrice').bind('DOMNodeInserted', function(e){
-        // стоимость с учетом доставки
-        catalogi.service();
-    });
-    //
-    //catalogi('.js-priceWrapper').bind('DOMNodeInserted', function(e){
-    //    // стоимость с учетом доставки
-    //    catalogi.serviceMob();
-    //});
-    //
-    //catalogi('#upcloadButton').on('mouseenter', function(){
-    //    jQuery('#upcloadButton').unbind('click');
-    //});
-    //
-    //catalogi('#upcloadButton').click(function(){
-    //    catalogi.sizeTable();
-    //});
-
-    //catalogi("#ajaxAddToCartBtn").on("click", function(){
-    //    jQuery("#ajaxAddToCartBtn").unbind('click');
-    //    var b = $("#listProductSizes").find("li.active"), b = b.length ? b.attr("id") : null;
-    //    if (!b && !(b = $("#articleSimpleSku").val()))
-    //        return !1;
-    //
-    //    var articul = product.identifier;
-    //    var name    = product.fn;
-    //    var price   = catalogi('#articlePrice').text().replace(',','.').replace('€','').trim();
-    //    var color   = catalogi('.colorList li.active img').attr('origin');
-    //    var size    = catalogi('#listProductSizes li.active').attr('origin');
-    //    var image   = catalogi('#image').attr('href');
-    //
-    //    var param   = [];
-    //
-    //    if(color && color != ''){
-    //        param.push(color)
-    //    }
-    //
-    //    if(size && size != ''){
-    //        param.push(size)
-    //    }
-    //
-    //    catalogi.basket.add({
-    //        catalog: 'ZL',
-    //        articul: articul,
-    //        name: name,
-    //        price: price,
-    //        size: param.length > 0 ? param.join(' ') : '0',
-    //        count: 1,
-    //        img: image,
-    //        stock: formatDate(new Date())
-    //    });
-    //
-    //    return !1
-    //});
-
     // Футер
     catalogi('.backToTopButton').remove();
+    catalogi('#myfeed').remove();
+    catalogi('.downTeaser').remove();
 
     // Отображение body
-    catalogi('body').css('visibility', 'visible');
+    catalogi('body')
+        .delay(500)
+        .queue(function (next) {
+            catalogi.service();
+
+            catalogi('#customerAccountBox')
+                .append('<img id="_auth_wait" src="http://cdn.catalogi.ru/static/images/loading.gif" border="0" align="middle">');
+            catalogi(this).css('visibility', 'visible');
+        });
+    catalogi('head')
+        .delay(5000)
+        .queue(function (next) {
+            if(_auth){
+                catalogi('#_auth_wait').remove();
+                catalogi('#customerAccountBox').html([
+                    '<a href="http://catalogi.ru/cabinet/" target="_blank">',
+                    '<span class="iconFont"></span>',
+                    '<span class="text">Личный кабинет</span>',
+                    '</a>',
+                ].join('\n'));
+            } else {
+                catalogi('#_auth_wait').remove();
+                catalogi('#customerAccountBox').html([
+                    '<a href="#">',
+                    '<span class="iconFont"></span>',
+                    '<span class="text">Вход</span>',
+                    '</a>',
+                ].join('\n'));
+                catalogi('#customerAccountBox > a').click(function(){
+                    catalogi.login();
+                    return false;
+                });
+            }
+        });
 
     // Подписка
     catalogi.subscribe(false, 76136);
-    catalogi.service();
-}
+};
 
 // Скидка
 catalogi.service = function(){
@@ -208,7 +255,9 @@ catalogi(function(){
         var currentDomain = m[0].replace('.','').replace('.','');
     }
 
-    catalogi('.search-button').click(function() {
+    catalogi('.miniSearch').appendTo('#header-search-container');
+    catalogi('#searchMiniFormTop').remove();
+    catalogi('#searchButtonTopSubmit').click(function() {
         catalogi.cookie('seachString', catalogi('#searchContent').val(), { expires: 7, path: '/', domain: '.catalogi.ru' });
         catalogi.ajax({
             url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
@@ -232,13 +281,10 @@ catalogi(function(){
         return false;
     });
 
-    //catalogi('body').removeClass('modalVisible');
-
-    //http://www.zalando.catalogi.ru/katalog/?q=
     catalogi(window).on('message', function(event) {
         switch (event.originalEvent.data.action) {
             case 'search':
-                var goingto = "http://www." + currentDomain + ".catalogi.ru/" + currentDomain + "/katalog/?q=";
+                var goingto = "http://www." + currentDomain + ".catalogi.ru/katalog/?q=";
                 goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
                 window.location = goingto;
                 break
@@ -258,4 +304,5 @@ catalogi(function(){
 
     catalogi.noTranslate();
     catalogi.parse();
+    catalogi.service();
 });
