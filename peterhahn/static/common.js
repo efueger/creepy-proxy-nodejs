@@ -56,12 +56,15 @@ catalogi.parse = function() {
     catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi");
     catalogi('a[href="#notepad"]').remove();
     catalogi(".hotline").remove();
+    catalogi('.mwst').empty();
 
     // Show body after f@cking hiding >_<
     catalogi('body')
         .delay(800)
         .queue(function (next) {
             catalogi(this).css('visibility', 'visible');
+
+            catalogi.service();
     });
 
     // Add to basket own function
@@ -107,10 +110,12 @@ catalogi.parse = function() {
 
     // Footer
     catalogi('#footer').remove();
-}
+
+    catalogi.service();
+};
 
 catalogi.service = function() {
-    if('_service' in window) {
+    //if('_service' in window) {
         // Cut useless items
         catalogi('.sizebox > a').remove();
         catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi");
@@ -125,14 +130,18 @@ catalogi.service = function() {
         var _price2 = catalogi('.pricebox > ul > div').find('.newprice').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
         var _price3   = (_price1 == "") ? _price2 : _price1;
         var _price4 = catalogi('.pricebox > ul > div > p').text();
-        var _price   = (_price3 == "") ? _price4 : _price3;
+        var _price5   = (_price3 == "") ? _price4 : _price3;
+        var _price6   = catalogi('.curprice:eq(0)').text().replace('от', '').replace('ab', '').replace('EUR', '').replace(',', '.').trim();
+        var _price   = (_price5 == "") ? _price6 : _price5;
+
+        console.log(_price);
 
         if(_price != '') {
             var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
             catalogi('.mwst').text('С учетом доставки '+_delivery.toFixed(2) + ' EUR');
         }
-    }
-}
+    //}
+};
 
 catalogi(function() {
     catalogi(window).on('message', function(event) {
