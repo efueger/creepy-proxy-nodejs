@@ -58,8 +58,9 @@ catalogi.parse = function() {
     catalogi(".hotline").remove();
     catalogi('.mwst').empty();
 
-    catalogi('#outfit').remove();
-    catalogi('a[href="#outfit"]').remove();
+    //catalogi('#outfit').remove();
+    //catalogi('a[href="#outfit"]').remove();
+    catalogi('.outfitLink').remove();
 
     // Show body after f@cking hiding >_<
     catalogi('body')
