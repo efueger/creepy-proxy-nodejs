@@ -124,7 +124,7 @@ catalogi.parse = function(){
 
     // Добавление в корзину
     catalogi('#ajaxAddToCartBtn').remove();
-    jQuery('<div/>', {
+    catalogi('<div/>', {
         id: 'addToCart',
         class: 'zalButton',
         text: 'Добавить в корзину'
