@@ -58,6 +58,9 @@ catalogi.parse = function() {
     catalogi(".hotline").remove();
     catalogi('.mwst').empty();
 
+    catalogi('#outfit').remove();
+    catalogi('a[href="#outfit"]').remove();
+
     // Show body after f@cking hiding >_<
     catalogi('body')
         .delay(800)
@@ -83,15 +86,21 @@ catalogi.parse = function() {
             var price  = (price3 == "") ? price4 : price3;
 
             var color = catalogi('.colors > li[class="activeSelection"]').attr('title');
-            var size = catalogi('li[class*="selected"] > a > span').text();
+
+            var size1 = catalogi('li[class*="selected"] > a > span').text();
+            var size2 = catalogi('.selectAct').text();
+            var size  = (size1 == "") ? size2 : size1;
+
             var img = catalogi('img[class="mainphoto"]:eq(1)').attr('src');
 
             var param = [];
             if (color !== '') param.push(color);
             if (size !== '')
                 param.push(size);
-            else
+            else {
                 alert('Выберите размер!');
+                return false;
+            }
 
             catalogi.basket.add({
                 catalog: 'PH',
@@ -134,7 +143,7 @@ catalogi.service = function() {
         var _price6   = catalogi('.curprice:eq(0)').text().replace('от', '').replace('ab', '').replace('EUR', '').replace(',', '.').trim();
         var _price   = (_price5 == "") ? _price6 : _price5;
 
-        console.log(_price);
+        //console.log(_price);
 
         if(_price != '') {
             var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
