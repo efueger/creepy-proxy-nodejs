@@ -213,7 +213,8 @@ catalogi.parse = function(){
         });
 
     // Подписка
-    catalogi.subscribe(false, 76136);
+    //catalogi.subscribe(false, '76136');
+    catalogi.subscribe(false, '22452');
 };
 
 // Скидка
