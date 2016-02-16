@@ -143,7 +143,9 @@ catalogi.parse = function() {
             // количество
             var count   	= catalogi("input.quantity").val();
             // цена
-            var price       = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
+            var price1      = catalogi('.volume-price:eq(0)').text().replace('€','').replace(',','.').trim();
+            var price2       = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
+            var price 		= (price1 == "") ? price2 : price1;
             // картинка
             var img         = catalogi('.js-display-variant-primary-image').attr('content');
 
