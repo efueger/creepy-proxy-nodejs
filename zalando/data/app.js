@@ -9,7 +9,10 @@ function IsJsonString(str) {
 
 var config = require('config'),
     cluster = require('cluster'),
-    fs = require('fs');
+    fs = require('fs'),
+    os = require('os');
+
+var procNum = os.cpus();
 
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
@@ -29,12 +32,9 @@ var replaces = config.get('replaces');
 
 if (cluster.isMaster) {
     console.log('Start master');
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
+    for (var i = 0; i < procNum.length; i++) {
+        cluster.fork();
+    }
 
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
@@ -42,7 +42,7 @@ if (cluster.isMaster) {
     });
 
 } else {
-    console.log("Start worker");
+    console.log("+ worker");
     var http = require("http"),
         request = require("request"),
         replacestream = require("replacestream"),
@@ -180,7 +180,7 @@ if (cluster.isMaster) {
              .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.top + includes.body.bottom + '</body>'))
 
              .pipe(replacestream('https', 'http'))
-             .pipe(replacestream('secure-skin.ztat.net/s/slf/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
+             .pipe(replacestream('secure-skin.ztat.net/s/dpr/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
              .pipe(res);
 
     }).listen(config.get('site.port'));
