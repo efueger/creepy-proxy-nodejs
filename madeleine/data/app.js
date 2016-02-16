@@ -1,13 +1,14 @@
 var cluster = require('cluster');
+var os = require('os');
+
+var procNum = os.cpus();
 
 if (cluster.isMaster) {
 	console.log('Start master');
-	cluster.fork();
-	cluster.fork();
-	cluster.fork();
-	cluster.fork();
-	cluster.fork();
-	cluster.fork();
+
+    for (var i = 0; i < procNum.length; i++) {
+        cluster.fork();
+    }
 
 	cluster.on('disconnect', function(worker) {
 		console.error('Worker disconnect!');
@@ -15,7 +16,7 @@ if (cluster.isMaster) {
 	});
 
 } else {
-	console.log('Start worker');
+	console.log('+ worker');
 
 	var domain = require('domain'),
 		http = require('http'),
@@ -136,7 +137,7 @@ if (cluster.isMaster) {
 							
 							out = out.replace(/NEWS &amp; SPECIALS/g, '');
 							//out = out.replace(/MODE-BERATUNG/g, '');
-                            out = out.replace(/MODE-BERATUNG/g, 'Каталоги');
+                            out = out.replace(/MODEBERATUNG/g, 'Каталоги');
                             out = out.replace('www.madeleine.catalogi.ru/modeberatung/', 'www.madeleine.catalogi.ru/service/kataloge/blaetterkataloge/');
 
 							out = out.replace(/MODE/g, 'одежда');
@@ -170,9 +171,9 @@ if (cluster.isMaster) {
 
 							out = out.replace(/Ihre gew&#228;hlte Gr&#246;&#223;e/g, 'Выбранный размер');
 
-                            out = out.replace('"web11647Banner"', 'bye-bye my dear banner');
-                            out = out.replace('fl_main fl_col_5 fl_col_advisoryservice web-11080 touch-me', 'bye-bye my dear banner');
-                            out = out.replace('fl_main fl_col_6 fl_main_last fl_col_advisory web-11080 touch-me', 'bye-bye my dear banner');
+                            //out = out.replace('"web11647Banner"', 'bye-bye my dear banner');
+                            //out = out.replace('fl_main fl_col_5 fl_col_advisoryservice web-11080 touch-me', 'bye-bye my dear banner');
+                            //out = out.replace('fl_main fl_col_6 fl_main_last fl_col_advisory web-11080 touch-me', 'bye-bye my dear banner');
 
 							out = out.replace(/Zur&#252;ck/g, 'Назад');
 							out = out.replace(/Weiter/g, 'Вперед');
