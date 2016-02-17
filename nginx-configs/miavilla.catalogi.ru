@@ -23,9 +23,9 @@ server {
         }
 
         location / {
-                if ($allowed_country = no) {
-                        rewrite ^/ http://www.miavilla.de/ permanent;
-                }
+                #if ($allowed_country = no) {
+                #        rewrite ^/ http://www.miavilla.de/ permanent;
+                #}
                 proxy_pass http://127.0.0.1:6055;
                 proxy_redirect http://127.0.0.1:6055/ /;
                 proxy_set_header Host $host;

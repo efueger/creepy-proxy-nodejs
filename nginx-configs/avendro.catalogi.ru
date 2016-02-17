@@ -23,9 +23,9 @@ server {
         }
 
         location / {
-                if ($allowed_country = no) {
-                        rewrite ^/ http://www.avendro.de/ permanent;
-                }
+                #if ($allowed_country = no) {
+                #        rewrite ^/ http://www.avendro.de/ permanent;
+                #}
                 proxy_pass http://127.0.0.1:6057;
                 proxy_redirect http://127.0.0.1:6057/ /;
                 proxy_set_header Host $host;
