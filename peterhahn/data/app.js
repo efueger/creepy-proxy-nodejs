@@ -25,23 +25,26 @@ var SITENAME = config.get('site.name'),
     };
 var replaces = config.get('replaces');
 
+
+
+var os = require('os');
+var procNum = os.cpus();
+
 // Start server
 var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
+
+    for (var i = 0; i < procNum.length; i++) {
+        cluster.fork();
+    }
 
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
         cluster.fork();
     });
 } else {
-    console.log("Start worker");
+    console.log("+ worker");
     var http = require("http"),
         request = require("request"),
         replacestream = require("replacestream"),
