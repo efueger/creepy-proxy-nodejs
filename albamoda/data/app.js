@@ -1,3 +1,9 @@
+var config = require('config'),
+    replaces = config.get('replaces'),
+    cluster = require('cluster'),
+    os = require('os'),
+    procNum = os.cpus();
+
 function IsJsonString(str) {
     try {
         JSON.parse(str);
@@ -8,7 +14,6 @@ function IsJsonString(str) {
 }
 
 // Load config
-var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
     SITE = SITENAME + SITEDOMAIN,
@@ -23,12 +28,8 @@ var SITENAME = config.get('site.name'),
             width: config.get('options.width')
         }
     };
-var replaces = config.get('replaces');
 
 // Start server
-var cluster = require('cluster'),
-    os = require('os');
-
 if (cluster.isMaster) {
     console.log('Start master');
 
