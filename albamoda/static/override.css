@@ -1,9 +1,9 @@
 /*** Переопределения стиля ***/
-body{
-    padding: 0;
-    top: 0 !important;
-    visibility: hidden;
-}
+/*body{*/
+    /*padding: 0;*/
+    /*top: 0 !important;*/
+    /*visibility: hidden;*/
+/*}*/
 
 .goog-te-banner-frame.skiptranslate {
     display: none !important;

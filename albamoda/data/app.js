@@ -26,22 +26,23 @@ var SITENAME = config.get('site.name'),
 var replaces = config.get('replaces');
 
 // Start server
-var cluster = require('cluster');
+var cluster = require('cluster'),
+    os = require('os');
+
 if (cluster.isMaster) {
     console.log('Start master');
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
+
+    for (var i = 0; i < procNum.length; i++) {
+        cluster.fork();
+    }
 
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
         cluster.fork();
     });
 } else {
-    console.log("Start worker");
+    console.log("+ worker");
+
     var http = require("http"),
         request = require("request"),
         replacestream = require("replacestream"),
@@ -65,13 +66,9 @@ if (cluster.isMaster) {
                 var killtimer = setTimeout(function () {
                     process.exit(1);
                 }, 10);
-
                 killtimer.unref();
-
                 server.close();
-
                 cluster.worker.disconnect();
-
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'text/html; charset=UTF-8');
                 res.end('Сервис временно недоступен!');
@@ -122,40 +119,40 @@ if (cluster.isMaster) {
             }
         });
 
+        //console.log('Trying to access: ' + req.headers.host);
+
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
         if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
-
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
-
-        var url = "http://" + host + req.url;
-        var piper;
-
-
-        if ('cookie' in req.headers) {
-            var cookies = req.headers.cookie.split(' ');
-            for (var i = 0; i < cookies.length; i++) {
-                j.setCookie(request.cookie(cookies[i].replace(';', '')), "http://" + host);
-            }
-        }
 
         // Proxyng trafic
         proxyfull = "http://" + proxy() + ":3129";
         //console.log("Accessing via: " + proxyfull);
 
         //console.log("Method: " + req.method);
+        var url = "http://" + host + req.url;
+        var piper;
+
+        //console.log("Method: " + req.method);
+        if ('cookie' in req.headers) {
+            var cookies = req.headers.cookie.split(' ');
+            for (var i = 0; i < cookies.length; i++) {
+                j.setCookie(request.cookie(cookies[i].replace(';', '')), "http://" + host);
+            }
+        }
         if (req.method === "GET") {
             piper = proxiedReq.get({
                 url: url,
-                proxy: proxyfull,
+                proxy: proxyfull
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
         else if (req.method === "POST") {
             piper = proxiedReq.post({
                 url: "http://" + host + req.url,
-                proxy: proxyfull,
+                proxy: proxyfull
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
 
@@ -184,7 +181,7 @@ if (cluster.isMaster) {
         }
 
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
-            .pipe(replacestream(new RegExp('<head data(.*)>', 'i'), '<head data-country="DE" data-language="de">'+includes.head))
+             .pipe(replacestream(new RegExp('<head data(.*)>', 'i'), '<head data-country="DE" data-language="de">'+includes.head))
             //.pipe(replacestream('eu-sonar.sociomantic.com', '127.0.0.1'))
             //.pipe(replacestream('www.google-analytics.com', '127.0.0.1'))
             //.pipe(replacestream('dev.visualwebsiteoptimizer.com', '127.0.0.1'))
@@ -206,7 +203,7 @@ if (cluster.isMaster) {
             //.pipe(replacestream('www.gstatic.com', '127.0.0.1'))
             //.pipe(replacestream('www.econda-monitor.de', '127.0.0.1'))
             .pipe(res);
-    }).listen(6052);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {

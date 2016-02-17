@@ -1,12 +1,13 @@
 {
   "site": {
-    "name"        : "peterhahn",
-    "domain"      : ".de"
+    "name"        : "albamoda",
+    "domain"      : ".de",
+    "port"        : 6058
   },
   "header": {
-    "catalog"     : "peterhahn",
-    "alias"       : "PH",
-    "info"        : "Интернет-магазин Peterhahn. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
+    "catalog"     : "albamoda",
+    "alias"       : "AM",
+    "info"        : "Интернет-магазин Albamoda. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
   },
   "options": {
     "height"      : 112,

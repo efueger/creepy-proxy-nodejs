@@ -2,11 +2,11 @@
 
 NODE_ENV="production"
 NODE_APP='app.js'
-APP_DIR='/var/www/peterhahn/data';
+APP_DIR='/var/www/albamoda/data';
 PID_FILE=$APP_DIR/pid/app.pid
 LOG_FILE=$APP_DIR/log/app.log
 CONFIG_DIR=$APP_DIR/config
-PORT=6052
+PORT=6058
 NODE_EXEC=/usr/bin/node
 
 ###############
