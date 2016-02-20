@@ -16,7 +16,7 @@ catalogi.noTranslate = function(){
     }
 
     // Стр. товара
-    catalogi('.borderBox').addClass('notranslate');
+    //catalogi('.borderBox').addClass('notranslate');
     catalogi('.changeOutfit').addClass('notranslate');
     catalogi('#showAvailMatrix').addClass('notranslate');
     catalogi('.pager').addClass('notranslate');
@@ -45,8 +45,6 @@ catalogi.noTranslate = function(){
             catalogi(this).attr('origin', catalogi(this).text());
         }
     });
-
-    // Футер
 };
 
 catalogi.parse = function(){
@@ -85,6 +83,9 @@ catalogi.parse = function(){
         onclick: 'return false;'
     }).appendTo( "#ads_bg" );
     catalogi('<span />', {"class": 'bagLogo'}).appendTo( ".basketButton" );
+
+    catalogi('.outfitComplete').remove();
+    catalogi('.outfitStyles').attr("style", "");
 
     // Разное
     catalogi('.callback').remove();
