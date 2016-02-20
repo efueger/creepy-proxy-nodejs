@@ -1,30 +1,30 @@
 server {
-        server_name  avendro.catalogi.ru;
+        server_name  otto.catalogi.ru;
         listen 188.40.83.218;
-        rewrite ^(.*) http://www.avendro.catalogi.ru$1 permanent;
+        rewrite ^(.*) http://www.otto.catalogi.ru$1 permanent;
 }
 
 server {
-        server_name ~^(?<subdomain>.*)\.avendro\.catalogi\.ru;
+        server_name ~^(?<subdomain>.*)\.otto\.catalogi\.ru;
         listen 188.40.83.218;
 
         location ~* ^.+\.(css|js|jpe?g|gif|png|avi|swf|ico)$ {
-                rewrite ^(.*)$ http://$subdomain.avendro.de$1 permanent;
+                rewrite ^(.*)$ http://$subdomain.otto.de$1 permanent;
         }
 
         location ~* ^.+\.(ttf|svg|css)$ {
-                proxy_pass http://www.avendro.de:80;
-                proxy_redirect http://www.avendro.de:80/ /;
-                proxy_set_header Host www.avendro.de;
+                proxy_pass http://www.otto.de:80;
+                proxy_redirect http://www.otto.de:80/ /;
+                proxy_set_header Host www.otto.de;
         }
 
         location ^~ /static/ {
-                root /var/www/avendro;
+                root /var/www/otto;
         }
 
         location / {
                 #if ($allowed_country = no) {
-                #        rewrite ^/ http://www.avendro.de/ permanent;
+                #        rewrite ^/ http://www.otto.de/ permanent;
                 #}
                 proxy_pass http://127.0.0.1:6057;
                 proxy_redirect http://127.0.0.1:6057/ /;
