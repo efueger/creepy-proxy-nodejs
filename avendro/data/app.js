@@ -1,3 +1,9 @@
+var config = require('config'),
+    replaces = config.get('replaces'),
+    cluster = require('cluster'),
+    os = require('os'),
+    procNum = os.cpus();
+
 function IsJsonString(str) {
     try {
         JSON.parse(str);
@@ -7,10 +13,7 @@ function IsJsonString(str) {
     return true;
 }
 
-var config = require('config'),
-    cluster = require('cluster'),
-    fs = require('fs');
-
+// Load config
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
     SITE = SITENAME + SITEDOMAIN,
@@ -25,24 +28,22 @@ var SITENAME = config.get('site.name'),
             width: config.get('options.width')
         }
     };
-var replaces = config.get('replaces');
 
+// Start server
 if (cluster.isMaster) {
     console.log('Start master');
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
-    cluster.fork();
+
+    for (var i = 0; i < procNum.length; i++) {
+        cluster.fork();
+    }
 
     cluster.on('disconnect', function (worker) {
         console.error('Worker disconnect!');
         cluster.fork();
     });
-
 } else {
-    console.log("Start worker");
+    console.log("+ worker");
+
     var http = require("http"),
         request = require("request"),
         replacestream = require("replacestream"),
@@ -58,6 +59,7 @@ if (cluster.isMaster) {
     var translates, fsize = 0;
 
     var server = http.createServer(function (req, res) {
+        //console.log('Trying to access: ' + req.headers.host + req.url);
         onError = function (err) {
             console.error(err);
 
@@ -75,8 +77,10 @@ if (cluster.isMaster) {
                 console.error('Error sending HTTP response', er, req.url);
             }
         };
+
         onResponse = function (response) {
-            if ('location' in response.headers) response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
+            if ('location' in response.headers)
+                response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
 
             var _cookie = [];
 
@@ -116,7 +120,7 @@ if (cluster.isMaster) {
             }
         });
 
-        console.log('Trying to access: ' + req.headers.host);
+        //console.log('Trying to access: ' + req.headers.host);
 
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
@@ -125,14 +129,15 @@ if (cluster.isMaster) {
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
 
+        // Proxyng trafic
         proxyfull = "http://" + proxy() + ":3129";
-        console.log("Accessing via: " + proxyfull);
+        //console.log("Accessing via: " + proxyfull);
 
-        console.log("Method: " + req.method);
+        //console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
 
-
+        //console.log("Method: " + req.method);
         if ('cookie' in req.headers) {
             var cookies = req.headers.cookie.split(' ');
             for (var i = 0; i < cookies.length; i++) {
@@ -152,7 +157,7 @@ if (cluster.isMaster) {
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
 
-
+        // Replaces from config
         replaces.forEach(function (item, i, arr) {
             if (item.type === "usual") {
                 piper = piper.pipe(replacestream(item.from, item.to));
@@ -162,29 +167,46 @@ if (cluster.isMaster) {
             }
         });
 
+        // Replaces from translates.catalogi.ru
         if (translates && translates.length) {
             translates.forEach(function (item, i, arr) {
                 if (item.type === "usual") {
                     piper = piper.pipe(replacestream(item.from, item.to));
                 }
                 else if (item.type === "regex") {
-                    var from = "(^|[^ =\\/?$])\\b(" + item.from + ")\\b";
+                    var from = "(^|[^ \\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
                 }
             });
         }
 
-        //if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
-            piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
-                .pipe(replacestream(new RegExp('<head(.*)>', 'i'), '<head>' + includes.head.top))
-                .pipe(replacestream(new RegExp('</head>', 'i'), includes.head.bottom + '</head>'))
-                .pipe(res);
-        //}
+        piper.pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head.top))
+            .pipe(replacestream(new RegExp('</head>', 'i'), includes.head.bottom + '</head>'))
+            .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.top + includes.body.bottom + '</body>'))
 
+            //.pipe(replacestream('http://www.albamoda.catalogi.ru/js/script-compressed.js', 'albamoda.catalogi.ru/static/script-compressed.js'))
+            //.pipe(replacestream('http://www.albamoda.catalogi.ru/m/basket.xhtml', 'http://catalogi.ru/zakaz/'))
+
+            .pipe(replacestream('https://assets.cdn-otto.catalogi.ru', 'http://assets.cdn-otto.de'))
+            .pipe(replacestream('images.otto.catalogi.ru', 'images.otto.de'))
+
+            //.pipe(replacestream('class="rsaquo', 'class="rsaquo notranslate'))
+            //.pipe(replacestream('http://www.google-analytics.com', '127.0.0.1'))
+            //.pipe(replacestream('//www.googletagmanager.com', '127.0.0.1'))
+            //.pipe(replacestream('//www.googleadservices.com', '127.0.0.1'))
+            //.pipe(replacestream('http://ads.heias.com', '127.0.0.1'))
+            //.pipe(replacestream('http://config1.veinteractive.com', '127.0.0.1'))
+            //.pipe(replacestream('http://track.effiliation.com', '127.0.0.1'))
+            //.pipe(replacestream('http://widget.criteo.com', '127.0.0.1'))
+            //.pipe(replacestream('statse.webtrendslive.com', '127.0.0.1'))
+            //.pipe(replacestream('/js/landmarking/webtrends.js', ''))
+            //.pipe(replacestream('/js/landmarking/webtrends.load.js', ''))
+
+            .pipe(res);
     }).listen(config.get('site.port'));
 }
 
 setInterval(function() {
-    global.gc(); // --e
+    global.gc(); // --expose-gc
 }, 1000);
