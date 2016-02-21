@@ -188,6 +188,7 @@ if (cluster.isMaster) {
             //.pipe(replacestream('http://www.albamoda.catalogi.ru/js/script-compressed.js', 'albamoda.catalogi.ru/static/script-compressed.js'))
             //.pipe(replacestream('http://www.albamoda.catalogi.ru/m/basket.xhtml', 'http://catalogi.ru/zakaz/'))
 
+            .pipe(replacestream('class="rsaquo', 'class="rsaquo notranslate'))
             .pipe(replacestream('http://www.google-analytics.com', '127.0.0.1'))
             .pipe(replacestream('//www.googletagmanager.com', '127.0.0.1'))
             .pipe(replacestream('//www.googleadservices.com', '127.0.0.1'))
