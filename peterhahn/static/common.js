@@ -37,34 +37,40 @@ catalogi.noTranslate = function() {
 // Main section
 catalogi.parse = function() {
     // Head
-    catalogi('.topnav').empty();
-    catalogi('#social').empty();
-    catalogi('#vorteilskommunikation').hide();
-    catalogi('#siegel').empty();
+    catalogi('#iframe').hide();
+    catalogi('#siegel').remove();
+    catalogi('#header > ul > li:eq(0) > a').attr('href', '#').text('Вход');
+    catalogi('#header > ul > li:eq(1) > a').remove();
+    catalogi('.directorder').remove();
 
-    catalogi('.headerrow').empty();
-    catalogi('#iframe').appendTo('.headerrow');
+    // Корзина
+    catalogi('#warenkorb > a > div > div:eq(0)').text('Корзина');
+    catalogi('#warenkorb > a > div > div:eq(1)').remove();
+    //catalogi('.topnav').empty();
+    //catalogi('#social').empty();
+    //catalogi('#vorteilskommunikation').hide();
+    //catalogi('#siegel').empty();
+    //
+    //catalogi('.headerrow').empty();
+    //catalogi('#iframe').appendTo('.headerrow');
 
-    // Menu
-    catalogi('#nav').append('<li><div class="upper"><a href="http://catalogi.ru/katalog_peter_hahn/">Каталог</a></div></li>');
+    //// Menu
+    //catalogi('#nav').append('<li><div class="upper"><a href="http://catalogi.ru/katalog_peter_hahn/">Каталог</a></div></li>');
 
     // Body
-    catalogi('#skyscraper').empty(); // баннер справа
-    catalogi('#warenkorbContainer').empty();
+    //catalogi('#skyscraper').empty(); // баннер справа
+    //catalogi('#warenkorbContainer').empty();
 
     // Product page
-    catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi");
-    catalogi('a[href="#notepad"]').remove();
-    catalogi(".hotline").remove();
-    catalogi('.mwst').empty();
-
-    //catalogi('#outfit').remove();
-    //catalogi('a[href="#outfit"]').remove();
-    catalogi('.outfitLink').remove();
+    //catalogi('a[href=#addtocart]').attr("href", "#addtocartCatalogi");
+    //catalogi('a[href="#notepad"]').remove();
+    //catalogi(".hotline").remove();
+    //catalogi('.mwst').empty();
+    //catalogi('.outfitLink').remove();
 
     // Show body after f@cking hiding >_<
     catalogi('body')
-        .delay(800)
+        //.delay(800)
         .queue(function (next) {
             catalogi(this).css('visibility', 'visible');
 
