@@ -8,3 +8,11 @@
 .outfitWrap {
     display: none !important;
 }
+
+/* Правим корзину */
+#warenkorb a {
+    padding: 15px 0 0 75px;
+}
+#warenkorb {
+    width: 166px;
+}
