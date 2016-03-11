@@ -22,9 +22,9 @@ server {
     }
 
 	location / {
-		if ($allowed_country = no) {
-			rewrite ^/ http://www.klingel.de/ permanent;
-		}
+		#if ($allowed_country = no) {
+		#	rewrite ^/ http://www.klingel.de/ permanent;
+		#}
 		proxy_pass http://127.0.0.1:5058;
 		proxy_redirect http://127.0.0.1:5058/ /;
 		proxy_set_header Host $host;
