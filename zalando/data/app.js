@@ -181,6 +181,8 @@ if (cluster.isMaster) {
 
              .pipe(replacestream('https', 'http'))
              .pipe(replacestream('secure-skin.ztat.net/s/dpr/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
+             .pipe(replacestream('secure-skin.ztat.net/s/n5x/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
+             .pipe(replacestream('secure-skin.ztat.net/s/uqh/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
              .pipe(res);
 
     }).listen(config.get('site.port'));
