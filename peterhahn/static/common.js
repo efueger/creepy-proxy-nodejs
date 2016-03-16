@@ -139,6 +139,7 @@ catalogi.parse = function() {
                     catalogi.logout();
                     return false;
                 });
+
             } else {
                 catalogi('#catalogi-head-right').text('Вход').click(function(){
                     catalogi.login();
