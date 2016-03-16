@@ -182,6 +182,8 @@ if (cluster.isMaster) {
                     var from = "(^|[^ \\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
+
+                    //console.log(item.from+" -> "+to);
                 }
             });
         }
@@ -189,7 +191,8 @@ if (cluster.isMaster) {
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
             .pipe(replacestream(new RegExp('<head data(.*)>', 'i'), '<head data-country="DE" data-language="de">'+includes.head))
             .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-            //.pipe(replacestream('eu-sonar.sociomantic.com', '127.0.0.1'))
+            .pipe(replacestream(new RegExp('Best.-Nr.', 'i'), 'Артикул:'))
+            //.pipe(replacestream('Best.-Nr.', 'Номер'))
             //.pipe(replacestream('www.google-analytics.com', '127.0.0.1'))
             //.pipe(replacestream('dev.visualwebsiteoptimizer.com', '127.0.0.1'))
             //.pipe(replacestream('d5phz18u4wuww.cloudfront.net', '127.0.0.1'))
