@@ -192,7 +192,6 @@ if (cluster.isMaster) {
             .pipe(replacestream(new RegExp('<head data(.*)>', 'i'), '<head data-country="DE" data-language="de">'+includes.head))
             .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
             .pipe(replacestream(new RegExp('Best.-Nr.', 'i'), 'Артикул:'))
-            //.pipe(replacestream('Best.-Nr.', 'Номер'))
             //.pipe(replacestream('www.google-analytics.com', '127.0.0.1'))
             //.pipe(replacestream('dev.visualwebsiteoptimizer.com', '127.0.0.1'))
             //.pipe(replacestream('d5phz18u4wuww.cloudfront.net', '127.0.0.1'))
