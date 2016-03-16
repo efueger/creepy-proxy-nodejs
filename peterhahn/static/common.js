@@ -134,7 +134,8 @@ catalogi.parse = function() {
                 catalogi('#catalogi-head-right')
                     .html('<a href="http://catalogi.ru/cabinet/" ' +
                         'class="my-account-login underline-alternative" ' +
-                        'target="_blank">Личный кабинет</a><a href="#" class="_logout"></a>').click(function(){
+                        'target="_blank">Личный кабинет</a><a href="#" class="_logout"></a>')
+                catalogi('._logout').click(function(){
                     catalogi.logout();
                     return false;
                 });
