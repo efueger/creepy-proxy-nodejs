@@ -91,12 +91,13 @@
 }
 #catalogi-head #catalogi-head-left {
     float: left;
-    margin: 0;
+    margin: 0 0 0 10px;
     width: 85%;
     text-align: left;
 }
 #catalogi-head #catalogi-head-right {
     float: right;
+    margin: 0 10px 0 0;
 }
 #catalogi-head #catalogi-headtext a {
     margin-right: 15px;

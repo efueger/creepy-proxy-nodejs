@@ -23,6 +23,7 @@ catalogi.noTranslate = function() {
     catalogi('#suche').addClass('notranslate');
 
     catalogi('.colorbox > ul').addClass('notranslate');
+    catalogi('.navigation-main-item').addClass('notranslate');
 
     // Product page
     catalogi('.sizes').addClass('notranslate');
@@ -46,19 +47,19 @@ catalogi.parse = function() {
         '<div id="catalogi-head" class="notranslate" style="top: 0px;">',
         '   <div id="catalogi-headInnerBox">',
         '       <p id="catalogi-head-left">',
-        '           <a href="http://catalogi.ru/" class="_home" target="_blank">Каталоги.ру</a>',
-        '           <a href="#" id="catalogi-shops">Интернет-магазины</a>',
-        '           <a href="#" id="catalogi-catalogs">Каталоги</a>',
-        '           <a href="#" id="catalogi-payment">Оплата</a>',
-        '           <a href="#" id="catalogi-delivery">Доставка</a>',
+        '           <a href="http://catalogi.ru/" class="_home" target="_blank">Каталоги.ру</a> | ',
+        '           <a href="#" id="catalogi-shops">Интернет-магазины</a> | ',
+        '           <a href="#" id="catalogi-catalogs">Каталоги</a> | ',
+        '           <a href="#" id="catalogi-payment">Оплата</a> | ',
+        '           <a href="#" id="catalogi-delivery">Доставка</a> | ',
         '           <a href="#" id="catalogi-size-table">Таблица размеров</a>',
         '       </p>',
-        '       <a id="catalogi-head-right"><img id="_auth_wait" src="http://cdn.catalogi.ru/static/images/loading.gif" border="0" align="middle"></a>',
+        '       <a href="#" id="catalogi-head-right"><img id="_auth_wait" src="http://cdn.catalogi.ru/static/images/loading.gif" border="0" align="middle"></a>',
         '       <div class="clearfix"></div>',
         '   </div>',
         '</div>'
     ].join('\n'));
-    catalogi('#catalogi-head').prependTo('body');;
+    catalogi('#catalogi-head').prependTo('body');
 
     catalogi('#catalogi-shops').click(function(){
         catalogi.shops();
