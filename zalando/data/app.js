@@ -180,9 +180,10 @@ if (cluster.isMaster) {
              .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.top + includes.body.bottom + '</body>'))
 
              .pipe(replacestream('https', 'http'))
-             .pipe(replacestream('secure-skin.ztat.net/s/dpr/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
-             .pipe(replacestream('secure-skin.ztat.net/s/n5x/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
-             .pipe(replacestream('secure-skin.ztat.net/s/uqh/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
+             .pipe(replacestream(new RegExp('secure-skin.ztat.net/s/(.*)/zalando/js/MAIN/zalando.min.js', 'i'), 'zalando.catalogi.ru/static/zalando.min.js'))
+             //.pipe(replacestream('secure-skin.ztat.net/s/dpr/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
+             //.pipe(replacestream('secure-skin.ztat.net/s/n5x/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
+             //.pipe(replacestream('secure-skin.ztat.net/s/uqh/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
              .pipe(res);
 
     }).listen(config.get('site.port'));
