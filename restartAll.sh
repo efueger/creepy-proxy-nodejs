@@ -1,6 +1,7 @@
 #!/bin/bash
 
 array=(
+albamoda
 madeleine
 klingel
 peterhahn
