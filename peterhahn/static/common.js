@@ -162,7 +162,7 @@ catalogi.parse = function() {
             var price1 = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').replace('Всё', '').trim();
             var price2 = catalogi('.pricebox > ul > div').find('.newprice').text().replace('от', '').replace('EUR', '').replace(',', '.').replace('Всё', '').trim();
             var price3 = (price1 == "") ? price2 : price1;
-            var price4 = catalogi('.pricebox > ul > div > p').text().replace('Всё', '');
+            var price4 = catalogi('.pricebox > ul > div > p').text().replace('Всё', '').replace('от', '').replace('EUR', '').replace(',', '.').trim();
             var price  = (price3 == "") ? price4 : price3;
 
             var color = catalogi('.colors > li[class="activeSelection"]').attr('title');
@@ -214,7 +214,7 @@ catalogi.service = function() {
         var _price1 = catalogi('span[itemprop="price"]').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
         var _price2 = catalogi('.pricebox > ul > div').find('.newprice').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
         var _price3   = (_price1 == "") ? _price2 : _price1;
-        var _price4 = catalogi('.pricebox > ul > div > p').text();
+        var _price4 = catalogi('.pricebox > ul > div > p').text().replace('от', '').replace('EUR', '').replace(',', '.').trim();
         var _price5   = (_price3 == "") ? _price4 : _price3;
         var _price6   = catalogi('.curprice:eq(0)').text().replace('от', '').replace('ab', '').replace('EUR', '').replace(',', '.').trim();
         var _price   = (_price5 == "") ? _price6 : _price5;
