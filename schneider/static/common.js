@@ -42,6 +42,7 @@ catalogi.noTranslate = function(){
 
     // Страница товара
     catalogi('.product-size-dropdown').addClass('notranslate');
+    catalogi('.product-price').addClass('notranslate');
 };
 
 catalogi.parse = function() {
@@ -131,9 +132,16 @@ catalogi.parse = function() {
     catalogi('#quick-shopper').remove();
     catalogi('.product-helper-guides').remove();
     catalogi('.product-button-panel').append(catalogi('.add-to-cart-button'));
-    catalogi('.product-button-panel > form > div:eq(1)').remove();
+    catalogi('#waCalculator').remove();
 
     // Добавление в корзину
+    catalogi('.sod_label').mouseover(function() {
+        catalogi.service();
+    });
+    catalogi('.quantity-section > input:eq(0)').change(function () {
+        catalogi.service();
+    });
+
     catalogi('.add-to-cart-button').click(function(event){
         try{
             // артикул
@@ -141,7 +149,8 @@ catalogi.parse = function() {
             // название
             var name 		= shop.product.name;
             // количество
-            var count   	= catalogi("input.quantity").val();
+            var count       = catalogi('.quantity-section > input:eq(0)').val();
+            if (count == '') count = 1;
             // цена
             var price1      = catalogi('.volume-price:eq(0)').text().replace('€','').replace(',','.').trim();
             var price2       = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
@@ -188,6 +197,7 @@ catalogi.parse = function() {
     // Футер
     catalogi('#seo-text').remove();
     catalogi('#page-footer').remove();
+    catalogi('.campaign-img-big').remove();
 
     // Подписка
     catalogi.subscribe(false, '113549');
@@ -209,7 +219,7 @@ catalogi.parse = function() {
         });
 
     catalogi('head')
-        .delay(5000)
+        .delay(6000)
         .queue(function (next) {
             if(_auth){
                 catalogi('#_auth_wait').remove();
@@ -255,11 +265,14 @@ function checkSeach(){
 // Скидка
 catalogi.service = function(){
     if('_service' in window && catalogi('.js-display-variant-price')){
-        _price1 = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
-        _price2 = catalogi('.print-price.visible:eq(0)').text().replace('€','').replace(',','.').trim();
-        _price 	= (_price1 == "") ? _price2 : _price1;
+        var _price1 = catalogi('.volume-price:eq(0)').text().replace('€','').replace(',','.').trim();
+        var _price2 = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
+        var _price 	= (_price1 == "") ? _price2 : _price1;
 
-        _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
+        var _count = catalogi('.quantity-section > input:eq(0)').val();
+        if (_count == '') _count = 1;
+
+        var _delivery = (parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service )))*_count;
         catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
     }
 };
