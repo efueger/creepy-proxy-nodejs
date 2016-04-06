@@ -184,12 +184,28 @@ if (cluster.isMaster) {
                 .pipe(replacestream('maxymiser', '127.0.0.1'))
                 .pipe(replacestream('googletagmanager', '127.0.0.1'))
                 .pipe(replacestream('fast.fonts.net', '127.0.0.1'))
+                .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                 .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
+                .pipe(replacestream(new RegExp('OnlineKAT_Impressionen_2604_DE', 'g'), 'OnlineKAT_Impressionen_2604_DE/index.php'))
+                .pipe(replacestream('customlib', 'GGWP'))
+                .pipe(res);
+        } else if (req.headers.host == 'static.schneider.de') {
+            piper.pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
+                .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
+                .pipe(replacestream(new RegExp('OnlineKAT_Impressionen_2604_DE', 'g'), 'OnlineKAT_Impressionen_2604_DE/index.php'))
+                .pipe(replacestream('customlib', 'GGWP'))
                 .pipe(res);
         } else {
             piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/bk_script.js'))
+                .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktoprebrush/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
+                .pipe(replacestream('static.etracker', '127.0.0.1'))
+                .pipe(replacestream('maxymiser', '127.0.0.1'))
+                .pipe(replacestream('googletagmanager', '127.0.0.1'))
+                .pipe(replacestream('fast.fonts.net', '127.0.0.1'))
                 .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                 .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
+                .pipe(replacestream(new RegExp('OnlineKAT_Impressionen_2604_DE', 'g'), 'OnlineKAT_Impressionen_2604_DE/index.php'))
+                .pipe(replacestream('customlib', 'GGWP'))
                 .pipe(res);
         }
     }).listen(5057);

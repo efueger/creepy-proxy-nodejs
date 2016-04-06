@@ -26,6 +26,8 @@ catalogi(document).ready(function(){
 catalogi.noTranslate = function(){
     // Меню
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
+    catalogi("#page-header-main-wrapper").addClass('notranslate');
+    catalogi("#root-nav").addClass('notranslate');
 
     // Все остальное
     catalogi('.brands-main-title').addClass('notranslate');
@@ -94,7 +96,7 @@ catalogi.parse = function() {
         catalogi.delivery();
         return false;
     });
-    catalogi('.catalogi-size-table > span').text('Таблица размеров').click(function(){
+    catalogi('.catalogi-size-table > span').text('Tаблица размеров').click(function(){
         catalogi.sizeTable();
         return false;
     });
