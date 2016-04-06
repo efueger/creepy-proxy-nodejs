@@ -34,31 +34,10 @@ catalogi.noTranslate = function(){
     // Список брендов
     catalogi('.brandIndex').addClass('notranslate');
     catalogi('div[class*="brandBlock"]').addClass('notranslate');
-    //catalogi('.iconFont').addClass('notranslate');
-    //catalogi('.brandSearch .brandSearch').addClass('notranslate');
-    //catalogi('.brandSearch .content li').addClass('notranslate');
-    //catalogi('a[title="Marke"] > span.value').addClass('notranslate');
-    //catalogi('.productBox b').addClass('notranslate');
-    //
-    //
-    //// Стр. товара
-    //catalogi('.simpleSupplierSize').text('Размеры');
-    //catalogi('.recos h3 a').addClass('notranslate');
-    //catalogi('#articlePrice').addClass('notranslate');
-    //catalogi('#sizeTypeLinks').addClass('notranslate');
-    //catalogi('.colorList li img').each(function(el, index){
-    //    catalogi(this).attr('origin', catalogi(this).attr('alt'));
-    //});
-    //
-    //catalogi('#listProductSizes li').each(function(el, index){
-    //    catalogi(this).attr('origin', catalogi(this).text().trim());
-    //});
-    //
-    ////Моб. версия
-    //catalogi('select[name="articleSimpleSku"] option').each(function(el, index){
-    //    catalogi(this).attr('origin', catalogi(this).text().trim());
-    //});
-}
+
+    // Стр. товара
+    catalogi('.boxPrice').addClass('notranslate');
+};
 
 catalogi.parse = function(){
     // Шапка
@@ -141,7 +120,7 @@ catalogi.parse = function(){
             }
 
             var name    = catalogi('span[itemprop="name"]').text();
-            var price   = catalogi('#articlePrice').text().replace(',','.').replace('€','').trim();
+            var price   = catalogi('#articlePrice').text().replace('€','').trim().replace('.','').replace(',','.');
             //var color   = catalogi('.colorList li.active img').attr('alt').split('- ')[1];
             var color   = '';
             var size    = catalogi("#listProductSizes").find("li.active").text();
@@ -203,7 +182,7 @@ catalogi.parse = function(){
                     '<a href="#">',
                     '<span class="iconFont"></span>',
                     '<span class="text">Вход</span>',
-                    '</a>',
+                    '</a>'
                 ].join('\n'));
                 catalogi('#customerAccountBox > a').click(function(){
                     catalogi.login();
@@ -213,14 +192,13 @@ catalogi.parse = function(){
         });
 
     // Подписка
-    //catalogi.subscribe(false, '76136');
     catalogi.subscribe(false, '22452');
 };
 
-// Скидка
+// Стоимоть доставки
 catalogi.service = function(){
     if('_service' in window){
-        var _price = catalogi('#articlePrice').text().replace(',','.').replace('€','').trim();
+        var _price = catalogi('#articlePrice').text().replace('€','').trim().replace('.','').replace(',','.');
         if(_price != ''){
             var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
             if( catalogi('.inclTax').text() != 'С учетом доставки € '+_delivery.toFixed(2) ){
@@ -228,7 +206,7 @@ catalogi.service = function(){
             }
         }
     }
-}
+};
 
 ///*** моб. версия ***/
 //catalogi.serviceMob = function(){
