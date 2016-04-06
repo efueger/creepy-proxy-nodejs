@@ -176,20 +176,27 @@ if (cluster.isMaster) {
         }
 
         if (req.headers.host !== 'static.'+ SITENAME +'.catalogi.ru') {
+            // фикс всего, кроме каталогов
             piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
                 .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
                 .pipe(replacestream(new RegExp('/'+ SITENAME +'/_ui/desktoprebrush/theme-'+ SITENAME +'/all.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/all.js'))
+                // вырезаем мусор
                 .pipe(replacestream('static.etracker', '127.0.0.1'))
+                .pipe(replacestream('etracker.com', '127.0.0.1'))
+                .pipe(replacestream('etracker.de', '127.0.0.1'))
                 .pipe(replacestream('maxymiser', '127.0.0.1'))
                 .pipe(replacestream('googletagmanager', '127.0.0.1'))
                 .pipe(replacestream('fast.fonts.net', '127.0.0.1'))
+                // фикс ссылок на каталоги
+                .pipe(replacestream(new RegExp('schneider.de/blaetterkatalog', 'g'), SITENAME +'.catalogi.ru/blaetterkatalog'))
+                .pipe(replacestream(new RegExp('OnlineKAT_Impressionen_2604_DE', 'g'), 'OnlineKAT_Impressionen_2604_DE/index.php'))
                 .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
                 .pipe(res);
         } else {
+            // фикс внутренностей фрейма каталогов
             piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/bk_script.js'))
                 .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
-                .pipe(replacestream(new RegExp('blaetterkatalog/2601a', 'g'), 'blaetterkatalog/2601a/index.php'))
                 .pipe(res);
         }
     }).listen(5057);
