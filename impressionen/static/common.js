@@ -52,6 +52,7 @@ catalogi.parse = function() {
     // Разное
     catalogi('a[href*="/de/login"]').parent().parent().remove();
     catalogi('a[href*="agb#Preise"]').parent().remove(); //Ссылка про НДС
+    catalogi('#content-main > article').remove(); // Хлам на странице каталогов
 
     // Каталоги
     catalogi('#content-main > article:eq(1)').remove();
