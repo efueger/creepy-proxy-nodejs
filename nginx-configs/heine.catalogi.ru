@@ -26,8 +26,8 @@ server {
                 #if ($allowed_country = no) {
                 #        rewrite ^/ http://www.heine.de/ permanent;
                 #}
-                proxy_pass http://127.0.0.1:6061;
-                proxy_redirect http://127.0.0.1:6061/ /;
+                proxy_pass http://127.0.0.1:6051;
+                proxy_redirect http://127.0.0.1:6051/ /;
                 proxy_set_header Host $host;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header X-Forwarded-Proto $scheme;
