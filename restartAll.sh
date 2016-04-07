@@ -2,14 +2,15 @@
 
 array=(
 albamoda
-madeleine
-klingel
-peterhahn
-impressionen
 conleys
-gingar
 faibels
+gingar
+impressionen
+klingel
+madeleine
+mia-moda
 miavilla
+peterhahn
 schneider
 zalando
 )
