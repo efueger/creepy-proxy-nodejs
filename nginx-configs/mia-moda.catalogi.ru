@@ -8,11 +8,11 @@ server {
         server_name ~^(?<subdomain>.*)\.mia-moda\.catalogi\.ru;
         listen 188.40.83.218;
 
-        location ~* ^.+\.(css|js|jpe?g|gif|png|avi|swf|ico)$ {
+        location ~* ^.+\.(css|jpe?g|gif|png|avi|swf|ico)$ {
                 rewrite ^(.*)$ http://$subdomain.mia-moda.de$1 permanent;
         }
 
-        location ~* ^.+\.(ttf|svg|css)$ {
+        location ~* ^.+\.(ttf|svg|css|js)$ {
                 proxy_pass http://www.mia-moda.de:80;
                 proxy_redirect http://www.mia-moda.de:80/ /;
                 proxy_set_header Host www.mia-moda.de;
