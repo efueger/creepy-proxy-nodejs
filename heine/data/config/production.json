@@ -1,7 +1,8 @@
 {
   "site": {
     "name"        : "heine",
-    "domain"      : ".de"
+    "domain"      : ".de",
+    "port"        : "6051"
   },
   "header": {
     "catalog"     : "heine",

@@ -6,7 +6,7 @@ APP_DIR='/var/www/heine/data';
 PID_FILE=$APP_DIR/pid/app.pid
 LOG_FILE=$APP_DIR/log/app.log
 CONFIG_DIR=$APP_DIR/config
-PORT=6061
+PORT=6051
 NODE_EXEC=/usr/bin/node
 
 ###############
