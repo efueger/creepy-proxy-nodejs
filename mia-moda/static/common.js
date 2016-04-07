@@ -223,7 +223,7 @@ catalogi(function () {
             case 'search':
                 var goingto = "http://www." + currentDomain + ".catalogi.ru/SearchDisplay?searchTerm=";
                 goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
-                window.location = goingto + "&storeId=510004&catalogId=510000&langId=-3&beginIndex=0&sType=SimpleSearch&resultCatEntryType=2&showResultsPage=true&searchSource=Q&pageView=&categoryId=";
+                window.location = goingto + "&storeId=51000";
                 break;
 
             case 'orderCount':
