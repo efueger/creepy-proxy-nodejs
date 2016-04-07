@@ -1,5 +1,8 @@
+/**
+ * Created by mihailstepancenko on 16.10.15.
+ */
+
 function _googleTranslateElementInit() {
-    catalogi.noTranslate();
     new google.translate.TranslateElement({
         pageLanguage: 'de',
         includedLanguages: 'ru',
@@ -7,12 +10,20 @@ function _googleTranslateElementInit() {
     }, 'google_translate_element');
 }
 
+
 catalogi.noTranslate = function () {
+    // Меню
     catalogi('#available-brand-filters').addClass('notranslate');
+    catalogi('.categoryNavLink').addClass('notranslate');
+
     // Стр. товара
+    catalogi('[itemprop="sku"]').addClass('notranslate');
     catalogi('[itemprop="brand"]').addClass('notranslate');
     catalogi('.categoryProductName').addClass('notranslate');
     catalogi('h1[itemprop="name"]').attr('origin', catalogi('h1[itemprop="name"]').text().trim().replace('&nbsp;', ' '));
+
+    // Список товаров
+    catalogi('div[id*="productImages-"]').addClass('notranslate');
 };
 
 catalogi.parse = function () {
@@ -20,12 +31,19 @@ catalogi.parse = function () {
     catalogi('header').empty();
     catalogi("#iframe").appendTo("header");
 
+    // Меню
+    catalogi('.navMenuTopCategory1').remove();
 
     // Список
     catalogi('.quickViewHover').remove();
     catalogi('.categoryAvailabilityHover').remove();
+    catalogi('[data-tracky*="Damenmode_Kategorien"]').remove();
 
     // Стр. товара
+    catalogi('.shippingCostLink').remove();
+    catalogi('.lowAvailabilityHint').remove();
+    catalogi('.productAdditionalLinks').remove();
+    catalogi('.hotlineInfo').remove();
 
     //Поправка цветов и размеров
     catalogi('.colorTile > div').removeAttr('onclick');
@@ -74,7 +92,7 @@ catalogi.parse = function () {
                 var count = catalogi('#quantityField').val();
                 var color = catalogi('#color').val();
                 var size = catalogi('#size').val();
-                var img = 'http://mia-moda.catalogi.ru' + catalogi('#imgLink1').attr('data-image');
+                var img = catalogi('#imgLink1').attr('data-image');
 
                 var param = [];
 
@@ -109,7 +127,12 @@ catalogi.parse = function () {
     catalogi('#footer').remove();
 
     // Отображение body
-    catalogi('body').css('visibility', 'visible');
+    catalogi('body')
+        .delay(800)
+        .queue(function (next) {
+            catalogi(this).css('visibility', 'visible');
+            //catalogi.service();
+        });
 
     // Подписка
     //catalogi.subscribe(false, '30460');
@@ -135,9 +158,7 @@ catalogi(function () {
     catalogi(window).on('message', function (event) {
         switch (event.originalEvent.data.action) {
             case 'search':
-                //catalogi('#desktopSearchTerm').val(event.originalEvent.data.search).parents('form').submit();
-                //break;
-                var goingto = "http://www.mia-moda.de/SearchDisplay?searchTerm=";
+                var goingto = "http://www.mia-moda.catalogi.ru/SearchDisplay?searchTerm=";
                 goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
                 window.location = goingto + "&storeId=510004&catalogId=510000&langId=-3&beginIndex=0&sType=SimpleSearch&resultCatEntryType=2&showResultsPage=true&searchSource=Q&pageView=&categoryId=";
                 break;
@@ -153,4 +174,15 @@ catalogi(function () {
     catalogi.parse();
 
     catalogi('.quickViewHover').remove();
+
+    // Выполняется при прокрутке страницы
+    catalogi('body').bind('mousewheel', function(e){
+        // Список товаров
+        catalogi('div[id*="productImages-"]').addClass('notranslate');
+
+        // Отзывы
+        catalogi('.bv-trustmarkIcon').remove();
+        catalogi('.bv-write-review').remove();
+        catalogi('.bv-content-actions-container').remove();
+    });
 });
