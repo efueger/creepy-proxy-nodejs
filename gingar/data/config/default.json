@@ -13,16 +13,16 @@
     "width"       : "options.width"
   },
   "replaces": [
-    {
-      "type": "usual",
-      "from": "from",
-      "to": "to"
-    },
-    {
-      "type": "regex",
-      "from": "\\(from)",
-      "args": "g",
-      "to": "$1"
-    }
+//    {
+//      "type": "usual",
+//      "from": "from",
+//      "to": "to"
+//    },
+//    {
+//      "type": "regex",
+//      "from": "\\(from)",
+//      "args": "g",
+//      "to": "$1"
+//    }
   ]
 }
