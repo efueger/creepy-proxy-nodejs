@@ -128,10 +128,10 @@ if (cluster.isMaster) {
         proxyfull = "http://" + proxy() + ":3129";
         //console.log("Accessing via: " + proxyfull);
 
-        console.log("Method: " + req.method);
+        //console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
-        console.log('url: ' + req.url);
+        //console.log('url: ' + req.url);
 
 
         if ('cookie' in req.headers) {
@@ -154,6 +154,7 @@ if (cluster.isMaster) {
         }
 
 
+        // Replaces from config
         replaces.forEach(function (item, i, arr) {
             if (item.type === "usual") {
                 piper = piper.pipe(replacestream(item.from, item.to));
@@ -163,15 +164,18 @@ if (cluster.isMaster) {
             }
         });
 
+        // Replaces from translates.catalogi.ru
         if (translates && translates.length) {
             translates.forEach(function (item, i, arr) {
                 if (item.type === "usual") {
                     piper = piper.pipe(replacestream(item.from, item.to));
                 }
                 else if (item.type === "regex") {
-                    var from = "(^|[^ =\\/?$])\\b(" + item.from + ")\\b";
+                    var from = "(^|[^\\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
+
+                    //console.log(item.from+" -> "+to);
                 }
             });
         }
