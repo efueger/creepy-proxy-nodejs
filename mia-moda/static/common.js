@@ -109,6 +109,14 @@ catalogi.parse = function () {
     });
 
     // Стр. товара
+    // catalogi('#productAjaxDescription').change(function() {
+    //     window.clearTimeout(catalogi(this).data("timeout"));
+    //     catalogi(this).data("timeout", setTimeout(function () {
+    //         catalogi.parse();
+    //         catalogi.service();
+    //         console.log('ggwp');
+    //     }, 1000));
+    // });
 
     catalogi('#productAjaxDescription').bind('DOMNodeInserted', function (e) {
 
@@ -180,6 +188,7 @@ catalogi.service = function () {
                 catalogi('.vatLabel').text('С учетом доставки € ' + _delivery.toFixed(2));
             }
         }
+        //console.log(_price);
     }
 };
 
@@ -237,7 +246,7 @@ catalogi(function () {
     catalogi.noTranslate();
     catalogi.parse();
 
-    catalogi('.quickViewHover').remove();
+    //catalogi('.quickViewHover').remove();
 
     // Выполняется при прокрутке страницы
     catalogi('body').bind('mousewheel', function(e){
