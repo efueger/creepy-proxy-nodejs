@@ -75,6 +75,7 @@ catalogi.parse = function () {
     catalogi('.lowAvailabilityHint').remove();
     catalogi('.productAdditionalLinks').remove();
     catalogi('.hotlineInfo').remove();
+    catalogi('.availability24hService').remove();
 
     //Поправка цветов и размеров
     catalogi('.colorTile > div').removeAttr('onclick');
