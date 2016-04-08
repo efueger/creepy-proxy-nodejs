@@ -1,7 +1,12 @@
 /**
  * Created by mihailstepancenko on 07.04.16.
+ * @return {boolean}
  */
 
+
+/**
+ * @return {boolean}
+ */
 function IsJsonString(str) {
     try {
         JSON.parse(str);
@@ -61,6 +66,7 @@ if (cluster.isMaster) {
     var translates, fsize = 0;
 
     var server = http.createServer(function (req, res) {
+        //console.log('Trying to access: ' + req.headers.host + req.url);
         onError = function (err) {
             console.error(err);
 
@@ -68,9 +74,13 @@ if (cluster.isMaster) {
                 var killtimer = setTimeout(function () {
                     process.exit(1);
                 }, 10);
+
                 killtimer.unref();
+
                 server.close();
+
                 cluster.worker.disconnect();
+
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'text/html; charset=UTF-8');
                 res.end('Сервис временно недоступен!');
@@ -79,7 +89,8 @@ if (cluster.isMaster) {
             }
         };
         onResponse = function (response) {
-            if ('location' in response.headers) response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
+            if ('location' in response.headers)
+                response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
 
             var _cookie = [];
 
@@ -119,19 +130,14 @@ if (cluster.isMaster) {
             }
         });
 
-        //console.log('Trying to access: ' + req.headers.host);
-
         var _header = {};
         if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
         if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
+
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
 
-        proxyfull = "http://" + proxy() + ":3129";
-        //console.log("Accessing via: " + proxyfull);
-
-        //console.log("Method: " + req.method);
         var url = "http://" + host + req.url;
         var piper;
 
@@ -142,20 +148,26 @@ if (cluster.isMaster) {
                 j.setCookie(request.cookie(cookies[i].replace(';', '')), "http://" + host);
             }
         }
+
+        // Proxyng trafic
+        proxyfull = "http://" + proxy() + ":3129";
+        //console.log("Accessing via: " + proxyfull);
+
+        //console.log("Method: " + req.method);
         if (req.method === "GET") {
             piper = proxiedReq.get({
                 url: url,
-                proxy: proxyfull
+                proxy: proxyfull,
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
         else if (req.method === "POST") {
             piper = proxiedReq.post({
                 url: "http://" + host + req.url,
-                proxy: proxyfull
+                proxy: proxyfull,
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
 
-
+        // Replaces from config
         replaces.forEach(function (item, i, arr) {
             if (item.type === "usual") {
                 piper = piper.pipe(replacestream(item.from, item.to));
@@ -165,15 +177,18 @@ if (cluster.isMaster) {
             }
         });
 
+        // Replaces from translates.catalogi.ru
         if (translates && translates.length) {
             translates.forEach(function (item, i, arr) {
                 if (item.type === "usual") {
                     piper = piper.pipe(replacestream(item.from, item.to));
                 }
                 else if (item.type === "regex") {
-                    var from = "(^|[^ =\\/?$])\\b(" + item.from + ")\\b";
+                    var from = "(^|[^\\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
+
+                    //console.log(item.from+" -> "+to);
                 }
             });
         }

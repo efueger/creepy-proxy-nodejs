@@ -75,6 +75,7 @@ catalogi.parse = function () {
     catalogi('.lowAvailabilityHint').remove();
     catalogi('.productAdditionalLinks').remove();
     catalogi('.hotlineInfo').remove();
+    catalogi('.availability24hService').remove();
 
     //Поправка цветов и размеров
     catalogi('.colorTile > div').removeAttr('onclick');
@@ -108,6 +109,14 @@ catalogi.parse = function () {
     });
 
     // Стр. товара
+    // catalogi('#productAjaxDescription').change(function() {
+    //     window.clearTimeout(catalogi(this).data("timeout"));
+    //     catalogi(this).data("timeout", setTimeout(function () {
+    //         catalogi.parse();
+    //         catalogi.service();
+    //         console.log('ggwp');
+    //     }, 1000));
+    // });
 
     catalogi('#productAjaxDescription').bind('DOMNodeInserted', function (e) {
 
@@ -179,6 +188,7 @@ catalogi.service = function () {
                 catalogi('.vatLabel').text('С учетом доставки € ' + _delivery.toFixed(2));
             }
         }
+        //console.log(_price);
     }
 };
 
@@ -223,7 +233,7 @@ catalogi(function () {
             case 'search':
                 var goingto = "http://www." + currentDomain + ".catalogi.ru/SearchDisplay?searchTerm=";
                 goingto = goingto + event.originalEvent.data.search.toLowerCase().replace(' ', '+');
-                window.location = goingto + "&storeId=51000";
+                window.location = goingto + "&storeId=510004&catalogId=510000&langId=-3&beginIndex=0&sType=SimpleSearch&resultCatEntryType=2&showResultsPage=true&searchSource=Q&pageView=&categoryId=";
                 break;
 
             case 'orderCount':
@@ -236,7 +246,7 @@ catalogi(function () {
     catalogi.noTranslate();
     catalogi.parse();
 
-    catalogi('.quickViewHover').remove();
+    //catalogi('.quickViewHover').remove();
 
     // Выполняется при прокрутке страницы
     catalogi('body').bind('mousewheel', function(e){

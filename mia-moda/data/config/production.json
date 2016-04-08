@@ -13,21 +13,5 @@
     "height"      : 112,
     "width"       : 957
   },
-  "replaces": [
-    {
-      "type": "usual",
-      "from": "id=\"popupContainer\"",
-      "to": ""
-    },
-    {
-      "type": "usual",
-      "from": "id=\"newsletterPopupContainer\"",
-      "to": ""
-    },
-    {
-      "type": "usual",
-      "from": "https",
-      "to": "http"
-    }
-  ]
+  "replaces": []
 }
