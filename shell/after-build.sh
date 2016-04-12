@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-domainspath="$(cd .. && pwd)"
+domainspath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 domains=(
 "albamoda"
 "conleys"
