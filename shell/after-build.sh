@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-domainspath="/var/www"
+domainspath="$(cd .. && pwd)"
 domains=(
 "albamoda"
 "conleys"
