@@ -45,5 +45,3 @@ done
 
 echo -ne \\n"total domains checked: "${LightCyan}${#domains[@]}${NC}
 echo -ne \\n"${Green}done${NC}"\\n\\n
-
-#bash $domainspath/restart_domains.sh
