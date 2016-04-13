@@ -25,7 +25,7 @@ echo "relaunching domains..."
 for domain in "${domains[@]}"
 	do
 		echo -ne "	now restarting: "${LightCyan}$domain${NC}\\n
-        /usr/sbin/service $domain stop > /dev/null 2>&1
+		/usr/sbin/service $domain stop > /dev/null 2>&1
 		sleep 5
 		/usr/sbin/service $domain start > /dev/null 2>&1
 	done
