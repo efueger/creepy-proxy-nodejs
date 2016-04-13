@@ -1,0 +1,17 @@
+{
+  "site": {
+    "name"        : "janvanderstorm",
+    "domain"      : ".de",
+    "port"        : 5060
+  },
+  "header": {
+    "catalog"     : "janvanderstorm",
+    "alias"       : "DY",
+    "info"        : "Интернет-магазин Janvanderstorm. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
+  },
+  "options": {
+    "height"      : 120,
+    "width"       : 960
+  },
+  "replaces": []
+}
