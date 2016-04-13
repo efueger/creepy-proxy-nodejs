@@ -1,0 +1,17 @@
+{
+  "site": {
+    "name"        : "wenz",
+    "domain"      : ".de"
+  },
+  "header": {
+    "catalog"     : "wenz",
+    "alias"       : "WZ",
+    "info"        : "Интернет-магазин WENZ. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
+  },
+  "options": {
+    "height"      : 108,
+    "width"       : 984
+  },
+  "replaces": [
+  ]
+}
