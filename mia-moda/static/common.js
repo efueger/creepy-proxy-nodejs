@@ -242,7 +242,7 @@ catalogi(function () {
         }
         console.log(event.originalEvent.data);
     });
-    _googleTranslateElementInit();
+    //_googleTranslateElementInit();
     catalogi.noTranslate();
     catalogi.parse();
 
