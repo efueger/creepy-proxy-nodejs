@@ -193,6 +193,7 @@ if (cluster.isMaster) {
         piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
             .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
             .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
+            .pipe(replacestream('https', 'http'))
             .pipe(res);
 
     }).listen(config.get('site.port'));
