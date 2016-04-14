@@ -242,7 +242,6 @@ catalogi(function () {
         }
         console.log(event.originalEvent.data);
     });
-    _googleTranslateElementInit();
     catalogi.noTranslate();
     catalogi.parse();
 
