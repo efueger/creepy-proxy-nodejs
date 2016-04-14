@@ -1,6 +1,6 @@
 server {
     server_name cdn.catalogi.ru;
-    listen 188.40.83.245;
+    listen 188.40.83.218;
     charset UTF-8;
 
     location / {
