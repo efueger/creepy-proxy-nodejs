@@ -30,7 +30,7 @@ start_app (){
     then
         echo "$PID_FILE exists, process is already running or crashed"
         
-        echo "Stopping $APP_DIR/$NODE_APP ..."
+        echo "Stopping $APP_DIR/$NODE_APP  ..."
         echo "Killing `cat $PID_FILE`"
         kill `cat $PID_FILE`;
         rm -f $PID_FILE;
