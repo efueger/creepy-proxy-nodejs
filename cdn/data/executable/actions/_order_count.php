@@ -2,6 +2,8 @@
 require_once dirname(__FILE__).'/../lib.php';
 header('Access-Control-Allow-Origin: *');
 
+error_reporting(0);
+
 try{
   $db = new PDO(PDO_DSN, PDO_USER, PDO_PASS);
   $db->exec("SET CHARACTER SET utf8");

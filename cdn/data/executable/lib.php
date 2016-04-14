@@ -6,6 +6,10 @@ define('PDO_DSN', 'mysql:host=188.40.83.217;dbname=antonioooo_catal');
 define('PDO_USER', 'antonioooo_catal');
 define('PDO_PASS', 'Y70cBrEX');
 
+define('PDO_DSN_TEST', 'mysql:host=188.40.83.245;dbname=catalogiWP');
+define('PDO_USER_TEST', 'catalogiWP');
+define('PDO_PASS_TEST', 'Y1GA6WDg2MzC');
+
 
 /***
  * Кодирование кириллицы
