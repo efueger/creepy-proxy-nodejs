@@ -25,6 +25,11 @@ server {
                 root /var/www/janvanderstorm;
         }
 
+        location = /app.log {
+            root /var/www/janvanderstorm/data/log;
+            try_files $uri $uri/ /app.log;
+        }
+
         location / {
                 #if ($allowed_country = no) {
                 #        rewrite ^/ http://www.janvanderstorm.de/ permanent;
