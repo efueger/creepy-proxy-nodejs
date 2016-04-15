@@ -46,7 +46,9 @@ catalogi.noTranslate = function(){
 
 catalogi.parse = function() {
     //// Шапка
-    catalogi('#iframe').hide();
+    //catalogi('#iframe').hide();
+    catalogi('#topbar').remove();
+    catalogi('.contentarea').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
     catalogi('#wishlist-link').remove();
@@ -54,6 +56,11 @@ catalogi.parse = function() {
     catalogi('#menu-mob > span > span').text('Меню');
     catalogi('#menu').text('Меню');
     catalogi('#page-header').attr('style', '/* height: 100px; */');
+    catalogi('header').prepend(catalogi('#iframe'));
+
+    //юридические страницы
+    catalogi('.services').remove();
+    catalogi('footer').remove();
 
     // Разное
     catalogi('a[href*="/de/login"]').parent().parent().remove();
