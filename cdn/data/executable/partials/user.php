@@ -243,12 +243,15 @@ ob_start();
   });
 
   catalogi('#_login_partial ._forgote').click(function(){
+/*
     catalogi.colorbox({
       inline:true,
       href: '#_forgote_partial',
       innerWidth:394,
       innerHeight:100
     });
+*/
+	alert('Для восстановления пароля свяжитесь с менеджером по телефону: +7(495) 540-49-49');
   });
 </script>
 </body>

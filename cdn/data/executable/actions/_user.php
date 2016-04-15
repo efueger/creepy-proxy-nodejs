@@ -22,7 +22,7 @@ if(isset($_COOKIE["user"])){
   if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $db = new PDO(PDO_DSN, PDO_USER, PDO_PASS);
     $db->exec("SET CHARACTER SET utf8");
-    $stm = $db->prepare("SELECT * FROM `users` WHERE `login`=:login -- AND `password`=MD5(:password) LIMIT 1;");
+    $stm = $db->prepare("SELECT * FROM `users` WHERE `login`=:login AND `password`=MD5(:password) LIMIT 1;");
     $stm->bindParam(':login', $_POST['login']);
     $stm->bindParam(':password', $_POST['password']);
     $stm->execute();
