@@ -134,29 +134,32 @@ catalogi.parse = function() {
     catalogi('.product-button-panel > form > div:eq(1)').remove();
 
     // Добавление в корзину
-    catalogi('.add-to-cart-button').click(function(event){
+    catalogi('.addToCartForm').submit(function(event){
         try{
+
+
+            var queryString = $('.addToCartForm').serialize();
             // артикул
-            var articul 	= catalogi('.js-display-variant-number').text();
+            var articul 	= catalogi(".articlenumber .num").text();
             // название
-            var name 		= shop.product.name;
+            var name 		= window.dataLayer[0].Produktname;
             // количество
-            var count   	= catalogi("input.quantity").val();
+            var count   	= catalogi("input[name=quantity]").val();
             // цена
-            var price       = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
+            var price       = window.dataLayer[0].Produktpreis;
             // картинка
-            var img         = catalogi('.js-display-variant-primary-image').attr('content');
+            var img         = catalogi('#colorSelect .active img').attr('src');
 
             var param = [];
 
             // цвет
-            var color1 		= catalogi('#product-color-dropdown > span > span:eq(0)').text();
+            var color1 		= catalogi('#colorSelect .active').attr('data-original-title');
             var color2 		= catalogi('li[class*="selected"]:eq(0)').attr('title');
             var color 		= (color1 == "") ? color2 : color1;
             if (color && color.length > 0) param.push(color);
 
             // размер
-            var size1 		= catalogi('.product-size-dropdown > div > span > span:eq(0)').text();
+            var size1 		= catalogi('.button-holder .active').text();
             var size2		= catalogi('li[class*="selected"]:eq(1)').text();
             var size 		= ((size1 == "") ? size2 : size1).trim();
             if (size == 'Выберите размер' || size == 'Выберите размер ') {
