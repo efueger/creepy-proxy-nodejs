@@ -154,7 +154,7 @@ catalogi.parse = function() {
             // цена
             var price       = window.dataLayer[0].Produktpreis;
             // картинка
-            var img         = catalogi('#colorSelect .active img').attr('src');
+            var img         = catalogi('#thumbimages img').attr('src');
 
             var param = [];
 
