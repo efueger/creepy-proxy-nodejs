@@ -57,6 +57,8 @@ if (cluster.isMaster) {
         proxy = require("./proxy"),
         includes = require("./includes")(SITENAME, querystring.stringify(HEADERPARAMS.param), HEADERPARAMS.options);
 
+        request.defaults({followAllRedirects:true});
+
     var j = request.jar();
     var proxiedReq = request.defaults({
         jar: j
@@ -88,7 +90,7 @@ if (cluster.isMaster) {
             }
         };
         onResponse = function (response) {
-            console.log(response);
+           // console.log(response);
             if ('location' in response.headers)
                 response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
 
