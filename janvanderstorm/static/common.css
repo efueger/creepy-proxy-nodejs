@@ -5,8 +5,14 @@ body{
 
 
 #iframe{
-    margin: 0 auto;
+    margin: 0 auto !important;
+    background-color: #fff !important;
     display: block;
+}
+
+.iframeContainer {
+	margin: 0 auto !important;
+    background-color: #fff !important;
 }
 
 #page-header #page-header-main-wrapper{
