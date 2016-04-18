@@ -44,6 +44,12 @@
     color: #666;
 }
 
+.iframeContainer {
+    background-color: white;
+    display: table;
+    margin: auto;
+}
+
 /* Новые расположения элементов шапки */
 @media screen and (max-width: 63.9em) {
     #page-header.sticky #account-nav {
