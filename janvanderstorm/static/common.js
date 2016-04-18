@@ -52,6 +52,8 @@ catalogi.parse = function() {
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
     catalogi('#wishlist-link').remove();
+    catalogi('#cc-column-570cb3af6b447').remove();
+    catalogi('#cc-column-570cb3af6bd07').remove();
     catalogi('a[href*="/service/faq"]').attr('href', '#').attr('id', 'menu-mob');
     catalogi('#menu-mob > span > span').text('Меню');
     catalogi('#menu').text('Меню');
