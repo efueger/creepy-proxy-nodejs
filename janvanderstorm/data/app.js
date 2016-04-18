@@ -88,7 +88,7 @@ if (cluster.isMaster) {
             }
         };
         onResponse = function (response) {
-            console.log(response);
+           // console.log(response);
             if ('location' in response.headers)
                 response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
 
