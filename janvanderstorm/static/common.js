@@ -270,7 +270,7 @@ catalogi.parse = function() {
 
 //function for use filters without redirect
 function addFilter(obj){
-	var currentUrl = window.location.href.replace("?","");
+	var currentUrl = window.location.href.split("?")[0];
     var urlParts = window.location.href.split("/");
     var newUrl = "";
     var appliedFilters = urlParts[urlParts.length-1].split('_');
