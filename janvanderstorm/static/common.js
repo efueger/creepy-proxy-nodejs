@@ -52,7 +52,7 @@ catalogi.parse = function() {
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
     catalogi('#wishlist-link').remove();
-    catalogi('li.lightdesign > form.searchform').remove();
+    //catalogi('li.lightdesign > form.searchform').remove();
     catalogi('#cc-column-570cb3af6b447').remove();
     catalogi('#cc-column-570cb3af6bd07').remove();
     catalogi('a[href*="/service/faq"]').attr('href', '#').attr('id', 'menu-mob');
@@ -280,7 +280,7 @@ function addFilter(obj){
         if(obj.id.indexOf('Farbe') != -1){
             appliedFilters = '_Farbe-'+ obj.value;
         } else if(obj.id.indexOf('Größe') != -1){
-            appliedFilters = '_Größe-'+ obj.value;
+            appliedFilters = '__Größe-'+ obj.value;
         }
         urlParts.pop();
         newUrl = urlParts.join('/')+'/'+appliedFilters;
@@ -297,7 +297,7 @@ function addFilter(obj){
     	}
     	if(obj.id.indexOf('Größe') != -1){
     		if(appliedFilters[1].indexOf('Größe') != -1){
-    			appliedFilters[1] = appliedFilters[1]+"."+obj.value;
+    			appliedFilters[2] = appliedFilters[2]+"."+obj.value;
     		} else {
     			if(appliedFilters[1].indexOf('Größe') != -1){
     				appliedFilters[2] = appliedFilters[2]+"."+obj.value;
@@ -307,7 +307,8 @@ function addFilter(obj){
     		}
     	}
     	urlParts.pop();
-    	newUrl = urlParts.join('/')+'/'+appliedFilters.join('_');
+    	var tempUri 
+    	newUrl = urlParts.join('/')+'/'+encodeURIComponent(appliedFilters.join('_'));
     }
 
 
