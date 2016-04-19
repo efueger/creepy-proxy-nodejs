@@ -168,7 +168,7 @@ catalogi.parse = function() {
             // количество
             var count       = catalogi("input[name=quantity]").val();
             // цена
-            var price       = catalogi('.pricearea .price .value').first().text();
+            var price       = catalogi('.pricearea .price .value').first().text().replace(',','.');
             // картинка
             var img         = catalogi('#thumbimages img').attr('src');
 
@@ -213,7 +213,7 @@ catalogi.parse = function() {
                     articul: JSON.parse(catalogi(complekt[i]).attr('data-variantselect')).productId,
                     name: "Комплект "+namePart[0]+" "+catalogi(complekt[i]).find('.articlename').text(),
                     size:"size "+catalogi(complekt[i]).find('.variantselect .button-holder .active').text(),
-                    price: catalogi(complekt[i]).find('.price .value').text(),
+                    price: catalogi(complekt[i]).find('.price .value').text().replace(',','.'),
                     count: 1,
                     img: catalogi(complekt[i]).find('.imgholder img').attr('src')
                 };
