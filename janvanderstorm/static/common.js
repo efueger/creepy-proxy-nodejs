@@ -166,7 +166,7 @@ catalogi.parse = function() {
             if(complekt.length == 1){
                 var queryString = $('.addToCartForm').serialize();
             // артикул
-            var articul     = "<a href='"+window.location.href+"'>"+catalogi(".articlenumber .num").text()+"</a>";
+            var articul     = "<a href='"+window.location.href+"' target='_blank'>"+catalogi(".articlenumber .num").text()+"</a>";
             // название
             var name        = catalogi('.articlemain .articlename').text().trim();
             // количество
@@ -210,7 +210,7 @@ catalogi.parse = function() {
 
             var namePart = catalogi('.articlemain .articlenumber').text();
             namePart = namePart.match(numberPattern);
-            namePart = "<a href='"+window.location.href+"'>"+namePart+"</a>";
+            namePart = "<a href='"+window.location.href+"' target='_blank'>"+namePart+"</a>";
             for(var i = 0; i< complekt.length; i++){
                 var objToSend = {
                     catalog: 'JS',
