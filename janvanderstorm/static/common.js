@@ -272,15 +272,17 @@ catalogi.parse = function() {
 
 //function for use filters without redirect
 function addFilter(obj){
+ 
+	var value = encodeURIComponent(obj.value);
 	var currentUrl = window.location.href.split("?")[0];
     var urlParts = currentUrl.split("/");
     var newUrl = "";
     var appliedFilters = urlParts[urlParts.length-1].split('_');
     if(appliedFilters.length == 1){
         if(obj.id.indexOf('Farbe') != -1){
-            appliedFilters = '_Farbe-'+ obj.value;
+            appliedFilters = '_Farbe-'+ value;
         } else if(obj.id.indexOf('Größe') != -1){
-            appliedFilters = '__Größe-'+ obj.value;
+            appliedFilters = '__Größe-'+ value;
         }
         urlParts.pop();
         newUrl = urlParts.join('/')+'/'+appliedFilters;
@@ -289,26 +291,26 @@ function addFilter(obj){
     	var grosseFilter = "";
     	if(obj.id.indexOf('Farbe') != -1){
     		if(appliedFilters[1].indexOf('Farbe') != -1){
-    			appliedFilters[1] = appliedFilters[1]+"."+obj.value;
+    			appliedFilters[1] = appliedFilters[1]+"."+value;
     		} else {
     			appliedFilters.push(appliedFilters[1]);
-    			appliedFilters[1] = "Farbe-"+obj.value;
+    			appliedFilters[1] = "Farbe-"+value;
     		}
     	}
     	if(obj.id.indexOf('Größe') != -1){
     		if(appliedFilters[1].indexOf('Größe') != -1){
-    			appliedFilters[2] = appliedFilters[2]+"."+obj.value;
+    			appliedFilters[2] = appliedFilters[2]+"."+value;
     		} else {
     			if(appliedFilters[1].indexOf('Größe') != -1){
-    				appliedFilters[2] = appliedFilters[2]+"."+obj.value;
+    				appliedFilters[2] = appliedFilters[2]+"."+value;
     			} else {
-    				appliedFilters[2] = "Größe-"+obj.value;
+    				appliedFilters[2] = "Größe-"+value;
     			}
     		}
     	}
     	urlParts.pop();
-    	var tempUri 
-    	newUrl = urlParts.join('/')+'/'+encodeURIComponent(appliedFilters.join('_'));
+    	
+    	newUrl = urlParts.join('/')+'/'+appliedFilters.join('_');
     }
 
 
