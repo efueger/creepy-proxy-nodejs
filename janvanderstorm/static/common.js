@@ -59,7 +59,8 @@ catalogi.parse = function() {
     catalogi('#menu-mob > span > span').text('Меню');
     catalogi('#menu').text('Меню');
     catalogi('#page-header').attr('style', '/* height: 100px; */');
-    catalogi('header').prepend($("<div></div>").prepend(catalogi('#iframe')));
+    catalogi('header').prepend($("<div></div>").prepend($("<div></div>").prepend(catalogi('#iframe'))));
+    catalogi('#iframe').parent().parent().addClass("iframeContainer2");
     catalogi('#iframe').parent().addClass("iframeContainer");
 
     //юридические страницы
@@ -269,6 +270,7 @@ catalogi.parse = function() {
 
 //function for use filters without redirect
 function addFilter(obj){
+	var currentUrl = window.location.href.replace("?","");
     var urlParts = window.location.href.split("/");
     var newUrl = "";
     var appliedFilters = urlParts[urlParts.length-1].split('_');
@@ -280,7 +282,29 @@ function addFilter(obj){
         }
         urlParts.pop();
         newUrl = urlParts.join('/')+'/'+appliedFilters;
-
+    } else {
+    	var farbeFilter = "";
+    	var grosseFilter = "";
+    	if(obj.id.indexOf('Farbe') != -1){
+    		if(appliedFilters[1].indexOf('Farbe') != -1){
+    			appliedFilters[1] = appliedFilters[1]+"."+obj.value;
+    		} else {
+    			appliedFilters.push(appliedFilters[1]);
+    			appliedFilters[1] = "Farbe-"+obj.value;
+    		}
+    	}
+    	if(obj.id.indexOf('Größe') != -1){
+    		if(appliedFilters[1].indexOf('Größe') != -1){
+    			appliedFilters[1] = appliedFilters[1]+"."+obj.value;
+    		} else {
+    			if(appliedFilters[1].indexOf('Größe') != -1){
+    				appliedFilters[2] = appliedFilters[2]+"."+obj.value;
+    			} else {
+    				appliedFilters[2] = "Größe-"+obj.value;
+    			}
+    		}
+    	}
+    	newUrl = urlParts.join('/')+'/'+appliedFilters.join('_');
     }
 
 

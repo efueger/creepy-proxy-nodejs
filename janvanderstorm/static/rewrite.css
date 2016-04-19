@@ -47,10 +47,14 @@
 #cboxLoadedContent {
     padding: 0;
 }
+.iframeContainer2 {
+    margin: auto;
+}
 
 .iframeContainer {
     background-color: white;
-    display: table;
+    display: flex;
+    max-width: 1380px;
     margin: auto;
 }
 
