@@ -135,6 +135,7 @@ catalogi.parse = function() {
     catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
 
     // Корзина
+    catalogi('#cboxLoadedContent').css('width','1000px');
     catalogi('#minicart-data').remove();
     catalogi('a[title*="Warenkorb"]').attr('href', '#').click(function(){
         catalogi.order();
@@ -309,10 +310,10 @@ function addFilter(obj){
     		}
     	}
     	if(obj.id.indexOf('Größe') != -1){
-    		if(appliedFilters[1].indexOf('Größe') != -1){
+    		if(appliedFilters[2].indexOf('Größe') != -1){
     			appliedFilters[2] = appliedFilters[2]+"."+value;
     		} else {
-    			if(appliedFilters[1].indexOf('Größe') != -1){
+    			if(appliedFilters[2].indexOf('Größe') != -1){
     				appliedFilters[2] = appliedFilters[2]+"."+value;
     			} else {
     				appliedFilters[2] = "Größe-"+value;
