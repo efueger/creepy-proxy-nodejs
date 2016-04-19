@@ -94,6 +94,17 @@ catalogi.parse = function() {
     catalogi('.catalogi-shops').parent().parent().clone().prependTo('#meta-nav > ul');
     catalogi('.catalogi-shops:eq(0)').attr('class', 'catalogi-main-site');
 
+
+    //cart
+    catalogi('.minibasketholder').attr('onclick','catalogi.order()');
+
+    //subscribe button
+    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', 'catalogi.subscribe(false, '35346');event.preventDefault()');
+
+
+
+//cart
+
     // На основной сайт
     catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
     catalogi('.catalogi-main-site > span').text('Каталоги.ру');
@@ -160,7 +171,7 @@ catalogi.parse = function() {
             // количество
             var count       = catalogi("input[name=quantity]").val();
             // цена
-            var price       = catalogi('.pricearea .price .value').first().text();
+            var price       = catalogi('.pricearea .price .value').first().text().replace(',','.');
             // картинка
             var img         = catalogi('#thumbimages img').attr('src');
 
@@ -205,7 +216,7 @@ catalogi.parse = function() {
                     articul: JSON.parse(catalogi(complekt[i]).attr('data-variantselect')).productId,
                     name: "Комплект "+namePart[0]+" "+catalogi(complekt[i]).find('.articlename').text(),
                     size:"size "+catalogi(complekt[i]).find('.variantselect .button-holder .active').text(),
-                    price: catalogi(complekt[i]).find('.price .value').text(),
+                    price: catalogi(complekt[i]).find('.price .value').text().replace(',','.'),
                     count: 1,
                     img: catalogi(complekt[i]).find('.imgholder img').attr('src')
                 };
@@ -272,15 +283,17 @@ catalogi.parse = function() {
 
 //function for use filters without redirect
 function addFilter(obj){
+ 
+	var value = encodeURIComponent(obj.value);
 	var currentUrl = window.location.href.split("?")[0];
     var urlParts = currentUrl.split("/");
     var newUrl = "";
     var appliedFilters = urlParts[urlParts.length-1].split('_');
     if(appliedFilters.length == 1){
         if(obj.id.indexOf('Farbe') != -1){
-            appliedFilters = '_Farbe-'+ obj.value;
+            appliedFilters = '_Farbe-'+ value;
         } else if(obj.id.indexOf('Größe') != -1){
-            appliedFilters = '__Größe-'+ obj.value;
+            appliedFilters = '__Größe-'+ value;
         }
         urlParts.pop();
         newUrl = urlParts.join('/')+'/'+appliedFilters;
@@ -289,26 +302,26 @@ function addFilter(obj){
     	var grosseFilter = "";
     	if(obj.id.indexOf('Farbe') != -1){
     		if(appliedFilters[1].indexOf('Farbe') != -1){
-    			appliedFilters[1] = appliedFilters[1]+"."+obj.value;
+    			appliedFilters[1] = appliedFilters[1]+"."+value;
     		} else {
     			appliedFilters.push(appliedFilters[1]);
-    			appliedFilters[1] = "Farbe-"+obj.value;
+    			appliedFilters[1] = "Farbe-"+value;
     		}
     	}
     	if(obj.id.indexOf('Größe') != -1){
     		if(appliedFilters[1].indexOf('Größe') != -1){
-    			appliedFilters[2] = appliedFilters[2]+"."+obj.value;
+    			appliedFilters[2] = appliedFilters[2]+"."+value;
     		} else {
     			if(appliedFilters[1].indexOf('Größe') != -1){
-    				appliedFilters[2] = appliedFilters[2]+"."+obj.value;
+    				appliedFilters[2] = appliedFilters[2]+"."+value;
     			} else {
-    				appliedFilters[2] = "Größe-"+obj.value;
+    				appliedFilters[2] = "Größe-"+value;
     			}
     		}
     	}
     	urlParts.pop();
-    	var tempUri 
-    	newUrl = urlParts.join('/')+'/'+encodeURIComponent(appliedFilters.join('_'));
+    	
+    	newUrl = urlParts.join('/')+'/'+appliedFilters.join('_');
     }
 
 
