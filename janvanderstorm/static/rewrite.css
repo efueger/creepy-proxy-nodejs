@@ -46,6 +46,7 @@
 
 #cboxLoadedContent {
     padding: 0;
+    overflow: hidden;
 }
 .iframeContainer2 {
     margin: auto;
