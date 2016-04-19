@@ -130,6 +130,12 @@ catalogi.parse = function() {
     });
     catalogi('a[title*="Warenkorb"] > span:eq(0)').text('Корзина');
 
+
+    //filters 
+    catalogi("[onchange='this.form.submit()']").attr('onchange','addFilter(this);return false');
+
+    
+
     // Страница товара
     catalogi('#add-to-watchlist-button').remove();
     catalogi('#quick-shopper').remove();
@@ -260,6 +266,34 @@ catalogi.parse = function() {
             }
         });
 };
+
+//function for use filters without redirect
+function addFilter(obj){
+    var urlParts = window.location.href.split("/");
+    var newUrl = "";
+    var appliedFilters = urlParts[urlParts.length-1].split('_');
+    if(appliedFilters.length == 0){
+        if(obj.id.indexOf('Farbe') != -1){
+            appliedFilters = '_Farbe-'+ obj.value;
+        } else if(obj.id.indexOf('Größe') != -1){
+            appliedFilters = '_Größe-'+ obj.value;
+        }
+        urlParts.pop();
+        newUrl = urlParts.join('/')+'/'+appliedFilters;
+
+    }
+
+
+    /*alert(obj.value);
+    if(obj.id.indexOf('Farbe') != -1){
+        alert('Farbe'+ obj.value);
+    } else if(obj.id.indexOf('Größe') != -1){
+        alert('Größe'+ obj.value);
+    }*/
+
+    catalogi('.form-filter').attr('method','GET').attr('action',newUrl).submit();
+
+}
 
 function checkBasket() {
     window.clearInterval(window.timer1);
