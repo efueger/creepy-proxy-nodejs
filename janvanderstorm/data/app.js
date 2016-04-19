@@ -67,7 +67,7 @@ if (cluster.isMaster) {
     var translates, fsize = 0;
 
     var server = http.createServer(function (req, res) {
-        //console.log('Trying to access: ' + req.headers.host + req.url);
+        console.log('Trying to access: ' + req.headers.host + req.url);
         onError = function (err) {
             console.error(err);
 
@@ -90,7 +90,7 @@ if (cluster.isMaster) {
             }
         };
         onResponse = function (response) {
-           // console.log(response);
+            console.log(new Date()+" "+ response.headers);
            if(response.statusCode == 200){
             if ('location' in response.headers)
                 response.setHeader('Location', response.headers['location'].replace(SITE, SITENAME + '.catalogi.ru'));
