@@ -59,7 +59,8 @@ catalogi.parse = function() {
     catalogi('#menu-mob > span > span').text('Меню');
     catalogi('#menu').text('Меню');
     catalogi('#page-header').attr('style', '/* height: 100px; */');
-    catalogi('header').prepend($("<div></div>").prepend(catalogi('#iframe')));
+    catalogi('header').prepend($("<div></div>").prepend($("<div></div>").prepend(catalogi('#iframe'))));
+    catalogi('#iframe').parent().parent().addClass("iframeContainer2");
     catalogi('#iframe').parent().addClass("iframeContainer");
 
     //юридические страницы
