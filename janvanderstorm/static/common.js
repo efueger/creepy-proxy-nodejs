@@ -99,7 +99,7 @@ catalogi.parse = function() {
     catalogi('.minibasketholder').attr('onclick','catalogi.order()');
 
     //subscribe button
-    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', 'catalogi.subscribe(false, '35346');event.preventDefault()');
+    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(false, '35346');event.preventDefault()");
 
 
 
