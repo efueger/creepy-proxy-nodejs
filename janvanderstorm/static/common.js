@@ -148,11 +148,11 @@ catalogi.parse = function() {
             // артикул
             var articul     = catalogi(".articlenumber .num").text();
             // название
-            var name        = window.dataLayer[0].Produktname;
+            var name        = catalogi('.articlemain .articlename').text().trim();
             // количество
             var count       = catalogi("input[name=quantity]").val();
             // цена
-            var price       = window.dataLayer[0].Produktpreis;
+            var price       = catalogi('.pricearea .price .value').first().text();
             // картинка
             var img         = catalogi('#thumbimages img').attr('src');
 
