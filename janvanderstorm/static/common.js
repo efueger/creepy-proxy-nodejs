@@ -143,6 +143,7 @@ catalogi.parse = function() {
     catalogi('.product-helper-guides').remove();
     catalogi('.product-button-panel').append(catalogi('.add-to-cart-button'));
     catalogi('.product-button-panel > form > div:eq(1)').remove();
+    catalogi('.vatinfo').remove();
 
     // Добавление в корзину
     catalogi('.addToCartForm').submit(function(event){
@@ -153,7 +154,7 @@ catalogi.parse = function() {
             if(complekt.length == 1){
                 var queryString = $('.addToCartForm').serialize();
             // артикул
-            var articul     = catalogi(".articlenumber .num").text();
+            var articul     = "<a href='"+window.location.href+"'>"+catalogi(".articlenumber .num").text()+"</a>";
             // название
             var name        = catalogi('.articlemain .articlename').text().trim();
             // количество
@@ -197,6 +198,7 @@ catalogi.parse = function() {
 
             var namePart = catalogi('.articlemain .articlenumber').text();
             namePart = namePart.match(numberPattern);
+            namePart = "<a href='"+window.location.href+"'>"+namePart+"</a>";
             for(var i = 0; i< complekt.length; i++){
                 var objToSend = {
                     catalog: 'JS',
@@ -308,13 +310,6 @@ function addFilter(obj){
     	newUrl = urlParts.join('/')+'/'+appliedFilters.join('_');
     }
 
-
-    /*alert(obj.value);
-    if(obj.id.indexOf('Farbe') != -1){
-        alert('Farbe'+ obj.value);
-    } else if(obj.id.indexOf('Größe') != -1){
-        alert('Größe'+ obj.value);
-    }*/
 
     catalogi('.form-filter').attr('method','GET').attr('action',newUrl).submit();
 
