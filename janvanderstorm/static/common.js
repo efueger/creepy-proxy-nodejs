@@ -166,7 +166,7 @@ catalogi.parse = function() {
             if(complekt.length == 1){
                 var queryString = $('.addToCartForm').serialize();
             // артикул
-            var articul     = "<a href='"+window.location.href+"'>"+catalogi(".articlenumber .num").text()+"</a>";
+            var articul     = "<a href='"+window.location.href+"' target='_blank'>"+catalogi(".articlenumber .num").text()+"</a>";
             // название
             var name        = catalogi('.articlemain .articlename').text().trim();
             // количество
@@ -210,7 +210,7 @@ catalogi.parse = function() {
 
             var namePart = catalogi('.articlemain .articlenumber').text();
             namePart = namePart.match(numberPattern);
-            namePart = "<a href='"+window.location.href+"'>"+namePart+"</a>";
+            namePart = "<a href='"+window.location.href+"' target='_blank'>"+namePart+"</a>";
             for(var i = 0; i< complekt.length; i++){
                 var objToSend = {
                     catalog: 'JS',
@@ -289,7 +289,7 @@ function addFilter(obj){
 	var currentUrl = window.location.href.split("?")[0];
     var urlParts = currentUrl.split("/");
     var newUrl = "";
-    var appliedFilters = urlParts[urlParts.length-1].split('_');
+    var appliedFilters = decodeURIComponent(urlParts[urlParts.length-1]).split('_');
     if(appliedFilters.length == 1){
         if(obj.id.indexOf('Farbe') != -1){
             appliedFilters = '_Farbe-'+ value;
@@ -310,7 +310,7 @@ function addFilter(obj){
     		}
     	}
     	if(obj.id.indexOf('Größe') != -1){
-    		if(appliedFilters[2].indexOf('Größe') != -1){
+    		if(appliedFilters[2] && appliedFilters[2].indexOf('Größe') != -1){
     			appliedFilters[2] = appliedFilters[2]+"."+value;
     		} else {
     			if(appliedFilters[2].indexOf('Größe') != -1){
