@@ -134,7 +134,7 @@ catalogi.parse = function() {
     //filters 
     catalogi("[onchange='this.form.submit()']").attr('onchange','addFilter(this);return false');
 
-    
+
 
     // Страница товара
     catalogi('#add-to-watchlist-button').remove();
@@ -223,7 +223,7 @@ catalogi.parse = function() {
     catalogi('#page-footer').remove();
 
     // Подписка
-    catalogi.subscribe(false, '22914');
+    catalogi.subscribe(false, '35346');
 
     // Showing body after hiding
     catalogi('body')
@@ -272,7 +272,7 @@ function addFilter(obj){
     var urlParts = window.location.href.split("/");
     var newUrl = "";
     var appliedFilters = urlParts[urlParts.length-1].split('_');
-    if(appliedFilters.length == 0){
+    if(appliedFilters.length == 1){
         if(obj.id.indexOf('Farbe') != -1){
             appliedFilters = '_Farbe-'+ obj.value;
         } else if(obj.id.indexOf('Größe') != -1){
