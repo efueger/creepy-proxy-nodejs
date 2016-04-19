@@ -94,6 +94,14 @@ catalogi.parse = function() {
     catalogi('.catalogi-shops').parent().parent().clone().prependTo('#meta-nav > ul');
     catalogi('.catalogi-shops:eq(0)').attr('class', 'catalogi-main-site');
 
+
+    //cart
+    catalogi('.minibasketholder').attr('onclick','catalogi.order()');
+
+
+
+//cart
+
     // На основной сайт
     catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
     catalogi('.catalogi-main-site > span').text('Каталоги.ру');
