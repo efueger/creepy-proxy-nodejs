@@ -60,8 +60,8 @@ catalogi.parse = function() {
     catalogi('#menu').text('Меню');
     catalogi('#page-header').attr('style', '/* height: 100px; */');
     catalogi('header').prepend($("<div></div>").prepend($("<div></div>").prepend(catalogi('#iframe'))));
-    catalogi('#iframe').parent().parent().addClass("iframeContainer2");
-    catalogi('#iframe').parent().addClass("iframeContainer");
+    catalogi('#iframe').parent().parent().addClass("iframeContainer");
+    catalogi('#iframe').parent().addClass("iframeContainer2");
 
     //юридические страницы
     catalogi('.services').remove();
@@ -304,6 +304,7 @@ function addFilter(obj){
     			}
     		}
     	}
+    	urlParts.pop();
     	newUrl = urlParts.join('/')+'/'+appliedFilters.join('_');
     }
 
