@@ -135,6 +135,7 @@ catalogi.parse = function() {
     catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
 
     // Корзина
+    catalogi('#cboxLoadedContent').css('width','1000px');
     catalogi('#minicart-data').remove();
     catalogi('a[title*="Warenkorb"]').attr('href', '#').click(function(){
         catalogi.order();
