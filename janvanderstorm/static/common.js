@@ -46,9 +46,9 @@ catalogi.noTranslate = function(){
 
 catalogi.parse = function() {
     //// Шапка
-    //catalogi('#iframe').hide();
-    catalogi('#topbar').remove();
-    catalogi('.contentarea').remove();
+    catalogi('#iframe').hide();
+    //catalogi('#topbar').remove();
+    //catalogi('.contentarea').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
     catalogi('#wishlist-link').remove();
@@ -59,9 +59,9 @@ catalogi.parse = function() {
     catalogi('#menu-mob > span > span').text('Меню');
     catalogi('#menu').text('Меню');
     catalogi('#page-header').attr('style', '/* height: 100px; */');
-    catalogi('header').prepend($("<div></div>").prepend($("<div></div>").prepend(catalogi('#iframe'))));
-    catalogi('#iframe').parent().parent().addClass("iframeContainer2");
-    catalogi('#iframe').parent().addClass("iframeContainer");
+    //catalogi('header').prepend($("<div></div>").prepend($("<div></div>").prepend(catalogi('#iframe'))));
+    //catalogi('#iframe').parent().parent().addClass("iframeContainer");
+    //catalogi('#iframe').parent().addClass("iframeContainer2");
 
     //юридические страницы
     catalogi('.services').remove();
@@ -270,7 +270,7 @@ catalogi.parse = function() {
 
 //function for use filters without redirect
 function addFilter(obj){
-	var currentUrl = window.location.href.replace("?","");
+	var currentUrl = window.location.href.split("?")[0];
     var urlParts = window.location.href.split("/");
     var newUrl = "";
     var appliedFilters = urlParts[urlParts.length-1].split('_');
@@ -304,6 +304,7 @@ function addFilter(obj){
     			}
     		}
     	}
+    	urlParts.pop();
     	newUrl = urlParts.join('/')+'/'+appliedFilters.join('_');
     }
 
