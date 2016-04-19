@@ -289,7 +289,7 @@ function addFilter(obj){
 	var currentUrl = window.location.href.split("?")[0];
     var urlParts = currentUrl.split("/");
     var newUrl = "";
-    var appliedFilters = urlParts[urlParts.length-1].split('_');
+    var appliedFilters = decodeURIComponent(urlParts[urlParts.length-1]).split('_');
     if(appliedFilters.length == 1){
         if(obj.id.indexOf('Farbe') != -1){
             appliedFilters = '_Farbe-'+ value;
@@ -310,7 +310,7 @@ function addFilter(obj){
     		}
     	}
     	if(obj.id.indexOf('Größe') != -1){
-    		if(appliedFilters[2].indexOf('Größe') != -1){
+    		if(appliedFilters[2] && appliedFilters[2].indexOf('Größe') != -1){
     			appliedFilters[2] = appliedFilters[2]+"."+value;
     		} else {
     			if(appliedFilters[2].indexOf('Größe') != -1){
