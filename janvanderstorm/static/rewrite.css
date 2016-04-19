@@ -44,6 +44,10 @@
     color: #666;
 }
 
+#cboxLoadedContent {
+    padding: 0;
+}
+
 .iframeContainer {
     background-color: white;
     display: table;
