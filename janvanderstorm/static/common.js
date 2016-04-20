@@ -26,6 +26,7 @@ catalogi(document).ready(function(){
 catalogi.noTranslate = function(){
     // Шапка
     catalogi('#meta-nav').addClass('notranslate');
+    catalogi('.benefit').addClass('notranslate');
 
     // Меню
     catalogi('#navs').addClass('notranslate');
@@ -48,6 +49,10 @@ catalogi.noTranslate = function(){
 catalogi.parse = function() {
     //// Шапка
     catalogi('#iframe').hide();
+
+    catalogi('.benefit.first').text('ЭКСПЕРТ ПО БОЛЬШИМ РАЗМЕРАМ');
+    catalogi('.benefit.second').text('МУЖСКАЯ МОДА ДО 70 РАЗМЕРА');
+    catalogi('.benefit.last').text('ИДЕАЛЬНО ДЛЯ ВАШЕЙ ФИГУРЫ');
     //catalogi('#topbar').remove();
     //catalogi('.contentarea').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
