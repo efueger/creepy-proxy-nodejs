@@ -2,3 +2,7 @@
 	margin: 0px 0 0 34px !important;
 }
 
+#cboxLoadedContent {
+    width: 110%!important;
+    height: 110%!important;
+}
