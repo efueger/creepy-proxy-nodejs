@@ -50,7 +50,7 @@
     color: #666;
 }
 
-#cboxLoadedContent {
+/*#cboxLoadedContent {
     width: 60%!important;
     padding: 0 !important;
 
@@ -59,7 +59,7 @@
 
 #cboxLoadedContent > iframe {
     width: 100%!important;
-}
+}*/
 
 
 /* Новые расположения элементов шапки */

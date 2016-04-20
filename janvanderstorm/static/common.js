@@ -233,9 +233,38 @@ catalogi.parse = function() {
     return false;
 });
 
+
+
+
     // Футер
     catalogi('#seo-text').remove();
     catalogi('#page-footer').remove();
+
+
+    //search handler
+    catalogi("[value='Suche starten']").click(function() {
+        catalogi.cookie('seachString', catalogi("[name='search'").val(), { expires: 7, path: '/', domain: '.catalogi.ru' });
+        catalogi.ajax({
+            url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
+            type: 'get',
+            dataType: 'json',
+            data: {
+                client: 't',
+                text: catalogi("[name='search'").val(),
+                sl: 'ru',
+                tl: 'de'
+            },
+            success: function(data){
+                console.log('success:' + data);
+                //top.postMessage({action: 'search', search: data.text[0]},'*');
+            },
+            error: function(data){
+                console.log('error:' + data);
+                //top.postMessage({action: 'search', search: catalogi('#search').val()},'*');
+            }
+        });
+        return false;
+    });
 
     // Подписка
     catalogi.subscribe(false, '35346');
