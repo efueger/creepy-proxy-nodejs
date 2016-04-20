@@ -99,11 +99,11 @@ catalogi.parse = function() {
     catalogi('.minibasketholder').attr('onclick','catalogi.order()');
 
     //subscribe button
-    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(false, '35346');event.preventDefault()");
+    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(true, '35346');event.preventDefault()");
 
 
 
-//cart
+
 
     // На основной сайт
     catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
