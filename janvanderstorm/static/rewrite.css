@@ -63,11 +63,9 @@
     padding-right: 1em;
 }
 
-/*#cboxLoadedContent {
-    width: 60%!important;
-    padding: 0 !important;
-
-    overflow: hidden;
+#cboxLoadedContent {
+    width: 110%!important;
+    height: 110%!important;
 }
 
 #cboxLoadedContent > iframe {
