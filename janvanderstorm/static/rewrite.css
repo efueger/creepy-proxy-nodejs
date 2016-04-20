@@ -57,6 +57,10 @@
     overflow: hidden;
 }
 
+#cboxLoadedContent > iframe {
+    width: 100%!important;
+}
+
 
 /* Новые расположения элементов шапки */
 @media screen and (max-width: 63.9em) {
