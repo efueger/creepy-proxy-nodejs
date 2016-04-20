@@ -50,6 +50,13 @@
     color: #666;
 }
 
+.headerLinks {
+    text-decoration: none;
+    font-style: normal;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
 /*#cboxLoadedContent {
     width: 60%!important;
     padding: 0 !important;
