@@ -26,11 +26,12 @@ catalogi(document).ready(function(){
 catalogi.noTranslate = function(){
     // Шапка
     catalogi('#meta-nav').addClass('notranslate');
-    catalogi('.benefit').addClass('notranslate');
+    catalogi('#header-wrapper').children().addClass('notranslate');
+    //catalogi('.benefit').addClass('notranslate');
 
     // Меню
     catalogi('#navs').addClass('notranslate');
-    catalogi('#navbar').addClass('notranslate');
+   // catalogi('#navbar').addClass('notranslate');
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Von A bis Z')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Top Brands')").parent().parent().addClass('notranslate');
