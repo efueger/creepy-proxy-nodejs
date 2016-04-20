@@ -297,6 +297,8 @@ catalogi.parse = function() {
     } catch(e) {
         console.log(e);
     }
+    catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     return false;
 });
 
