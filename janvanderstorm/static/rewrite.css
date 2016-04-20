@@ -1,4 +1,10 @@
 /* Заменяем шрифты */
+
+@font-face {
+    font-family: "jvds icons";
+    src: url("/static/fonts/jvds-icons.woff");
+}
+
 @font-face {
     font-family: "GinIcons";
     src: url("/static/fonts/janvanderstorm-iconfont.eot");
