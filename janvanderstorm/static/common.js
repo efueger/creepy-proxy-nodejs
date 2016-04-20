@@ -242,7 +242,7 @@ catalogi.parse = function() {
 
 
     //search handler
-    catalogi("[value='Suche starten']").click(function() {
+    /*catalogi("[value='Suche starten']").click(function() {
         catalogi.cookie('seachString', catalogi("[name='search'").val(), { expires: 7, path: '/', domain: '.catalogi.ru' });
         catalogi.ajax({
             url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
@@ -264,7 +264,7 @@ catalogi.parse = function() {
             }
         });
         return false;
-    });
+    });*/
 
     // Подписка
     catalogi.subscribe(false, '35346');
