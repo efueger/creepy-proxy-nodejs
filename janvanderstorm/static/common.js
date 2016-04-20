@@ -297,8 +297,6 @@ catalogi.parse = function() {
     } catch(e) {
         console.log(e);
     }
-    catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     return false;
 });
 
@@ -430,7 +428,7 @@ function checkBasket() {
 
     var ordersNumber = catalogi.cookie('ordersNum');
     if(ordersNumber)
-        catalogi('.minicart-amount').text(ordersNumber);
+        catalogi('.wording .basket .num').text(ordersNumber);
     console.log('ordersNumber: ' + ordersNumber);
 
     window.timer1 = window.setInterval("checkBasket();", timeout1);
