@@ -134,6 +134,12 @@ catalogi.parse = function() {
     // Главное меню
     catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
 
+    catalogi(catalogi('#navbar li.dropdown > a > font > font')[0]).text('ОДЕЖДА');
+    catalogi(catalogi('#navbar li.dropdown > a > font > font')[1]).text('БЕЛЬЕ');
+    catalogi(catalogi('#navbar li.dropdown > a > font > font')[2]).text('ТРЕНДЫ');
+    catalogi(catalogi('#navbar li.dropdown > a > font > font')[3]).text('РАСПРОДАЖА');
+   // catalogi(catalogi('#navbar li.dropdown > a > font > font')[4]).text('ОДЕЖДА');
+
     // Корзина
     catalogi('#cboxLoadedContent').css('width','1000px');
     catalogi('#minicart-data').remove();
@@ -156,6 +162,7 @@ catalogi.parse = function() {
     catalogi('.product-button-panel').append(catalogi('.add-to-cart-button'));
     catalogi('.product-button-panel > form > div:eq(1)').remove();
     catalogi('.vatinfo').remove();
+    catalogi('.sharing').remove();
 
     // Добавление в корзину
     catalogi('.addToCartForm').submit(function(event){
