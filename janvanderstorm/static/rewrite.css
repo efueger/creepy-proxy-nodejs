@@ -1,4 +1,10 @@
 /* Заменяем шрифты */
+
+@font-face {
+    font-family: "jvds icons";
+    src: url("/static/fonts/jvds-icons.woff");
+}
+
 @font-face {
     font-family: "GinIcons";
     src: url("/static/fonts/janvanderstorm-iconfont.eot");
@@ -45,19 +51,12 @@
 }
 
 #cboxLoadedContent {
-    padding: 0;
+    width: 60%!important;
+    padding: 0 !important;
+
     overflow: hidden;
 }
-.iframeContainer2 {
-    margin: auto;
-}
 
-.iframeContainer {
-    background-color: white;
-    display: flex;
-    max-width: 1380px;
-    margin: auto;
-}
 
 /* Новые расположения элементов шапки */
 @media screen and (max-width: 63.9em) {
