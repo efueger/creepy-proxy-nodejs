@@ -59,20 +59,20 @@ catalogi.parse = function() {
     catalogi('.newsletterinfo').prepend($("<a>Таблица размеров</a>").attr('href','#').addClass('headerLinks').click(function(event){
         event.preventDefault();
         catalogi.sizeTable();
-       // catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-       // catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     }));
     catalogi('.newsletterinfo').prepend($("<a>Доставка</a>").attr('href','#').addClass('headerLinks').click(function(event){
         event.preventDefault();
         catalogi.delivery();
-        //catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-        //catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     }));
     catalogi('.newsletterinfo').prepend($("<a>Оплата</a>").attr('href','#').addClass('headerLinks').click(function(event){
         event.preventDefault();
         catalogi.payment();
-       // catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-       // catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     }));
 
 
@@ -80,17 +80,17 @@ catalogi.parse = function() {
     catalogi('.miniaccount').prepend($("<a>Каталоги</a>").attr('href','#').addClass('headerLinks').click(function(event){
         event.preventDefault();
         catalogi.catalogs();
-        //catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-       // catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     }));
     catalogi('.miniaccount').prepend($("<a>Интернет-магазины</a>").attr('href','#').addClass('headerLinks').click(function(event){
         event.preventDefault();
         catalogi.shops();
-       // catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-       // catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     }));
     catalogi('.miniaccount')
-    .prepend($("<a>Каталоги.ру</a>")
+    .prepend($("<a> Каталоги.ру</a>")
         .attr('href','http://www.catalogi.ru')
         .attr('target','_blank')
         .addClass('headerLinks')
