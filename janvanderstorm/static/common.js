@@ -69,10 +69,7 @@ catalogi.parse = function() {
         catalogi.payment();
     }));
     catalogi('.directorderlink').remove();
-    catalogi('.customerbox')
-    .append($('<div></div>')
-        .text('Каталоги.ру - доставка одежды больших размеров из Германии')
-        .addClass('textInHeader'));
+    catalogi('.customerbox').append($('<div></div>').text('Каталоги.ру - доставка одежды больших размеров из Германии').addClass('textInHeader'));
     
     catalogi('.basket .pre').remove();
     catalogi('.wording .price').remove();
