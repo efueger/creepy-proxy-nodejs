@@ -185,6 +185,7 @@ if (cluster.isMaster) {
                 .pipe(replacestream('googletagmanager', '127.0.0.1'))
                 .pipe(replacestream('fast.fonts.net', '127.0.0.1'))
                 .pipe(replacestream(new RegExp('OnlineKAT_Conleys_950O_DE', 'g'), 'OnlineKAT_Conleys_950O_DE/index.php'))
+                .pipe(replacestream(new RegExp('OnlineKAT_Conleys_9604_DE_neu', 'g'), 'OnlineKAT_Conleys_9604_DE_neu/index.php'))
                 .pipe(res);
         } else {
             piper.pipe(replacestream(new RegExp('blaetterkatalog/script/bk_script.js', 'g'), 'http://conleys.catalogi.ru/static/bk_script.js'))
