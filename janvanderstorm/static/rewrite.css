@@ -63,10 +63,7 @@
     padding-right: 1em;
 }
 
-#cboxLoadedContent {
-    width: 110%!important;
-    height: 110%!important;
-}
+
 
 #cboxLoadedContent > iframe {
     width: 100%!important;
