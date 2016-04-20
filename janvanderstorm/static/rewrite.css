@@ -50,9 +50,15 @@
     color: #666;
 }
 
+.textInHeader {
+    padding-top: 1em;
+    font-style: italic;
+    font-size: 1.4em;
+}
+
 .headerLinks {
-    text-decoration: none;
-    font-style: normal;
+    text-decoration: none!important;
+    font-style: normal!important;
     padding-left: 1em;
     padding-right: 1em;
 }
