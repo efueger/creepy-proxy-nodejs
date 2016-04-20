@@ -56,18 +56,20 @@ catalogi.parse = function() {
     catalogi('.benefit.last').text('ИДЕАЛЬНО ДЛЯ ВАШЕЙ ФИГУРЫ');
 
     catalogi('.newsletterinfo').children().remove();
-    catalogi('.newsletterinfo').prepend($("<a>Оплата</a>").attr('href','#').click(function(event){
-        event.preventDefault();
-        catalogi.payment();
-    }));
-    catalogi('.newsletterinfo').prepend($("<a>Доставка</a>").attr('href','#').click(function(event){
-        event.preventDefault();
-        catalogi.delivery();
-    }));
-    catalogi('.newsletterinfo').prepend($("<a>Таблица размеров</a>").attr('href','#').click(function(event){
+    catalogi('.newsletterinfo').prepend($("<a>Таблица размеров</a>").attr('href','#').addClass('headerLinks').click(function(event){
         event.preventDefault();
         catalogi.sizeTable();
     }));
+    catalogi('.newsletterinfo').prepend($("<a>Доставка</a>").attr('href','#').addClass('headerLinks').click(function(event){
+        event.preventDefault();
+        catalogi.delivery();
+    }));
+    catalogi('.newsletterinfo').prepend($("<a>Оплата</a>").attr('href','#').addClass('headerLinks').click(function(event){
+        event.preventDefault();
+        catalogi.payment();
+    }));
+    
+    
     
 
     catalogi('.logged').text('Личный кабинет');
