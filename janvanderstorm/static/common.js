@@ -53,6 +53,12 @@ catalogi.parse = function() {
     catalogi('.benefit.first').text('ЭКСПЕРТ ПО БОЛЬШИМ РАЗМЕРАМ');
     catalogi('.benefit.second').text('МУЖСКАЯ МОДА ДО 70 РАЗМЕРА');
     catalogi('.benefit.last').text('ИДЕАЛЬНО ДЛЯ ВАШЕЙ ФИГУРЫ');
+
+    catalogi('.newsletterinfo').children().remove();
+    catalogi('.newsletterinfo').text("<a>one</a>   <a>two</a>   <a>three</a>");
+
+    catalogi('.logged').text('Личный кабинет');
+    catalogi('.myaccount .link').text('Вход');
     //catalogi('#topbar').remove();
     //catalogi('.contentarea').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
