@@ -68,9 +68,14 @@ catalogi.parse = function() {
         event.preventDefault();
         catalogi.payment();
     }));
+    catalogi('.directorderlink').remove();
+    catalogi('.customerbox')
+    .append($('<div></div>')
+        .text('Каталоги.ру - доставка одежды больших размеров из Германии')
+        .addClass('textInHeader'));
     
-    
-    
+    catalogi('.basket .pre').remove();
+    catalogi('.wording .price').remove();
 
     catalogi('.logged').text('Личный кабинет');
     catalogi('.myaccount .link').text('Вход');
