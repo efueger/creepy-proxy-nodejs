@@ -563,7 +563,7 @@ catalogi(function(){
     });
 
     catalogi.noTranslate();
-    //catalogi.parse();
+    catalogi.parse();
     catalogi.removeShit();
     checkSeach();
 });
