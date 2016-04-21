@@ -199,8 +199,11 @@ catalogi.parse = function() {
     catalogi('#minicart-data').remove();
     catalogi('a[title*="Warenkorb"]').attr('href', '#').click(function(){
         catalogi.order();
-        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
+        setTimeout(function(){
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
+        }, 300);
+        
         return false;
     });
     catalogi('a[title*="Warenkorb"] > span:eq(0)').text('Корзина');
