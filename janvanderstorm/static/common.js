@@ -26,12 +26,9 @@ catalogi(document).ready(function(){
 catalogi.noTranslate = function(){
     // Шапка
     catalogi('#meta-nav').addClass('notranslate');
-    catalogi('#header-wrapper').children().addClass('notranslate');
-    //catalogi('.benefit').addClass('notranslate');
 
     // Меню
     catalogi('#navs').addClass('notranslate');
-   // catalogi('#navbar').addClass('notranslate');
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Von A bis Z')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Top Brands')").parent().parent().addClass('notranslate');
@@ -50,62 +47,6 @@ catalogi.noTranslate = function(){
 catalogi.parse = function() {
     //// Шапка
     catalogi('#iframe').hide();
-
-    catalogi('.benefit.first').text('ЭКСПЕРТ ПО БОЛЬШИМ РАЗМЕРАМ');
-    catalogi('.benefit.second').text('МУЖСКАЯ МОДА ДО 70 РАЗМЕРА');
-    catalogi('.benefit.last').text('ИДЕАЛЬНО ДЛЯ ВАШЕЙ ФИГУРЫ');
-
-    catalogi('.newsletterinfo').children().remove();
-    catalogi('.newsletterinfo').prepend($("<a>Таблица размеров</a>").attr('href','#').addClass('headerLinks').click(function(event){
-        event.preventDefault();
-        catalogi.sizeTable();
-        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
-    }));
-    catalogi('.newsletterinfo').prepend($("<a>Доставка</a>").attr('href','#').addClass('headerLinks').click(function(event){
-        event.preventDefault();
-        catalogi.delivery();
-        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
-    }));
-    catalogi('.newsletterinfo').prepend($("<a>Оплата</a>").attr('href','#').addClass('headerLinks').click(function(event){
-        event.preventDefault();
-        catalogi.payment();
-        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
-    }));
-
-
-    catalogi('.miniaccount').children().remove();
-    catalogi('.miniaccount').prepend($("<a>Каталоги</a>").attr('href','#').addClass('headerLinks').click(function(event){
-        event.preventDefault();
-        catalogi.catalogs();
-        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
-    }));
-    catalogi('.miniaccount').prepend($("<a>Интернет-магазины</a>").attr('href','#').addClass('headerLinks').click(function(event){
-        event.preventDefault();
-        catalogi.shops();
-        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
-    }));
-    catalogi('.miniaccount')
-    .prepend($("<a> Каталоги.ру</a>")
-        .attr('href','http://www.catalogi.ru')
-        .attr('target','_blank')
-        .addClass('headerLinks')
-        .addClass('_home'));
-
-
-
-    catalogi('.directorderlink').remove();
-    catalogi('.customerbox').parent().append($('<div></div>').text('Каталоги.ру - доставка одежды больших размеров из Германии').addClass('textInHeader'));
-    
-    catalogi('.basket .pre').remove();
-    catalogi('.wording .price').remove();
-
-    catalogi('.logged').text('Личный кабинет');
-    catalogi('.myaccount .link').text('Вход');
     //catalogi('#topbar').remove();
     //catalogi('.contentarea').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
@@ -158,11 +99,11 @@ catalogi.parse = function() {
     catalogi('.minibasketholder').attr('onclick','catalogi.order()');
 
     //subscribe button
-    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(true, '35346');event.preventDefault()");
+    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(false, '35346');event.preventDefault()");
 
 
 
-
+//cart
 
     // На основной сайт
     catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
@@ -193,13 +134,6 @@ catalogi.parse = function() {
     // Главное меню
     catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
 
-    catalogi(catalogi('#navbar li.dropdown > a')[0]).text('ОДЕЖДА');
-    catalogi(catalogi('#navbar li.dropdown > a')[1]).text('БЕЛЬЕ');
-    catalogi(catalogi('#navbar li.dropdown > a')[2]).text('ТРЕНДЫ');
-    catalogi(catalogi('#navbar li.dropdown > a')[3]).text('РАСПРОДАЖА');
-    catalogi("[title='Magazin'").text('КАТАЛОГ').attr('href','http://catalogi.ru/katalog_jan_vanderstorm/').attr('target','_blank');
-   // catalogi(catalogi('#navbar li.dropdown > a > font > font')[4]).text('ОДЕЖДА');
-
     // Корзина
     catalogi('#cboxLoadedContent').css('width','1000px');
     catalogi('#minicart-data').remove();
@@ -222,7 +156,6 @@ catalogi.parse = function() {
     catalogi('.product-button-panel').append(catalogi('.add-to-cart-button'));
     catalogi('.product-button-panel > form > div:eq(1)').remove();
     catalogi('.vatinfo').remove();
-    catalogi('.sharing').remove();
 
     // Добавление в корзину
     catalogi('.addToCartForm').submit(function(event){
@@ -297,45 +230,12 @@ catalogi.parse = function() {
     } catch(e) {
         console.log(e);
     }
-    setTimeout(function(){
-        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
-        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-    },500);
     return false;
 });
-
-
-
 
     // Футер
     catalogi('#seo-text').remove();
     catalogi('#page-footer').remove();
-
-
-    //search handler
-    catalogi("[value='Suche starten']").click(function() {
-        catalogi.cookie('seachString', catalogi("[name='search'").val(), { expires: 7, path: '/', domain: '.catalogi.ru' });
-        catalogi.ajax({
-            url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
-            type: 'get',
-            dataType: 'json',
-            data: {
-                client: 't',
-                text: catalogi("[name='search'").val(),
-                sl: 'ru',
-                tl: 'de'
-            },
-            success: function(data){
-                console.log('success:' + data);
-                //top.postMessage({action: 'search', search: data.text[0]},'*');
-            },
-            error: function(data){
-                console.log('error:' + data);
-                //top.postMessage({action: 'search', search: catalogi('#search').val()},'*');
-            }
-        });
-        return false;
-    });
 
     // Подписка
     catalogi.subscribe(false, '35346');
@@ -432,7 +332,7 @@ function checkBasket() {
 
     var ordersNumber = catalogi.cookie('ordersNum');
     if(ordersNumber)
-        catalogi('.wording .article .num').text(ordersNumber);
+        catalogi('.minicart-amount').text(ordersNumber);
     console.log('ordersNumber: ' + ordersNumber);
 
     window.timer1 = window.setInterval("checkBasket();", timeout1);
