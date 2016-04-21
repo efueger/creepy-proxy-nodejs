@@ -26,9 +26,9 @@ catalogi(document).ready(function(){
 catalogi.noTranslate = function(){
     // Шапка
     catalogi('#meta-nav').addClass('notranslate');
-    catalogi('#header-wrapper').children().addClass('notranslate');
+    catalogi('#header-wrapper').find('*').addClass('notranslate');
     //catalogi('.benefit').addClass('notranslate');
-
+//catalogi('.basket').addClass('notranslate');
     // Меню
     catalogi('#navs').addClass('notranslate');
    // catalogi('#navbar').addClass('notranslate');
@@ -134,6 +134,8 @@ catalogi.parse = function() {
     catalogi('a[href*="/de/login"]').parent().parent().remove();
     catalogi('a[href*="/de/service/agb"]').parent().parent().parent().remove();
     catalogi('a[href*="agb#Preise"]').parent().remove(); //Ссылка про НДС
+    catalogi('.side-desc').remove();
+    catalogi('.topseller').remove();
 
     // Каталоги
     catalogi('#content-main > article:eq(1)').remove();
@@ -233,7 +235,7 @@ catalogi.parse = function() {
         
         //return false;
     });
-    catalogi('a[title*="Warenkorb"] > span:eq(0)').text('Корзина');
+    catalogi('.basket').text('Корзина');
 
 
     //filters 
