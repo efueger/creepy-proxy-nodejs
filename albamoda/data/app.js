@@ -1,19 +1,17 @@
-var config = require('config'),
-    replaces = config.get('replaces'),
-    cluster = require('cluster'),
-    os = require('os'),
-    procNum = os.cpus();
-
+/**
+ * @return {boolean}
+ */
 function IsJsonString(str) {
     try {
         JSON.parse(str);
     } catch (e) {
         return false;
     }
-    return true; 
+    return true;
 }
 
 // Load config
+var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
     SITE = SITENAME + SITEDOMAIN,
@@ -28,12 +26,25 @@ var SITENAME = config.get('site.name'),
             width: config.get('options.width')
         }
     };
+var replaces = config.get('replaces');
 
 // Start server
+var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
 
-    for (var i = 0; i < procNum.length; i++) {
+    var fs = require('fs');
+    var clusersConf = JSON.parse(fs.readFileSync("/var/www/global-config.json", 'utf8'));
+
+    if(clusersConf.server.cpuBased) {
+        var os = require('os');
+        var procNum = os.cpus();
+        var forkNum = procNum.length;
+    } else {
+        var forkNum = clusersConf.server.clusersNum;
+    }
+
+    for (var i = 0; i < forkNum; i++) {
         cluster.fork();
     }
 
@@ -174,7 +185,7 @@ if (cluster.isMaster) {
                     piper = piper.pipe(replacestream(item.from, item.to));
                 }
                 else if (item.type === "regex") {
-                    var from = "(^|[^ \\/?$])\\b(" + item.from + ")\\b";
+                    var from = "(^|[^\\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
                 }
