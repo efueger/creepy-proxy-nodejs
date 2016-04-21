@@ -1,3 +1,6 @@
+/**
+ * @return {boolean}
+ */
 function IsJsonString(str) {
     try {
         JSON.parse(str);
@@ -7,13 +10,8 @@ function IsJsonString(str) {
     return true;
 }
 
-var config = require('config'),
-    cluster = require('cluster'),
-    fs = require('fs'),
-    os = require('os');
-
-var procNum = os.cpus();
-
+// Load config
+var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
     SITE = SITENAME + SITEDOMAIN,
@@ -30,9 +28,23 @@ var SITENAME = config.get('site.name'),
     };
 var replaces = config.get('replaces');
 
+// Start server
+var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
-    for (var i = 0; i < procNum.length; i++) {
+
+    var fs = require('fs');
+    var clusersConf = JSON.parse(fs.readFileSync("/var/www/global-config.json", 'utf8'));
+
+    if(clusersConf.server.cpuBased) {
+        var os = require('os');
+        var procNum = os.cpus();
+        var forkNum = procNum.length;
+    } else {
+        var forkNum = clusersConf.server.clusersNum;
+    }
+
+    for (var i = 0; i < forkNum; i++) {
         cluster.fork();
     }
 
@@ -40,7 +52,6 @@ if (cluster.isMaster) {
         console.error('Worker disconnect!');
         cluster.fork();
     });
-
 } else {
     console.log("+ worker");
     var http = require("http"),
@@ -168,7 +179,7 @@ if (cluster.isMaster) {
                     piper = piper.pipe(replacestream(item.from, item.to));
                 }
                 else if (item.type === "regex") {
-                    var from = "(^|[^ =\\/?$])\\b(" + item.from + ")\\b";
+                    var from = "(^|[^=\\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
                 }
@@ -182,8 +193,6 @@ if (cluster.isMaster) {
              .pipe(replacestream('https', 'http'))
              .pipe(replacestream(new RegExp('secure-skin.ztat.net/s/(.*)/zalando/js/MAIN/zalando.min.js', 'i'), 'zalando.catalogi.ru/static/zalando.min.js'))
              //.pipe(replacestream('secure-skin.ztat.net/s/dpr/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
-             //.pipe(replacestream('secure-skin.ztat.net/s/n5x/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
-             //.pipe(replacestream('secure-skin.ztat.net/s/uqh/zalando/js/MAIN/zalando.min.js', 'zalando.catalogi.ru/static/zalando.min.js'))
              .pipe(res);
 
     }).listen(config.get('site.port'));
