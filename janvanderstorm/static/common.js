@@ -101,26 +101,20 @@ catalogi.parse = function() {
     catalogi('.directorderlink').remove();
     catalogi('.customerbox').parent().append($('<div></div>').text('Каталоги.ру - доставка одежды больших размеров из Германии').addClass('textInHeader'));
     
-    catalogi('.basket .pre').remove();
-    catalogi('.wording .price').remove();
+    
 
     catalogi('.logged').text('Личный кабинет');
     catalogi('.myaccount .link').text('Вход');
-    //catalogi('#topbar').remove();
-    //catalogi('.contentarea').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
     catalogi('#wishlist-link').remove();
-    //catalogi('li.lightdesign > form.searchform').remove();
     catalogi('#cc-column-570cb3af6b447').remove();
     catalogi('#cc-column-570cb3af6bd07').remove();
     catalogi('a[href*="/service/faq"]').attr('href', '#').attr('id', 'menu-mob');
     catalogi('#menu-mob > span > span').text('Меню');
     catalogi('#menu').text('Меню');
     catalogi('#page-header').attr('style', '/* height: 100px; */');
-    //catalogi('header').prepend($("<div></div>").prepend($("<div></div>").prepend(catalogi('#iframe'))));
-    //catalogi('#iframe').parent().parent().addClass("iframeContainer");
-    //catalogi('#iframe').parent().addClass("iframeContainer2");
+
 
     //юридические страницы
     catalogi('.services').remove();
@@ -205,6 +199,8 @@ catalogi.parse = function() {
     catalogi('#minicart-data').remove();
     catalogi('a[title*="Warenkorb"]').attr('href', '#').click(function(){
         catalogi.order();
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
         return false;
     });
     catalogi('a[title*="Warenkorb"] > span:eq(0)').text('Корзина');
@@ -345,6 +341,8 @@ catalogi.parse = function() {
         .delay(500)
         .queue(function (next) {
             checkBasket();
+            catalogi('.basket .pre').remove();
+    catalogi('.wording .price').remove();
 
             catalogi('#account-nav').append('<img id="_auth_wait" src="http://cdn.catalogi.ru/static/images/loading.gif" border="0" align="middle">');
             catalogi('.account-nav-listelem').hide();
