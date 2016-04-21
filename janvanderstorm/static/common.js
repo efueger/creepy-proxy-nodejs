@@ -163,9 +163,9 @@ catalogi.parse = function() {
         event.preventDefault();
         catalogi.subscribe(true, '35346');
         setTimeout(function(){
-            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
-            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-        },500);
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+50+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+50+'px');
+        },1300);
         
         return false;
     });
@@ -219,7 +219,7 @@ catalogi.parse = function() {
         setTimeout(function(){
             catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
             catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-        },1300);
+        },500);
         
         //return false;
     });
@@ -356,8 +356,8 @@ catalogi.parse = function() {
     // Подписка
     catalogi.subscribe(false, '35346');
     setTimeout(function(){
-            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+50+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+50+'px');
     },1300);
 
     // Showing body after hiding
