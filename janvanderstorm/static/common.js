@@ -239,6 +239,7 @@ catalogi.parse = function() {
     catalogi('.product-button-panel > form > div:eq(1)').remove();
     catalogi('.vatinfo').remove();
     catalogi('.sharing').remove();
+    catalogi('.variantselect .btn').attr('onclick','catalogi.service()');
 
     // Добавление в корзину
     catalogi('.addToCartForm').submit(function(event){
@@ -470,9 +471,10 @@ function checkSeach() {
 // Скидка
 catalogi.service = function(){
     if('_service' in window && catalogi('.pricearea .price .value')){
+        catalogi('#deliveryPriceDiv').remove();
         _price = catalogi('.pricearea .price .value').text().replace('€','').replace(',','.').trim();
         _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
-        catalogi('.pricearea').append($('<div></div>').text('С учетом доставки € '+_delivery.toFixed(2)));
+        catalogi('.pricearea').append($('<div></div>').attr('id','deliveryPriceDiv').text('С учетом доставки € '+_delivery.toFixed(2)));
        // catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
     }
 };
