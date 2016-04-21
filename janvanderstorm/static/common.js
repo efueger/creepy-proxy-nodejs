@@ -103,8 +103,18 @@ catalogi.parse = function() {
     
     
 
-    catalogi('.logged').text('Личный кабинет');
-    catalogi('.myaccount .link').text('Вход');
+    catalogi('.logged').text('Личный кабинет').click(function(event){
+        event.preventDefault();
+        catalogi.login();
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+    });
+    catalogi('.myaccount .link').text('Вход').click(function(event){
+        event.preventDefault();
+        catalogi.login();
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+        catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+    });
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
     catalogi('#wishlist-link').remove();
@@ -242,7 +252,7 @@ catalogi.parse = function() {
     catalogi('.variantselect .btn').click(function(){
         setTimeout(function(){
             catalogi.service();
-        },100);
+        },400);
     });
 
     // Добавление в корзину
