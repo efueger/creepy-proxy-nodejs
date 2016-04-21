@@ -30,7 +30,3 @@ body{
 a[href="http://www.liveinternet.ru/click;CatalogiRU_NEW"]{
     display: none !important;
 }
-#cboxLoadedContent {
-    width: 110%!important;
-    height: 110%!important;
-}
