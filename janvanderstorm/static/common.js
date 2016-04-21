@@ -159,7 +159,16 @@ catalogi.parse = function() {
         return false;
     });
     //subscribe button
-    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(true, '35346');event.preventDefault()");
+    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").click(function(event){
+        event.preventDefault();
+        catalogi.subscribe(true, '35346');
+        setTimeout(function(){
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
+        },500);
+        
+        return false;
+    });
 
 
 
@@ -204,14 +213,15 @@ catalogi.parse = function() {
     // Корзина
     catalogi('#cboxLoadedContent').css('width','1000px');
     catalogi('#minicart-data').remove();
-    catalogi('a[title*="Warenkorb"]').attr('href', '#').click(function(){
+    catalogi('a[title*="Warenkorb"]').attr('href', '#').click(function(event){
+        event.preventDefault();
         catalogi.order();
         setTimeout(function(){
             catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
             catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
         },500);
         
-        return false;
+        //return false;
     });
     catalogi('a[title*="Warenkorb"] > span:eq(0)').text('Корзина');
 
@@ -345,6 +355,10 @@ catalogi.parse = function() {
 
     // Подписка
     catalogi.subscribe(false, '35346');
+    setTimeout(function(){
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
+    },500);
 
     // Showing body after hiding
     catalogi('body')
