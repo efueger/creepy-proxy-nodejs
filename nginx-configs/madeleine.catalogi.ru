@@ -3,6 +3,7 @@ server {
 	listen 188.40.83.218;
 	rewrite ^(.*) http://www.madeleine.catalogi.ru$1 permanent;
 }
+
 server {
 	server_name ~^(?<subdomain>.*)\.madeleine\.catalogi\.ru;
 	listen 188.40.83.218;
@@ -59,4 +60,9 @@ server {
     	root /var/www;
     	internal;
 	}
+    error_page 404 /404.html;
+    location = /404.html {
+        root /var/www;
+        internal;
+    }
 }

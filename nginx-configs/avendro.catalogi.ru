@@ -18,7 +18,6 @@ server {
         proxy_set_header Host www.avendro.de;
     }
 
-
     location / {
         root /var/www/otto/data/www/avendro.catalogi.ru;
         index index.php;
@@ -32,8 +31,13 @@ server {
         }
     }
 
-    error_page 500 502 503 504 /50x.html;
-    location = /50x.html {
+	error_page 500 502 503 504 /50x.html;
+	location = /50x.html {
+    	root /var/www;
+    	internal;
+	}
+    error_page 404 /404.html;
+    location = /404.html {
         root /var/www;
         internal;
     }
