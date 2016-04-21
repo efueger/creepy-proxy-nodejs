@@ -201,7 +201,7 @@ if (cluster.isMaster) {
             .pipe(replacestream('<head>', '<head>' + includes.head))
             .pipe(res);
 
-    }).listen(5058);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {
