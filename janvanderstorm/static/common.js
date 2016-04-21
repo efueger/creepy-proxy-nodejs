@@ -160,11 +160,11 @@ catalogi.parse = function() {
     });
     //subscribe button
     catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").click(function(event){
-        event.preventDefault();
+        //event.preventDefault();
         catalogi.subscribe(true, '35346');
         setTimeout(function(){
-            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+30+'px');
-            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+30+'px');
+           // catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+30+'px');
+           // catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+30+'px');
         },1500);
         
         return false;
@@ -356,8 +356,8 @@ catalogi.parse = function() {
     // Подписка
     catalogi.subscribe(false, '35346');
     setTimeout(function(){
-            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+30+'px');
-            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+30+'px');
+           // catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+30+'px');
+           // catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+30+'px');
     },1300);
 
     // Showing body after hiding
