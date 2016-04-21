@@ -1,7 +1,7 @@
 {
   "site": {
     "name"        : "impressionen",
-    "domain"      : ".de"
+    "domain"      : ".de",
     "port"        : 5057
   },
   "header": {
