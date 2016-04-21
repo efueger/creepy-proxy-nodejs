@@ -1,8 +1,4 @@
 {
-  "server": {
-    "cpuBased"    : false,
-    "clusersNum"  : 2
-  },
   "site": {
     "name"        : "conleys",
     "domain"      : ".de"
