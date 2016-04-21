@@ -1,3 +1,6 @@
+/**
+ * @return {boolean}
+ */
 function IsJsonString(str) {
     try {
         JSON.parse(str);
@@ -7,6 +10,7 @@ function IsJsonString(str) {
     return true;
 }
 
+// Load config
 var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
@@ -24,16 +28,21 @@ var SITENAME = config.get('site.name'),
     };
 var replaces = config.get('replaces');
 
-
-var os = require('os');
-var procNum = os.cpus();
-
 // Start server
 var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
 
-    for (var i = 0; i < procNum.length; i++) {
+    var forkNum;
+    if(config.get('server.cpuBased')) {
+        var os = require('os');
+        var procNum = os.cpus();
+        forkNum = procNum.length;
+    } else {
+        forkNum = config.get('server.clusersNum');
+    }
+
+    for (var i = 0; i < forkNum; i++) {
         cluster.fork();
     }
 
@@ -199,7 +208,7 @@ if (cluster.isMaster) {
                 .pipe(replacestream(new RegExp('customers/customer_001/katalog_001/de_DE/js/customlib.js', 'g'), 'http://'+ SITENAME +'.catalogi.ru/static/customlib.js'))
                 .pipe(res);
         }
-    }).listen(5057);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {
