@@ -202,7 +202,7 @@ catalogi.parse = function() {
         setTimeout(function(){
             catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
             catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-        }, 300);
+        },500);
         
         return false;
     });
