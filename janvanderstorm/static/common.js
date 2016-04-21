@@ -539,7 +539,7 @@ catalogi(function(){
             success: function(data){
                 console.log('success:' + data);
                 catalogi("[name='search'").val(data.text[0]);
-                form.submit();
+                form.submit(); 
                // top.postMessage({action: 'search', search: data.text[0]},'*');
             },
             error: function(data){
