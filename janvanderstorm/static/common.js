@@ -26,11 +26,9 @@ catalogi(document).ready(function(){
 catalogi.noTranslate = function(){
     // Шапка
     catalogi('#meta-nav').addClass('notranslate');
-    catalogi('.benefit').addClass('notranslate');
 
     // Меню
     catalogi('#navs').addClass('notranslate');
-    catalogi('#navbar').addClass('notranslate');
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Von A bis Z')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Top Brands')").parent().parent().addClass('notranslate');
@@ -49,10 +47,6 @@ catalogi.noTranslate = function(){
 catalogi.parse = function() {
     //// Шапка
     catalogi('#iframe').hide();
-
-    catalogi('.benefit.first').text('ЭКСПЕРТ ПО БОЛЬШИМ РАЗМЕРАМ');
-    catalogi('.benefit.second').text('МУЖСКАЯ МОДА ДО 70 РАЗМЕРА');
-    catalogi('.benefit.last').text('ИДЕАЛЬНО ДЛЯ ВАШЕЙ ФИГУРЫ');
     //catalogi('#topbar').remove();
     //catalogi('.contentarea').remove();
     catalogi('#account-nav > li > a').attr('href', '#');
@@ -105,11 +99,11 @@ catalogi.parse = function() {
     catalogi('.minibasketholder').attr('onclick','catalogi.order()');
 
     //subscribe button
-    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(true, '35346');event.preventDefault()");
+    catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(false, '35346');event.preventDefault()");
 
 
 
-
+//cart
 
     // На основной сайт
     catalogi('#meta-nav > ul > li:eq(0)').attr('class', 'yCmsComponent _home');
@@ -140,13 +134,6 @@ catalogi.parse = function() {
     // Главное меню
     catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
 
-    catalogi(catalogi('#navbar li.dropdown > a')[0]).text('ОДЕЖДА');
-    catalogi(catalogi('#navbar li.dropdown > a')[1]).text('БЕЛЬЕ');
-    catalogi(catalogi('#navbar li.dropdown > a')[2]).text('ТРЕНДЫ');
-    catalogi(catalogi('#navbar li.dropdown > a')[3]).text('РАСПРОДАЖА');
-    catalogi("[title='Magazin'").text('КАТАЛОГ').attr('href','http://catalogi.ru/katalog_jan_vanderstorm/').attr('target','_blank');
-   // catalogi(catalogi('#navbar li.dropdown > a > font > font')[4]).text('ОДЕЖДА');
-
     // Корзина
     catalogi('#cboxLoadedContent').css('width','1000px');
     catalogi('#minicart-data').remove();
@@ -169,7 +156,6 @@ catalogi.parse = function() {
     catalogi('.product-button-panel').append(catalogi('.add-to-cart-button'));
     catalogi('.product-button-panel > form > div:eq(1)').remove();
     catalogi('.vatinfo').remove();
-    catalogi('.sharing').remove();
 
     // Добавление в корзину
     catalogi('.addToCartForm').submit(function(event){
