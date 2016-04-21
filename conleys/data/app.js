@@ -33,13 +33,15 @@ var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
 
-    var forkNum;
-    if(config.get('server.cpuBased')) {
+    var fs = require('fs');
+    var clusersConf = JSON.parse(fs.readFileSync("/var/www/global-config.json", 'utf8'));
+
+    if(clusersConf.server.cpuBased) {
         var os = require('os');
         var procNum = os.cpus();
-        forkNum = procNum.length;
+        var forkNum = procNum.length;
     } else {
-        forkNum = config.get('server.clusersNum');
+        var forkNum = clusersConf.server.clusersNum;
     }
 
     for (var i = 0; i < forkNum; i++) {
@@ -202,7 +204,7 @@ if (cluster.isMaster) {
                 .pipe(replacestream(new RegExp('OnlineKAT_Conleys_950O_DE', 'g'), 'OnlineKAT_Conleys_950O_DE/index.php'))
                 .pipe(res);
         }
-    }).listen(5054);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {

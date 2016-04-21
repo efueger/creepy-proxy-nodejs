@@ -1,11 +1,8 @@
 {
-  "server": {
-    "cpuBased"    : false,
-    "clusersNum"  : 2
-  },
   "site": {
     "name"        : "conleys",
-    "domain"      : ".de"
+    "domain"      : ".de",
+    "port"        : 5054
   },
   "header": {
     "catalog"     : "conleys",
