@@ -97,7 +97,7 @@ catalogi.parse = function() {
         .addClass('_home'));
 
 
-
+catalogi('#mobile-menu').remove();
     catalogi('.directorderlink').remove();
     catalogi('.customerbox').parent().append($('<div></div>').text('Каталоги.ру - доставка одежды больших размеров из Германии').addClass('textInHeader'));
     
