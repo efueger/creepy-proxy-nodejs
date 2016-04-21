@@ -135,10 +135,11 @@ catalogi.parse = function() {
     // Главное меню
     catalogi('a[href*="/conleys/de/men"]').attr('href', '/conleys/de/s//men');
 
-    catalogi(catalogi('#navbar li.dropdown > a > font > font')[0]).text('ОДЕЖДА');
-    catalogi(catalogi('#navbar li.dropdown > a > font > font')[1]).text('БЕЛЬЕ');
-    catalogi(catalogi('#navbar li.dropdown > a > font > font')[2]).text('ТРЕНДЫ');
-    catalogi(catalogi('#navbar li.dropdown > a > font > font')[3]).text('РАСПРОДАЖА');
+    catalogi(catalogi('#navbar li.dropdown > a')[0]).text('ОДЕЖДА');
+    catalogi(catalogi('#navbar li.dropdown > a')[1]).text('БЕЛЬЕ');
+    catalogi(catalogi('#navbar li.dropdown > a')[2]).text('ТРЕНДЫ');
+    catalogi(catalogi('#navbar li.dropdown > a')[3]).text('РАСПРОДАЖА');
+    catalogi("[title='Magazin'").text('КАТАЛОГ').attr('href','http://catalogi.ru/katalog_jan_vanderstorm/').attr('target','_blank');
    // catalogi(catalogi('#navbar li.dropdown > a > font > font')[4]).text('ОДЕЖДА');
 
     // Корзина
