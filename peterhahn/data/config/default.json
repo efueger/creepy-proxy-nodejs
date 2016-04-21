@@ -1,7 +1,8 @@
 {
   "site": {
     "name"        : "site.name",
-    "domain"      : "site.domain"
+    "domain"      : "site.domain",
+    "port"        : "6666"
   },
   "header": {
     "catalog"     : "header.catalog",
@@ -12,17 +13,5 @@
     "height"      : "options.height",
     "width"       : "options.width"
   },
-  "replaces": [
-    {
-      "type": "usual",
-      "from": "from",
-      "to": "to"
-    },
-    {
-      "type": "regex",
-      "from": "\\(from)",
-      "args": "g",
-      "to": "$1"
-    }
-  ]
+  "replaces": []
 }
