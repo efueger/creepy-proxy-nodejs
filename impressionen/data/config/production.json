@@ -2,6 +2,7 @@
   "site": {
     "name"        : "impressionen",
     "domain"      : ".de"
+    "port"        : 5057
   },
   "header": {
     "catalog"     : "impressionen",
