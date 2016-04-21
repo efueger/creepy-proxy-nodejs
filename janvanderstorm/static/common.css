@@ -4,11 +4,11 @@ body{
 }
 
 
-/*#iframe{
+#iframe{
     margin: 0 auto !important;
     background-color: #fff !important;
     display: block;
-}*/
+}
 
 .iframeContainer {
 	margin: 0 auto !important;
@@ -29,8 +29,4 @@ body{
 #page-footer,
 a[href="http://www.liveinternet.ru/click;CatalogiRU_NEW"]{
     display: none !important;
-}
-#cboxLoadedContent {
-    width: 110%!important;
-    height: 110%!important;
 }
