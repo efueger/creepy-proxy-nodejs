@@ -204,7 +204,7 @@ if (cluster.isMaster) {
                 .pipe(replacestream(new RegExp('OnlineKAT_Conleys_950O_DE', 'g'), 'OnlineKAT_Conleys_950O_DE/index.php'))
                 .pipe(res);
         }
-    }).listen(5054);
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {

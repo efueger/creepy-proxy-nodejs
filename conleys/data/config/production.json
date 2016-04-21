@@ -1,7 +1,8 @@
 {
   "site": {
     "name"        : "conleys",
-    "domain"      : ".de"
+    "domain"      : ".de",
+    "port"        : 5054
   },
   "header": {
     "catalog"     : "conleys",
