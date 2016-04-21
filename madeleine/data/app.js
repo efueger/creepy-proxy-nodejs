@@ -1,20 +1,57 @@
+/**
+ * @return {boolean}
+ */
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+// Load config
+var config = require('config');
+var SITENAME = config.get('site.name'),
+    SITEDOMAIN = config.get('site.domain'),
+    SITE = SITENAME + SITEDOMAIN,
+    HEADERPARAMS = {
+        param: {
+            catalog: config.get('header.catalog'),
+            alias: config.get('header.alias'),
+            info: config.get('header.info')
+        },
+        options: {
+            height: config.get('options.height'),
+            width: config.get('options.width')
+        }
+    };
+var replaces = config.get('replaces');
+
+// Start server
 var cluster = require('cluster');
-var os = require('os');
-
-var procNum = os.cpus();
-
 if (cluster.isMaster) {
-	console.log('Start master');
+    console.log('Start master');
 
-    for (var i = 0; i < procNum.length; i++) {
+    var fs = require('fs');
+    var clusersConf = JSON.parse(fs.readFileSync("/var/www/global-config.json", 'utf8'));
+
+    if(clusersConf.server.cpuBased) {
+        var os = require('os');
+        var procNum = os.cpus();
+        var forkNum = procNum.length;
+    } else {
+        var forkNum = clusersConf.server.clusersNum;
+    }
+
+    for (var i = 0; i < forkNum; i++) {
         cluster.fork();
     }
 
-	cluster.on('disconnect', function(worker) {
-		console.error('Worker disconnect!');
-		cluster.fork();
-	});
-
+    cluster.on('disconnect', function (worker) {
+        console.error('Worker disconnect!');
+        cluster.fork();
+    });
 } else {
 	console.log('+ worker');
 
@@ -211,7 +248,7 @@ if (cluster.isMaster) {
 			});
 		});
 
-	}).listen(5055);
+	}).listen(config.get('site.port'));
 
 }
 
