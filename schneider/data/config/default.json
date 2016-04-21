@@ -2,7 +2,7 @@
   "site": {
     "name"        : "site.name",
     "domain"      : "site.domain",
-    "port"        : "0000"
+    "port"        : "6666"
   },
   "header": {
     "catalog"     : "header.catalog",
