@@ -3,6 +3,7 @@ server {
 	listen 188.40.83.218;
 	rewrite ^(.*) http://www.klingel.catalogi.ru$1 permanent;
 }
+
 server {
 	server_name ~^(?<subdomain>.*)\.klingel\.catalogi\.ru;
 	listen 188.40.83.218;
@@ -32,14 +33,15 @@ server {
 		proxy_set_header X-Forwarded-Proto $scheme;
 		proxy_set_header X-Real-IP $remote_addr;
 	}
-	
+
 	error_page 500 502 503 504 /50x.html;
 	location = /50x.html {
     	root /var/www;
     	internal;
 	}
-
-    # LOGS
-    access_log /var/www/klingel/data/log/access.log;
-    error_log /var/www/klingel/data/log/error.log;
+    error_page 404 /404.html;
+    location = /404.html {
+        root /var/www;
+        internal;
+    }
 }
