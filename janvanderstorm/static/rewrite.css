@@ -1,4 +1,10 @@
 /* Заменяем шрифты */
+
+@font-face {
+    font-family: "jvds icons";
+    src: url("/static/fonts/jvds-icons.woff");
+}
+
 @font-face {
     font-family: "GinIcons";
     src: url("/static/fonts/janvanderstorm-iconfont.eot");
@@ -44,20 +50,25 @@
     color: #666;
 }
 
-#cboxLoadedContent {
-    padding: 0;
-    overflow: hidden;
-}
-.iframeContainer2 {
-    margin: auto;
+.textInHeader {
+    padding-top: 1em;
+    font-style: italic;
+    font-size: 1.4em;
 }
 
-.iframeContainer {
-    background-color: white;
-    display: flex;
-    max-width: 1380px;
-    margin: auto;
+.headerLinks {
+    text-decoration: none!important;
+    font-style: normal!important;
+    padding-left: 1em;
+    padding-right: 1em;
 }
+
+
+
+/*#cboxLoadedContent > iframe {
+    width: 100%!important;
+}*/
+
 
 /* Новые расположения элементов шапки */
 @media screen and (max-width: 63.9em) {
