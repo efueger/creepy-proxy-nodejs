@@ -524,7 +524,7 @@ catalogi(function(){
         var currentDomain = m[0].replace('.','').replace('.','');
     }
 
-    catalogi('.searchform').submit(function() {
+    catalogi('.searchform').submit(function(form) {
         catalogi.cookie('seachString', catalogi("[name='search'").val(), { expires: 7, path: '/', domain: '.catalogi.ru' });
         catalogi.ajax({
             url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
@@ -538,6 +538,8 @@ catalogi(function(){
             },
             success: function(data){
                 console.log('success:' + data);
+                catalogi("[name='search'").val(data.text[0]);
+                form.submit();
                // top.postMessage({action: 'search', search: data.text[0]},'*');
             },
             error: function(data){
