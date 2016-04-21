@@ -149,8 +149,15 @@ catalogi.parse = function() {
 
 
     //cart
-    catalogi('.minibasketholder').attr('onclick','catalogi.order()');
-
+    catalogi('.minibasketholder').click(function(){
+        catalogi.order();
+        setTimeout(function(){
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
+        },500);
+        
+        return false;
+    });
     //subscribe button
     catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").attr('onclick', "catalogi.subscribe(true, '35346');event.preventDefault()");
 
