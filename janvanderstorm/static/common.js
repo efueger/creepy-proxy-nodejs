@@ -468,7 +468,7 @@ function addFilter(obj){
 
 function checkBasket() {
     window.clearInterval(window.timer1);
-
+catalogi('.basket').text('Корзина');
     var ordersNumber = catalogi.cookie('ordersNum');
     if(ordersNumber)
         catalogi('.wording .article .num').text(ordersNumber);
