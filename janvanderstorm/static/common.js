@@ -239,7 +239,11 @@ catalogi.parse = function() {
     catalogi('.product-button-panel > form > div:eq(1)').remove();
     catalogi('.vatinfo').remove();
     catalogi('.sharing').remove();
-    catalogi('.variantselect .btn').attr('onclick','catalogi.service()');
+    catalogi('.variantselect .btn').click(function(){
+        setTimeout(function(){
+            catalogi.service();
+        },100);
+    });
 
     // Добавление в корзину
     catalogi('.addToCartForm').submit(function(event){
