@@ -469,10 +469,11 @@ function checkSeach() {
 
 // Скидка
 catalogi.service = function(){
-    if('_service' in window && catalogi('.js-display-variant-price')){
-        _price = catalogi('.price-formatted').text().replace('€','').replace(',','.').trim();
+    if('_service' in window && catalogi('.pricearea .price .value')){
+        _price = catalogi('.pricearea .price .value').text().replace('€','').replace(',','.').trim();
         _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
-        catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
+        catalogi('.pricearea').append($('<div></div>').text('С учетом доставки € '+_delivery.toFixed(2)));
+       // catalogi('.product-shipping-costs').text('С учетом доставки € '+_delivery.toFixed(2));
     }
 };
 
