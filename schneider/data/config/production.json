@@ -2,7 +2,7 @@
   "site": {
     "name"        : "schneider",
     "domain"      : ".de",
-    "port"        : "6056"
+    "port"        : 6056
   },
   "header": {
     "catalog"     : "schneider",
