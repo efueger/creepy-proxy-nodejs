@@ -185,7 +185,7 @@ if (cluster.isMaster) {
                     piper = piper.pipe(replacestream(item.from, item.to));
                 }
                 else if (item.type === "regex") {
-                    var from = "(^|[^ \\/?$])\\b(" + item.from + ")\\b";
+                    var from = "(^|[^\\/?$])\\b(" + item.from + ")\\b";
                     var to = "$1" + item.to;
                     piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
                 }
