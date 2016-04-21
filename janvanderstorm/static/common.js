@@ -296,7 +296,7 @@ catalogi.parse = function() {
 
             // отправка запроса
             catalogi.basket.add({
-                catalog: 'JS',
+                catalog: 'Janvanderstorm.de',
                 articul: articul,
                 name: name,
                 size: (param.join(' ').trim() == '') ? 0 : param.join(' ').trim(),
@@ -313,7 +313,7 @@ catalogi.parse = function() {
             namePart = "<a href='"+window.location.href+"' target='_blank'>"+namePart+"</a>";
             for(var i = 0; i< complekt.length; i++){
                 var objToSend = {
-                    catalog: 'JS',
+                    catalog: 'Janvanderstorm.de',
                     articul: JSON.parse(catalogi(complekt[i]).attr('data-variantselect')).productId,
                     name: "Комплект "+namePart[0]+" "+catalogi(complekt[i]).find('.articlename').text(),
                     size:"size "+catalogi(complekt[i]).find('.variantselect .button-holder .active').text(),
