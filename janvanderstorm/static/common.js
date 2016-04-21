@@ -219,7 +219,7 @@ catalogi.parse = function() {
         setTimeout(function(){
             catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
             catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-        },500);
+        },1300);
         
         //return false;
     });
@@ -358,7 +358,7 @@ catalogi.parse = function() {
     setTimeout(function(){
             catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
             catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
-    },500);
+    },1300);
 
     // Showing body after hiding
     catalogi('body')
