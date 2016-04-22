@@ -2,19 +2,13 @@ body{
   top: 0 !important;
   visibility: hidden;
 }
-
 #iframe{
 	margin: 0 auto;
 	display: block;
 }
-
 #header{
 	background: #fff !important;
 	height: 110px !important;
-}
-
-.fl_header_span a[href="http://www.madeleine.catalogi.ru/kataloge/blaetterkataloge/"]{
-	color: #B40D56 !important;
 }
 
 #header > .wrapper,
@@ -33,7 +27,6 @@ a[href="/news-specials/fashion-videos/"],
 #bottom-navi,
 #app-quali,
 #black-impress > .wrapper,
-#SocialMedia,
-a[href="http://www.liveinternet.ru/click;CatalogiRU_NEW"]{
+#SocialMedia{
 	display: none !important;
 }

@@ -80,8 +80,6 @@ if (cluster.isMaster) {
         jar: j
     });
 
-    var translates, fsize = 0;
-
     var server = http.createServer(function (req, res) {
         onError = function (err) {
             console.error(err);
@@ -128,6 +126,7 @@ if (cluster.isMaster) {
         };
 
         // load translates
+        var translates, fsize = 0;
         request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
