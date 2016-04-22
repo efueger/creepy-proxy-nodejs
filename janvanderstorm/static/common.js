@@ -363,8 +363,8 @@ catalogi('.myaccount.notranslate').css('max-width','140px');
         .queue(function (next) {
             if(_auth){
                 catalogi('#_auth_wait').remove();
-                catalogi('.logged.notranslate > a').remove();
-                catalogi('.account-nav-listelem')
+                catalogi('.myaccount.notranslate > a').remove();
+                catalogi('.myaccount.notranslate')
                     .html('<a href="http://catalogi.ru/cabinet/" class="my-account-login underline-alternative" target="_blank">Личный кабинет</a>' +
                         '<a href="#" class="_logout"></a>');
                 catalogi('.account-nav-listelem').show();
