@@ -312,16 +312,18 @@ catalogi.parse = function() {
             namePart = namePart.match(numberPattern);
             namePart = "<a href='"+window.location.href+"' target='_blank'>"+namePart+"</a>";
             for(var i = 0; i< complekt.length; i++){
-                var objToSend = {
-                    catalog: 'Janvanderstorm.de',
-                    articul: JSON.parse(catalogi(complekt[i]).attr('data-variantselect')).productId,
-                    name: "Комплект "+namePart[0]+" "+catalogi(complekt[i]).find('.articlename').text(),
-                    size:"size "+catalogi(complekt[i]).find('.variantselect .button-holder .active').text(),
-                    price: catalogi(complekt[i]).find('.price .value').text().replace(',','.'),
-                    count: 1,
-                    img: catalogi(complekt[i]).find('.imgholder img').attr('src')
-                };
-                catalogi.basket.add(objToSend);
+            	if(catalogi(complekt[i]).find('.checkbox.dark.active').length>0){
+            		var objToSend = {
+            			catalog: 'Janvanderstorm.de',
+            			articul: "<a href='"+window.location.href+"' target='_blank'>"+JSON.parse(catalogi(complekt[i]).attr('data-variantselect')).productId+"</a>",
+            			name: "Комплект "+catalogi(complekt[i]).find('.articlename').text(),
+            			size:"size "+catalogi(complekt[i]).find('.variantselect .button-holder .active').text(),
+            			price: catalogi(complekt[i]).find('.price .value').text().replace(',','.'),
+            			count: 1,
+            			img: catalogi(complekt[i]).find('.imgholder img').attr('src')
+            		};
+            		catalogi.basket.add(objToSend);
+            	}
                 //alert(catalogi(complekt[i]).find('.imgholder img').attr('src'));
             }
         }
@@ -525,7 +527,17 @@ catalogi(function(){
     }
 
     catalogi('.searchform').submit(function(event) {
-    	var value = catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value : catalogi("[name='search'")[1].value;
+    	var value = "";
+    	if(catalogi("[name='search'")[0].value != ""){
+    		value = catalogi("[name='search'")[0].value;
+    	}
+    	if(catalogi("[name='search'")[1].value != ""){
+    		value = catalogi("[name='search'")[1].value;
+    	}
+    	if(catalogi("[name='search'")[2].value != ""){
+    		value = catalogi("[name='search'")[2].value;
+    	}
+    	//var value = catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value : catalogi("[name='search'")[1].value;
         catalogi.cookie('seachString', value, { expires: 7, path: '/', domain: '.catalogi.ru' });
         catalogi.ajax({
             url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
@@ -541,7 +553,16 @@ catalogi(function(){
                 console.log('success:' + data);
 
                // top.postMessage({action: 'search', search: data.text[0]},'*');
-               catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value = data.text[0] : catalogi("[name='search'")[1].value = data.text[0];
+               if(catalogi("[name='search'")[0].value != ""){
+               	catalogi("[name='search'")[0].value = data.text[0];
+               }
+               if(catalogi("[name='search'")[1].value != ""){
+               	catalogi("[name='search'")[1].value = data.text[0];
+               }
+               if(catalogi("[name='search'")[2].value != ""){
+               	catalogi("[name='search'")[2].value = data.text[0];
+               }
+               //catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value = data.text[0] : catalogi("[name='search'")[1].value = data.text[0];
                 event.currentTarget.submit(); 
             },
             error: function(data){
