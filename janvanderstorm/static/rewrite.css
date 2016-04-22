@@ -65,10 +65,7 @@
 
 
 
-#cboxLoadedContent{
-    width: 100%!important;
-    height: 100%!important;
-}
+#cboxLoadedContent{overflow-x:hidden !important; overflow-y:hidden !important;}
 
 
 /* Новые расположения элементов шапки */
