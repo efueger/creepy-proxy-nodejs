@@ -65,9 +65,10 @@
 
 
 
-/*#cboxLoadedContent > iframe {
+#cboxLoadedContent{
     width: 100%!important;
-}*/
+    height: 100%!important;
+}
 
 
 /* Новые расположения элементов шапки */
