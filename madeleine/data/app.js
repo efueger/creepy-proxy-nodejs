@@ -64,10 +64,10 @@ if (cluster.isMaster) {
         replacestream = require("replacestream"),
         querystring = require("querystring"),
         proxy = require("./proxy"),
-        Iconv = require('iconv').Iconv,
+        //Iconv = require('iconv').Iconv,
         includes = require("./includes")(SITENAME, querystring.stringify(HEADERPARAMS.param), HEADERPARAMS.options);
 
-    var iconv = new Iconv('latin1', 'utf-8');
+    //var iconv = new Iconv('CP1252', 'utf-8');
 
     request.defaults({followAllRedirects:true});
 
