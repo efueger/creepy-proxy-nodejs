@@ -59,7 +59,7 @@ catalogi.parse = function() {
     // Шапка
     catalogi('#AcceptCookiesBannerTemplate').remove();
 
-    catalogi('#header').prepend(catalogi('#iframe'));
+    //catalogi('#header').prepend(catalogi('#iframe'));
     catalogi('<li><a href="http://www.madeleine.catalogi.ru/kataloge/blaetterkataloge/">Онлайн каталоги</a></li>').insertBefore(catalogi('a[href="/news-specials/fashion-trends/"]').parent());
     catalogi('a[href="/news-specials/"]').attr('href', 'http://www.madeleine.catalogi.ru/kataloge/blaetterkataloge/').text('Каталоги');
 
