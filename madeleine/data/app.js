@@ -202,14 +202,22 @@ if (cluster.isMaster) {
         }
 
         // Manual replaces
-        piper.pipe(replacestream('https', 'http'))
-            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head))
-            .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-            .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.bottom + '</body>'))
-            .pipe(replacestream('ad2.adfarm1.adition.com', '127.0.0.1'))
-            .pipe(replacestream('imagesrv.adition.com', '127.0.0.1'))
-            .pipe(res);
-
+        if (req.headers.host !== 'c.madeleine.catalogi.ru') {
+            piper.pipe(replacestream('https', 'http'))
+                .pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head))
+                .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
+                .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.bottom + '</body>'))
+                .pipe(replacestream('adition.com', '127.0.0.1'))
+                .pipe(replacestream('criteo.net', '127.0.0.1'))
+                .pipe(replacestream('googleadservices.com', '127.0.0.1'))
+                .pipe(replacestream('madeleine.122.2o7.net', '127.0.0.1'))
+                .pipe(replacestream('madeleine.scoopcatalogue.de', 'c.madeleine.catalogi.ru'))
+                .pipe(res);
+        } else {
+            piper.pipe(replacestream('https', 'http'))
+                .pipe(replacestream('blaetterkatalog/script/bk_script.js', 'http://www.madeleine.catalogi.ru/static/bk_script.js'))
+                .pipe(res);
+        }
     }).listen(config.get('site.port'));
 }
 

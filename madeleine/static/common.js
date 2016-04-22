@@ -9,21 +9,21 @@ function _googleTranslateElementInit() {
 catalogi(document).ready(function(){
     catalogi('.sizetype').click(function() {
         catalogi.service();
-        console.log("click!");
+        //console.log("click!");
     });
 });
 
 catalogi.noTranslate = function() {
     // Список
-    catalogi('a[href="/service/mymadeleine-vorteile/"]').hide();
-    catalogi('a[href="/service/freundschaftswerbung/"]').hide();
-    catalogi('a[href="/service/boutique-aktionen/"]').hide();
-    catalogi('a[href="/service/kataloge/kataloganforderung/"]').hide();
-    catalogi('a[href="/service/kundenbewertung/"]').hide();
-    catalogi('a[href="/service/"]').hide();
-    catalogi('a[href="#"]').hide();
+    // catalogi('a[href="/service/mymadeleine-vorteile/"]').hide();
+    // catalogi('a[href="/service/freundschaftswerbung/"]').hide();
+    // catalogi('a[href="/service/boutique-aktionen/"]').hide();
+    // catalogi('a[href="/service/kataloge/kataloganforderung/"]').hide();
+    // catalogi('a[href="/service/kundenbewertung/"]').hide();
+    // catalogi('a[href="/service/"]').hide();
+    // catalogi('a[href="#"]').hide();
 
-    catalogi('a[class="close sprite2"]').show();
+    //catalogi('a[class="close sprite2"]').show();
 
     // Меню
     catalogi('#Main-Navi').addClass('notranslate');
@@ -38,8 +38,8 @@ catalogi.noTranslate = function() {
 
     catalogi('.sf_sizes').addClass('notranslate');
 
-    catalogi('#tc-tab503').hide();
-    catalogi('.fl_col_5').hide();
+    // catalogi('#tc-tab503').hide();
+    // catalogi('.fl_col_5').hide();
 
     catalogi('.web12015cont').addClass('notranslate');
     catalogi('.colorFlagWeb12015New').addClass('notranslate');
@@ -47,33 +47,28 @@ catalogi.noTranslate = function() {
     catalogi('#sizesRoot .icon_container').addClass('notranslate');
     catalogi('.title-and-price h1').attr('origin', catalogi('.title-and-price h1').text());
     catalogi('#colorParent .icon_container').each(function(index, el) {
-    catalogi(this).attr('origin', catalogi(this).attr('title'));
+        catalogi(this).attr('origin', catalogi(this).attr('title'));
     });
 
     // Футер
-    catalogi('.big-teaser[style*="margin-bottom: 20px"]').hide();
+    //catalogi('.big-teaser[style*="margin-bottom: 20px"]').hide();
 };
 
 catalogi.parse = function() {
     // Шапка
     catalogi('#AcceptCookiesBannerTemplate').remove();
-
     catalogi('#header').prepend(catalogi('#iframe'));
     catalogi('<li><a href="http://www.madeleine.catalogi.ru/kataloge/blaetterkataloge/">Онлайн каталоги</a></li>').insertBefore(catalogi('a[href="/news-specials/fashion-trends/"]').parent());
     catalogi('a[href="/news-specials/"]').attr('href', 'http://www.madeleine.catalogi.ru/kataloge/blaetterkataloge/').text('Каталоги');
 
     catalogi('a[href="https://www.madeleine.catalogi.ru/kataloge/kataloganforderung/"]').attr('href', '/kataloge/blaetterkataloge/');
-
     catalogi('div[onclick*="Flyout:Newsletter"]').attr('onclick','#');
-
     catalogi('a[href^="https://www.madeleine.catalogi.ru/service/newsletter/"]').attr('href','#');
 
-    catalogi('.img_ts').click(function() {
-        catalogi.subscribe(true, '22452');
-    });
-    catalogi('#email').click(function() {
-        catalogi.subscribe(true, '22452');
-    });
+    // Меню
+    catalogi('.fl_col_6 > a').attr('href','//madeleine.catalogi.ru/service/kataloge/blaetterkataloge/');
+    catalogi('.fl_col_6 > div').remove();
+    catalogi('.fl_col_5').remove();
 
     // Стр. товара
     catalogi('a[class="next"]').eq(0).click(function(event) {
@@ -119,13 +114,15 @@ catalogi.parse = function() {
     };
 
     // Отображение body
-    catalogi('body').css('visibility', 'visible');
+    catalogi('body').delay(500).queue(function (next) {catalogi(this).css('visibility', 'visible');});
 
-    // Подписка
+    // Подписки
+    catalogi('.img_ts').click(function() {catalogi.subscribe(true, '22452');});
+    catalogi('#email').click(function() {catalogi.subscribe(true, '22452');});
     catalogi.subscribe(false, '22452');
 };
 
-catalogi.service = function(){
+catalogi.service = function() {
     if('_service' in window){
         catalogi(".single-price").text(function(index, text) {
             console.log("done");
@@ -134,10 +131,10 @@ catalogi.service = function(){
 
         //var _price = catalogi('[name="offerPrice"]').val();
         var _price = catalogi('.single-price').text().replace('от', '').replace('€', '').replace(',', '.').trim();
-        if(_price != ''){
+        if  (_price != '') {
             var _delivery = parseFloat(_price)+(( parseFloat(_price)/100 )* parseFloat( _service ));
-            if( catalogi('.addtocard > p').text() != 'С учетом доставки '+_delivery.toFixed(2)+' €' ){
-            catalogi('.addtocard > p').text('С учетом доставки '+_delivery.toFixed(2)+' €');
+            if( catalogi('.addtocard > p').text() != 'С учетом доставки '+_delivery.toFixed(2)+' €' ) {
+                catalogi('.addtocard > p').text('С учетом доставки '+_delivery.toFixed(2)+' €');
             }
         }
     }
