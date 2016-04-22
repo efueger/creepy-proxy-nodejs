@@ -435,11 +435,13 @@ catalogi('.basket').text('Корзина');
     if(ordersNumber)
         catalogi('.wording .article .num').text(ordersNumber);
     console.log('ordersNumber: ' + ordersNumber);
+    catalogi('#mbflyout-area').remove();
 
     window.timer1 = window.setInterval("checkBasket();", timeout1);
 }
 
 function checkSeach() {
+	catalogi('#mbflyout-area').remove();
     catalogi('.minicart-amount').remove();
     //var seachString = catalogi.cookie('seachString');
     //if (seachString)
@@ -486,7 +488,7 @@ catalogi(function(){
     	var currentDomain = m[0].replace('.','').replace('.','');
     }
     catalogi('#mbflyout-area').remove();
-    
+
     if(window.innerWidth < 770){
     	catalogi('.textInHeader').remove();
     }
