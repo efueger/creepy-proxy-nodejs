@@ -528,14 +528,14 @@ catalogi(function(){
 
     catalogi('.searchform').submit(function(event) {
     	var value = "";
-    	if(catalogi("[name='search'")[0].value != ""){
-    		value = catalogi("[name='search'")[0].value;
+    	if(catalogi("[name='search']")[0].value != ""){
+    		value = catalogi("[name='search']")[0].value;
     	}
-    	if(catalogi("[name='search'")[1].value != ""){
-    		value = catalogi("[name='search'")[1].value;
+    	if(catalogi("[name='search']")[1].value != ""){
+    		value = catalogi("[name='search']")[1].value;
     	}
-    	if(catalogi("[name='search'")[2].value != ""){
-    		value = catalogi("[name='search'")[2].value;
+    	if(catalogi("[name='search']")[2].value != ""){
+    		value = catalogi("[name='search']")[2].value;
     	}
     	//var value = catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value : catalogi("[name='search'")[1].value;
         catalogi.cookie('seachString', value, { expires: 7, path: '/', domain: '.catalogi.ru' });
@@ -553,15 +553,15 @@ catalogi(function(){
                 console.log('success:' + data);
 
                // top.postMessage({action: 'search', search: data.text[0]},'*');
-               if(catalogi("[name='search'")[0].value != ""){
-               	catalogi("[name='search'")[0].value = data.text[0];
-               }
-               if(catalogi("[name='search'")[1].value != ""){
-               	catalogi("[name='search'")[1].value = data.text[0];
-               }
-               if(catalogi("[name='search'")[2].value != ""){
-               	catalogi("[name='search'")[2].value = data.text[0];
-               }
+             
+               	catalogi("[name='search']")[0].value = data.text[0];
+               
+             
+               	catalogi("[name='search']")[1].value = data.text[0];
+               
+              
+               	catalogi("[name='search']")[2].value = data.text[0];
+               
                //catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value = data.text[0] : catalogi("[name='search'")[1].value = data.text[0];
                 event.currentTarget.submit(); 
             },
