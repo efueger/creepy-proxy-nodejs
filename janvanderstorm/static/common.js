@@ -50,7 +50,7 @@ catalogi.noTranslate = function(){
 catalogi.parse = function() {
     //// Шапка
     catalogi('#iframe').hide();
-catalogi('#mbflyout-area').remove()
+catalogi('#mbflyout-area').remove();
     catalogi('.benefit.first').text('ЭКСПЕРТ ПО БОЛЬШИМ РАЗМЕРАМ');
     catalogi('.benefit.second').text('МУЖСКАЯ МОДА ДО 70 РАЗМЕРА');
     catalogi('.benefit.last').text('ИДЕАЛЬНО ДЛЯ ВАШЕЙ ФИГУРЫ');
@@ -480,14 +480,16 @@ catalogi(function(){
     var m;
 
     if ((m = re.exec(str)) !== null) {
-        if (m.index === re.lastIndex) {
-            re.lastIndex++;
-        }
-        var currentDomain = m[0].replace('.','').replace('.','');
-    }
-if(window.innerWidth < 770){
-    		catalogi('.textInHeader').remove();
+    	if (m.index === re.lastIndex) {
+    		re.lastIndex++;
     	}
+    	var currentDomain = m[0].replace('.','').replace('.','');
+    }
+    catalogi('#mbflyout-area').remove();
+    
+    if(window.innerWidth < 770){
+    	catalogi('.textInHeader').remove();
+    }
     window.addEventListener('resize', function(){
     	if(window.innerWidth < 770){
     		catalogi('.textInHeader').remove();
