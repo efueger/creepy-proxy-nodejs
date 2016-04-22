@@ -65,7 +65,11 @@
 
 
 
-#cboxLoadedContent{overflow-x:hidden !important; overflow-y:hidden !important;}
+#cboxLoadedContent{
+    overflow-x:hidden !important;
+ overflow-y:hidden !important;
+padding: 0;
+}
 
 
 /* Новые расположения элементов шапки */
