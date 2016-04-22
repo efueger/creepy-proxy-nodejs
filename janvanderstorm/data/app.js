@@ -38,9 +38,18 @@ var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
 
-    var os = require('os');
-    var procNum = os.cpus();
-    for (var i = 0; i < procNum.length; i++) {
+    var fs = require('fs');
+    var clusersConf = JSON.parse(fs.readFileSync("/var/www/global-config.json", 'utf8'));
+
+    if(clusersConf.server.cpuBased) {
+        var os = require('os');
+        var procNum = os.cpus();
+        var forkNum = procNum.length;
+    } else {
+        var forkNum = clusersConf.server.clusersNum;
+    }
+
+    for (var i = 0; i < forkNum; i++) {
         cluster.fork();
     }
 
