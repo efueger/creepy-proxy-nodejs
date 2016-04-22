@@ -35,7 +35,7 @@ catalogi.noTranslate = function(){
     catalogi("span:contains('Top Marken')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Von A bis Z')").parent().parent().addClass('notranslate');
     catalogi("span:contains('Top Brands')").parent().parent().addClass('notranslate');
-catalogi('.form-filter').find("*").addClass('notranslate');
+//catalogi('.form-filter').find("*").addClass('notranslate');
     // Все остальное
     catalogi('.brands-main-title').addClass('notranslate');
     catalogi('.all-brands-container').addClass('notranslate');
