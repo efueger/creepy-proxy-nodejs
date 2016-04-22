@@ -214,7 +214,6 @@ if (cluster.isMaster) {
                 .pipe(replacestream('madeleine.scoopcatalogue.de', 'c.madeleine.catalogi.ru'))
                 .pipe(res);
         } else {
-            console.log('ggwp');
             piper.pipe(replacestream('https', 'http'))
                 .pipe(replacestream('blaetterkatalog/script/bk_script.js', 'http://www.madeleine.catalogi.ru/static/bk_script.js'))
                 .pipe(res);
