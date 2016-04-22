@@ -1,6 +1,6 @@
 {
     "server": {
-        "cpuBased"    : false,
+        "cpuBased"    : true,
         "clusersNum"  : 4
     }
 }
