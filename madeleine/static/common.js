@@ -70,6 +70,7 @@ catalogi.parse = function() {
     catalogi('.fl_col_3 > a > span').text('тренды');
     catalogi('.fl_col_4 > a > span').text('sale');
     catalogi('.fl_col_5').remove();
+    catalogi('.fl_col_6 > a > span').text('каталоги');
     catalogi('.fl_col_6 > a').attr('href','//madeleine.catalogi.ru/service/kataloge/blaetterkataloge/');
     catalogi('.fl_col_6 > div').remove();
 
@@ -87,8 +88,7 @@ catalogi.parse = function() {
 
     catalogi('#tc-tab503').remove();
     catalogi('.mav3-info-btns').remove();
-
-
+    
     // Перевод сообщений
     LocalizedText.Shop_Article_AddToCart_Hint_PleaseSelect = 'Выберите цвет и размер.';
     LocalizedText.Shop_Article_AddToCart_Hint_PleaseSelectSize = 'Пожалуйста, выберите размер.';
