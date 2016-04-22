@@ -527,16 +527,11 @@ catalogi(function(){
     }
 
     catalogi('.searchform').submit(function(event) {
-    	var value = "";
-    	if(catalogi("[name='search']")[0].value != ""){
-    		value = catalogi("[name='search']")[0].value;
-    	}
-    	if(catalogi("[name='search']")[1].value != ""){
-    		value = catalogi("[name='search']")[1].value;
-    	}
-    	if(catalogi("[name='search']")[2].value != ""){
-    		value = catalogi("[name='search']")[2].value;
-    	}
+    	
+    	var form = event.currentTarget;
+    	
+    	var value = catalogi(form).find("[name='search']").val();
+    	
     	//var value = catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value : catalogi("[name='search'")[1].value;
         catalogi.cookie('seachString', value, { expires: 7, path: '/', domain: '.catalogi.ru' });
         catalogi.ajax({
@@ -551,10 +546,8 @@ catalogi(function(){
             },
             success: function(data){
                 console.log('success:' + data);
-               	catalogi("[name='search']")[0].value = data.text[0];
-               	catalogi("[name='search']")[1].value = data.text[0];
-               	catalogi("[name='search']")[2].value = data.text[0];
-                event.currentTarget.submit(); 
+               	catalogi(form).find("[name='search']").val(data.text[0]);
+                form.submit(); 
             },
             error: function(data){
                 console.log('error:' + data);
