@@ -14,15 +14,6 @@ catalogi(document).ready(function(){
 });
 
 catalogi.noTranslate = function() {
-    // Список
-    // catalogi('a[href="/service/mymadeleine-vorteile/"]').hide();
-    // catalogi('a[href="/service/freundschaftswerbung/"]').hide();
-    // catalogi('a[href="/service/boutique-aktionen/"]').hide();
-    // catalogi('a[href="/service/kataloge/kataloganforderung/"]').hide();
-    // catalogi('a[href="/service/kundenbewertung/"]').hide();
-    // catalogi('a[href="/service/"]').hide();
-    // catalogi('a[href="#"]').hide();
-
     //catalogi('a[class="close sprite2"]').show();
 
     // Меню
@@ -64,15 +55,29 @@ catalogi.parse = function() {
     catalogi('div[onclick*="Flyout:Newsletter"]').attr('onclick','#');
     catalogi('a[href^="https://www.madeleine.catalogi.ru/service/newsletter/"]').attr('href','#');
 
+    // Страница каталогов
+    catalogi('a[href="/service/mymadeleine-vorteile/"]').hide();
+    catalogi('a[href="/service/freundschaftswerbung/"]').hide();
+    catalogi('a[href="/service/boutique-aktionen/"]').hide();
+    catalogi('a[href="/service/kataloge/kataloganforderung/"]').hide();
+    catalogi('a[href="/service/kundenbewertung/"]').hide();
+    catalogi('a[href*="/service/newsletter/"]').hide();
+    catalogi('a[href="/service/store-outletaktionen/"]').hide();
+    catalogi('a[href="/service/merkzettel/"]').hide();
+    catalogi('a[href="/service/"]').hide();
+    catalogi('a[href="#"]').hide();
+    catalogi('[style*="madeleine-blaetter-kataloge"]').hide();
+
     // Меню
     catalogi('.fl_col_1 > a > span').text('мода');
     catalogi('.fl_col_2 > a > span').text('обувь & аксессуары');
     catalogi('.fl_col_3 > a > span').text('тренды');
     catalogi('.fl_col_4 > a > span').text('sale');
     catalogi('.fl_col_5').remove();
-    catalogi('.fl_col_6 > a > span').text('каталоги');
-    catalogi('.fl_col_6 > a').attr('href','//madeleine.catalogi.ru/service/kataloge/blaetterkataloge/');
+    catalogi('.fl_col_6').attr('class','fl_main fl_col_6 fl_main_last fl_col_advisory web-11080');
     catalogi('.fl_col_6 > div').remove();
+    catalogi('.fl_col_6 > a').attr('href','//madeleine.catalogi.ru/service/kataloge/blaetterkataloge/');
+    catalogi('.fl_col_6 > a > span').text('каталоги');
 
     // Стр. товара
     catalogi('a[class="next"]').eq(0).click(function(event) {
@@ -88,7 +93,7 @@ catalogi.parse = function() {
 
     catalogi('#tc-tab503').remove();
     catalogi('.mav3-info-btns').remove();
-    
+
     // Перевод сообщений
     LocalizedText.Shop_Article_AddToCart_Hint_PleaseSelect = 'Выберите цвет и размер.';
     LocalizedText.Shop_Article_AddToCart_Hint_PleaseSelectSize = 'Пожалуйста, выберите размер.';
