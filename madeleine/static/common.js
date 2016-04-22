@@ -35,11 +35,7 @@ catalogi.noTranslate = function() {
     catalogi('.sale-price').addClass('notranslate');
     catalogi('.addtocard').addClass('notranslate');
     catalogi('.pagerContainer').addClass('notranslate');
-
     catalogi('.sf_sizes').addClass('notranslate');
-
-    // catalogi('#tc-tab503').hide();
-    // catalogi('.fl_col_5').hide();
 
     catalogi('.web12015cont').addClass('notranslate');
     catalogi('.colorFlagWeb12015New').addClass('notranslate');
@@ -82,6 +78,16 @@ catalogi.parse = function() {
         catalogi.sizeTable();
         return false;
     }).text('Таблица размеров');
+    catalogi('.size-standard > span:eq(0)').remove();
+    catalogi('.size-standard > span').text('Нормальный');
+    catalogi('.size-short > span:eq(0)').remove();
+    catalogi('.size-short > span').text('Короткий');
+    catalogi('.size-long > span:eq(0)').remove();
+    catalogi('.size-long > span').text('Длинный');
+
+    catalogi('#tc-tab503').remove();
+    catalogi('.mav3-info-btns').remove();
+
 
     // Перевод сообщений
     LocalizedText.Shop_Article_AddToCart_Hint_PleaseSelect = 'Выберите цвет и размер.';
@@ -127,6 +133,10 @@ catalogi.parse = function() {
     catalogi('.img_ts').click(function() {catalogi.subscribe(true, '22452');});
     catalogi('#email').click(function() {catalogi.subscribe(true, '22452');});
     catalogi.subscribe(false, '22452');
+
+    // Футер
+    catalogi('.black-impress').remove();
+    catalogi('#newletter-social').remove();
 };
 
 catalogi.service = function() {
