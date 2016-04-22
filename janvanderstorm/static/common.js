@@ -333,37 +333,11 @@ catalogi.parse = function() {
     catalogi('#page-footer').remove();
 
 
-    //search handler
-    /*catalogi("[value='Suche starten']").click(function() {
-        catalogi.cookie('seachString', catalogi("[name='search'").val(), { expires: 7, path: '/', domain: '.catalogi.ru' });
-        catalogi.ajax({
-            url: 'http://cdn.catalogi.ru/executable/actions/_translate.php',
-            type: 'get',
-            dataType: 'json',
-            data: {
-                client: 't',
-                text: catalogi("[name='search'").val(),
-                sl: 'ru',
-                tl: 'de'
-            },
-            success: function(data){
-                console.log('success:' + data);
-                //top.postMessage({action: 'search', search: data.text[0]},'*');
-            },
-            error: function(data){
-                console.log('error:' + data);
-                //top.postMessage({action: 'search', search: catalogi('#search').val()},'*');
-            }
-        });
-        return false;
-    });*/
+  
 
     // Подписка
     catalogi.subscribe(false, '35346');
-  //  setTimeout(function(){
-   //        catalogi('#cboxLoadedContent').css('width', '620px');//catalogi('#cboxLoadedContent').css('width').replace('px','')+30+'px');
-   //         catalogi('#cboxLoadedContent').css('height', '520px'); //catalogi('#cboxLoadedContent').css('height').replace('px','')+30+'px');
-   // },1300);
+
 
     // Showing body after hiding
     catalogi('body')
@@ -511,6 +485,14 @@ catalogi(function(){
         }
         var currentDomain = m[0].replace('.','').replace('.','');
     }
+if(window.innerWidth < 770){
+    		catalogi('.textInHeader').remove();
+    	}
+    window.addEventListener('resize', function(){
+    	if(window.innerWidth < 770){
+    		catalogi('.textInHeader').remove();
+    	}
+    }, true);
 
     catalogi('.searchform').submit(function(event) {
     	
