@@ -26,6 +26,9 @@ catalogi.noTranslate = function() {
 
     catalogi('a[class="close sprite2"]').show();
 
+    // Меню
+    catalogi('#Main-Navi').addClass('notranslate');
+
     // Стр. товара
     catalogi('#optionError').addClass('notranslate');
     catalogi('.single-price').addClass('notranslate');

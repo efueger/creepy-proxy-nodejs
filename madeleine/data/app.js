@@ -38,9 +38,18 @@ var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
 
-    var os = require('os');
-    var procNum = os.cpus();
-    for (var i = 0; i < procNum.length; i++) {
+    var fs = require('fs');
+    var clusersConf = JSON.parse(fs.readFileSync("/var/www/global-config.json", 'utf8'));
+
+    if(clusersConf.server.cpuBased) {
+        var os = require('os');
+        var procNum = os.cpus();
+        var forkNum = procNum.length;
+    } else {
+        var forkNum = clusersConf.server.clusersNum;
+    }
+
+    for (var i = 0; i < forkNum; i++) {
         cluster.fork();
     }
 
@@ -55,7 +64,10 @@ if (cluster.isMaster) {
         replacestream = require("replacestream"),
         querystring = require("querystring"),
         proxy = require("./proxy"),
+        Iconv = require('iconv').Iconv,
         includes = require("./includes")(SITENAME, querystring.stringify(HEADERPARAMS.param), HEADERPARAMS.options);
+
+    var iconv = new Iconv('latin1', 'utf-8');
 
     request.defaults({followAllRedirects:true});
 
@@ -67,7 +79,6 @@ if (cluster.isMaster) {
     var translates, fsize = 0;
 
     var server = http.createServer(function (req, res) {
-        console.log('Trying to access: ' + req.headers.host + req.url);
         onError = function (err) {
             console.error(err);
 
@@ -90,7 +101,6 @@ if (cluster.isMaster) {
             }
         };
         onResponse = function (response) {
-            //console.log(new Date()+" "+ JSON.stringify(response.headers));
             if ('location' in response.headers)
                 response.setHeader('Location', response.headers['location'].replace('madeleine.scoopcatalogue.de', 'c.madeleine.catalogi.ru').replace(SITE, SITENAME + '.catalogi.ru'));
 
@@ -118,12 +128,18 @@ if (cluster.isMaster) {
         request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
+                console.log(response.headers['content-length']);
                 if (IsJsonString(body)) {
+                    console.log("JOSN detected");
                     if (fsize != tmp) {
                         fsize = tmp;
                         translates = JSON.parse(body, 'utf8');
                     }
+                } else {
+                    console.log("JOSN NOT detected!");
                 }
+            } else {
+                console.log("JOSN NOT 200!");
             }
         });
 
