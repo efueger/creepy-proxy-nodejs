@@ -1,5 +1,5 @@
 /**
- * Created by mihailstepancenko on 13.04.16.
+ * Created by mihailstepancenko on 22.04.16.
  */
 
 
@@ -15,7 +15,9 @@ function IsJsonString(str) {
     return true;
 }
 
-// Load config
+/**
+ * Load config
+ */
 var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
@@ -33,9 +35,12 @@ var SITENAME = config.get('site.name'),
     };
 var replaces = config.get('replaces');
 
-// Start server
+/**
+ * Start server
+ */
 var cluster = require('cluster');
 if (cluster.isMaster) {
+    // start master instarnce
     console.log('Start master');
 
     var fs = require('fs');
@@ -58,16 +63,15 @@ if (cluster.isMaster) {
         cluster.fork();
     });
 } else {
+    // start cluster instarnce
     console.log("+ worker");
+
     var http = require("http"),
         request = require("request"),
         replacestream = require("replacestream"),
         querystring = require("querystring"),
         proxy = require("./proxy"),
-        //Iconv = require('iconv').Iconv,
         includes = require("./includes")(SITENAME, querystring.stringify(HEADERPARAMS.param), HEADERPARAMS.options);
-
-    //var iconv = new Iconv('CP1252', 'utf-8');
 
     request.defaults({followAllRedirects:true});
 
@@ -88,9 +92,7 @@ if (cluster.isMaster) {
                 }, 10);
 
                 killtimer.unref();
-
                 server.close();
-
                 cluster.worker.disconnect();
 
                 res.statusCode = 500;
@@ -102,10 +104,11 @@ if (cluster.isMaster) {
         };
         onResponse = function (response) {
             if ('location' in response.headers)
-                response.setHeader('Location', response.headers['location'].replace('madeleine.scoopcatalogue.de', 'c.madeleine.catalogi.ru').replace(SITE, SITENAME + '.catalogi.ru'));
+                response.setHeader('Location', response.headers['location']
+                    .replace(SITENAME + '.scoopcatalogue.de', 'c.' + SITENAME + '.catalogi.ru')
+                    .replace(SITE, SITENAME + '.catalogi.ru'));
 
             var _cookie = [];
-
             if ('set-cookie' in response.headers) {
                 _cookie = response.headers['set-cookie'];
                 _cookie.push([
@@ -124,34 +127,34 @@ if (cluster.isMaster) {
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
         };
 
-        // Load translates
+        // load translates
         request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
-                //console.log(response.headers['content-length']);
                 if (IsJsonString(body)) {
-                    //console.log("JOSN detected");
                     if (fsize != tmp) {
                         fsize = tmp;
                         translates = JSON.parse(body, 'utf8');
                     }
-                } else {
-                    //console.log("JOSN NOT detected!");
                 }
-            } else {
-                //console.log("JOSN NOT 200!");
             }
         });
 
+        // set headers
         var _header = {};
-        if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
-        if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
-        if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
+        if ('user-agent' in req.headers)
+            _header['User-Agent'] = req.headers['user-agent'];
+        if ('content-type' in req.headers)
+            _header['Content-Type'] = req.headers['content-type'];
+        if ('cookie' in req.headers)
+            _header['Cookie'] = req.headers['cookie'];
 
-        var host = req.headers.host.replace('c.madeleine.catalogi.ru', 'madeleine.scoopcatalogue.de').replace(SITENAME + '.catalogi.ru', SITE);
-        _header['Host'] = host;
+        var host = req.headers.host
+            .replace('c.' + SITENAME + '.catalogi.ru', SITENAME + '.scoopcatalogue.de')
+            .replace(SITENAME + '.catalogi.ru', SITE);
+            _header['Host'] = host;
 
-
+        // set cookies
         if ('cookie' in req.headers) {
             var cookies = req.headers.cookie.split(' ');
             for (var i = 0; i < cookies.length; i++) {
@@ -159,8 +162,7 @@ if (cluster.isMaster) {
             }
         }
 
-
-        // Proxyng trafic
+        // proxyng trafic
         var piper;
         var url = "http://" + host + req.url;
         proxyfull = "http://" + proxy() + ":3129";
@@ -177,7 +179,7 @@ if (cluster.isMaster) {
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
 
-        // Replaces from config
+        // replaces from config
         replaces.forEach(function (item, i, arr) {
             if (item.type === "usual") {
                 piper = piper.pipe(replacestream(item.from, item.to));
@@ -187,7 +189,7 @@ if (cluster.isMaster) {
             }
         });
 
-        // Replaces from translates.catalogi.ru
+        // replaces from translates
         if (translates && translates.length) {
             translates.forEach(function (item, i, arr) {
                 if (item.type === "usual") {
@@ -201,7 +203,7 @@ if (cluster.isMaster) {
             });
         }
 
-        // Manual replaces
+        // manual replaces
         if (req.headers.host !== 'c.madeleine.catalogi.ru') {
             piper.pipe(replacestream('https', 'http'))
                 .pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head))
