@@ -26,12 +26,11 @@ module.exports = function(catalog, param, options){
         ].join("\n"),
 
         body: {
-            top: [
-                '<div id="google_translate_element" style="display: none"></div>',
-                '<iframe src="http://cdn.catalogi.ru/executable/index.php?'+param+'" width="'+options.width+'px" height="'+options.height+'px" frameborder="0" name="_head" id="iframe"/>'
-            ].join("\n"),
+            top: [].join("\n"),
 
             bottom: [
+                '<div id="google_translate_element" style="display: none"></div>',
+                '<iframe src="http://cdn.catalogi.ru/executable/index.php?'+param+'" width="'+options.width+'px" height="'+options.height+'px" frameborder="0" name="_head" id="iframe"/>'
             ].join("\n")
         }
     }

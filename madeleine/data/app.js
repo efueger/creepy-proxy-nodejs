@@ -128,18 +128,18 @@ if (cluster.isMaster) {
         request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
-                console.log(response.headers['content-length']);
+                //console.log(response.headers['content-length']);
                 if (IsJsonString(body)) {
-                    console.log("JOSN detected");
+                    //console.log("JOSN detected");
                     if (fsize != tmp) {
                         fsize = tmp;
                         translates = JSON.parse(body, 'utf8');
                     }
                 } else {
-                    console.log("JOSN NOT detected!");
+                    //console.log("JOSN NOT detected!");
                 }
             } else {
-                console.log("JOSN NOT 200!");
+                //console.log("JOSN NOT 200!");
             }
         });
 
@@ -202,10 +202,12 @@ if (cluster.isMaster) {
         }
 
         // Manual replaces
-        piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
-            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
+        piper.pipe(replacestream('https', 'http'))
+            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head))
             .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
-            .pipe(replacestream('https', 'http'))
+            .pipe(replacestream(new RegExp('</body>', 'i'), includes.body.bottom + '</body>'))
+            .pipe(replacestream('ad2.adfarm1.adition.com', '127.0.0.1'))
+            .pipe(replacestream('imagesrv.adition.com', '127.0.0.1'))
             .pipe(res);
 
     }).listen(config.get('site.port'));
