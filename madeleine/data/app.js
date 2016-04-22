@@ -34,6 +34,7 @@ var SITENAME = config.get('site.name'),
         }
     };
 var replaces = config.get('replaces');
+var translates, fsize = 0;
 
 /**
  * Start server
@@ -126,7 +127,6 @@ if (cluster.isMaster) {
         };
 
         // load translates
-        var translates, fsize = 0;
         request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 tmp = response.headers['content-length'];
