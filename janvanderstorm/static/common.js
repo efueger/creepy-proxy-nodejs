@@ -71,10 +71,11 @@ catalogi.parse = function() {
 
 
     catalogi('.miniaccount').children().remove();
-    catalogi('.miniaccount').prepend($("<a>Каталоги</a>").attr('href','#').addClass('headerLinks').click(function(event){
-        event.preventDefault();
-        catalogi.catalogs();
-    }));
+    catalogi('.miniaccount').prepend($("<a>Каталоги</a>").attr('href','#').addClass('headerLinks')
+    	.attr('onclick','catalogi.catalogs(); return false');
+    //    event.preventDefault();
+    //    catalogi.catalogs();
+    //}));
     catalogi('.miniaccount').prepend($("<a>Интернет-магазины</a>").attr('href','#').addClass('headerLinks').click(function(event){
         event.preventDefault();
         catalogi.shops();
@@ -96,14 +97,10 @@ catalogi.parse = function() {
     catalogi('.logged').text('Личный кабинет').click(function(event){
         event.preventDefault();
         catalogi.login();
-      //  catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-      //  catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     });
     catalogi('.myaccount .link').text('Вход').click(function(event){
         event.preventDefault();
         catalogi.login();
-      //  catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+20+'px');
-      //  catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+20+'px');
     });
     catalogi('#account-nav > li > a').attr('href', '#');
     catalogi('.my-account').remove();
@@ -153,10 +150,10 @@ catalogi.parse = function() {
     //cart
     catalogi('.minibasketholder').click(function(){
         catalogi.order();
-       // setTimeout(function(){
-       //     catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
-       //     catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-       // },500);
+        setTimeout(function(){
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
+        },500);
         
         return false;
     });
