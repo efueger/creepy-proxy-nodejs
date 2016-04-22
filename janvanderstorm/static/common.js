@@ -346,7 +346,7 @@ catalogi('.myaccount.notranslate').css('max-width','140px');
     catalogi('.wording .price').remove();
 
 
-    if(catalogi("[data-include='http://www.janvanderstorm.catalogi.ru/basket']").length == 0){
+    if(catalogi("[data-include='http://www.janvanderstorm.catalogi.ru/basket']").children().length == 0){
     	catalogi("[data-include='http://www.janvanderstorm.catalogi.ru/basket']").html("<div class='minibasket-area'>
     		<a class='wkempty' >
     		<span class='minibasketicon'>
@@ -358,11 +358,11 @@ catalogi('.myaccount.notranslate').css('max-width','140px');
     		<span class='num'>0</span>
     		<span class='text'>Artikel</span>
     		</span>
-    		
+
     		</span>
     		</a>
 
-    		
+
     		</div>");
     	catalogi('a[title*="Warenkorb"]').attr('href', '#').click(function(event){
     		event.preventDefault();
@@ -371,7 +371,7 @@ catalogi('.myaccount.notranslate').css('max-width','140px');
     			catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
     			catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
     		},500);
-    		
+
         //return false;
     });
     	catalogi('.basket').text('Корзина');
