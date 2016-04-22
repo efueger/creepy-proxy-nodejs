@@ -59,8 +59,9 @@
 .headerLinks {
     text-decoration: none!important;
     font-style: normal!important;
-    padding-left: 1em;
-    padding-right: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    font-weight: normal!important;
 }
 
 
