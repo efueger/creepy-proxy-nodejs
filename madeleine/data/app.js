@@ -1,4 +1,9 @@
 /**
+ * Created by mihailstepancenko on 13.04.16.
+ */
+
+
+/**
  * @return {boolean}
  */
 function IsJsonString(str) {
@@ -33,18 +38,9 @@ var cluster = require('cluster');
 if (cluster.isMaster) {
     console.log('Start master');
 
-    var fs = require('fs');
-    var clusersConf = JSON.parse(fs.readFileSync("/var/www/global-config.json", 'utf8'));
-
-    if(clusersConf.server.cpuBased) {
-        var os = require('os');
-        var procNum = os.cpus();
-        var forkNum = procNum.length;
-    } else {
-        var forkNum = clusersConf.server.clusersNum;
-    }
-
-    for (var i = 0; i < forkNum; i++) {
+    var os = require('os');
+    var procNum = os.cpus();
+    for (var i = 0; i < procNum.length; i++) {
         cluster.fork();
     }
 
@@ -53,205 +49,152 @@ if (cluster.isMaster) {
         cluster.fork();
     });
 } else {
-	console.log('+ worker');
+    console.log("+ worker");
+    var http = require("http"),
+        request = require("request"),
+        replacestream = require("replacestream"),
+        querystring = require("querystring"),
+        proxy = require("./proxy"),
+        includes = require("./includes")(SITENAME, querystring.stringify(HEADERPARAMS.param), HEADERPARAMS.options);
 
-	var domain = require('domain'),
-		http = require('http'),
-		url = require('url'),
-		querystring = require('querystring'),
-		Iconv = require('iconv').Iconv,
-		proxy = require('./proxy');
+    request.defaults({followAllRedirects:true});
 
-		var iconv = new Iconv('latin1', 'utf-8');
+    var j = request.jar();
+    var proxiedReq = request.defaults({
+        jar: j
+    });
 
-	var server = http.createServer(function(req, res) {
-		var errHandler = domain.create();
+    var translates, fsize = 0;
 
-		errHandler.on('error', function(err) {
-			console.error('error', err.stack);
+    var server = http.createServer(function (req, res) {
+        console.log('Trying to access: ' + req.headers.host + req.url);
+        onError = function (err) {
+            console.error(err);
 
-			try {
-				var killtimer = setTimeout(function() {
-					process.exit(1);
-				}, 10);
+            try {
+                var killtimer = setTimeout(function () {
+                    process.exit(1);
+                }, 10);
 
-				killtimer.unref();
+                killtimer.unref();
 
-				server.close();
+                server.close();
 
-				cluster.worker.disconnect();
+                cluster.worker.disconnect();
 
-				res.statusCode = 500;
-				res.setHeader('Content-Type', 'text/html; charset=UTF-8');
-				res.end('Сервис временно недоступен!');
-			} catch (er) {
-				console.error('Error sending HTTP response', er, req.url);
-			}
-		});
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+                res.end('Сервис временно недоступен!');
+            } catch (er) {
+                console.error('Error sending HTTP response', er, req.url);
+            }
+        };
+        onResponse = function (response) {
+            //console.log(new Date()+" "+ JSON.stringify(response.headers));
+            if ('location' in response.headers)
+                response.setHeader('Location', response.headers['location'].replace('madeleine.scoopcatalogue.de', 'c.madeleine.catalogi.ru').replace(SITE, SITENAME + '.catalogi.ru'));
 
-		errHandler.add(req);
-		errHandler.add(res);
+            var _cookie = [];
 
-		errHandler.run(function() {
-			var _post = '';
+            if ('set-cookie' in response.headers) {
+                _cookie = response.headers['set-cookie'];
+                _cookie.push([
+                    'googtrans=%2Fde%2Fru; path=/; domain=.catalogi.ru',
+                    'googtrans=%2Fde%2Fru; path=/; domain=' + SITENAME + '.catalogi.ru'
+                ]);
+                res.setHeader('Set-cookie', _cookie);
+            } else {
+                _cookie.push([
+                    'googtrans=%2Fde%2Fru; path=/; domain=.catalogi.ru',
+                    'googtrans=%2Fde%2Fru; path=/; domain=' + SITENAME + '.catalogi.ru'
+                ]);
+                res.setHeader('Set-cookie', _cookie);
+            }
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+        };
 
-			req.addListener("data", function(data) {
-				_post += data;
-			});
+        // Load translates
+        request.get('http://translates.catalogi.ru/temp/' + SITENAME + '.json', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                tmp = response.headers['content-length'];
+                if (IsJsonString(body)) {
+                    if (fsize != tmp) {
+                        fsize = tmp;
+                        translates = JSON.parse(body, 'utf8');
+                    }
+                }
+            }
+        });
 
-			var query = querystring.parse(url.parse(req.url).query);
-			var param = {
-				catalog: 'madeleine',
-				alias: 'ML',
-				info: 'Интернет-магазин MADELEINE. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов.'
-			};
+        var _header = {};
+        if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
+        if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
+        if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
 
-			if ('utm_medium' in query) param['utm_medium'] = query['utm_medium'];
-			if ('utm_source' in query) param['utm_source'] = query['utm_source'];
-			if ('utm_campaign' in query) param['utm_campaign'] = query['utm_campaign'];
-
-			var includes = require('./includes')('madeleine', querystring.stringify(param), '958');
-
-			req.addListener('end', function() {
-
-				/*** Формирование заголовков запроса ***/
-				var _header = {};
-				if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
-				if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
-				if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
-
-				// Интеграция хоста в заголовок
-				var host = req.headers.host.replace('c.madeleine.catalogi.ru', 'madeleine.scoopcatalogue.de').replace('madeleine.catalogi.ru', 'madeleine.de');
-				_header['Host'] = host;
-
-				var request = http.request({
-					host: proxy(),
-					port: 3129,
-					path: 'http://' + host + req.url,
-					method: req.method,
-					headers: _header
-				}, function(response) {
-
-					// Заголовки
-					if ('content-type' in response.headers) res.setHeader('Content-Type', response.headers['content-type']);
-
-					if ('location' in response.headers) res.setHeader('Location', response.headers['location'].replace('madeleine.scoopcatalogue.de', 'c.madeleine.catalogi.ru').replace('madeleine.de', 'madeleine.catalogi.ru'));
-
-					if ('set-cookie' in response.headers) {
-						var _cookie = response.headers['set-cookie'];
-						_cookie.push([
-						  'googtrans=%2Fde%2Fru; path=/; domain=.catalogi.ru',
-						  'googtrans=%2Fde%2Fru; path=/; domain=madeleine.catalogi.ru'
-						]);
-						res.setHeader('Set-cookie', _cookie);
-					} else {
-						var _cookie = [];
-						_cookie.push([
-						  'googtrans=%2Fde%2Fru; path=/; domain=.catalogi.ru',
-						   'googtrans=%2Fde%2Fru; path=/; domain=madeleine.catalogi.ru'
-						]);
-						res.setHeader('Set-cookie', _cookie);
-					}
-
-					res.writeHead(response.statusCode);
-
-					response.on('data', function(chunk) {
-						if (res.headersSent) {
-							var _out = chunk.toString();
-							out = _out.replace(/madeleine\.de/g, 'madeleine.catalogi.ru');
-
-							// Замена
-							out = out.replace(/madeleine\.scoopcatalogue\.de/g, 'c.madeleine.catalogi.ru');
-							out = out.replace(/blaetterkatalog\/script\/bk_script\.js/g, 'http://www.madeleine.catalogi.ru/static/bk_script.js');
-
-							if (req.headers.host !== 'c.madeleine.catalogi.ru') {
-								out = out.replace('<head>', '<head>' + includes.head);
-								out = out.replace('</body>', includes.body.top + includes.body.bottom + '</body>');
-								//out = out.replace('<body>', includes.body.top);
-								//out = out.replace(includes.body.bottom + '</body>');
-
-							}
-							
-							out = out.replace(/NEWS &amp; SPECIALS/g, '');
-							//out = out.replace(/MODE-BERATUNG/g, '');
-                            out = out.replace(/MODEBERATUNG/g, 'Каталоги');
-                            out = out.replace('www.madeleine.catalogi.ru/modeberatung/', 'www.madeleine.catalogi.ru/service/kataloge/blaetterkataloge/');
-
-							out = out.replace(/MODE/g, 'одежда');
-							out = out.replace(/SCHUHE &amp; ACCESSOIRES/i, 'обувь & аксессуары');
-							out = out.replace(/THEMEN &amp; TRENDS/i, 'тренды');
-							out = out.replace(/SALE/g, 'Распродажа');
-
-							out = out.replace(/Dessous/g, 'Нижнее белье');
-							out = out.replace(/Strick/g, 'Трикотаж');
-							out = out.replace(/Pumps/g, 'Туфли на каблуке');
-							out = out.replace(/Taschen/g, 'Сумки');
-							out = out.replace(/Pantoletten/g, 'Босоножки');
-							out = out.replace(/Kleider/g, 'Платья');
-							
-							out = out.replace(/NEU/g, 'NEW');
-							out = out.replace(/In den Warenkorb/g, 'Добавить в корзину');
-
-							
-							out = out.replace(/Bestellnummer/g, 'Артикул');
-							out = out.replace(/Produktdetails/g, 'Описание товара');
-							out = out.replace(/Materialinfos/g, 'Состав');
-							out = out.replace(/Produktansichten/g, 'Посмотреть товар');
-
-							out = out.replace(/Kurzgr&#246;&#223;en/g, 'Короткие размеры');
-							out = out.replace(/Kurzgr&#246;&#223;e/g, 'рост 156-163см');
-
-							out = out.replace(/Normalgr&#246;&#223;e/g, 'рост 164-172');
-
-							out = out.replace(/Langgr&#246;&#223;en/g, 'Длинные размеры');
-							out = out.replace(/Langgr&#246;&#223;e/g, 'рост от 173см');
-
-							out = out.replace(/Ihre gew&#228;hlte Gr&#246;&#223;e/g, 'Выбранный размер');
-
-                            //out = out.replace('"web11647Banner"', 'bye-bye my dear banner');
-                            //out = out.replace('fl_main fl_col_5 fl_col_advisoryservice web-11080 touch-me', 'bye-bye my dear banner');
-                            //out = out.replace('fl_main fl_col_6 fl_main_last fl_col_advisory web-11080 touch-me', 'bye-bye my dear banner');
-
-							out = out.replace(/Zur&#252;ck/g, 'Назад');
-							out = out.replace(/Weiter/g, 'Вперед');
-
-							out = out.replace(/Cupgr&#246;&#223;en/g, 'Размеры чашек');
-							out = out.replace(/lieferbar in 5 bis 6 Wochen/g, 'доступны в теч. 5 - 6 недель');
-
-							out = out.replace(/Au&#223;enmaterial/g, 'Внешний материал');
-							out = out.replace(/F&#252;llung/g, 'Наполение');
-							out = out.replace(/Futter/g, 'Подкладка');
-							out = out.replace(/Besatz/g, 'Отделка');
+        var host = req.headers.host.replace('c.madeleine.catalogi.ru', 'madeleine.scoopcatalogue.de').replace(SITENAME + '.catalogi.ru', SITE);
+        _header['Host'] = host;
 
 
-							out = out.replace('//static.criteo.net/js/ld/ld.js', '');
-							out = out.replace(/adition.com/g, '');
-							out = out.replace(/googleadservices.com/g, '');
+        if ('cookie' in req.headers) {
+            var cookies = req.headers.cookie.split(' ');
+            for (var i = 0; i < cookies.length; i++) {
+                j.setCookie(request.cookie(cookies[i].replace(';', '')), "http://" + host);
+            }
+        }
 
-							out = out.replace(/madeleine\.122\.2o7\.net/g, '');
 
-							res.write(out);
-						}
-					});
+        // Proxyng trafic
+        var piper;
+        var url = "http://" + host + req.url;
+        proxyfull = "http://" + proxy() + ":3129";
+        if (req.method === "GET") {
+            piper = proxiedReq.get({
+                url: url,
+                proxy: proxyfull
+            }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
+        }
+        else if (req.method === "POST") {
+            piper = proxiedReq.post({
+                url: url,
+                proxy: proxyfull
+            }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
+        }
 
-					response.on('end', function() {
-						res.end();
-					});
-				});
+        // Replaces from config
+        replaces.forEach(function (item, i, arr) {
+            if (item.type === "usual") {
+                piper = piper.pipe(replacestream(item.from, item.to));
+            }
+            else if (item.type === "regex") {
+                piper = piper.pipe(replacestream(new RegExp(item.from, item.args), item.to));
+            }
+        });
 
-				request.on('error', function(err) {
-					throw new Error('Marke request error - ' + err.message);
-				});
+        // Replaces from translates.catalogi.ru
+        if (translates && translates.length) {
+            translates.forEach(function (item, i, arr) {
+                if (item.type === "usual") {
+                    piper = piper.pipe(replacestream(item.from, item.to));
+                }
+                else if (item.type === "regex") {
+                    var from = "(^|[^\\/?$])\\b(" + item.from + ")\\b";
+                    var to = "$1" + item.to;
+                    piper = piper.pipe(replacestream(new RegExp(from, item.args), to));
+                }
+            });
+        }
 
-				request.write(_post);
-				request.end();
-			});
-		});
+        // Manual replaces
+        piper.pipe(replacestream('</body>', includes.body.top + includes.body.bottom + '</body>'))
+            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>'+includes.head))
+            .pipe(replacestream(new RegExp('</head>', 'i'), includes.headbottom + '</head>'))
+            .pipe(replacestream('https', 'http'))
+            .pipe(res);
 
-	}).listen(config.get('site.port'));
-
+    }).listen(config.get('site.port'));
 }
 
 setInterval(function() {
-	global.gc(); // --expose-gc
+    global.gc(); // --e
 }, 1000);
