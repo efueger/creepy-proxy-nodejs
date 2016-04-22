@@ -551,18 +551,9 @@ catalogi(function(){
             },
             success: function(data){
                 console.log('success:' + data);
-
-               // top.postMessage({action: 'search', search: data.text[0]},'*');
-             
                	catalogi("[name='search']")[0].value = data.text[0];
-               
-             
                	catalogi("[name='search']")[1].value = data.text[0];
-               
-              
                	catalogi("[name='search']")[2].value = data.text[0];
-               
-               //catalogi("[name='search'")[0].value ? catalogi("[name='search'")[0].value = data.text[0] : catalogi("[name='search'")[1].value = data.text[0];
                 event.currentTarget.submit(); 
             },
             error: function(data){
