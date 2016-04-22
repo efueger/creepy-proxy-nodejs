@@ -150,10 +150,10 @@ catalogi('.myaccount.notranslate').css('max-width','140px');
     //cart
     catalogi('.minibasketholder').click(function(){
         catalogi.order();
-       // setTimeout(function(){
-       //     catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
-      //      catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-      //  },500);
+        setTimeout(function(){
+            catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
+            catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
+        },500);
         
         return false;
     });
@@ -161,10 +161,7 @@ catalogi('.myaccount.notranslate').css('max-width','140px');
     catalogi("[href='http://www.janvanderstorm.catalogi.ru/newsletter/']").click(function(event){
         //event.preventDefault();
         catalogi.subscribe(true, '35346');
-      //  setTimeout(function(){
-      //      catalogi('#cboxLoadedContent').css('width', '620px');//catalogi('#cboxLoadedContent').css('width').replace('px','')+30+'px');
-      //      catalogi('#cboxLoadedContent').css('height', '520px'); //catalogi('#cboxLoadedContent').css('height').replace('px','')+30+'px');
-      //  },1500);
+    
         
         return false;
     });
@@ -319,10 +316,10 @@ catalogi('.myaccount.notranslate').css('max-width','140px');
     } catch(e) {
         console.log(e);
     }
-    //setTimeout(function(){
-    //    catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
-    //   catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
-    //},500);
+    setTimeout(function(){
+        catalogi('#cboxLoadedContent').css('width', catalogi('#cboxLoadedContent').css('width').replace('px','')+40+'px');
+       catalogi('#cboxLoadedContent').css('height', catalogi('#cboxLoadedContent').css('height').replace('px','')+40+'px');
+    },500);
     return false;
 });
 
