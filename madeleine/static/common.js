@@ -52,6 +52,9 @@ catalogi.noTranslate = function() {
 
     // Футер
     //catalogi('.big-teaser[style*="margin-bottom: 20px"]').hide();
+
+    // Страница товара
+    catalogi('#sizesRoot').addClass('notranslate');
 };
 
 catalogi.parse = function() {
@@ -66,9 +69,13 @@ catalogi.parse = function() {
     catalogi('a[href^="https://www.madeleine.catalogi.ru/service/newsletter/"]').attr('href','#');
 
     // Меню
+    catalogi('.fl_col_1 > a > span').text('мода');
+    catalogi('.fl_col_2 > a > span').text('обувь & аксессуары');
+    catalogi('.fl_col_3 > a > span').text('тренды');
+    catalogi('.fl_col_4 > a > span').text('sale');
+    catalogi('.fl_col_5').remove();
     catalogi('.fl_col_6 > a').attr('href','//madeleine.catalogi.ru/service/kataloge/blaetterkataloge/');
     catalogi('.fl_col_6 > div').remove();
-    catalogi('.fl_col_5').remove();
 
     // Стр. товара
     catalogi('a[class="next"]').eq(0).click(function(event) {
