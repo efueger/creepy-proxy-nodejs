@@ -51,6 +51,7 @@ catalogi.parse = function() {
     //// Шапка
     catalogi('#iframe').hide();
 catalogi('#mbflyout-area').remove();
+catalogi('.myaccount.notranslate').css('max-width','140px');
     catalogi('.benefit.first').text('ЭКСПЕРТ ПО БОЛЬШИМ РАЗМЕРАМ');
     catalogi('.benefit.second').text('МУЖСКАЯ МОДА ДО 70 РАЗМЕРА');
     catalogi('.benefit.last').text('ИДЕАЛЬНО ДЛЯ ВАШЕЙ ФИГУРЫ');
@@ -362,7 +363,7 @@ catalogi('#mbflyout-area').remove();
         .queue(function (next) {
             if(_auth){
                 catalogi('#_auth_wait').remove();
-                catalogi('.account-nav-listelem > a').remove();
+                catalogi('.logged.notranslate > a').remove();
                 catalogi('.account-nav-listelem')
                     .html('<a href="http://catalogi.ru/cabinet/" class="my-account-login underline-alternative" target="_blank">Личный кабинет</a>' +
                         '<a href="#" class="_logout"></a>');
