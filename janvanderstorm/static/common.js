@@ -72,14 +72,13 @@ catalogi.parse = function() {
 
     catalogi('.miniaccount').children().remove();
     catalogi('.miniaccount').prepend($("<a>Каталоги</a>").attr('href','#').addClass('headerLinks')
-    	.attr('onclick','catalogi.catalogs(); return false');
+    	.attr('onclick','catalogi.catalogs(); return false'));
     //    event.preventDefault();
     //    catalogi.catalogs();
     //}));
-    catalogi('.miniaccount').prepend($("<a>Интернет-магазины</a>").attr('href','#').addClass('headerLinks').click(function(event){
-        event.preventDefault();
-        catalogi.shops();
-    }));
+    catalogi('.miniaccount').prepend($("<a>Интернет-магазины</a>").attr('href','#').addClass('headerLinks')
+    	.attr('onclick','catalogi.shops(); return false'));
+
     catalogi('.miniaccount')
     .prepend($("<a> Каталоги.ру</a>")
         .attr('href','http://www.catalogi.ru')
