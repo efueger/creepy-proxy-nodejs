@@ -51,7 +51,7 @@
 }
 
 .myaccount {
-    display: block!important;
+    display: inline-block!important;
 }
 
 .textInHeader {
