@@ -265,7 +265,12 @@ catalogi('#page-header').attr('style', '/* height: 100px; */');
             // цена
             var price       = catalogi('.pricearea .price .value').first().text().replace(',','.');
             // картинка
-            var img         = catalogi('#thumbimages img').attr('src');
+            if(window.innerWidth < 770){
+            	var img = catalogi('#thumbslider img').attr('data-src');
+            } else {
+            	var img         = catalogi('#thumbimages img').attr('src');
+            }
+            
 
             var param = [];
 
