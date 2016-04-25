@@ -27,6 +27,7 @@ catalogi.noTranslate = function(){
     // Шапка
     catalogi('#meta-nav').addClass('notranslate');
     catalogi('#header-wrapper').find('*').addClass('notranslate');
+    catalogi(".addToCartForm [name='submit']").addClass('notranslate');
     //catalogi('.benefit').addClass('notranslate');
 //catalogi('.basket').addClass('notranslate');
     // Меню
@@ -247,7 +248,7 @@ catalogi('#page-header').attr('style', '/* height: 100px; */');
     		catalogi.service();
     	},400);
     });
-
+catalogi(".addToCartForm [name='submit']").text("В корзину");
     // Добавление в корзину
     catalogi('.addToCartForm').submit(function(event){
     	try{
@@ -356,7 +357,7 @@ catalogi('#page-header').attr('style', '/* height: 100px; */');
     	checkBasket();
     	catalogi('.basket .pre').remove();
     	catalogi('.wording .price').remove();
-catalogi("[.addToCartForm [name='submit']").text("В корзину");
+
 
     	if(catalogi("[data-include='http://www.janvanderstorm.catalogi.ru/basket']").children().length == 0){
     		catalogi("[data-include='http://www.janvanderstorm.catalogi.ru/basket']").html("<div class='minibasket-area'>"+
@@ -462,7 +463,7 @@ function addFilter(obj){
 function checkBasket() {
 	window.clearInterval(window.timer1);
 	catalogi('.basket').text('Корзина');
-	catalogi("[.addToCartForm [name='submit']").text("В корзину");
+	
 	var ordersNumber = catalogi.cookie('ordersNum');
 	if(ordersNumber)
 		catalogi('.wording .article .num').text(ordersNumber);
