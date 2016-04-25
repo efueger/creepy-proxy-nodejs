@@ -356,7 +356,7 @@ catalogi('#page-header').attr('style', '/* height: 100px; */');
     	checkBasket();
     	catalogi('.basket .pre').remove();
     	catalogi('.wording .price').remove();
-
+catalogi("[.addToCartForm [name='submit']").text("В корзину");
 
     	if(catalogi("[data-include='http://www.janvanderstorm.catalogi.ru/basket']").children().length == 0){
     		catalogi("[data-include='http://www.janvanderstorm.catalogi.ru/basket']").html("<div class='minibasket-area'>"+
