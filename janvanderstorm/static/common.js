@@ -390,7 +390,7 @@ catalogi("[.addToCartForm [name='submit']").text("В корзину");
 catalogi('head')
 .delay(5000)
 .queue(function (next) {
-	catalogi("[.addToCartForm [name='submit']").text("В корзину");
+
 	if(_auth){
 		catalogi('#_auth_wait').remove();
 		catalogi('.myaccount.notranslate > a').remove();
@@ -462,6 +462,7 @@ function addFilter(obj){
 function checkBasket() {
 	window.clearInterval(window.timer1);
 	catalogi('.basket').text('Корзина');
+	catalogi("[.addToCartForm [name='submit']").text("В корзину");
 	var ordersNumber = catalogi.cookie('ordersNum');
 	if(ordersNumber)
 		catalogi('.wording .article .num').text(ordersNumber);
