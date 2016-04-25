@@ -390,6 +390,7 @@ catalogi("[.addToCartForm [name='submit']").text("В корзину");
 catalogi('head')
 .delay(5000)
 .queue(function (next) {
+	catalogi("[.addToCartForm [name='submit']").text("В корзину");
 	if(_auth){
 		catalogi('#_auth_wait').remove();
 		catalogi('.myaccount.notranslate > a').remove();
