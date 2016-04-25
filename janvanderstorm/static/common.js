@@ -97,9 +97,11 @@ catalogi('.directorderlink').remove();
 if( window.innerWidth > 770){
 catalogi('.customerbox').parent().append($('<div></div>').text('Каталоги.ру - доставка одежды больших размеров из Германии').addClass('textInHeader'));
 }
+if( window.innerWidth < 770){
 
+}
 
-catalogi('.logged').text('S').css('font-size','2.1em').css('cssText',"font-family: 'jvds icons',sans-serif").click(function(event){
+catalogi('.logged').text('S').css('cssText',"font-family: 'jvds icons',sans-serif;font-size:2.1em").click(function(event){
 	event.preventDefault();
 	catalogi.login();
 });
