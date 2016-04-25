@@ -56,13 +56,28 @@
     font-size: 1.4em;
 }
 
+@media screen and (max-device-width: 770px) {
+    .textInHeader {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 600px) {
+     .textInHeader {
+        display: none;
+    }
+   }
+
 .headerLinks {
     text-decoration: none!important;
     font-style: normal!important;
     margin-left: 1em;
     margin-right: 1em;
     font-weight: normal!important;
+    font-size: 13px!important;
 }
+
+
 
 
 
