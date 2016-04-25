@@ -71,6 +71,10 @@ catalogi.parse = function() {
     }));
 catalogi('.myaccount').css('cssText','display:inline-block!important');
 
+
+    
+
+
     catalogi('.miniaccount').children().remove();
     catalogi('.miniaccount').prepend($("<a>Каталоги</a>").attr('href','#').addClass('headerLinks')
     	.attr('onclick','catalogi.catalogs(); return false'));
@@ -95,14 +99,14 @@ catalogi('.customerbox').parent().append($('<div></div>').text('Каталоги
 }
 
 
-catalogi('.logged').text('Личный кабинет').click(function(event){
+catalogi('.logged').text('S').css('cssText',"font-family: 'jvds icons',sans-serif").click(function(event){
 	event.preventDefault();
 	catalogi.login();
 });
-catalogi('.myaccount .link').text('Вход').click(function(event){
+catalogi('.myaccount .link').remove();/*text('Вход').click(function(event){
 	event.preventDefault();
 	catalogi.login();
-});
+});*/
 catalogi('#account-nav > li > a').attr('href', '#');
 catalogi('.my-account').remove();
 catalogi('#wishlist-link').remove();
