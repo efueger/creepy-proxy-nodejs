@@ -69,7 +69,7 @@ catalogi.parse = function() {
     	event.preventDefault();
     	catalogi.payment();
     }));
-
+catalogi('.myaccount').css('display','inline-block!important');
 
     catalogi('.miniaccount').children().remove();
     catalogi('.miniaccount').prepend($("<a>Каталоги</a>").attr('href','#').addClass('headerLinks')
