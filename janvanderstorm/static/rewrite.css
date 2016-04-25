@@ -50,6 +50,10 @@
     color: #666;
 }
 
+.myaccount {
+    display: block!important;
+}
+
 .textInHeader {
     padding-top: 1em;
     font-style: italic;
