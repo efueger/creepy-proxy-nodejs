@@ -99,7 +99,7 @@ catalogi('.customerbox').parent().append($('<div></div>').text('Каталоги
 }
 
 
-catalogi('.logged').text('S').css('cssText',"font-family: 'jvds icons',sans-serif").click(function(event){
+catalogi('.logged').text('S').css('font-size','2.1em').css('cssText',"font-family: 'jvds icons',sans-serif").click(function(event){
 	event.preventDefault();
 	catalogi.login();
 });
