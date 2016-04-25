@@ -90,7 +90,7 @@ catalogi('.miniaccount')
 
 
 catalogi('.directorderlink').remove();
-if( window.innerWidth > "770px"){
+if( window.innerWidth > 770){
 catalogi('.customerbox').parent().append($('<div></div>').text('Каталоги.ру - доставка одежды больших размеров из Германии').addClass('textInHeader'));
 }
 
