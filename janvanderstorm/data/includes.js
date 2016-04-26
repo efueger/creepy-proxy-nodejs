@@ -1,6 +1,7 @@
 module.exports = function(catalog, param, options){
     return {
         head :[
+            '<meta charset="utf-8">',
             '<meta name="google" value="notranslate" />',
             '<meta name="robots" content="noindex, nofollow"/>',
             '<link href="http://cdn.catalogi.ru/static/css/jquery.jscrollpane.css" rel="stylesheet" type="text/css" />',
