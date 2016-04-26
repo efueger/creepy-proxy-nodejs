@@ -215,7 +215,7 @@ if (cluster.isMaster) {
             .pipe(replacestream('click.cptrack.de', '127.0.0.1'))
             .pipe(replacestream('criteo_ld.js', ''))
             .pipe(res);
-    }).listen(config.get('site.port'));
+    }).listen(6052);
 }
 
 setInterval(function() {

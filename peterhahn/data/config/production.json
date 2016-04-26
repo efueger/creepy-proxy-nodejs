@@ -1,8 +1,7 @@
 {
   "site": {
     "name"        : "peterhahn",
-    "domain"      : ".de",
-    "port"        : 6052
+    "domain"      : ".de"
   },
   "header": {
     "catalog"     : "peterhahn",
