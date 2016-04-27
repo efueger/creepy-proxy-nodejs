@@ -7,6 +7,7 @@ domains=(
 "faibels"
 "gingar"
 "impressionen"
+"issuu"
 "janvanderstorm"
 "klingel"
 "madeleine"
