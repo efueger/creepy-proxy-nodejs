@@ -13,7 +13,6 @@ function IsJsonString(str) {
 }
 
 // Load config
-var _UserAgent = 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1';
 var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
@@ -49,8 +48,7 @@ if (cluster.isMaster) {
         request = require("request"),
         replacestream = require("replacestream"),
         querystring = require("querystring"),
-        proxy = require("./proxy"), 
-        includes = require("./includes");
+        proxy = require("./proxy");
         request.defaults({followAllRedirects:true});
 
     var j = request.jar();
@@ -79,7 +77,6 @@ if (cluster.isMaster) {
 
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-            res.setHeader('User-Agent', _UserAgent);
         };
 
         var _header = {};
@@ -88,9 +85,6 @@ if (cluster.isMaster) {
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
-
-        console.log(JSON.stringify(req.headers['user-agent']));
-
 
         if ('cookie' in req.headers) {
             var cookies = req.headers.cookie.split(' ');
@@ -118,7 +112,7 @@ if (cluster.isMaster) {
 
         piper.pipe(replacestream('issuu.com', 'issuu.catalogi.ru'))
              .pipe(replacestream('https', 'http'))
-             .pipe(replacestream('http://static.isu.pub/fe/issuu-documentpage/s3/448/scripts/default.js', 'http://www.issuu.catalogi.ru/static/default.js'))
+             .pipe(replacestream('http://static.isu.pub/fe/issuu-documentpage/s3/448/scripts/default.js', 'http://www.' + SITENAME + '.catalogi.ru/static/default.js'))
              .pipe(res);
 
     }).listen(config.get('site.port'));
