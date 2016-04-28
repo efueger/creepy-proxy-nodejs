@@ -13,6 +13,7 @@ function IsJsonString(str) {
 }
 
 // Load config
+var newUserAgent = 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1';
 var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
@@ -48,7 +49,8 @@ if (cluster.isMaster) {
         request = require("request"),
         replacestream = require("replacestream"),
         querystring = require("querystring"),
-        proxy = require("./proxy");
+        proxy = require("./proxy"), 
+        includes = require("./includes")(SITENAME, querystring.stringify(HEADERPARAMS.param), HEADERPARAMS.options);
         request.defaults({followAllRedirects:true});
 
     var j = request.jar();
@@ -80,14 +82,21 @@ if (cluster.isMaster) {
         };
 
         var _header = {};
-        //if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
-        _header['User-Agent'] = "Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1";
+        if ('user-agent' in req.headers) {
+            var oldUserAgent = req.headers['user-agent'];
+            console.log("Old user-agent: " + oldUserAgent);
+
+            req.headers.user-agent = newUserAgent;
+            console.log("New user-agent: " + newUserAgent);
+        }
 
         if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
 
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
+
+        console.log(new Date()+" "+ JSON.stringify(req.headers));
 
 
         if ('cookie' in req.headers) {
@@ -116,6 +125,7 @@ if (cluster.isMaster) {
 
         piper.pipe(replacestream('issuu.com', 'issuu.catalogi.ru'))
             .pipe(replacestream('https', 'http'))
+            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head))
             .pipe(res);
 
     }).listen(config.get('site.port'));
