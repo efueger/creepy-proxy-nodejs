@@ -17,3 +17,6 @@ Cyan='\033[0;36m'
 LightCyan='\033[1;36m'
 LightGray='\033[0;37m'
 White='\033[1;37m'
+
+cd $( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
+find . -name app.log -printf '%s %p\n' | sort -nr | awk '{$1/=1024;printf $2" %.2fMB\n",$1}' | column -t
