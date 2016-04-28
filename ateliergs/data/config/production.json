@@ -2,7 +2,7 @@
   "site": {
     "name"        : "ateliergs",
     "domain"      : ".de",
-    "port"        : 6060
+    "port"        : 7051
   },
   "header": {
     "catalog"     : "ateliergs",
