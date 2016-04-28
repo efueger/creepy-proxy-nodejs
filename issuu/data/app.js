@@ -57,7 +57,6 @@ if (cluster.isMaster) {
     });
 
     var server = http.createServer(function (req, res) {
-        //console.log('Trying to access: ' + req.headers.host + req.url);
         onError = function (err) {
             console.error(err);
             try {
@@ -81,7 +80,9 @@ if (cluster.isMaster) {
         };
 
         var _header = {};
-        if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
+        //if ('user-agent' in req.headers) _header['User-Agent'] = req.headers['user-agent'];
+        _header['User-Agent'] = "Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1";
+
         if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
 
@@ -113,7 +114,9 @@ if (cluster.isMaster) {
             }).on('error', onError).on('response', onResponse).pipe(replacestream(SITE, SITENAME + '.catalogi.ru'));
         }
 
-        piper.pipe(res);
+        piper.pipe(replacestream('issuu.com', 'issuu.catalogi.ru'))
+            .pipe(replacestream('https', 'http'))
+            .pipe(res);
 
     }).listen(config.get('site.port'));
 }
