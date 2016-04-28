@@ -13,7 +13,7 @@ function IsJsonString(str) {
 }
 
 // Load config
-var newUserAgent = 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1';
+var _UserAgent = 'Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1';
 var config = require('config');
 var SITENAME = config.get('site.name'),
     SITEDOMAIN = config.get('site.domain'),
@@ -50,7 +50,7 @@ if (cluster.isMaster) {
         replacestream = require("replacestream"),
         querystring = require("querystring"),
         proxy = require("./proxy"), 
-        includes = require("./includes")(SITENAME, querystring.stringify(HEADERPARAMS.param), HEADERPARAMS.options);
+        includes = require("./includes");
         request.defaults({followAllRedirects:true});
 
     var j = request.jar();
@@ -79,24 +79,17 @@ if (cluster.isMaster) {
 
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+            res.setHeader('User-Agent', _UserAgent);
         };
 
         var _header = {};
-        if ('user-agent' in req.headers) {
-            var oldUserAgent = req.headers['user-agent'];
-            console.log("Old user-agent: " + oldUserAgent);
-
-            req.headers.user-agent = newUserAgent;
-            console.log("New user-agent: " + newUserAgent);
-        }
-
+        if ('user-agent' in req.headers) req.headers['user-agent'] = req.headers['user-agent'];
         if ('content-type' in req.headers) _header['Content-Type'] = req.headers['content-type'];
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
-
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
-
-        console.log(new Date()+" "+ JSON.stringify(req.headers));
+s
+        console.log(JSON.stringify(req.headers['user-agent']));
 
 
         if ('cookie' in req.headers) {
@@ -124,9 +117,9 @@ if (cluster.isMaster) {
         }
 
         piper.pipe(replacestream('issuu.com', 'issuu.catalogi.ru'))
-            .pipe(replacestream('https', 'http'))
-            .pipe(replacestream(new RegExp('<head>', 'i'), '<head>' + includes.head))
-            .pipe(res);
+             .pipe(replacestream('https', 'http'))
+             .pipe(replacestream('http://static.isu.pub/fe/issuu-documentpage/s3/448/scripts/default.js', 'http://www.issuu.catalogi.ru/static/default.js'))
+             .pipe(res);
 
     }).listen(config.get('site.port'));
 }
