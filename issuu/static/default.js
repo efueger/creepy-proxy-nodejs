@@ -19507,7 +19507,7 @@ webpackJsonp([1], [function(e, t, n) {
         }
         return {
             hasFlash: function() {
-                return n
+                return false
             },
             getVersion: function() {
                 return i
@@ -19526,7 +19526,7 @@ webpackJsonp([1], [function(e, t, n) {
     t._init = function(e) {
         a = n(e), window.FLASHDETECT = a
     }, t.hasFlash = function() {
-        return i().hasFlash()
+        return false
     }, t.getVersion = function() {
         return i().getVersion()
     }, t.isGoodForIssuu = function() {
