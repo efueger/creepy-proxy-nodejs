@@ -8,6 +8,10 @@ server {
     server_name ~^(?<subdomain>.*)\.issuu\.catalogi\.ru;
     listen 188.40.83.218;
 
+    location ^~ /static/ {
+        root /var/www/issuu;
+    }
+
     location ~* ^.+\.(css|js|jpe?g|gif|png|avi|swf|ico)$ {
         rewrite ^(.*)$ http://$subdomain.issuu.de$1 permanent;
     }
