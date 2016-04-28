@@ -88,7 +88,7 @@ if (cluster.isMaster) {
         if ('cookie' in req.headers) _header['Cookie'] = req.headers['cookie'];
         var host = req.headers.host.replace(SITENAME + '.catalogi.ru', SITE);
         _header['Host'] = host;
-s
+
         console.log(JSON.stringify(req.headers['user-agent']));
 
 
