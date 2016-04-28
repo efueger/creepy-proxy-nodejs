@@ -1,13 +1,13 @@
 {
   "site": {
-    "name"        : "janvanderstorm",
+    "name"        : "ateliergs",
     "domain"      : ".de",
-    "port"        : 6059
+    "port"        : 6060
   },
   "header": {
-    "catalog"     : "janvanderstorm",
-    "alias"       : "JS",
-    "info"        : "Интернет-магазин MIA-MODA. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
+    "catalog"     : "ateliergs",
+    "alias"       : "AT",
+    "info"        : "Интернет-магазин ateliergs. Каталоги.ру - заказ и доставка одежды из европейских интернет-магазинов."
   },
   "options": {
     "height"      : 150,
